@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://locdh3npnl70"]
+
+[ext_resource type="Texture2D" uid="uid://uv6lvc0nq03j" path="res://assets/textures/shapes/cylinderSprite.png" id="1_3rdp4"]
+[ext_resource type="Script" path="res://scripts/cylinder_sbo.gd" id="1_gwyoe"]
+[ext_resource type="Texture2D" uid="uid://b4yp0nypvwojw" path="res://assets/textures/shapes/cylinderSpriteNormal.png" id="2_2lan0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mkpy1"]
+transparency = 1
+cull_mode = 2
+albedo_texture = ExtResource("1_3rdp4")
+normal_enabled = true
+normal_texture = ExtResource("2_2lan0")
+texture_filter = 0
+
+[node name="CylinderSBO" type="Node3D"]
+
+[node name="graphics" type="Sprite3D" parent="."]
+transform = Transform3D(-0.274884, -0.532086, -0.800826, 0.945831, -5.22416e-07, -0.324657, 0.172745, -0.84669, 0.503264, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_mkpy1")
+modulate = Color(0.211765, 0.639216, 0.105882, 1)
+texture_filter = 0
+texture = ExtResource("1_3rdp4")
+hframes = 2
+vframes = 3
+frame = 1
+region_rect = Rect2(2.19, 2.52, 0, 2.54)
+script = ExtResource("1_gwyoe")

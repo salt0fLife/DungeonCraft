@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://cw1xud0kamkct"]
+
+[ext_resource type="Script" path="res://scripts/generating_dungeon_flat.gd" id="1_oceuk"]
+[ext_resource type="PackedScene" uid="uid://ber7k64jpelml" path="res://debug/debug_freecam.tscn" id="2_10b2t"]
+
+[sub_resource type="Environment" id="Environment_tuiga"]
+sdfgi_use_occlusion = true
+fog_enabled = true
+fog_light_color = Color(0.117647, 0.137255, 0.117647, 1)
+
+[node name="generating_dungeon_flat" type="Node3D"]
+script = ExtResource("1_oceuk")
+
+[node name="mesher" type="Node3D" parent="."]
+
+[node name="debugFreecam" parent="." instance=ExtResource("2_10b2t")]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0, 0)
+light_color = Color(1, 0, 0, 1)
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 0, 0, 0)
+light_color = Color(0, 1, 0, 1)
+
+[node name="DirectionalLight3D3" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.707107, 6.18172e-08, 0.707107, -0.5, 0.707107, 0.5, -0.5, -0.707107, 0.5, 0, 0, 0)
+light_color = Color(0, 0, 1, 1)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_tuiga")

@@ -1,0 +1,13 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created using Krita: https://krita.org -->
+<svg xmlns="http://www.w3.org/2000/svg" 
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:krita="http://krita.org/namespaces/svg/krita"
+    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+    width="92.16pt"
+    height="92.16pt"
+    viewBox="0 0 92.16 92.16">
+<defs/>
+<rect id="shape0" transform="matrix(0.719999971389772 0 0 0.719999971389772 1.43999994277954 1.43999994277954)" fill="#332531" stroke="#000000" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2" width="124" height="124" rx="61.9999999999999" ry="62"/><path id="shape1" transform="matrix(0.999999960263572 0 0 0.999999960263572 18.9303718385035 15.8925306733394)" fill="#9c8585" fill-rule="evenodd" stroke="#000000" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="bevel" d="M17.0554 0L0 33.9836L12.6006 51.9299L33.4744 23.4194C28.0014 15.6129 22.5284 7.80646 17.0554 0Z" sodipodi:nodetypes="ccccc"/><path id="shape2" transform="matrix(0.999999960263572 0 0 0.999999960263572 36.113066441694 16.274368331188)" fill="#b9978e" fill-rule="evenodd" stroke="#000000" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="bevel" d="M16.2917 22.9103L40.4748 24.9467L27.2378 3.56382L0 0Z" sodipodi:nodetypes="ccccc"/><path id="shape3" transform="matrix(0.999999960263572 0 0 0.999999960263572 32.1674106439242 39.6937446792402)" fill="#674e51" fill-rule="evenodd" stroke="#000000" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="bevel" d="M43.9113 1.40007L35.7655 21.892L0 27.7469L20.492 0Z" sodipodi:nodetypes="ccccc"/><text id="shape4" krita:useRichText="true" krita:textVersion="2" transform="matrix(0.999999960263572 0 0 0.999999960263572 6.2342726686034 47.2916083393578)" fill="#ffffff" stroke-opacity="0" stroke="#000000" stroke-width="0" stroke-linecap="square" stroke-linejoin="bevel" font-family="Bernard MT Condensed" font-size="24" font-size-adjust="0.210526" font-stretch="normal" letter-spacing="0" text-anchor="middle" word-spacing="0"><tspan x="40.875">Dungeon</tspan><tspan x="40.875" dy="28.5">Craft</tspan></text>
+</svg>

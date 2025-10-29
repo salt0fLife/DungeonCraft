@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dmt6ple6woq2h"]
+
+[node name="hallway_debug" type="Node3D"]
+
+[node name="hallway_debug" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, 0.5)

@@ -1,0 +1,231 @@
+[gd_scene load_steps=21 format=3 uid="uid://b0tr8qsb1x5y4"]
+
+[ext_resource type="Script" path="res://scripts/rabbit.gd" id="1_onmqu"]
+[ext_resource type="Script" path="res://scripts/fox.gd" id="2_efb6n"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_5okix"]
+
+[sub_resource type="Gradient" id="Gradient_7p0wb"]
+colors = PackedColorArray(0.0751182, 0.274127, 0.0935229, 1, 0.416633, 0.688532, 0.291605, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_4ec0s"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_x352w"]
+color_ramp = SubResource("Gradient_7p0wb")
+noise = SubResource("FastNoiseLite_4ec0s")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l1x23"]
+albedo_texture = SubResource("NoiseTexture2D_x352w")
+
+[sub_resource type="QuadMesh" id="QuadMesh_bckr8"]
+material = SubResource("StandardMaterial3D_l1x23")
+size = Vector2(50, 50)
+orientation = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oajcb"]
+albedo_color = Color(0.764706, 0.627451, 0.12549, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cx7ff"]
+material = SubResource("StandardMaterial3D_oajcb")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xvx33"]
+albedo_color = Color(0.701961, 0.509804, 0.141176, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xdl03"]
+material = SubResource("StandardMaterial3D_xvx33")
+size = Vector3(0.595, 0.855, 0.95)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_dga1f"]
+radius = 8.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_lgrr3"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_is7m3"]
+radius = 0.677218
+
+[sub_resource type="SphereMesh" id="SphereMesh_v5rw5"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_gial4"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_k1un0"]
+radius = 0.827585
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_2jh3j"]
+radius = 0.915426
+
+[sub_resource type="SphereMesh" id="SphereMesh_2pao5"]
+
+[node name="world_flat" type="Node3D"]
+
+[node name="worldFloor" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="worldFloor"]
+shape = SubResource("WorldBoundaryShape3D_5okix")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("QuadMesh_bckr8")
+
+[node name="rabbit" type="CharacterBody3D" parent="." groups=["rabbit"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.34335, 0, -8.04817)
+collision_layer = 2
+script = ExtResource("1_onmqu")
+
+[node name="graphics" type="Node3D" parent="rabbit"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="rabbit/graphics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_cx7ff")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="rabbit/graphics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.54442, 0.310838)
+mesh = SubResource("BoxMesh_xdl03")
+skeleton = NodePath("../..")
+
+[node name="sight_check_area" type="Area3D" parent="rabbit"]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="rabbit/sight_check_area"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("SphereShape3D_dga1f")
+
+[node name="vision" type="RayCast3D" parent="rabbit/sight_check_area"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="rabbit"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("SphereShape3D_lgrr3")
+
+[node name="biteArea" type="Area3D" parent="rabbit"]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="rabbit/biteArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.57731, 0)
+shape = SubResource("SphereShape3D_is7m3")
+
+[node name="fox" type="CharacterBody3D" parent="." groups=["fox"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.0777, 0, -10.7432)
+collision_layer = 2
+script = ExtResource("2_efb6n")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="fox"]
+mesh = SubResource("SphereMesh_v5rw5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="fox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("SphereShape3D_gial4")
+
+[node name="sight_check_area" type="Area3D" parent="fox"]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="fox/sight_check_area"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("SphereShape3D_dga1f")
+
+[node name="vision" type="RayCast3D" parent="fox/sight_check_area"]
+
+[node name="biteArea" type="Area3D" parent="fox"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="fox/biteArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.330806, 0)
+shape = SubResource("SphereShape3D_k1un0")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 20, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+
+[node name="grassFruit" type="StaticBody3D" parent="." groups=["foodPlant"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.93405, 0.997976, 5.26848)
+collision_layer = 2
+metadata/nutrition = 10.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="grassFruit"]
+shape = SubResource("SphereShape3D_2jh3j")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="grassFruit"]
+mesh = SubResource("SphereMesh_2pao5")
+
+[node name="grassFruit2" type="StaticBody3D" parent="." groups=["foodPlant"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.2207, 0, -3.29888)
+collision_layer = 2
+metadata/nutrition = 10.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="grassFruit2"]
+shape = SubResource("SphereShape3D_2jh3j")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="grassFruit2"]
+mesh = SubResource("SphereMesh_2pao5")
+
+[node name="grassFruit3" type="StaticBody3D" parent="." groups=["foodPlant"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.47333, 0, -16.3924)
+collision_layer = 2
+metadata/nutrition = 10.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="grassFruit3"]
+shape = SubResource("SphereShape3D_2jh3j")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="grassFruit3"]
+mesh = SubResource("SphereMesh_2pao5")
+
+[node name="grassFruit7" type="StaticBody3D" parent="." groups=["foodPlant"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.69079, 0, -10.4658)
+collision_layer = 2
+metadata/nutrition = 10.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="grassFruit7"]
+shape = SubResource("SphereShape3D_2jh3j")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="grassFruit7"]
+mesh = SubResource("SphereMesh_2pao5")
+
+[node name="grassFruit8" type="StaticBody3D" parent="." groups=["foodPlant"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.70913, 0, -9.01503)
+collision_layer = 2
+metadata/nutrition = 10.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="grassFruit8"]
+shape = SubResource("SphereShape3D_2jh3j")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="grassFruit8"]
+mesh = SubResource("SphereMesh_2pao5")
+
+[node name="grassFruit4" type="StaticBody3D" parent="." groups=["foodPlant"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.38838, 0, -1.47835)
+collision_layer = 2
+metadata/nutrition = 10.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="grassFruit4"]
+shape = SubResource("SphereShape3D_2jh3j")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="grassFruit4"]
+mesh = SubResource("SphereMesh_2pao5")
+
+[node name="grassFruit5" type="StaticBody3D" parent="." groups=["foodPlant"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7588, 0, 5.24678)
+collision_layer = 2
+metadata/nutrition = 10.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="grassFruit5"]
+shape = SubResource("SphereShape3D_2jh3j")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="grassFruit5"]
+mesh = SubResource("SphereMesh_2pao5")
+
+[node name="grassFruit6" type="StaticBody3D" parent="." groups=["foodPlant"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.991, -9.53674e-07, 2.97391)
+collision_layer = 2
+metadata/nutrition = 10.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="grassFruit6"]
+shape = SubResource("SphereShape3D_2jh3j")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="grassFruit6"]
+mesh = SubResource("SphereMesh_2pao5")
+
+[connection signal="body_entered" from="rabbit/biteArea" to="rabbit" method="_on_bite_area_body_entered"]
+[connection signal="body_exited" from="rabbit/biteArea" to="rabbit" method="_on_bite_area_body_exited"]
+[connection signal="body_entered" from="fox/biteArea" to="fox" method="_on_bite_area_body_entered"]

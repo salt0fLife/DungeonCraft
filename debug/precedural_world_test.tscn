@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://dvv6r43jhqp7j"]
+
+[ext_resource type="Script" path="res://debug/precedural_world_test.gd" id="1_7r23q"]
+
+[node name="precedural_world_test" type="Node3D"]
+script = ExtResource("1_7r23q")
+
+[node name="background" type="Node3D" parent="."]
+
+[node name="hallways" type="Node3D" parent="."]
+
+[node name="rooms" type="Node3D" parent="."]

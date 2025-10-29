@@ -1,0 +1,65 @@
+[gd_scene load_steps=4 format=3 uid="uid://bfmtven01nbak"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_rca1e"]
+[ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="2_g62rv"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0qdw2"]
+radius = 0.287424
+height = 1.49829
+
+[node name="player" type="CharacterBody3D"]
+script = ExtResource("1_rca1e")
+
+[node name="playerAvatar" parent="." instance=ExtResource("2_g62rv")]
+
+[node name="torso" parent="playerAvatar/genericAvatar/root/chestBase" index="0"]
+transform = Transform3D(0.999881, 0.00254583, 0.0151372, 0, 0.986149, -0.165855, -0.0153498, 0.165835, 0.986034, 0.00138179, -0.0298187, -0.00162298)
+
+[node name="hip_L" parent="playerAvatar/genericAvatar/root/chestBase/torso" index="0"]
+transform = Transform3D(0.136527, 0.00156932, -0.00209587, -0.00154187, 0.136532, 0.00179161, 0.00211614, -0.00176761, 0.136524, 0.075, -0.280793, -0.001)
+
+[node name="knee_L" parent="playerAvatar/genericAvatar/root/chestBase/torso/hip_L/Cube_001" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.999998, -0.00223124, 0, 0.00223124, 0.999998, 0.00460759, -0.269104, -0.0209225)
+
+[node name="hip_R" parent="playerAvatar/genericAvatar/root/chestBase/torso" index="1"]
+transform = Transform3D(0.999399, -0.0314532, -0.0145699, 0.0344413, 0.94857, 0.314688, 0.00392264, -0.315001, 0.949083, -0.075, -0.233207, -0.001)
+
+[node name="knee_R" parent="playerAvatar/genericAvatar/root/chestBase/torso/hip_R/Cube_010" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.840139, -0.542369, 0, 0.542369, 0.840139, -0.00594005, -0.269127, -0.0209496)
+
+[node name="neck" parent="playerAvatar/genericAvatar/root/chestBase/torso" index="2"]
+transform = Transform3D(0.360857, 0.00101858, -0.00715474, 0, 0.357326, 0.0508708, 0.00722687, -0.0508604, 0.357255, 0, 0.289384, -0.00323021)
+
+[node name="shoulder_L" parent="playerAvatar/genericAvatar/root/chestBase/torso" index="3"]
+transform = Transform3D(0.11306, -0.00849542, 0, 0.00847704, 0.112815, 0.00745676, -0.000558736, -0.00743582, 0.113133, 0.14978, 0.245517, -0.00142635)
+
+[node name="elbowL" parent="playerAvatar/genericAvatar/root/chestBase/torso/shoulder_L/Cube_002" index="0"]
+transform = Transform3D(0.105207, 0, 0, 0, 0.0922552, 0.0505724, 0, -0.0505724, 0.0922552, 0.0850663, -0.248776, -0.0054425)
+
+[node name="shoulder_R" parent="playerAvatar/genericAvatar/root/chestBase/torso" index="4"]
+transform = Transform3D(0.997188, 0.0749295, 0, -0.0746417, 0.993355, -0.087575, -0.00656197, 0.0873287, 0.996157, -0.14978, 0.226483, -0.00142637)
+
+[node name="elbowR" parent="playerAvatar/genericAvatar/root/chestBase/torso/shoulder_R/Cube_012" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.963335, 0.268299, 0, -0.268299, 0.963335, -0.0850136, -0.248392, -0.00541138)
+
+[node name="tail" parent="playerAvatar/genericAvatar/root/chestBase/torso" index="5"]
+transform = Transform3D(0.988242, -0.139978, 0.0615234, 6.48681e-08, 0.402372, 0.915476, -0.152902, -0.904712, 0.397641, -9.31325e-10, -0.289919, -0.088)
+
+[node name="tail_001" parent="playerAvatar/genericAvatar/root/chestBase/torso/tail" index="0"]
+transform = Transform3D(0.948636, -0.0576537, -0.311072, -1.79082e-08, 0.983254, -0.182235, 0.316369, 0.172875, 0.932751, 1.86265e-09, 0.00471914, -0.230203)
+
+[node name="tail_002" parent="playerAvatar/genericAvatar/root/chestBase/torso/tail/tail_001" index="0"]
+transform = Transform3D(0.970413, -0.0685766, -0.231511, 0, 0.95882, -0.284016, 0.241454, 0.275612, 0.930451, -3.55271e-15, 0.00895518, -0.236132)
+
+[node name="cameraHandler" type="Node3D" parent="playerAvatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.23262, 0)
+
+[node name="Camera3D" type="Camera3D" parent="playerAvatar/cameraHandler"]
+cull_mask = 1048573
+fov = 90.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.747046, 0)
+shape = SubResource("CapsuleShape3D_0qdw2")
+
+[editable path="playerAvatar"]

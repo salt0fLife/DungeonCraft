@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6de167wkydn3"]
+
+[ext_resource type="Script" path="res://scripts/hitmarker.gd" id="1_3bl0b"]
+[ext_resource type="FontFile" uid="uid://g043wv70ps2v" path="res://assets/fonts/PIXELOIDMONO-D94EV.TTF" id="1_q7m2j"]
+
+[node name="hitmarker" type="Label3D"]
+billboard = 1
+no_depth_test = true
+fixed_size = true
+texture_filter = 2
+modulate = Color(1, 0, 0, 1)
+text = "damage"
+font = ExtResource("1_q7m2j")
+font_size = 12
+outline_size = 2
+script = ExtResource("1_3bl0b")

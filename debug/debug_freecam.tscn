@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://ber7k64jpelml"]
+
+[ext_resource type="Script" path="res://debug/debug_freecam.gd" id="1_3xa3j"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_278he"]
+
+[node name="debugFreecam" type="CharacterBody3D"]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_3xa3j")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_278he")
+
+[node name="graphics" type="Node3D" parent="."]
+
+[node name="camerahandler" type="Node3D" parent="graphics"]
+
+[node name="Camera3D" type="Camera3D" parent="graphics/camerahandler"]

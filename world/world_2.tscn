@@ -1,0 +1,326 @@
+[gd_scene load_steps=23 format=3 uid="uid://2u5k6epejukx"]
+
+[ext_resource type="PackedScene" uid="uid://dbf6h8q6h3n6q" path="res://assets/glb/world1/world1.glb" id="1_0a1px"]
+[ext_resource type="Shader" path="res://assets/shaders/peaceful_island.gdshader" id="2_0ukwn"]
+[ext_resource type="Texture2D" uid="uid://2ufbefhpxmvn" path="res://assets/textures/moon.png" id="3_l6rb5"]
+[ext_resource type="PackedScene" uid="uid://cqm1ptmfpda0v" path="res://assets/environmentPieces/trees/tree_pine_2.tscn" id="4_esygy"]
+[ext_resource type="PackedScene" uid="uid://b4tpnh5lsjjto" path="res://assets/environmentPieces/trees/tree_pine_3.tscn" id="5_c4agg"]
+[ext_resource type="PackedScene" uid="uid://bwiiti130u4h8" path="res://assets/environmentPieces/trees/tree_pine_4.tscn" id="6_t4daj"]
+[ext_resource type="PackedScene" uid="uid://dypxexoxu8otj" path="res://assets/environmentPieces/trees/tree_pine_5.tscn" id="7_cbw8y"]
+[ext_resource type="PackedScene" uid="uid://dthbfvojp4mep" path="res://assets/environmentPieces/trees/tree_pine_small.tscn" id="8_jvsk0"]
+[ext_resource type="PackedScene" uid="uid://dly3g0b5sqii7" path="res://assets/environmentPieces/peaceful_island/grass_1.tscn" id="9_e5ydf"]
+[ext_resource type="PackedScene" uid="uid://dq5aik6jyb0o6" path="res://assets/environmentPieces/peaceful_island/grass_2.tscn" id="10_y8yb7"]
+[ext_resource type="PackedScene" uid="uid://g6ektn38chvg" path="res://assets/environmentPieces/peaceful_island/grass_3.tscn" id="11_8irsv"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jbwox"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8u3yo"]
+noise = SubResource("FastNoiseLite_jbwox")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jtati"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7pwjh"]
+noise = SubResource("FastNoiseLite_jtati")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_abr0l"]
+shader = ExtResource("2_0ukwn")
+shader_parameter/clouds_samples = 16
+shader_parameter/shadow_sample = 4
+shader_parameter/clouds_density = 0.5
+shader_parameter/clouds_scale = 1.0
+shader_parameter/clouds_smoothness = 0.035
+shader_parameter/clouds_light_color = Color(0.301961, 0.368627, 0.364706, 1)
+shader_parameter/clouds_shadow_color = Color(0, 0, 0, 1)
+shader_parameter/clouds_shadow_intensity = 1.0
+shader_parameter/cloud_shape_sampler = SubResource("NoiseTexture2D_8u3yo")
+shader_parameter/high_clouds_density = 0.0
+shader_parameter/high_clouds_sampler = SubResource("NoiseTexture2D_7pwjh")
+shader_parameter/top_color = Color(0.376471, 0.509804, 0.572549, 1)
+shader_parameter/bottom_color = Color(0.27451, 0.305882, 0.270588, 1)
+shader_parameter/sun_scatter = Color(0.494118, 0.592157, 0.509804, 1)
+shader_parameter/astro_tint = Color(0.858824, 0.858824, 0.858824, 1)
+shader_parameter/astro_scale = 3.4
+shader_parameter/astro_intensity = 1.0
+shader_parameter/astro_sampler = ExtResource("3_l6rb5")
+shader_parameter/stars_intensity = 0.0
+shader_parameter/shooting_stars_intensity = 0.0
+shader_parameter/shooting_star_tint = Color(0.996078, 0.996078, 0.996078, 1)
+
+[sub_resource type="Sky" id="Sky_64vac"]
+sky_material = SubResource("ShaderMaterial_abr0l")
+
+[sub_resource type="Environment" id="Environment_t7yqa"]
+background_mode = 2
+sky = SubResource("Sky_64vac")
+ssao_enabled = true
+ssao_ao_channel_affect = 1.0
+fog_enabled = true
+fog_light_color = Color(0.454902, 0.580392, 0.509804, 1)
+fog_density = 0.005
+fog_sky_affect = 0.0
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0
+volumetric_fog_albedo = Color(0.494118, 0.615686, 0.545098, 1)
+volumetric_fog_emission = Color(0.168627, 0.176471, 0.12549, 1)
+volumetric_fog_anisotropy = 0.38
+volumetric_fog_length = 256.0
+volumetric_fog_ambient_inject = 1.0
+volumetric_fog_temporal_reprojection_enabled = false
+
+[sub_resource type="Shader" id="Shader_itoma"]
+code = "
+// NOTE: Shader automatically converted from Godot Engine 4.2.1.stable's FogMaterial.
+
+shader_type fog;
+
+uniform float density : hint_range(0, 1, 0.0001) = 1.0;
+uniform vec4 albedo : source_color = vec4(1.0);
+uniform vec4 emission : source_color = vec4(0, 0, 0, 1);
+uniform float height_falloff = 0.0;
+uniform float edge_fade = 0.1;
+uniform sampler3D density_texture: hint_default_white;
+
+
+void fog() {
+	DENSITY = density * clamp(exp2(-height_falloff * (WORLD_POSITION.y - OBJECT_POSITION.y)), 0.0, 1.0);
+	DENSITY *= texture(density_texture, UVW + vec3(0.0,0.0,TIME)).r;
+	DENSITY *= pow(clamp(-2.0 * SDF / min(min(SIZE.x, SIZE.y), SIZE.z), 0.0, 1.0), edge_fade);
+	ALBEDO = albedo.rgb;
+	EMISSION = emission.rgb;
+}
+"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_nj584"]
+
+[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_wb5rj"]
+noise = SubResource("FastNoiseLite_nj584")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_782qe"]
+shader = SubResource("Shader_itoma")
+shader_parameter/density = 0.2099
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/emission = Color(0.129412, 0.207843, 0.266667, 1)
+shader_parameter/height_falloff = 0.0665395
+shader_parameter/edge_fade = 0.428709
+shader_parameter/density_texture = SubResource("NoiseTexture3D_wb5rj")
+
+[node name="world2" type="Node3D"]
+
+[node name="world1" parent="." instance=ExtResource("1_0a1px")]
+transform = Transform3D(-433.013, 0, 250, 0, 500, 0, -250, 0, -433.013, 138.554, -156.606, -94.1502)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_t7yqa")
+
+[node name="pines" type="Node3D" parent="."]
+
+[node name="treePine2" parent="pines" instance=ExtResource("4_esygy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53, -3, 3)
+
+[node name="treePine3" parent="pines" instance=ExtResource("5_c4agg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.2435, 3.01318, -19.2502)
+
+[node name="treePine4" parent="pines" instance=ExtResource("6_t4daj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.2142, -2.62479, 0.577957)
+
+[node name="treePine5" parent="pines" instance=ExtResource("6_t4daj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.7052, -5.02429, 9.20975)
+
+[node name="treePine6" parent="pines" instance=ExtResource("7_cbw8y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.4542, -4.3167, 9.33466)
+
+[node name="treePine7" parent="pines" instance=ExtResource("6_t4daj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -61.8513, 10.6146, -30.1413)
+
+[node name="treePine8" parent="pines" instance=ExtResource("5_c4agg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44.4549, 13.1919, -45.953)
+
+[node name="treePine9" parent="pines" instance=ExtResource("4_esygy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.2374, 14.6627, -55.6089)
+
+[node name="treePine10" parent="pines" instance=ExtResource("5_c4agg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.1452, 6.22041, -31.2037)
+
+[node name="treePine11" parent="pines" instance=ExtResource("6_t4daj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.0741, 3.54384, -21.0475)
+
+[node name="treePine12" parent="pines" instance=ExtResource("5_c4agg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.15796, 15.4575, -87.9152)
+
+[node name="treePine13" parent="pines" instance=ExtResource("4_esygy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.3484, 12.3869, -64.525)
+
+[node name="treePine14" parent="pines" instance=ExtResource("7_cbw8y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.71446, 7.93468, -37.0497)
+
+[node name="treePine15" parent="pines" instance=ExtResource("5_c4agg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.688, 16.457, -65.9288)
+
+[node name="treePine16" parent="pines" instance=ExtResource("7_cbw8y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -68.5689, 16.2413, -71.6586)
+
+[node name="treePine17" parent="pines" instance=ExtResource("4_esygy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.9677, -6.75339, 18.4473)
+
+[node name="treePine18" parent="pines" instance=ExtResource("4_esygy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.1461, 7.01263, -31.9031)
+
+[node name="treePine19" parent="pines" instance=ExtResource("4_esygy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -114.748, 23.3428, -48.0366)
+
+[node name="treePine20" parent="pines" instance=ExtResource("6_t4daj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100.729, 18.8478, -38.9364)
+
+[node name="treePine21" parent="pines" instance=ExtResource("5_c4agg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -103.347, 22.4592, -54.7688)
+
+[node name="treePine22" parent="pines" instance=ExtResource("6_t4daj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -156.614, 18.0406, -54.5975)
+
+[node name="treePine23" parent="pines" instance=ExtResource("7_cbw8y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -138.04, 21.1891, -47.2933)
+
+[node name="treePine24" parent="pines" instance=ExtResource("5_c4agg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -148.256, 18.4889, -57.1735)
+
+[node name="treePine25" parent="pines" instance=ExtResource("4_esygy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -162.673, 15.9916, -65.9405)
+
+[node name="treePine26" parent="pines" instance=ExtResource("5_c4agg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -112.87, 11.6414, -90.5269)
+
+[node name="treePine27" parent="pines" instance=ExtResource("4_esygy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -93.8661, 16.5479, -77.9271)
+
+[node name="treePine28" parent="pines" instance=ExtResource("6_t4daj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -122.389, 16.401, -76.84)
+
+[node name="treePine29" parent="pines" instance=ExtResource("7_cbw8y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -133.82, 10.5418, -101.984)
+
+[node name="treePineSmall" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.42438, 8.11868, -38.3566)
+
+[node name="treePineSmall2" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.78087, 7.18512, -32.8867)
+
+[node name="treePineSmall3" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.56963, 5.98938, -28.9394)
+
+[node name="treePineSmall4" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.7098, 12.0659, -47.5759)
+
+[node name="treePineSmall5" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.6013, 14.5242, -53.5806)
+
+[node name="treePineSmall6" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.0808, 13.6037, -51.0135)
+
+[node name="treePineSmall7" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.152115, 14.7272, -78.6108)
+
+[node name="treePineSmall8" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.638733, 15.0081, -73.8596)
+
+[node name="treePineSmall9" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.78407, 15.5594, -62.1586)
+
+[node name="treePineSmall10" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -59.8513, 15.217, -84.4424)
+
+[node name="treePineSmall11" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -51.8642, 15.228, -88.4648)
+
+[node name="treePineSmall12" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -47.2562, 14.8415, -94.4499)
+
+[node name="treePineSmall13" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -54.2263, 15.8421, -79.019)
+
+[node name="treePineSmall14" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -55.7849, 16.4226, -73.8542)
+
+[node name="treePineSmall15" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.7108, 16.6611, -76.7985)
+
+[node name="treePineSmall16" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -88.3208, 17.2809, -77.8065)
+
+[node name="treePineSmall17" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -86.4617, 18.0921, -74.4306)
+
+[node name="treePineSmall18" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -74.2285, 16.8454, -65.0159)
+
+[node name="treePineSmall19" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -98.3202, 23.3899, -52.8863)
+
+[node name="treePineSmall20" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.6412, 3.85587, -22.3419)
+
+[node name="treePineSmall21" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.5215, 2.75999, -18.1634)
+
+[node name="treePineSmall22" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.5507, 12.4245, -46.0867)
+
+[node name="treePineSmall23" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.7635, 10.9873, -43.3088)
+
+[node name="treePineSmall24" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -83.2347, 19.7324, -47.6098)
+
+[node name="treePineSmall25" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -77.8601, 18.1657, -46.5096)
+
+[node name="treePineSmall26" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -99.5274, 16.638, -33.5007)
+
+[node name="treePineSmall27" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -97.0499, 15.0124, -29.34)
+
+[node name="treePineSmall28" parent="pines" instance=ExtResource("8_jvsk0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -104.098, 15.614, -31.3531)
+
+[node name="grass_1" parent="pines" instance=ExtResource("9_e5ydf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.08493, 2.83012, -13.2136)
+
+[node name="grass_2" parent="pines" instance=ExtResource("10_y8yb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.18974, 5.00824, -24.7422)
+
+[node name="grass_3" parent="pines" instance=ExtResource("10_y8yb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6841, 2.59789, -12.1672)
+
+[node name="grass_4" parent="pines" instance=ExtResource("10_y8yb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.57072, 2.67606, -12.1292)
+
+[node name="grass_5" parent="pines" instance=ExtResource("11_8irsv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.99489, 4.49626, -21.2376)
+
+[node name="grass_6" parent="pines" instance=ExtResource("11_8irsv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.07494, 2.78432, -12.0963)
+
+[node name="grass_7" parent="pines" instance=ExtResource("10_y8yb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.2501, 3.73428, -19.6404)
+
+[node name="grass_8" parent="pines" instance=ExtResource("9_e5ydf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.39, 3.85416, -19.9448)
+
+[node name="grass_9" parent="pines" instance=ExtResource("10_y8yb7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5538, 3.63261, -18.7721)
+
+[node name="grass_10" parent="pines" instance=ExtResource("9_e5ydf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.09032, 3.79192, -18.1833)
+
+[node name="grass_11" parent="pines" instance=ExtResource("11_8irsv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.07164, 3.62978, -17.6937)
+
+[node name="grass_12" parent="pines" instance=ExtResource("11_8irsv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.46352, 3.35249, -16.734)
+
+[node name="grass_13" parent="pines" instance=ExtResource("11_8irsv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.06642, 3.75789, -17.1262)
+
+[node name="FogVolume" type="FogVolume" parent="."]
+size = Vector3(1640.33, 722.767, 1028.96)
+material = SubResource("ShaderMaterial_782qe")

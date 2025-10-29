@@ -1,0 +1,275 @@
+[gd_scene load_steps=14 format=3 uid="uid://cm7d5y2llo0ky"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_s7ggu"]
+[ext_resource type="Script" path="res://scripts/steam.gd" id="2_35c3e"]
+[ext_resource type="Script" path="res://scripts/playerSync.gd" id="3_4tkpv"]
+[ext_resource type="Texture2D" uid="uid://br2442v846uvl" path="res://assets/playerSkins/defaultSkin.png" id="3_30b8r"]
+[ext_resource type="PackedScene" uid="uid://bfmtven01nbak" path="res://entities/player.tscn" id="4_rgl0b"]
+[ext_resource type="Shader" path="res://assets/shaders/postEffects.gdshader" id="6_ghpdg"]
+[ext_resource type="Script" path="res://scripts/postEffects.gd" id="6_knuf1"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jhn6c"]
+blend_mode = 2
+
+[sub_resource type="Gradient" id="Gradient_83ynv"]
+colors = PackedColorArray(0.868985, 0.868985, 0.868985, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_rorqh"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_h3kr7"]
+seamless = true
+color_ramp = SubResource("Gradient_83ynv")
+noise = SubResource("FastNoiseLite_rorqh")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gbjt2"]
+shader = ExtResource("6_ghpdg")
+shader_parameter/spiral = 0.0
+shader_parameter/wave = 0.0
+shader_parameter/flash = 0.0
+shader_parameter/flash_color = Color(0.301961, 0, 0.0117647, 1)
+shader_parameter/noise_1 = SubResource("NoiseTexture2D_h3kr7")
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_1goxy"]
+
+[node name="main" type="Node"]
+script = ExtResource("1_s7ggu")
+
+[node name="steam" type="Node" parent="."]
+script = ExtResource("2_35c3e")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="hostLocal" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 66.0
+offset_top = 47.0
+offset_right = 228.0
+offset_bottom = 104.0
+text = "hostLocal"
+
+[node name="joinLocal" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 277.0
+offset_top = 47.0
+offset_right = 439.0
+offset_bottom = 104.0
+text = "joinLocal"
+
+[node name="lobbyButtons" type="VBoxContainer" parent="Control"]
+layout_mode = 0
+offset_left = 59.0
+offset_top = 277.0
+offset_right = 622.0
+offset_bottom = 551.0
+
+[node name="refreshList" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 82.0
+offset_top = 196.0
+offset_right = 198.0
+offset_bottom = 244.0
+text = "refresh list"
+
+[node name="host" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 207.0
+offset_top = 214.0
+offset_right = 529.0
+offset_bottom = 246.0
+text = "host steam"
+
+[node name="nameInput" type="TextEdit" parent="Control"]
+layout_mode = 0
+offset_left = 319.0
+offset_top = 124.0
+offset_right = 482.0
+offset_bottom = 168.0
+placeholder_text = "display name"
+
+[node name="skinPreview" type="TextureRect" parent="Control"]
+layout_mode = 0
+offset_left = 592.0
+offset_top = 63.0
+offset_right = 632.0
+offset_bottom = 103.0
+texture = ExtResource("3_30b8r")
+
+[node name="filepathInput" type="TextEdit" parent="Control"]
+layout_mode = 0
+offset_left = 701.0
+offset_top = 13.0
+offset_right = 1147.0
+offset_bottom = 56.0
+placeholder_text = "filepath"
+
+[node name="skinImport" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 591.0
+offset_top = 24.0
+offset_right = 688.0
+offset_bottom = 55.0
+text = "import skin"
+
+[node name="importDialogue" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 705.0
+offset_top = 61.0
+offset_right = 745.0
+offset_bottom = 84.0
+
+[node name="randomize Name" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 222.0
+offset_top = 136.0
+offset_right = 317.0
+offset_bottom = 167.0
+text = "Randomize"
+
+[node name="skinKey" type="OptionButton" parent="Control"]
+layout_mode = 0
+offset_left = 558.0
+offset_top = 172.0
+offset_right = 675.0
+offset_bottom = 203.0
+
+[node name="skinKeylabel" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 562.0
+offset_top = 145.0
+offset_right = 602.0
+offset_bottom = 168.0
+text = "Select Skin"
+
+[node name="save" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 347.0
+offset_top = 170.0
+offset_right = 449.0
+offset_bottom = 207.0
+text = "save name"
+
+[node name="quit" type="Button" parent="Control"]
+layout_mode = 0
+offset_right = 63.0
+offset_bottom = 34.0
+text = "quit game"
+
+[node name="skinEditor" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 534.0
+offset_top = 211.0
+offset_right = 681.0
+offset_bottom = 247.0
+text = "launch skin editor"
+
+[node name="playerSync" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://entities/player.tscn")
+spawn_path = NodePath(".")
+script = ExtResource("3_4tkpv")
+playerScene = ExtResource("4_rgl0b")
+
+[node name="playerHandler" type="Node3D" parent="."]
+
+[node name="pauseMenu" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="background" type="ColorRect" parent="pauseMenu"]
+material = SubResource("CanvasItemMaterial_jhn6c")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.141176, 0.266667, 0.301961, 1)
+
+[node name="backdrop" type="ColorRect" parent="pauseMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.130208
+anchor_top = 0.109568
+anchor_right = 0.897569
+anchor_bottom = 0.878086
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12549, 0.12549, 0.12549, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="pauseMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Resume" type="Button" parent="pauseMenu/VBoxContainer"]
+layout_mode = 2
+text = "resume"
+
+[node name="leave" type="Button" parent="pauseMenu/VBoxContainer"]
+layout_mode = 2
+text = "disconnect"
+
+[node name="creatureSync" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://debug/debug_enemy.tscn", "res://entities/blue_slime.tscn")
+spawn_path = NodePath(".")
+
+[node name="projectileSync" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://entities/projectiles/arrow.tscn")
+spawn_path = NodePath(".")
+
+[node name="worldSync" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://world/peaceful_island.tscn", "res://world/world_1.tscn", "res://world/world_2.tscn", "res://debug/debug_world.tscn")
+spawn_path = NodePath(".")
+
+[node name="postEffects" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_gbjt2")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("PlaceholderTexture2D_1goxy")
+script = ExtResource("6_knuf1")
+
+[connection signal="button_down" from="Control/hostLocal" to="." method="_on_host_local_button_down"]
+[connection signal="button_down" from="Control/joinLocal" to="." method="_on_join_local_button_down"]
+[connection signal="button_down" from="Control/refreshList" to="." method="_on_refresh_list_button_down"]
+[connection signal="button_down" from="Control/host" to="." method="_on_host_button_down"]
+[connection signal="text_changed" from="Control/nameInput" to="." method="_on_name_input_text_changed"]
+[connection signal="button_down" from="Control/skinImport" to="." method="_on_skin_import_button_down"]
+[connection signal="button_down" from="Control/randomize Name" to="." method="_on_randomize_name_button_down"]
+[connection signal="item_selected" from="Control/skinKey" to="." method="_on_skin_key_item_selected"]
+[connection signal="button_down" from="Control/save" to="." method="_on_save_button_down"]
+[connection signal="button_down" from="Control/quit" to="." method="_on_quit_button_down"]
+[connection signal="button_down" from="Control/skinEditor" to="." method="_on_skin_editor_button_down"]
+[connection signal="button_down" from="pauseMenu/VBoxContainer/Resume" to="." method="_on_resume_button_down"]
+[connection signal="button_down" from="pauseMenu/VBoxContainer/leave" to="." method="_on_leave_button_down"]

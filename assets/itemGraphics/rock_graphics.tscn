@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cl13duyrvs6o5"]
+
+[ext_resource type="PackedScene" uid="uid://locdh3npnl70" path="res://assets/spriteBasedObjects/cylinder_sbo.tscn" id="1_d1q5m"]
+
+[node name="rockGraphics" type="Node3D"]
+
+[node name="CylinderSBO" parent="." instance=ExtResource("1_d1q5m")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)

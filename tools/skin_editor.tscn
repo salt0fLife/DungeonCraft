@@ -1,0 +1,372 @@
+[gd_scene load_steps=9 format=3 uid="uid://dp35w3txer3pw"]
+
+[ext_resource type="Script" path="res://scripts/skin_editor.gd" id="1_ytni7"]
+[ext_resource type="Texture2D" uid="uid://bk0f6fi8bv0yc" path="res://assets/playerSkins/x64.png" id="2_tv6d1"]
+[ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="2_ygmxy"]
+
+[sub_resource type="Gradient" id="Gradient_2fxoy"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_clxlx"]
+gradient = SubResource("Gradient_2fxoy")
+
+[sub_resource type="Gradient" id="Gradient_8b1g3"]
+offsets = PackedFloat32Array(0, 0.521531, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.0338533, 0.0338533, 0.0338533, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_gjg00"]
+gradient = SubResource("Gradient_8b1g3")
+fill_from = Vector2(1, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_2uib7"]
+viewport_path = NodePath("SubViewport")
+
+[node name="skinEditor" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ytni7")
+color_1 = Color(0.14902, 0.345098, 0.537255, 1)
+
+[node name="ColorRect2" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 637.0
+texture = ExtResource("2_tv6d1")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="preview" type="TextureRect" parent="Control"]
+layout_mode = 1
+scale = Vector2(5, 5)
+texture = SubResource("GradientTexture2D_clxlx")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(384, 583)
+
+[node name="rotationBase" type="Node3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+
+[node name="playerAvatar" parent="SubViewport/rotationBase" instance=ExtResource("2_ygmxy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.75, 0)
+
+[node name="chestBase" parent="SubViewport/rotationBase/playerAvatar/genericAvatar/root" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999297, 0.00442364, -0.00925243, 0.08964)
+
+[node name="hip_L" parent="SubViewport/rotationBase/playerAvatar/genericAvatar/root/chestBase" index="0"]
+transform = Transform3D(0.995003, -0.00800376, 0.0995121, 0, 0.99678, 0.0801712, -0.0998333, -0.0797706, 0.991802, 0.075, -0.282, -0.001)
+
+[node name="knee_L" parent="SubViewport/rotationBase/playerAvatar/genericAvatar/root/chestBase/hip_L" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.996578, -0.0826629, 0, 0.0826629, 0.996578, 0, -0.274171, 0)
+
+[node name="hip_R" parent="SubViewport/rotationBase/playerAvatar/genericAvatar/root/chestBase" index="1"]
+transform = Transform3D(0.995004, 0.00800375, -0.0995121, 0, 0.99678, 0.0801712, 0.0998334, -0.0797705, 0.991802, -0.075, -0.282, -0.001)
+
+[node name="knee_R" parent="SubViewport/rotationBase/playerAvatar/genericAvatar/root/chestBase/hip_R" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.996578, -0.0826629, 0, 0.0826629, 0.996578, 0, -0.274171, 0)
+
+[node name="neck" parent="SubViewport/rotationBase/playerAvatar/genericAvatar/root/chestBase" index="2"]
+transform = Transform3D(1, 0, 0, 0, 0.999297, 0.0374912, 0, -0.0374912, 0.999297, 0, 0.289384, -0.00323021)
+
+[node name="shoulder_L" parent="SubViewport/rotationBase/playerAvatar/genericAvatar/root/chestBase" index="3"]
+transform = Transform3D(0.99983, -0.0183243, -0.00233044, 0.0183455, 0.999785, 0.00938094, 0.00215804, -0.00942206, 0.999954, 0.14978, 0.241, -0.0014265)
+
+[node name="elbowL" parent="SubViewport/rotationBase/playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.996587, 0.0825254, 0, -0.0825254, 0.996587, 0.0786937, -0.240458, -0.002611)
+
+[node name="shoulder_R" parent="SubViewport/rotationBase/playerAvatar/genericAvatar/root/chestBase" index="4"]
+transform = Transform3D(0.99983, 0.0183243, 0.00233044, -0.0183455, 0.999784, 0.00938094, -0.00215804, -0.00942205, 0.999954, -0.14978, 0.241, -0.00142637)
+
+[node name="elbowR" parent="SubViewport/rotationBase/playerAvatar/genericAvatar/root/chestBase/shoulder_R" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.996587, 0.0825254, 0, -0.0825254, 0.996587, -0.0786937, -0.240458, -0.00261103)
+
+[node name="tailBase" parent="SubViewport/rotationBase/playerAvatar/genericAvatar/root/chestBase" index="9"]
+transform = Transform3D(0.945249, 0.295312, -0.138904, 0, 0.42563, 0.904897, 0.326349, -0.855353, 0.402327, 0, 0, -0.088)
+
+[node name="tailMiddle" parent="SubViewport/rotationBase/playerAvatar/genericAvatar/root/chestBase/tailBase" index="0"]
+transform = Transform3D(0.948013, 0.0579921, 0.312896, 0, 0.983254, -0.182236, -0.318224, 0.172763, 0.932141, 0, 0, 0)
+
+[node name="tailLast" parent="SubViewport/rotationBase/playerAvatar/genericAvatar/root/chestBase/tailBase/tailMiddle" index="0"]
+transform = Transform3D(0.970053, 0.0689854, 0.232889, 0, 0.95882, -0.284016, -0.242892, 0.275511, 0.930105, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0.812261, -4.78747)
+fov = 20.0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport"]
+transform = Transform3D(0.82089, 0.551627, 0.147808, 0, -0.258819, 0.965926, 0.571086, -0.792919, -0.212462, 0, 0, 0)
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="SubViewport"]
+transform = Transform3D(0.709885, 0.141664, -0.689923, 0.0343251, -0.985358, -0.167008, -0.70348, 0.0948749, -0.704354, 0, 0, 0)
+light_color = Color(0.839216, 0.811765, 0.811765, 1)
+
+[node name="ColorRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 641.0
+offset_top = 1.0
+offset_right = 1025.0
+offset_bottom = 649.0
+texture = SubResource("GradientTexture2D_gjg00")
+
+[node name="skinDisplay" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 641.0
+offset_top = 1.0
+offset_right = 1025.0
+offset_bottom = 584.0
+texture = SubResource("ViewportTexture_2uib7")
+
+[node name="rotation" type="HSlider" parent="."]
+layout_mode = 0
+offset_left = 641.0
+offset_top = 605.0
+offset_right = 1025.0
+offset_bottom = 621.0
+min_value = -6.283
+max_value = 6.283
+step = 0.1
+value = 0.017
+
+[node name="rotation2" type="HSlider" parent="."]
+layout_mode = 0
+offset_left = 1008.0
+offset_top = 502.0
+offset_right = 1392.0
+offset_bottom = 518.0
+rotation = -1.57079
+min_value = -3.142
+max_value = 3.142
+step = 0.1
+value = -0.042
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="."]
+layout_mode = 0
+offset_left = 1025.0
+offset_top = 2.0
+offset_right = 1149.0
+offset_bottom = 124.0
+color = Color(1, 1, 1, 1)
+
+[node name="walking" type="CheckButton" parent="."]
+layout_mode = 0
+offset_left = 1032.0
+offset_top = 130.0
+offset_right = 1142.0
+offset_bottom = 161.0
+text = "Walking"
+
+[node name="importFrom" type="Button" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 1032.0
+offset_top = 426.0
+offset_right = 1141.0
+offset_bottom = 457.0
+text = "append from"
+
+[node name="tail" type="CheckButton" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 1033.0
+offset_top = 208.0
+offset_right = 1106.0
+offset_bottom = 241.0
+text = "tail"
+
+[node name="ears" type="CheckButton" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 1033.0
+offset_top = 246.0
+offset_right = 1106.0
+offset_bottom = 279.0
+text = "ears"
+
+[node name="snout" type="CheckButton" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 1033.0
+offset_top = 288.0
+offset_right = 1115.0
+offset_bottom = 321.0
+text = "snout"
+
+[node name="slim" type="CheckButton" parent="."]
+layout_mode = 0
+offset_left = 1033.0
+offset_top = 172.0
+offset_right = 1115.0
+offset_bottom = 205.0
+text = "slim"
+
+[node name="save" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1031.0
+offset_top = 472.0
+offset_right = 1075.0
+offset_bottom = 503.0
+text = "Save"
+
+[node name="exit" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1031.0
+offset_top = 514.0
+offset_right = 1249.0
+offset_bottom = 589.0
+text = "save and close"
+
+[node name="exitWithoutSaving" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1034.0
+offset_top = 595.0
+offset_right = 1202.0
+offset_bottom = 637.0
+text = "Close without saving"
+
+[node name="eyeColor5" type="ColorPickerButton" parent="."]
+layout_mode = 0
+offset_left = 1217.0
+offset_top = 325.0
+offset_right = 1386.0
+offset_bottom = 516.0
+edit_alpha = false
+
+[node name="eyeColor4" type="ColorPickerButton" parent="."]
+layout_mode = 0
+offset_left = 1217.0
+offset_top = 344.0
+offset_right = 1386.0
+offset_bottom = 498.0
+color = Color(0.862745, 0.894118, 0.854902, 1)
+edit_alpha = false
+
+[node name="eyeColor3" type="ColorPickerButton" parent="."]
+layout_mode = 0
+offset_left = 1247.0
+offset_top = 370.0
+offset_right = 1354.0
+offset_bottom = 472.0
+color = Color(0.454902, 0.231373, 0.164706, 1)
+edit_alpha = false
+
+[node name="eyeColor2" type="ColorPickerButton" parent="."]
+layout_mode = 0
+offset_left = 1264.0
+offset_top = 386.0
+offset_right = 1337.0
+offset_bottom = 456.0
+color = Color(0.568627, 0.282353, 0.14902, 1)
+edit_alpha = false
+
+[node name="eyeColor1" type="ColorPickerButton" parent="."]
+layout_mode = 0
+offset_left = 1281.0
+offset_top = 404.0
+offset_right = 1319.0
+offset_bottom = 440.0
+edit_alpha = false
+
+[node name="set_eye_color" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1242.0
+offset_top = 287.0
+offset_right = 1367.0
+offset_bottom = 318.0
+text = "apply eye color"
+
+[node name="smileLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 1281.0
+offset_top = 170.0
+offset_right = 1323.0
+offset_bottom = 193.0
+text = "smile"
+
+[node name="smile" type="HSlider" parent="."]
+layout_mode = 0
+offset_left = 1222.0
+offset_top = 195.0
+offset_right = 1382.0
+offset_bottom = 211.0
+min_value = -0.2
+max_value = 0.2
+step = 0.05
+value = -0.2
+
+[node name="owoLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 1281.0
+offset_top = 203.0
+offset_right = 1321.0
+offset_bottom = 226.0
+text = "owo"
+
+[node name="OWO" type="HSlider" parent="."]
+layout_mode = 0
+offset_left = 1222.0
+offset_top = 224.0
+offset_right = 1382.0
+offset_bottom = 240.0
+min_value = -0.025
+max_value = 0.055
+step = 0.005
+value = -0.025
+
+[node name="mouth1" type="ColorPickerButton" parent="."]
+layout_mode = 0
+offset_left = 1207.0
+offset_top = 247.0
+offset_right = 1260.0
+offset_bottom = 282.0
+edit_alpha = false
+
+[node name="mouth2" type="ColorPickerButton" parent="."]
+layout_mode = 0
+offset_left = 1267.0
+offset_top = 247.0
+offset_right = 1320.0
+offset_bottom = 282.0
+color = Color(0.337255, 0.203922, 0.156863, 1)
+edit_alpha = false
+
+[node name="mouth3" type="ColorPickerButton" parent="."]
+layout_mode = 0
+offset_left = 1332.0
+offset_top = 247.0
+offset_right = 1385.0
+offset_bottom = 282.0
+color = Color(0.25098, 0.0196078, 0, 1)
+edit_alpha = false
+
+[node name="applyMouth" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1221.0
+offset_top = 142.0
+offset_right = 1393.0
+offset_bottom = 173.0
+text = "apply mouth settings"
+
+[connection signal="value_changed" from="rotation" to="." method="_on_rotation_value_changed"]
+[connection signal="value_changed" from="rotation2" to="." method="_on_rotation_2_value_changed"]
+[connection signal="color_changed" from="ColorPickerButton" to="." method="_on_color_picker_button_color_changed"]
+[connection signal="toggled" from="walking" to="." method="_on_walking_toggled"]
+[connection signal="toggled" from="tail" to="." method="_on_tail_toggled"]
+[connection signal="toggled" from="ears" to="." method="_on_ears_toggled"]
+[connection signal="toggled" from="snout" to="." method="_on_snout_toggled"]
+[connection signal="toggled" from="slim" to="." method="_on_slim_toggled"]
+[connection signal="button_down" from="save" to="." method="_on_save_button_down"]
+[connection signal="button_down" from="exit" to="." method="_on_exit_button_down"]
+[connection signal="button_down" from="exitWithoutSaving" to="." method="_on_button_button_down"]
+[connection signal="button_down" from="set_eye_color" to="." method="_on_set_eye_color_button_down"]
+[connection signal="button_down" from="applyMouth" to="." method="_on_apply_mouth_button_down"]
+
+[editable path="SubViewport/rotationBase/playerAvatar"]

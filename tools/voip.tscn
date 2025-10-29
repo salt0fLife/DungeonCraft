@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3 uid="uid://q13m3wxawmoj"]
+
+[ext_resource type="Script" path="res://scripts/voip.gd" id="1_e7mtr"]
+[ext_resource type="AudioStream" uid="uid://of43thnf8x5e" path="res://assets/sounds/music/battleBlockTheaterMusic.wav" id="2_yewc8"]
+
+[node name="voip" type="Node3D"]
+script = ExtResource("1_e7mtr")
+
+[node name="input" type="AudioStreamPlayer" parent="."]
+bus = &"Record"
+
+[node name="distance" type="RayCast3D" parent="."]
+target_position = Vector3(0, 0, -20)
+
+[node name="distance2" type="RayCast3D" parent="."]
+transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, 0, 0, 0)
+target_position = Vector3(0, 0, -20)
+
+[node name="distance3" type="RayCast3D" parent="."]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, 0, 0, 0)
+target_position = Vector3(0, 0, -20)
+
+[node name="up" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -8.9407e-08, -1, 0, 1, -8.9407e-08, 0, 0, 0)
+target_position = Vector3(0, 0, -20)
+
+[node name="back" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -1, 5.96046e-08, 0, -5.96046e-08, -1, 0, 0, 0)
+target_position = Vector3(0, 0, -20)
+
+[node name="left" type="RayCast3D" parent="."]
+transform = Transform3D(-8.9407e-08, 0, 1, 0, 1, 0, -1, 0, -8.9407e-08, 0, 0, 0)
+target_position = Vector3(0, 0, -20)
+
+[node name="right" type="RayCast3D" parent="."]
+transform = Transform3D(-8.9407e-08, 0, -1, 0, 1, 0, 1, 0, -8.9407e-08, 0, 0, 0)
+target_position = Vector3(0, 0, -20)
+
+[node name="test" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_yewc8")
+bus = &"Record"
+
+[node name="occlusion_check" type="RayCast3D" parent="."]
+top_level = true

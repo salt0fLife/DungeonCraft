@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://blf0epa3htntu"]
+
+[ext_resource type="Script" path="res://debug/debug_enemy_spawner.gd" id="1_viana"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ukeel"]
+size = Vector3(7, 5, 7)
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_1t0ca"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0, 0, 0.0235294)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xuufa"]
+material = SubResource("ORMMaterial3D_1t0ca")
+size = Vector3(7, 5, 7)
+
+[node name="debugEnemySpawner" type="Node3D"]
+script = ExtResource("1_viana")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+shape = SubResource("BoxShape3D_ukeel")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+mesh = SubResource("BoxMesh_xuufa")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

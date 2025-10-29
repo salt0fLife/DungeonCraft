@@ -1,0 +1,115 @@
+[gd_scene load_steps=13 format=3 uid="uid://dt7b7tt16k8f"]
+
+[ext_resource type="Shader" uid="uid://dncyx1op0mu1y" path="res://assets/shaders/slimeShader.tres" id="1_k4igg"]
+[ext_resource type="Script" path="res://scripts/blue_slime.gd" id="1_npvit"]
+[ext_resource type="PackedScene" uid="uid://ctjywblutag5l" path="res://assets/entityComponents/hurtbox.tscn" id="3_e5u5d"]
+
+[sub_resource type="Gradient" id="Gradient_kfj0v"]
+offsets = PackedFloat32Array(0.855422, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_26g6b"]
+gradient = SubResource("Gradient_kfj0v")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.568376, 0.568376)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_72n1s"]
+diffuse_mode = 2
+albedo_texture = SubResource("GradientTexture2D_26g6b")
+roughness = 0.31
+uv1_scale = Vector3(1, 0.5, 1)
+uv1_offset = Vector3(0, 0.25, 0)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ogmtd"]
+material = SubResource("StandardMaterial3D_72n1s")
+radius = 0.1
+height = 0.2
+
+[sub_resource type="SphereMesh" id="SphereMesh_lutp7"]
+lightmap_size_hint = Vector2i(17, 9)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5tvnu"]
+render_priority = 0
+shader = ExtResource("1_k4igg")
+shader_parameter/albedo = Color(0.333333, 0.941176, 0, 1)
+shader_parameter/internal_col = Color(0, 0.533333, 0.0705882, 1)
+shader_parameter/fog_col = Color(0, 0.686275, 0.607843, 1)
+shader_parameter/proximity_fade_distance = 0.325
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 0.15
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/idle_sway = 1.0
+shader_parameter/internal_col_strength = 1.0
+shader_parameter/internal_col_shape = 1.0
+shader_parameter/squash = 1.0
+shader_parameter/walk = 0.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_74gb6"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_2hx4y"]
+radius = 0.479713
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ygjkd"]
+radius = 0.474844
+
+[node name="blueSlime" type="CharacterBody3D" groups=["slime"]]
+collision_layer = 2
+velocity = Vector3(3, -269.333, 0)
+script = ExtResource("1_npvit")
+eye_acceleration = 20.0
+eye_damp = 20.0
+
+[node name="graphics" type="Node3D" parent="."]
+
+[node name="eye1" type="MeshInstance3D" parent="graphics"]
+transform = Transform3D(0.994583, 0.102441, 9.71115e-05, -4.77678e-06, -0.000901474, 0.999826, 0.102441, -0.994586, -0.000896221, -0.212907, 0.186622, -0.0970869)
+mesh = SubResource("SphereMesh_ogmtd")
+skeleton = NodePath("../..")
+
+[node name="eye2" type="MeshInstance3D" parent="graphics"]
+transform = Transform3D(0.855131, 0.475026, -0.206855, 0.0135844, 0.378494, 0.925331, 0.517933, -0.794217, 0.317257, 0.284037, 0.194618, 0.0802205)
+mesh = SubResource("SphereMesh_ogmtd")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="graphics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.331715, 0)
+mesh = SubResource("SphereMesh_lutp7")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("ShaderMaterial_5tvnu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+shape = SubResource("SphereShape3D_74gb6")
+
+[node name="eye_rot_center" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.998869, -0.0475481, 0, 0.0475481, 0.998869, 0, 0.244626, 0)
+
+[node name="desired_Leye_trans" type="Node3D" parent="eye_rot_center"]
+transform = Transform3D(0.578259, 0.814215, 0.0516667, -0.0169019, -0.0513591, 0.998537, 0.815677, -0.578287, -0.0159371, -0.210407, 0.0113386, -0.0988071)
+
+[node name="desired_Reye_trans" type="Node3D" parent="eye_rot_center"]
+transform = Transform3D(0.871293, 0.47921, -0.105858, 0.0198533, 0.181107, 0.983263, 0.490361, -0.858812, 0.148283, 0.286537, 0.069971, 0.055493)
+
+[node name="combineArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="combineArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.303119, 0)
+shape = SubResource("SphereShape3D_2hx4y")
+
+[node name="hurtbox" parent="." instance=ExtResource("3_e5u5d")]
+health_handler = NodePath("..")
+id = "body"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="hurtbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.260335, 0)
+shape = SubResource("SphereShape3D_ygjkd")
+
+[connection signal="body_entered" from="combineArea" to="." method="_on_combine_area_body_entered"]

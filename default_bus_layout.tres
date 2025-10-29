@@ -1,0 +1,33 @@
+[gd_resource type="AudioBusLayout" load_steps=4 format=3 uid="uid://cnldcg5xh6486"]
+
+[sub_resource type="AudioEffectCompressor" id="AudioEffectCompressor_prqim"]
+resource_name = "Compressor"
+threshold = -10.8
+
+[sub_resource type="AudioEffectCapture" id="AudioEffectCapture_l6bhk"]
+resource_name = "Capture"
+buffer_length = 0.5
+
+[sub_resource type="AudioEffectSpectrumAnalyzer" id="AudioEffectSpectrumAnalyzer_lus6c"]
+resource_name = "SpectrumAnalyzer"
+fft_size = 0
+
+[resource]
+bus/1/name = &"Mute Bus"
+bus/1/solo = false
+bus/1/mute = true
+bus/1/bypass_fx = false
+bus/1/volume_db = 0.0
+bus/1/send = &"Master"
+bus/2/name = &"Record"
+bus/2/solo = false
+bus/2/mute = false
+bus/2/bypass_fx = false
+bus/2/volume_db = 0.0
+bus/2/send = &"Mute Bus"
+bus/2/effect/0/effect = SubResource("AudioEffectCompressor_prqim")
+bus/2/effect/0/enabled = true
+bus/2/effect/1/effect = SubResource("AudioEffectCapture_l6bhk")
+bus/2/effect/1/enabled = true
+bus/2/effect/2/effect = SubResource("AudioEffectSpectrumAnalyzer_lus6c")
+bus/2/effect/2/enabled = true
