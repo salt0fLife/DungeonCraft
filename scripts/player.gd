@@ -29,38 +29,30 @@ const base_attributes = {
 	"jump_velocity" : 6.0,
 	"can_fly" : false
 }
-var accessories = {
-	"cape" : "",
-	"shirt" : "",
-	"hat" : "",
-	"pants" : "",
-	"gloves" : "",
-	"shoes" : ""
-}
 var accessories_paths = {
 }
 
 func update_accessories():
 	update_stats_from_accessories()
 	update_accessories_graphics()
-	update_accessories_graphics.rpc(accessories)
+	update_accessories_graphics.rpc(Inventory.accessories)
 
 func update_stats_from_accessories():
 	set_stats_to_default()
-	for i in accessories.keys():
-		var val = accessories[i]
+	for i in Inventory.accessories.keys():
+		var val = Inventory.accessories[i]
 		if val != "":
-			var data = Lookup.Accessories[val]
-			for k in data[1].keys():
+			var data = Lookup.items[val]
+			for k in data[2][1].keys():
 				if attributes.has(k):
-					if typeof(data[1][k]) == TYPE_BOOL:
-						attributes[k] = data[1][k]
+					if typeof(data[2][1][k]) == TYPE_BOOL:
+						attributes[k] = data[2][1][k]
 					else:
-						attributes[k] += data[1][k]
+						attributes[k] += data[2][1][k]
 	pass
 
 @rpc("any_peer", "reliable")
-func update_accessories_graphics(a = accessories):
+func update_accessories_graphics(a = Inventory.accessories):
 	for k in a.keys():
 		var val = a[k]
 		if accessories_paths.has(k):
@@ -68,7 +60,7 @@ func update_accessories_graphics(a = accessories):
 				accessories_paths[k].queue_free()
 				accessories_paths[k] = null
 		if val != "":
-			var s = load(Lookup.Accessories[val][0]).instantiate()
+			var s = load(Lookup.items[val][2][0]).instantiate()
 			AG_handler.add_child(s)
 			accessories_paths[k] = s
 			pass
@@ -91,10 +83,11 @@ func _ready():
 	if !is_multiplayer_authority():
 		request_cosmetics.rpc()
 		return
+	Inventory.connect("update_accessories", update_accessories)
 	display_name = Global.display_name
 	update_stats_from_accessories()
 	update_accessories_graphics()
-	update_accessories_graphics.rpc(accessories)
+	update_accessories_graphics.rpc(Inventory.accessories)
 	position.y += 0.1
 	$spawnSounds.play()
 	$UI.show()
@@ -407,7 +400,7 @@ func sync_cosmetics(skin, t: Array, dn: String):
 func request_cosmetics() -> void:
 	if is_multiplayer_authority():
 		sync_cosmetics.rpc(Global.skin, [Global.ears, Global.tail, Global.snout, Global.slim, Global.eyeColor, Global.mouthData], Global.display_name)
-		update_accessories_graphics.rpc(accessories)
+		update_accessories_graphics.rpc(Inventory.accessories)
 
 @rpc("any_peer","unreliable")
 func blink_funny() -> void:
@@ -480,9 +473,13 @@ func attempt_to_interact():
 		if hit.is_in_group("interact"):
 			var ret = hit.interact()
 			print(ret)
+			process_interact_data(ret)
 			return
 	print("invalid interact")
 
+func process_interact_data(data):
+	match data[0]:
+		interact_return_code.is_item: Inventory.pickup_item(data[1][0],data[1][1]) #is item should pick it up
 
 
 
