@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://dj7mi1fnyudgn"]
+
+[ext_resource type="Script" path="res://scripts/level_creator.gd" id="1_sjlrc"]
+
+[node name="LevelCreator" type="Node3D"]
+script = ExtResource("1_sjlrc")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-1, -1.77636e-15, 8.74228e-08, 2.26267e-08, 0.965926, 0.258819, -8.44439e-08, 0.258819, -0.965926, 0, 1, -3)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.849088, -0.481295, 0.217728, 0.0110561, 0.428268, 0.903584, -0.528136, -0.764815, 0.368958, 0, 0, 0)
