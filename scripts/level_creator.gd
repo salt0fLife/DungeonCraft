@@ -1,17 +1,13 @@
+@tool
 extends Node3D
 
-@export var world_size = Vector3i(5,5,10)
+var world_size = Vector3i(16,16,16)
 var blocks = []
+var level_name = "level_1_test"
+var level_path = "res://world/levels/"
 
 func _ready():
-	resize_blocks()
-	generate_world()
-	print(blocks)
-	print(blocks.size())
-	print(blocks[0].size())
-	print(blocks[0][0].size())
-	create_mesh()
-	pass
+	quick_build()
 
 func resize_blocks():
 	blocks = []
@@ -26,24 +22,118 @@ func resize_blocks():
 		blocks += [y.duplicate(true)]
 
 func generate_world():
-	var x = 0
-	var y = 0
-	var z = 0
-	blocks[x][y][z] = 1
-	blocks[x][y][z+1] = 1
+	for x in range(0,blocks.size()):
+		for y in range(0,blocks[x].size()):
+			for z in range(0,blocks[x][y].size()):
+				if y < 3:
+					blocks[x][y][z] = brick
+				elif y == 3:
+					blocks[x][y][z] = grass
+				elif y > 10:
+					blocks[x][y][z] = metal
+	blocks[0][1][1] = air
+	blocks[0][1][2] = air
+	blocks[0][1][3] = air
+	blocks[0][2][1] = air
+	blocks[0][2][2] = air
+	blocks[0][2][3] = air
+	blocks[0][3][1] = air
+	blocks[0][3][2] = air
+	blocks[0][3][3] = air
+	blocks[1][2][1] = air
+	blocks[1][2][2] = air
+	blocks[1][2][3] = air
+	blocks[1][3][1] = air
+	blocks[1][3][2] = air
+	blocks[1][3][3] = air
+	blocks[2][3][1] = air
+	blocks[2][3][2] = air
+	blocks[2][3][3] = air
+	
+	
+	blocks[3][4][0] = brick
+	blocks[3][5][0] = brick
+	blocks[3][6][0] = brick
+	blocks[3][7][0] = brick
+	blocks[3][8][0] = brick
+	blocks[3][9][0] = brick
+	blocks[3][10][0] = brick
+	
+	blocks[6][4][0] = brick
+	blocks[6][5][0] = brick
+	blocks[6][6][0] = brick
+	blocks[6][7][0] = brick
+	blocks[6][8][0] = brick
+	blocks[6][9][0] = brick
+	blocks[6][10][0] = brick
+	
+	blocks[10][4][0] = brick
+	blocks[10][5][0] = brick
+	blocks[10][6][0] = brick
+	blocks[10][7][0] = brick
+	blocks[10][8][0] = brick
+	blocks[10][9][0] = brick
+	blocks[10][10][0] = brick
+	
+	blocks[15][4][0] = brick
+	blocks[15][5][0] = brick
+	blocks[15][6][0] = brick
+	blocks[15][7][0] = brick
+	blocks[15][8][0] = brick
+	blocks[15][9][0] = brick
+	blocks[15][10][0] = brick
+	
+	blocks[15][10][1] = grass
 
-const unit_scale = 0.25
+const unit_scale = 0.4
 
 enum directions {
 	up,down,north,south,east,west
 }
 
-enum b_id {
+#block types
+enum {
 	air,
-	brick
+	brick,
+	grass,
+	metal
+}
+
+const block_data = {
+	air : {
+		"transparent" : true
+	},
+	brick : {
+		"transparent" : false,
+		"up" : Vector2(0,0),
+		"down" : Vector2(1,1),
+		"north" : Vector2(1,0),
+		"south" : Vector2(1,0),
+		"east" : Vector2(2,0),
+		"west" : Vector2(0,1)
+	},
+	grass : {
+		"transparent" : false,
+		"up" : Vector2(2,1),
+		"down" : Vector2(1,2),
+		"north" : Vector2(0,2),
+		"south" : Vector2(0,2),
+		"east" : Vector2(0,2),
+		"west" : Vector2(0,2)
+	},
+	metal : {
+		"transparent" : false,
+		"up" : Vector2(2,2),
+		"down" : Vector2(2,2),
+		"north" : Vector2(2,2),
+		"south" : Vector2(2,2),
+		"east" : Vector2(2,2),
+		"west" : Vector2(2,2)
+	},
 }
 
 var st = SurfaceTool.new()
+var material = load("res://assets/materials/worldMat.tres")
 func create_mesh():
 	var mi = MeshInstance3D.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -51,55 +141,110 @@ func create_mesh():
 		for y in range(0,blocks[x].size()):
 			for z in range(0,blocks[x][y].size()):
 				var type = blocks[x][y][z]
-				match type:
-					b_id.air:
-						#dont do anything :3
-						pass
-					b_id.brick:
-						#create block
-						create_block(b_id.brick, Vector3(x,y,z))
-						pass
+				if type != air:
+					create_block(type, Vector3(x,y,z))
 	var m = st.commit()
 	mi.mesh = m
-	add_child(mi)
+	mi.set_surface_override_material(0,material)
+	add_child(mi,true)
+	
+	var col = StaticBody3D.new()
+	add_child(col,true)
+	var shape = CollisionShape3D.new()  #mi.mesh.create_trimesh_shape()
+	shape.shape = mi.mesh.create_trimesh_shape()
+	col.add_child(shape,true)
+	mi.owner = get_tree().edited_scene_root
+	col.owner = get_tree().edited_scene_root
+	shape.owner = get_tree().edited_scene_root
 
 func create_block(id, coords):
-	#print("created block " + str(id) + " " + str(coords))
-	create_face(directions.up, coords, id)
-	create_face(directions.down, coords, id)
-	create_face(directions.north, coords, id)
-	create_face(directions.south, coords, id)
-	create_face(directions.east, coords, id)
-	create_face(directions.west, coords, id)
+	var TU = true
+	var TD = true
+	var TN = true
+	var TS = true
+	var TE = true
+	var TW = true
+	if !(coords.y + 1 >= world_size.y):
+		TU = block_data[blocks[coords.x][coords.y+1][coords.z]]["transparent"]
+	if !(coords.y - 1 < 0):
+		TD = block_data[blocks[coords.x][coords.y-1][coords.z]]["transparent"]
+	if !(coords.x + 1 >= world_size.x):
+		TE = block_data[blocks[coords.x+1][coords.y][coords.z]]["transparent"]
+	if !(coords.x - 1 < 0):
+		TW = block_data[blocks[coords.x-1][coords.y][coords.z]]["transparent"]
+	if !(coords.z + 1 >= world_size.z):
+		TN = block_data[blocks[coords.x][coords.y][coords.z+1]]["transparent"]
+	if !(coords.z - 1 < 0):
+		TS = block_data[blocks[coords.x][coords.y][coords.z-1]]["transparent"]
+	if TU:
+		create_face(UP, coords, block_data[id]["up"])
+	if TD:
+		create_face(DOWN, coords, block_data[id]["down"])
+	if TN:
+		create_face(NORTH, coords, block_data[id]["north"])
+	if TS:
+		create_face(SOUTH, coords, block_data[id]["south"])
+	if TE:
+		create_face(EAST, coords, block_data[id]["east"])
+	if TW:
+		create_face(WEST, coords, block_data[id]["west"])
 
-func create_face(tag, coords, id):
-	match tag:
-		directions.up:
-			print("created up face at " + str(coords))
-			#(0,1,0), (1,1,0), (0,1,1)
-			#(1,1,1), (1,1,0), (0,1,1)
-			st.add_vertex(Vector3(coords.x*unit_scale, (1.0+coords.y)*unit_scale, coords.z*unit_scale))
-			st.add_vertex(Vector3((coords.x+1.0)*unit_scale, (1.0+coords.y)*unit_scale, coords.z*unit_scale))
-			st.add_vertex(Vector3(coords.x*unit_scale, (1.0+coords.y)*unit_scale, (coords.z+1.0)*unit_scale))
-			
-			st.add_vertex(Vector3((coords.x+1.0)*unit_scale, (1.0+coords.y)*unit_scale, coords.z*unit_scale))
-			st.add_vertex(Vector3((coords.x+1.0)*unit_scale, (1.0+coords.y)*unit_scale, (coords.z+1.0)*unit_scale))
-			st.add_vertex(Vector3(coords.x*unit_scale, (1.0+coords.y)*unit_scale, (coords.z+1.0)*unit_scale))
-			pass
-		directions.down:
-			
-			pass
-		directions.north:
-			
-			pass
-		directions.south:
-			
-			pass
-		directions.east:
-			
-			pass
-		directions.west:
-			
-			pass
+const vertices = [
+	Vector3(0,0,0), #0
+	Vector3(1,0,0), #1
+	Vector3(0,1,0), #2
+	Vector3(1,1,0), #3
+	Vector3(0,0,1), #4
+	Vector3(1,0,1), #5
+	Vector3(0,1,1), #6
+	Vector3(1,1,1), #7
+]
+
+const UP = [2, 3, 7, 6]
+const DOWN = [0, 4, 5, 1]
+const WEST = [6, 4, 0, 2]
+const EAST = [3, 1, 5, 7]
+const NORTH = [7, 5, 4, 6]
+const SOUTH = [2, 0, 1, 3]
+
+const atlas_size = Vector2(3,3)
+
+func create_face(i, coords, texture_atlas_offset):
+	var a = (vertices[i[0]] + coords)*unit_scale
+	var b = (vertices[i[1]] + coords)*unit_scale
+	var c = (vertices[i[2]] + coords)*unit_scale
+	var d = (vertices[i[3]] + coords)*unit_scale
+	
+	var uv_offset = texture_atlas_offset / atlas_size
+	
+	var height = 1.0 / atlas_size.y
+	var width = 1.0 / atlas_size.x
+	
+	var uv_a = uv_offset + Vector2(0, 0)
+	var uv_b = uv_offset + Vector2(0, height)
+	var uv_c = uv_offset + Vector2(width, height)
+	var uv_d = uv_offset + Vector2(width, 0)
+	
+	
+	st.add_triangle_fan(([a, b, c]), ([uv_a, uv_b, uv_c]))
+	st.add_triangle_fan(([a, c, d]), ([uv_a, uv_c, uv_d]))
+
+func quick_build():
+	for c in get_children(false):
+		c.queue_free()
+	resize_blocks()
+	generate_world()
+	create_mesh()
+	if !Engine.is_editor_hint():
+		save_level()
+		get_tree().quit(0)
+
+func save_level():
+	var l = self.duplicate()
+	l.name = level_name
+	l.set_script(load("res://scripts/world_level.gd"))
+	l.blocks = blocks
+	var scene = PackedScene.new()
+	scene.pack(l)
+	ResourceSaver.save(scene, (level_path + level_name + ".tscn"))
 	pass
-
