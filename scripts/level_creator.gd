@@ -85,7 +85,7 @@ func generate_world():
 	
 	blocks[15][10][1] = grass
 
-const unit_scale = 0.4
+const unit_scale = 0.5
 
 enum directions {
 	up,down,north,south,east,west
@@ -157,6 +157,172 @@ func create_mesh():
 	col.owner = get_tree().edited_scene_root
 	shape.owner = get_tree().edited_scene_root
 
+
+var meshed = {
+	NORTH : [],
+	SOUTH : [],
+	EAST : [],
+	WEST : [],
+	UP: [],
+	DOWN: [],
+}
+
+
+func create_greedy_mesh():
+	var mi = MeshInstance3D.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	
+	var x = 0
+	var y = 0
+	var z = 0
+	
+	while x < world_size.x:
+		while y < world_size.y:
+			while z < world_size.z:
+				var type = blocks[x][y][z]
+				if type != air:
+					var coords = Vector3(x,y,z)
+					#north
+					if ((z + 1 >= world_size.z) or (block_data[blocks[x][y][z+1]]["transparent"])) and !meshed[NORTH].has(Vector3i(x,y,z)):
+						var greed_x = 0
+						while (x + greed_x + 1) < world_size.x and blocks[x+greed_x + 1][y][z] == type and ((z + 1 >= world_size.z) or block_data[blocks[x+greed_x + 1][y][z+1]]["transparent"]):
+							greed_x += 1
+							meshed[NORTH] += [Vector3i(x+greed_x,y,z)]
+						
+						var greed_y = 0
+						var y_greed_dead = false
+						while !y_greed_dead and (y + greed_y + 1 < world_size.y):
+							for gx in range(0,greed_x+1):
+								if !blocks[x+gx][y+greed_y+1][z] == type:
+									y_greed_dead = true
+								elif !((z + 1 >= world_size.z) or (block_data[blocks[x+gx][y+greed_y+1][z+1]]["transparent"])):
+									y_greed_dead = true
+							if ! y_greed_dead:
+								for cgx in range(0,greed_x+1):
+									meshed[NORTH] += [Vector3i(x+cgx,y+greed_y+1,z)]
+									pass
+								greed_y += 1
+						
+						
+						var a = (vertices[NORTH[0]] + coords + Vector3(greed_x,greed_y,0))*unit_scale
+						var b = (vertices[NORTH[1]] + coords + Vector3(greed_x,0,0))*unit_scale
+						var c = (vertices[NORTH[2]] + coords)*unit_scale
+						var d = (vertices[NORTH[3]] + coords + Vector3(0,greed_y,0))*unit_scale
+						
+						var uv_offset = block_data[type]["north"] / atlas_size
+						
+						var height = 1.0 / atlas_size.y
+						var width = 1.0 / atlas_size.x
+						
+						var uv_a = uv_offset + Vector2(0, 0)
+						var uv_b = uv_offset + Vector2(0, height)
+						var uv_c = uv_offset + Vector2(width, height)
+						var uv_d = uv_offset + Vector2(width, 0)
+						
+						
+						st.add_triangle_fan(([a, b, c]), ([uv_a, uv_b, uv_c]))
+						st.add_triangle_fan(([a, c, d]), ([uv_a, uv_c, uv_d]))
+					var TU = true
+					var TD = true
+					var TN = true
+					var TS = true
+					var TE = true
+					var TW = true
+					if !(coords.y + 1 >= world_size.y):
+						TU = block_data[blocks[coords.x][coords.y+1][coords.z]]["transparent"]
+					if !(coords.y - 1 < 0):
+						TD = block_data[blocks[coords.x][coords.y-1][coords.z]]["transparent"]
+					if !(coords.x + 1 >= world_size.x):
+						TE = block_data[blocks[coords.x+1][coords.y][coords.z]]["transparent"]
+					if !(coords.x - 1 < 0):
+						TW = block_data[blocks[coords.x-1][coords.y][coords.z]]["transparent"]
+					if !(coords.z - 1 < 0):
+						TS = block_data[blocks[coords.x][coords.y][coords.z-1]]["transparent"]
+					if TU:
+						create_face(UP, coords, block_data[type]["up"])
+					if TD:
+						create_face(DOWN, coords, block_data[type]["down"])
+					if TS:
+						create_face(SOUTH, coords, block_data[type]["south"])
+					if TE:
+						create_face(EAST, coords, block_data[type]["east"])
+					if TW:
+						create_face(WEST, coords, block_data[type]["west"])
+				z += 1
+			z = 0
+			y += 1
+		y = 0
+		x += 1
+	#if (z + 1 >= world_size.z) or (block_data[blocks[x][y][z+1]]["transparent"]):
+	var m = st.commit()
+	mi.mesh = m
+	mi.set_surface_override_material(0,material)
+	add_child(mi,true)
+
+#func mesh_side_from_block(x,y,z,dir_en,dir_str):
+	#
+	#var check_dir = Vector3.ZERO
+	#
+	#match dir_en:
+		#NORTH:check_dir = Vector3(0,0,1)
+		#SOUTH:check_dir = Vector3(0,0,-1)
+		#EAST:check_dir = Vector3(1,0,0)
+		#WEST:check_dir = Vector3(-1,0,0)
+		#UP:check_dir = Vector3(0,1,0)
+		#DOWN:check_dir = Vector3(0,-1,0)
+	#
+	#
+	#var type = blocks[x][y][z]
+	#var check_x = x+check_dir.x
+	#var check_y = y+check_dir.y
+	#var check_z = z+check_dir.z
+	#if type != air:
+		#var coords = Vector3(x,y,z)
+		##north
+		#if block_safe(check_x,check_y,check_z) and !meshed[dir_en].has(Vector3i(x,y,z)):
+			#var greed_x = 0
+			#while (x + greed_x + 1) < world_size.x and blocks[x+greed_x + 1][y][z] == type and ((z + 1 >= world_size.z) or block_data[blocks[x+greed_x + 1][y][z+1]]["transparent"]):
+				#greed_x += 1
+				#meshed[dir_en] += [Vector3i(x+greed_x,y,z)]
+			#
+			#var greed_y = 0
+			#var y_greed_dead = false
+			#while !y_greed_dead and (y + greed_y + 1 < world_size.y):
+				#for gx in range(0,greed_x+1):
+					#if !blocks[x+gx][y+greed_y+1][z] == type:
+						#y_greed_dead = true
+					#elif !(block_safe(check_x,check_y,check_z) or (block_data[blocks[x+gx][y+greed_y+1][z+1]]["transparent"])):
+						#y_greed_dead = true
+				#if ! y_greed_dead:
+					#for cgx in range(0,greed_x+1):
+						#meshed[dir_en] += [Vector3i(x+cgx,y+greed_y+1,z)]
+						#pass
+					#greed_y += 1
+			#
+			#
+			#var a = (vertices[dir_en[0]] + coords + Vector3(greed_x,greed_y,0))*unit_scale
+			#var b = (vertices[dir_en[1]] + coords + Vector3(greed_x,0,0))*unit_scale
+			#var c = (vertices[dir_en[2]] + coords)*unit_scale
+			#var d = (vertices[dir_en[3]] + coords + Vector3(0,greed_y,0))*unit_scale
+			#
+			#var uv_offset = block_data[type][dir_str] / atlas_size
+			#
+			#var height = 1.0 / atlas_size.y
+			#var width = 1.0 / atlas_size.x
+			#
+			#var uv_a = uv_offset + Vector2(0, 0)
+			#var uv_b = uv_offset + Vector2(0, height)
+			#var uv_c = uv_offset + Vector2(width, height)
+			#var uv_d = uv_offset + Vector2(width, 0)
+			#
+			#
+			#st.add_triangle_fan(([a, b, c]), ([uv_a, uv_b, uv_c]))
+			#st.add_triangle_fan(([a, c, d]), ([uv_a, uv_c, uv_d]))
+
+func block_safe(x,y,z) -> bool:
+	return x >= world_size.x or x > 0 or y >= world_size.y or y < 0 or z >= world_size.z or z < 0
+
+
 func create_block(id, coords):
 	var TU = true
 	var TD = true
@@ -188,6 +354,7 @@ func create_block(id, coords):
 		create_face(EAST, coords, block_data[id]["east"])
 	if TW:
 		create_face(WEST, coords, block_data[id]["west"])
+
 
 const vertices = [
 	Vector3(0,0,0), #0
@@ -234,7 +401,8 @@ func quick_build():
 		c.queue_free()
 	resize_blocks()
 	generate_world()
-	create_mesh()
+	#create_mesh()
+	create_greedy_mesh()
 	if !Engine.is_editor_hint():
 		save_level()
 		get_tree().quit(0)
@@ -243,7 +411,7 @@ func save_level():
 	var l = self.duplicate()
 	l.name = level_name
 	l.set_script(load("res://scripts/world_level.gd"))
-	l.blocks = blocks
+	#l.blocks = blocks
 	var scene = PackedScene.new()
 	scene.pack(l)
 	ResourceSaver.save(scene, (level_path + level_name + ".tscn"))
