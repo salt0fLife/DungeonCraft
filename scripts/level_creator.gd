@@ -1,13 +1,15 @@
 @tool
 extends Node3D
+@export var reload = false
 
-var world_size = Vector3i(16,16,16)
+var world_size = Vector3i(64,16,64)
 var blocks = []
-var level_name = "level_1_test"
+var level_name = "level_2_test"
 var level_path = "res://world/levels/"
 
 func _ready():
-	quick_build()
+	if reload:
+		quick_build()
 
 func resize_blocks():
 	blocks = []
@@ -28,7 +30,9 @@ func generate_world():
 				if y < 3:
 					blocks[x][y][z] = brick
 				elif y == 3:
-					blocks[x][y][z] = grass
+					if x > 32 and z > 32:
+						blocks[x][y][z] = living_dirt
+					else: blocks[x][y][z] = dead_dirt
 				elif y > 10:
 					blocks[x][y][z] = metal
 	blocks[0][1][1] = air
@@ -83,9 +87,124 @@ func generate_world():
 	blocks[15][9][0] = brick
 	blocks[15][10][0] = brick
 	
-	blocks[15][10][1] = grass
+	blocks[15][10][1] = living_dirt
+	
+	blocks[15][4][15] = brick
+	
+	blocks[17][7][15] = metal
+	blocks[18][7][15] = metal
+	blocks[19][7][15] = metal
+	blocks[17][8][15] = metal
+	blocks[18][8][15] = metal
+	blocks[19][8][15] = metal
+	blocks[17][9][15] = metal
+	blocks[18][9][15] = metal
+	blocks[19][9][15] = metal
+	blocks[17][10][15] = metal
+	blocks[18][10][15] = metal
+	blocks[19][10][15] = metal
+	
+	blocks[20][8][15] = metal
+	blocks[21][8][15] = metal
+	blocks[22][8][15] = metal
+	blocks[20][9][15] = metal
+	blocks[21][9][15] = metal
+	blocks[22][9][15] = metal
+	blocks[20][10][15] = metal
+	blocks[21][10][15] = metal
+	blocks[22][10][15] = metal
+	
+	blocks[23][9][15] = metal
+	blocks[24][9][15] = metal
+	blocks[25][9][15] = metal
+	blocks[23][10][15] = metal
+	blocks[24][10][15] = metal
+	blocks[25][10][15] = metal
+	
+	blocks[26][10][15] = metal
+	blocks[27][10][15] = metal
+	blocks[28][10][15] = metal
+	
+	
+	blocks[28][9][15] = metal
+	blocks[16][5][16] = living_dirt
+	blocks[17][5][16] = living_dirt
+	blocks[17][5][17] = living_dirt
+	blocks[16][5][17] = living_dirt
 
-const unit_scale = 0.5
+func add_effects():
+	var n = Node3D.new()
+	n.name = "plant_parent"
+	add_child(n,true)
+	n.owner = get_tree().edited_scene_root
+	var noise_1 = FastNoiseLite.new()
+	for x in range(0,blocks.size()):
+		for y in range(0,blocks[x].size()):
+			for z in range(0,blocks[x][y].size()):
+				var type = blocks[x][y][z]
+				if block_data[type]["fertile"]:
+					if float(y)+1.0>=world_size.y or blocks[x][y+1][z] == air:
+						var grow = noise_1.get_noise_3d(x*16,y*16,z*16)
+						if grow > -0.1:
+							grow_plants(x,y,z,1.0, n)
+
+
+const plants = [
+	"res://assets/environmentPieces/peaceful_island/grass_2.tscn",
+	"res://assets/environmentPieces/peaceful_island/grass_1.tscn",
+	"res://assets/environmentPieces/peaceful_island/grass_3.tscn"
+	
+	
+	]
+
+func grow_plants(x,y,z,scale_mult, node):
+	var free_x = 1.0
+	var mod_x = 0.0
+	var free_z = 1.0
+	var mod_z = 0.0
+	#makes sure grass never grows on air or non_fertile substances
+	if !x+1>=world_size.x:
+		if !block_data[blocks[x+1][y][z]]["fertile"]:
+			mod_x -= unit_scale*0.5
+			free_x -= 0.5
+	else:
+		mod_x -= unit_scale*0.5
+		free_x -= 0.5
+	if !x-1<0:
+		if !block_data[blocks[x-1][y][z]]["fertile"]:
+			mod_x += unit_scale*0.5
+			free_x -= 0.5
+	else:
+		mod_x += unit_scale*0.5
+		free_x -= 0.5
+	if !z+1 >= world_size.z:
+		if !block_data[blocks[x][y][z+1]]["fertile"]:
+			mod_z -= unit_scale*0.5
+			free_z -= 0.5
+	else:
+		mod_z -= unit_scale*0.5
+		free_z -= 0.5
+	if !z-1<0:
+		if !block_data[blocks[x][y][z-1]]["fertile"]:
+			mod_z += unit_scale*0.5
+			free_z -= 0.5
+	else:
+		mod_z += unit_scale*0.5
+		free_z -= 0.5
+	
+	var n = FastNoiseLite.new()
+	var p = load(plants.pick_random()).instantiate()
+	p.position = Vector3(x*unit_scale+unit_scale*0.5,y*unit_scale+unit_scale,z*unit_scale+unit_scale*0.5)
+	p.position.x += (n.get_noise_3d(x*100.0,y*100.0,z*100.0)*unit_scale + mod_x)*free_x
+	p.position.z += (n.get_noise_3d(x*100.0,y*100.0,z*100.0)*unit_scale + mod_z)*free_z
+	var s = unit_scale*1.5*(n.get_noise_3d(x*10.0,y*10.0,z*10.0)+1.0)*0.5
+	p.scale = Vector3(s*(free_x+unit_scale),s*1.5,s*(free_z+unit_scale))
+	p.rotation.y = n.get_noise_3d(x*64.0,y*64.0,z*64.0)*0.5
+	node.add_child(p,true)
+	p.owner = get_tree().edited_scene_root
+	pass
+
+const unit_scale = 0.4
 
 enum directions {
 	up,down,north,south,east,west
@@ -95,45 +214,101 @@ enum directions {
 enum {
 	air,
 	brick,
-	grass,
+	living_dirt,
+	dead_dirt,
 	metal
 }
 
+#const block_data = {
+	#air : {
+		#"transparent" : true
+	#},
+	#brick : {
+		#"transparent" : false,
+		#"up" : Vector2(0,0),
+		#"down" : Vector2(1,1),
+		#"north" : Vector2(1,0),
+		#"south" : Vector2(1,0),
+		#"east" : Vector2(2,0),
+		#"west" : Vector2(0,1)
+	#},
+	#grass : {
+		#"transparent" : false,
+		#"up" : Vector2(2,1),
+		#"down" : Vector2(1,2),
+		#"north" : Vector2(0,2),
+		#"south" : Vector2(0,2),
+		#"east" : Vector2(0,2),
+		#"west" : Vector2(0,2)
+	#},
+	#metal : {
+		#"transparent" : false,
+		#"up" : Vector2(2,2),
+		#"down" : Vector2(2,2),
+		#"north" : Vector2(2,2),
+		#"south" : Vector2(2,2),
+		#"east" : Vector2(2,2),
+		#"west" : Vector2(2,2)
+	#},
+#}
 const block_data = {
 	air : {
-		"transparent" : true
+		"transparent" : true,
+		"fertile" : false
 	},
 	brick : {
 		"transparent" : false,
-		"up" : Vector2(0,0),
-		"down" : Vector2(1,1),
-		"north" : Vector2(1,0),
-		"south" : Vector2(1,0),
-		"east" : Vector2(2,0),
-		"west" : Vector2(0,1)
+		UP : 3,
+		DOWN : 4,
+		NORTH : 4,
+		SOUTH : 4,
+		EAST : 4,
+		WEST : 4,
+		"roughness" : 0.9,
+		"metallic" : 0.0,
+		"fertile" : false
 	},
-	grass : {
+	living_dirt : {
 		"transparent" : false,
-		"up" : Vector2(2,1),
-		"down" : Vector2(1,2),
-		"north" : Vector2(0,2),
-		"south" : Vector2(0,2),
-		"east" : Vector2(0,2),
-		"west" : Vector2(0,2)
+		UP : 0,
+		DOWN : 1,
+		NORTH : 0,
+		SOUTH : 0,
+		EAST : 0,
+		WEST : 0,
+		"roughness" : 0.8,
+		"metallic" : 0.0,
+		"fertile" : true
+	},
+	dead_dirt : {
+		"transparent" : false,
+		UP : 1,
+		DOWN : 1,
+		NORTH : 1,
+		SOUTH : 1,
+		EAST : 1,
+		WEST : 1,
+		"roughness" : 0.8,
+		"metallic" : 0.0,
+		"fertile" : false
 	},
 	metal : {
 		"transparent" : false,
-		"up" : Vector2(2,2),
-		"down" : Vector2(2,2),
-		"north" : Vector2(2,2),
-		"south" : Vector2(2,2),
-		"east" : Vector2(2,2),
-		"west" : Vector2(2,2)
+		UP : 5,
+		DOWN : 5,
+		NORTH : 2,
+		SOUTH : 2,
+		EAST : 2,
+		WEST : 2,
+		"roughness" : 0.5,
+		"metallic" : 0.8,
+		"fertile" : false
 	},
 }
 
+
 var st = SurfaceTool.new()
-var material = load("res://assets/materials/worldMat.tres")
+var material = load("res://assets/materials/worldShaderMat.tres")
 func create_mesh():
 	var mi = MeshInstance3D.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -158,17 +333,17 @@ func create_mesh():
 	shape.owner = get_tree().edited_scene_root
 
 
-var meshed = {
-	NORTH : [],
-	SOUTH : [],
-	EAST : [],
-	WEST : [],
-	UP: [],
-	DOWN: [],
-}
 
 
 func create_greedy_mesh():
+	var meshed = {
+		NORTH : [],
+		SOUTH : [],
+		EAST : [],
+		WEST : [],
+		UP: [],
+		DOWN: [],
+	}
 	var mi = MeshInstance3D.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	
@@ -197,6 +372,8 @@ func create_greedy_mesh():
 									y_greed_dead = true
 								elif !((z + 1 >= world_size.z) or (block_data[blocks[x+gx][y+greed_y+1][z+1]]["transparent"])):
 									y_greed_dead = true
+								elif meshed[NORTH].has(Vector3i(x+gx,y+greed_y+1,z)):
+									y_greed_dead = true
 							if ! y_greed_dead:
 								for cgx in range(0,greed_x+1):
 									meshed[NORTH] += [Vector3i(x+cgx,y+greed_y+1,z)]
@@ -209,118 +386,280 @@ func create_greedy_mesh():
 						var c = (vertices[NORTH[2]] + coords)*unit_scale
 						var d = (vertices[NORTH[3]] + coords + Vector3(0,greed_y,0))*unit_scale
 						
-						var uv_offset = block_data[type]["north"] / atlas_size
+						#var uv_offset = block_data[type]["north"] / atlas_size
+						#
+						#var height = 1.0 / atlas_size.y
+						#var width = 1.0 / atlas_size.x
 						
-						var height = 1.0 / atlas_size.y
-						var width = 1.0 / atlas_size.x
+						var uv_a = Vector2(0,-greed_y-1)#uv_offset + Vector2(0, 0) + Vector2(0,-greed_y*height)
+						var uv_b = Vector2.ZERO#uv_offset + Vector2(0, height)
+						var uv_c = Vector2(-greed_x-1,0)#uv_offset + Vector2(width, height) + Vector2(greed_x*width,0)
+						var uv_d = Vector2(-greed_x-1,-greed_y-1)#uv_offset + Vector2(width, 0) + Vector2(greed_x*width,-greed_y*height)
 						
-						var uv_a = uv_offset + Vector2(0, 0)
-						var uv_b = uv_offset + Vector2(0, height)
-						var uv_c = uv_offset + Vector2(width, height)
-						var uv_d = uv_offset + Vector2(width, 0)
+						var col = Color(float(block_data[type][NORTH])*0.01,block_data[type]["roughness"],block_data[type]["metallic"],0.0)
+						
+						st.add_triangle_fan(([a, b, c]), ([uv_a, uv_b, uv_c]), ([col,col,col]))
+						st.add_triangle_fan(([a, c, d]), ([uv_a, uv_c, uv_d]), ([col,col,col]))
+					#south
+					if ((z - 1 < 0) or (block_data[blocks[x][y][z-1]]["transparent"])) and !meshed[SOUTH].has(Vector3i(x,y,z)):
+						var greed_x = 0
+						while (x + greed_x + 1) < world_size.x and blocks[x+greed_x + 1][y][z] == type and ((z - 1 < 0) or block_data[blocks[x+greed_x + 1][y][z-1]]["transparent"]):
+							greed_x += 1
+							meshed[SOUTH] += [Vector3i(x+greed_x,y,z)]
+						
+						var greed_y = 0
+						var y_greed_dead = false
+						while !y_greed_dead and (y + greed_y + 1 < world_size.y):
+							for gx in range(0,greed_x+1):
+								if !blocks[x+gx][y+greed_y+1][z] == type:
+									y_greed_dead = true
+								elif !((z - 1 < 0) or (block_data[blocks[x+gx][y+greed_y+1][z-1]]["transparent"])):
+									y_greed_dead = true
+								elif meshed[SOUTH].has(Vector3i(x+gx,y+greed_y+1,z)):
+									y_greed_dead = true
+							if ! y_greed_dead:
+								for cgx in range(0,greed_x+1):
+									meshed[SOUTH] += [Vector3i(x+cgx,y+greed_y+1,z)]
+									pass
+								greed_y += 1
 						
 						
-						st.add_triangle_fan(([a, b, c]), ([uv_a, uv_b, uv_c]))
-						st.add_triangle_fan(([a, c, d]), ([uv_a, uv_c, uv_d]))
-					var TU = true
-					var TD = true
-					var TN = true
-					var TS = true
-					var TE = true
-					var TW = true
-					if !(coords.y + 1 >= world_size.y):
-						TU = block_data[blocks[coords.x][coords.y+1][coords.z]]["transparent"]
-					if !(coords.y - 1 < 0):
-						TD = block_data[blocks[coords.x][coords.y-1][coords.z]]["transparent"]
-					if !(coords.x + 1 >= world_size.x):
-						TE = block_data[blocks[coords.x+1][coords.y][coords.z]]["transparent"]
-					if !(coords.x - 1 < 0):
-						TW = block_data[blocks[coords.x-1][coords.y][coords.z]]["transparent"]
-					if !(coords.z - 1 < 0):
-						TS = block_data[blocks[coords.x][coords.y][coords.z-1]]["transparent"]
-					if TU:
-						create_face(UP, coords, block_data[type]["up"])
-					if TD:
-						create_face(DOWN, coords, block_data[type]["down"])
-					if TS:
-						create_face(SOUTH, coords, block_data[type]["south"])
-					if TE:
-						create_face(EAST, coords, block_data[type]["east"])
-					if TW:
-						create_face(WEST, coords, block_data[type]["west"])
+						var a = (vertices[SOUTH[0]] + coords + Vector3(0,greed_y,0))*unit_scale
+						var b = (vertices[SOUTH[1]] + coords + Vector3(0,0,0))*unit_scale
+						var c = (vertices[SOUTH[2]] + coords + Vector3(greed_x,0,0))*unit_scale
+						var d = (vertices[SOUTH[3]] + coords + Vector3(greed_x,greed_y,0))*unit_scale
+						
+						#var uv_offset = block_data[type]["south"] / atlas_size
+						#
+						#var height = 1.0 / atlas_size.y
+						#var width = 1.0 / atlas_size.x
+						
+						#var uv_d = uv_offset + Vector2(0, 0)
+						#var uv_c = uv_offset + Vector2(0, height)
+						#var uv_b = uv_offset + Vector2(width, height)
+						#var uv_a = uv_offset + Vector2(width, 0)
+						
+						var uv_a = Vector2(0,-greed_y-1)
+						var uv_b = Vector2.ZERO
+						var uv_c = Vector2(-greed_x-1,0)
+						var uv_d = Vector2(-greed_x-1,-greed_y-1)
+						
+						var col = Color(float(block_data[type][SOUTH])*0.01,block_data[type]["roughness"],block_data[type]["metallic"],0.0)
+						
+						st.add_triangle_fan(([a, b, c]), ([uv_a, uv_b, uv_c]), ([col,col,col]))
+						st.add_triangle_fan(([a, c, d]), ([uv_a, uv_c, uv_d]), ([col,col,col]))
+						pass
+					#east
+					if ((x + 1 >= world_size.x) or (block_data[blocks[x+1][y][z]]["transparent"])) and !meshed[EAST].has(Vector3i(x,y,z)):
+						var greed_z = 0
+						while (z + greed_z + 1) < world_size.z and blocks[x][y][z+greed_z + 1] == type and ((x + 1 >= world_size.x) or block_data[blocks[x+1][y][z+greed_z + 1]]["transparent"]):
+							meshed[EAST] += [Vector3i(x,y,z+greed_z + 1)]
+							greed_z += 1
+						
+						var greed_y = 0
+						var y_greed_dead = false
+						while !y_greed_dead and (y + greed_y + 1 < world_size.y):
+							for gz in range(0,greed_z+1):
+								if !blocks[x][y+greed_y+1][z+gz] == type:
+									y_greed_dead = true
+								elif !((x + 1 >= world_size.x) or (block_data[blocks[x+1][y+greed_y+1][z+gz]]["transparent"])):
+									y_greed_dead = true
+								elif meshed[EAST].has(Vector3i(x,y+greed_y+1,z+gz)):
+									y_greed_dead = true
+							if ! y_greed_dead:
+								for cgz in range(0,greed_z+1):
+									meshed[EAST] += [Vector3i(x,y+greed_y+1,z+cgz)]
+									pass
+								greed_y += 1
+						
+						var a = (vertices[EAST[0]] + coords + Vector3(0,greed_y,0))*unit_scale
+						var b = (vertices[EAST[1]] + coords + Vector3(0,0,0))*unit_scale
+						var c = (vertices[EAST[2]] + coords + Vector3(0,0,greed_z))*unit_scale
+						var d = (vertices[EAST[3]] + coords + Vector3(0,greed_y,greed_z))*unit_scale
+						
+						#var uv_offset = block_data[type]["east"] / atlas_size
+						#
+						#var height = 1.0 / atlas_size.y
+						#var width = 1.0 / atlas_size.x
+						#
+						#var uv_d = uv_offset + Vector2(0, 0)
+						#var uv_c = uv_offset + Vector2(0, height)
+						#var uv_b = uv_offset + Vector2(width, height)
+						#var uv_a = uv_offset + Vector2(width, 0)
+						var uv_a = Vector2(0,-greed_y-1)
+						var uv_b = Vector2.ZERO
+						var uv_c = Vector2(-greed_z-1,0)
+						var uv_d = Vector2(-greed_z-1,-greed_y-1)
+						
+						var col = Color(float(block_data[type][EAST])*0.01,block_data[type]["roughness"],block_data[type]["metallic"],0.0)
+						
+						
+						st.add_triangle_fan(([a, b, c]), ([uv_a, uv_b, uv_c]), ([col,col,col]))
+						st.add_triangle_fan(([a, c, d]), ([uv_a, uv_c, uv_d]), ([col,col,col]))
+					#west
+					if ((x - 1 < 0) or (block_data[blocks[x-1][y][z]]["transparent"])) and !meshed[WEST].has(Vector3i(x,y,z)):
+						var greed_z = 0
+						while (z + greed_z + 1) < world_size.z and blocks[x][y][z+greed_z + 1] == type and ((x - 1 < 0) or block_data[blocks[x-1][y][z+greed_z + 1]]["transparent"]):
+							meshed[WEST] += [Vector3i(x,y,z+greed_z + 1)]
+							greed_z += 1
+						
+						var greed_y = 0
+						var y_greed_dead = false
+						while !y_greed_dead and (y + greed_y + 1 < world_size.y):
+							for gz in range(0,greed_z+1):
+								if !blocks[x][y+greed_y+1][z+gz] == type:
+									y_greed_dead = true
+								elif !((x - 1 < 0) or (block_data[blocks[x-1][y+greed_y+1][z+gz]]["transparent"])):
+									y_greed_dead = true
+								elif meshed[WEST].has(Vector3i(x,y+greed_y+1,z+gz)):
+									y_greed_dead = true
+							if ! y_greed_dead:
+								for cgz in range(0,greed_z+1):
+									meshed[WEST] += [Vector3i(x,y+greed_y+1,z+cgz)]
+									pass
+								greed_y += 1
+						
+						var a = (vertices[WEST[0]] + coords + Vector3(0,greed_y,greed_z))*unit_scale
+						var b = (vertices[WEST[1]] + coords + Vector3(0,0,greed_z))*unit_scale
+						var c = (vertices[WEST[2]] + coords + Vector3(0,0,0))*unit_scale
+						var d = (vertices[WEST[3]] + coords + Vector3(0,greed_y,0))*unit_scale
+						
+						#var uv_offset = block_data[type]["west"] / atlas_size
+						#
+						#var height = 1.0 / atlas_size.y
+						#var width = 1.0 / atlas_size.x
+						#
+						#var uv_d = uv_offset + Vector2(0, 0)
+						#var uv_c = uv_offset + Vector2(0, height)
+						#var uv_b = uv_offset + Vector2(width, height)
+						#var uv_a = uv_offset + Vector2(width, 0)
+						
+						var uv_a = Vector2(0,-greed_y-1)
+						var uv_b = Vector2.ZERO
+						var uv_c = Vector2(-greed_z-1,0)
+						var uv_d = Vector2(-greed_z-1,-greed_y-1)
+						
+						var col = Color(float(block_data[type][WEST])*0.01,block_data[type]["roughness"],block_data[type]["metallic"],0.0)
+						
+						st.add_triangle_fan(([a, b, c]), ([uv_a, uv_b, uv_c]), ([col,col,col]))
+						st.add_triangle_fan(([a, c, d]), ([uv_a, uv_c, uv_d]), ([col,col,col]))
+					#up
+					if ((y + 1 >= world_size.y) or (block_data[blocks[x][y+1][z]]["transparent"])) and !meshed[UP].has(Vector3i(x,y,z)):
+						var greed_x = 0
+						while (x + greed_x + 1) < world_size.x and blocks[x+greed_x + 1][y][z] == type and ((y + 1 >= world_size.y) or block_data[blocks[x+greed_x + 1][y+1][z]]["transparent"]):
+							greed_x += 1
+							meshed[UP] += [Vector3i(x+greed_x,y,z)]
+						
+						var greed_z = 0
+						var z_greed_dead = false
+						while !z_greed_dead and (z + greed_z + 1 < world_size.z):
+							for gx in range(0,greed_x+1):
+								if !blocks[x+gx][y][z+greed_z+1] == type:
+									z_greed_dead = true
+								elif !((y + 1 >= world_size.y) or (block_data[blocks[x+gx][y+1][z+greed_z+1]]["transparent"])):
+									z_greed_dead = true
+								elif meshed[UP].has(Vector3i(x+gx,y,z+greed_z+1)):
+									z_greed_dead = true
+							if ! z_greed_dead:
+								for cgx in range(0,greed_x+1):
+									meshed[UP] += [Vector3i(x+cgx,y,z+greed_z+1)]
+									pass
+								greed_z += 1
+						var a = (vertices[UP[0]] + coords + Vector3(0,0,0))*unit_scale
+						var b = (vertices[UP[1]] + coords + Vector3(greed_x,0,0))*unit_scale
+						var c = (vertices[UP[2]] + coords + Vector3(greed_x,0,greed_z))*unit_scale
+						var d = (vertices[UP[3]] + coords + Vector3(0,0,greed_z))*unit_scale
+						
+						#var uv_offset = block_data[type]["up"] / atlas_size
+						#
+						#var height = 1.0 / atlas_size.y
+						#var width = 1.0 / atlas_size.x
+						#
+						#var uv_d = uv_offset + Vector2(0, 0)
+						#var uv_c = uv_offset + Vector2(0, height)
+						#var uv_b = uv_offset + Vector2(width, height)
+						#var uv_a = uv_offset + Vector2(width, 0)
+						
+						var uv_a = Vector2(0,-greed_x-1)
+						var uv_b = Vector2.ZERO
+						var uv_c = Vector2(-greed_z-1,0)
+						var uv_d = Vector2(-greed_z-1,-greed_x-1)
+						
+						var col = Color(float(block_data[type][UP])*0.01,block_data[type]["roughness"],block_data[type]["metallic"],0.0)
+						
+						st.add_triangle_fan(([a, b, c]), ([uv_a, uv_b, uv_c]), ([col,col,col]))
+						st.add_triangle_fan(([a, c, d]), ([uv_a, uv_c, uv_d]), ([col,col,col]))
+					#down
+					if ((y -1 < 0) or (block_data[blocks[x][y-1][z]]["transparent"])) and !meshed[DOWN].has(Vector3i(x,y,z)):
+						var greed_x = 0
+						while (x + greed_x + 1) < world_size.x and blocks[x+greed_x + 1][y][z] == type and ((y -1 < 0) or block_data[blocks[x+greed_x + 1][y-1][z]]["transparent"]):
+							greed_x += 1
+							meshed[DOWN] += [Vector3i(x+greed_x,y,z)]
+						
+						var greed_z = 0
+						var z_greed_dead = false
+						while !z_greed_dead and (z + greed_z + 1 < world_size.z):
+							for gx in range(0,greed_x+1):
+								if !blocks[x+gx][y][z+greed_z+1] == type:
+									z_greed_dead = true
+								elif !((y - 1 < 0) or (block_data[blocks[x+gx][y-1][z+greed_z+1]]["transparent"])):
+									z_greed_dead = true
+								elif meshed[DOWN].has(Vector3i(x+gx,y,z+greed_z+1)):
+									z_greed_dead = true
+							if ! z_greed_dead:
+								for cgx in range(0,greed_x+1):
+									meshed[DOWN] += [Vector3i(x+cgx,y,z+greed_z+1)]
+									pass
+								greed_z += 1
+						var a = (vertices[DOWN[0]] + coords + Vector3(0,0,0))*unit_scale
+						var b = (vertices[DOWN[1]] + coords + Vector3(0,0,greed_z))*unit_scale
+						var c = (vertices[DOWN[2]] + coords + Vector3(greed_x,0,greed_z))*unit_scale
+						var d = (vertices[DOWN[3]] + coords + Vector3(greed_x,0,0))*unit_scale
+						
+						#var uv_offset = block_data[type]["down"] / atlas_size
+						#
+						#var height = 1.0 / atlas_size.y
+						#var width = 1.0 / atlas_size.x
+						#
+						#var uv_d = uv_offset + Vector2(0, 0)
+						#var uv_c = uv_offset + Vector2(0, height)
+						#var uv_b = uv_offset + Vector2(width, height)
+						#var uv_a = uv_offset + Vector2(width, 0)
+						
+						var uv_a = Vector2(0,-greed_z-1)
+						var uv_b = Vector2.ZERO
+						var uv_c = Vector2(-greed_x-1,0)
+						var uv_d = Vector2(-greed_x-1,-greed_z-1)
+						
+						var col = Color(float(block_data[type][DOWN])*0.01,block_data[type]["roughness"],block_data[type]["metallic"],0.0)
+						
+						st.add_triangle_fan(([a, b, c]), ([uv_a, uv_b, uv_c]), ([col,col,col]))
+						st.add_triangle_fan(([a, c, d]), ([uv_a, uv_c, uv_d]), ([col,col,col]))
 				z += 1
 			z = 0
 			y += 1
 		y = 0
 		x += 1
 	#if (z + 1 >= world_size.z) or (block_data[blocks[x][y][z+1]]["transparent"]):
+	st.generate_normals(false)
+	st.generate_tangents()
 	var m = st.commit()
 	mi.mesh = m
 	mi.set_surface_override_material(0,material)
 	add_child(mi,true)
+	
+	var col = StaticBody3D.new()
+	add_child(col,true)
+	var shape = CollisionShape3D.new()  #mi.mesh.create_trimesh_shape()
+	shape.shape = mi.mesh.create_trimesh_shape()
+	col.add_child(shape,true)
+	mi.owner = get_tree().edited_scene_root
+	col.owner = get_tree().edited_scene_root
+	shape.owner = get_tree().edited_scene_root
 
-#func mesh_side_from_block(x,y,z,dir_en,dir_str):
-	#
-	#var check_dir = Vector3.ZERO
-	#
-	#match dir_en:
-		#NORTH:check_dir = Vector3(0,0,1)
-		#SOUTH:check_dir = Vector3(0,0,-1)
-		#EAST:check_dir = Vector3(1,0,0)
-		#WEST:check_dir = Vector3(-1,0,0)
-		#UP:check_dir = Vector3(0,1,0)
-		#DOWN:check_dir = Vector3(0,-1,0)
-	#
-	#
-	#var type = blocks[x][y][z]
-	#var check_x = x+check_dir.x
-	#var check_y = y+check_dir.y
-	#var check_z = z+check_dir.z
-	#if type != air:
-		#var coords = Vector3(x,y,z)
-		##north
-		#if block_safe(check_x,check_y,check_z) and !meshed[dir_en].has(Vector3i(x,y,z)):
-			#var greed_x = 0
-			#while (x + greed_x + 1) < world_size.x and blocks[x+greed_x + 1][y][z] == type and ((z + 1 >= world_size.z) or block_data[blocks[x+greed_x + 1][y][z+1]]["transparent"]):
-				#greed_x += 1
-				#meshed[dir_en] += [Vector3i(x+greed_x,y,z)]
-			#
-			#var greed_y = 0
-			#var y_greed_dead = false
-			#while !y_greed_dead and (y + greed_y + 1 < world_size.y):
-				#for gx in range(0,greed_x+1):
-					#if !blocks[x+gx][y+greed_y+1][z] == type:
-						#y_greed_dead = true
-					#elif !(block_safe(check_x,check_y,check_z) or (block_data[blocks[x+gx][y+greed_y+1][z+1]]["transparent"])):
-						#y_greed_dead = true
-				#if ! y_greed_dead:
-					#for cgx in range(0,greed_x+1):
-						#meshed[dir_en] += [Vector3i(x+cgx,y+greed_y+1,z)]
-						#pass
-					#greed_y += 1
-			#
-			#
-			#var a = (vertices[dir_en[0]] + coords + Vector3(greed_x,greed_y,0))*unit_scale
-			#var b = (vertices[dir_en[1]] + coords + Vector3(greed_x,0,0))*unit_scale
-			#var c = (vertices[dir_en[2]] + coords)*unit_scale
-			#var d = (vertices[dir_en[3]] + coords + Vector3(0,greed_y,0))*unit_scale
-			#
-			#var uv_offset = block_data[type][dir_str] / atlas_size
-			#
-			#var height = 1.0 / atlas_size.y
-			#var width = 1.0 / atlas_size.x
-			#
-			#var uv_a = uv_offset + Vector2(0, 0)
-			#var uv_b = uv_offset + Vector2(0, height)
-			#var uv_c = uv_offset + Vector2(width, height)
-			#var uv_d = uv_offset + Vector2(width, 0)
-			#
-			#
-			#st.add_triangle_fan(([a, b, c]), ([uv_a, uv_b, uv_c]))
-			#st.add_triangle_fan(([a, c, d]), ([uv_a, uv_c, uv_d]))
 
 func block_safe(x,y,z) -> bool:
-	return x >= world_size.x or x > 0 or y >= world_size.y or y < 0 or z >= world_size.z or z < 0
+	return (((x+1 >= world_size.x or x > 0) or (y+1 >= world_size.y or y < 0)) or (z+1 >= world_size.z or z < 0))
 
 
 func create_block(id, coords):
@@ -403,6 +742,7 @@ func quick_build():
 	generate_world()
 	#create_mesh()
 	create_greedy_mesh()
+	add_effects()
 	if !Engine.is_editor_hint():
 		save_level()
 		get_tree().quit(0)

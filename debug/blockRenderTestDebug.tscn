@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://dfpyjmr8n7b6d"]
 
-[ext_resource type="Material" uid="uid://c6l3dtf83buvp" path="res://assets/materials/worldMat.tres" id="1_pcoby"]
+[ext_resource type="Material" uid="uid://c41eaqx5t5i0j" path="res://assets/materials/worldShaderMat.tres" id="1_ptyp2"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_0xaau"]
 
 [node name="MeshInstance3D" type="MeshInstance3D"]
 mesh = SubResource("BoxMesh_0xaau")
-surface_material_override/0 = ExtResource("1_pcoby")
+surface_material_override/0 = ExtResource("1_ptyp2")

@@ -1,0 +1,16 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://c41eaqx5t5i0j"]
+
+[ext_resource type="Shader" path="res://assets/shaders/level_world.gdshader" id="1_wiv2c"]
+[ext_resource type="CompressedTexture2DArray" uid="uid://jrcumpwy4x7j" path="res://assets/textures/levelCreator/testAtlas2.png" id="2_ymj45"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_wiv2c")
+shader_parameter/albedo = Color(0.27451, 0.27451, 0.27451, 1)
+shader_parameter/point_size = null
+shader_parameter/specular = null
+shader_parameter/uv1_scale = Vector3(0.1, 0.1, 0.1)
+shader_parameter/uv1_offset = null
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = null
+shader_parameter/texture_albedo = ExtResource("2_ymj45")

@@ -1,8 +1,0 @@
-[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://5rc41up8g82g"]
-
-[ext_resource type="Texture2D" uid="uid://dcsutfdabqdnr" path="res://assets/textures/levelCreator/test_world_blocks.png" id="1_m3uhg"]
-
-[resource]
-atlas = ExtResource("1_m3uhg")
-region = Rect2(0, 0, 32, 32)
-filter_clip = true
