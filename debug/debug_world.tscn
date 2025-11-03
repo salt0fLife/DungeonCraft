@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://dntnunlwfyesu"]
+[gd_scene load_steps=28 format=3 uid="uid://dntnunlwfyesu"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_5fl5y"]
 [ext_resource type="Script" path="res://debug/debug_world.gd" id="1_87rlt"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://jmajynm5h4rf" path="res://entities/ragdolls/player_corpse.tscn" id="13_lys41"]
 [ext_resource type="PackedScene" uid="uid://bfn3gjlgpj641" path="res://entities/generic_loose_item.tscn" id="14_ccyrl"]
 [ext_resource type="PackedScene" uid="uid://fwwtve5csj7i" path="res://debug/accessories_debugger.tscn" id="15_ytdhl"]
+[ext_resource type="PackedScene" uid="uid://bj1t8n02ux0ji" path="res://world/levels/level_2_test.tscn" id="16_j3rw5"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ks42u"]
 
@@ -94,6 +95,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -2)
 [node name="treePine2" parent="SubViewport" instance=ExtResource("6_o0lwk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 0)
 
+[node name="treePine6" parent="SubViewport" instance=ExtResource("6_o0lwk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 6, 21)
+
+[node name="treePine7" parent="SubViewport" instance=ExtResource("6_o0lwk")]
+transform = Transform3D(0.258819, 0, 0.965926, 0, 1, 0, -0.965926, 0, 0.258819, 21, 6, 16)
+
 [node name="treePine3" parent="SubViewport" instance=ExtResource("7_1t4tn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, 0)
 
@@ -152,7 +159,13 @@ shape = SubResource("BoxShape3D_qtu70")
 mesh = SubResource("BoxMesh_twib7")
 
 [node name="treePineSmall" parent="." instance=ExtResource("11_t1tsb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 13)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, -19)
+
+[node name="treePineSmall2" parent="." instance=ExtResource("11_t1tsb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 6, 14)
+
+[node name="treePineSmall3" parent="." instance=ExtResource("11_t1tsb")]
+transform = Transform3D(0.757332, 0, 1.14764, 0, 1.375, 0, -1.14764, 0, 0.757332, 17.2912, 6, 9.6036)
 
 [node name="portal_1" parent="." instance=ExtResource("12_kfbny")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -2)
@@ -169,3 +182,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.15502, 1.34547, -5.74185)
 [node name="accessories_debugger" parent="." instance=ExtResource("15_ytdhl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5627, 0, -3.93952)
 value = "devil_wings"
+
+[node name="level_2_test" parent="." instance=ExtResource("16_j3rw5")]

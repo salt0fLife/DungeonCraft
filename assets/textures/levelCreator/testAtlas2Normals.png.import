@@ -1,0 +1,26 @@
+[remap]
+
+importer="2d_array_texture"
+type="CompressedTexture2DArray"
+uid="uid://bsdsfs2e0pop0"
+path="res://.godot/imported/testAtlas2Normals.png-62227a6d4d29f0d6885a57a712e79a4a.ctexarray"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/textures/levelCreator/testAtlas2Normals.png"
+dest_files=["res://.godot/imported/testAtlas2Normals.png-62227a6d4d29f0d6885a57a712e79a4a.ctexarray"]
+
+[params]
+
+compress/mode=0
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/channel_pack=0
+mipmaps/generate=false
+mipmaps/limit=-1
+slices/horizontal=2
+slices/vertical=3

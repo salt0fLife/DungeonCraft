@@ -1,0 +1,26 @@
+[remap]
+
+importer="2d_array_texture"
+type="CompressedTexture2DArray"
+uid="uid://eobqqb402l52"
+path="res://.godot/imported/world_blocks_array.png-844de6971c57af36d63a9f6afd86c2cb.ctexarray"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/textures/levelCreator/world_blocks_array.png"
+dest_files=["res://.godot/imported/world_blocks_array.png-844de6971c57af36d63a9f6afd86c2cb.ctexarray"]
+
+[params]
+
+compress/mode=0
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+slices/horizontal=3
+slices/vertical=3

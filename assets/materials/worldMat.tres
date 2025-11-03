@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://c6l3dtf83buvp"]
+
+[ext_resource type="Texture2D" uid="uid://dcsutfdabqdnr" path="res://assets/textures/levelCreator/test_world_blocks.png" id="1_gefrs"]
+
+[resource]
+albedo_texture = ExtResource("1_gefrs")
+texture_filter = 0
