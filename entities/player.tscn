@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bfmtven01nbak"]
+[gd_scene load_steps=21 format=3 uid="uid://bfmtven01nbak"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_rca1e"]
 [ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="2_841cm"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://q13m3wxawmoj" path="res://tools/voip.tscn" id="3_mkb7a"]
 [ext_resource type="PackedScene" uid="uid://ctjywblutag5l" path="res://assets/entityComponents/hurtbox.tscn" id="4_gmgur"]
 [ext_resource type="AudioStream" uid="uid://cwgksjubbffnp" path="res://assets/sounds/spawnSounds/despawn.ogg" id="5_0xt38"]
+[ext_resource type="AudioStream" uid="uid://dfy3f7ydibpug" path="res://assets/sounds/player/footsteps2.ogg" id="7_jnhys"]
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ujmkt"]
 data = PackedVector3Array(-0.0617, -0.3077, -0.1433, 0.0873, -0.3019, 0.05, 0.0873, -0.3019, -0.1433, -0.0617, -0.3077, -0.1433, -0.0617, -0.3077, 0.05, 0.0873, -0.3019, 0.05, -0.0737, -0.0011, 0.05, -0.0617, -0.3077, -0.1433, -0.0737, -0.0011, -0.1433, -0.0737, -0.0011, 0.05, -0.0617, -0.3077, 0.05, -0.0617, -0.3077, -0.1433, 0.0873, -0.3019, 0.05, -0.0737, -0.0011, 0.05, 0.0753, 0.0047, 0.05, 0.0873, -0.3019, 0.05, -0.0617, -0.3077, 0.05, -0.0737, -0.0011, 0.05, 0.0873, -0.3019, -0.1433, 0.0753, 0.0047, 0.05, 0.0753, 0.0047, -0.1433, 0.0873, -0.3019, -0.1433, 0.0873, -0.3019, 0.05, 0.0753, 0.0047, 0.05, -0.0737, -0.0011, 0.05, 0.0753, 0.0047, -0.1433, 0.0753, 0.0047, 0.05, -0.0737, -0.0011, 0.05, -0.0737, -0.0011, -0.1433, 0.0753, 0.0047, -0.1433, -0.0617, -0.3077, -0.1433, 0.0753, 0.0047, -0.1433, -0.0737, -0.0011, -0.1433, -0.0617, -0.3077, -0.1433, 0.0873, -0.3019, -0.1433, 0.0753, 0.0047, -0.1433)
@@ -41,6 +42,9 @@ data = PackedVector3Array(-0.006, -0.2493, -0.0989, -0.1551, 0.0399, -0.0989, -0
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ihomt"]
 data = PackedVector3Array(-0.1491, -0.282, 0.0967, -0.1491, 0.2892, -0.0967, -0.1491, 0.2892, 0.0967, -0.1491, -0.282, 0.0967, -0.1491, -0.282, -0.0967, -0.1491, 0.2892, -0.0967, -0.1491, -0.282, -0.0967, 0.1491, 0.2892, -0.0967, -0.1491, 0.2892, -0.0967, -0.1491, -0.282, -0.0967, 0.1491, -0.282, -0.0967, 0.1491, 0.2892, -0.0967, 0.1491, -0.282, -0.0967, 0.1491, 0.2892, 0.0967, 0.1491, 0.2892, -0.0967, 0.1491, -0.282, -0.0967, 0.1491, -0.282, 0.0967, 0.1491, 0.2892, 0.0967, 0.1491, -0.282, 0.0967, -0.1491, 0.2892, 0.0967, 0.1491, 0.2892, 0.0967, 0.1491, -0.282, 0.0967, -0.1491, -0.282, 0.0967, -0.1491, 0.2892, 0.0967, -0.1491, -0.282, -0.0967, 0.1491, -0.282, 0.0967, 0.1491, -0.282, -0.0967, -0.1491, -0.282, -0.0967, -0.1491, -0.282, 0.0967, 0.1491, -0.282, 0.0967, 0.1491, 0.2892, -0.0967, -0.1491, 0.2892, 0.0967, -0.1491, 0.2892, -0.0967, 0.1491, 0.2892, -0.0967, 0.1491, 0.2892, 0.0967, -0.1491, 0.2892, 0.0967)
 
+[sub_resource type="BoxMesh" id="BoxMesh_x33ch"]
+size = Vector3(0.14, 0.455, 0.18)
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0qdw2"]
 radius = 0.287424
 height = 1.49829
@@ -52,13 +56,13 @@ script = ExtResource("1_rca1e")
 [node name="playerAvatar" parent="." instance=ExtResource("2_841cm")]
 
 [node name="chestBase" parent="playerAvatar/genericAvatar/root" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999297, -0.00320433, -0.00766075, 0.000402608)
+transform = Transform3D(0.998754, 0.00785033, 0.0492872, 0, 0.987552, -0.157294, -0.0499085, 0.157098, 0.986321, -0.00290706, -0.0731363, 0.00198869)
 
 [node name="hip_L" parent="playerAvatar/genericAvatar/root/chestBase" index="0"]
-transform = Transform3D(0.995004, -0.00752847, 0.0995491, 0, 0.997149, 0.0754105, -0.0998334, -0.0750336, 0.99217, 0.075, -0.282, -0.001)
+transform = Transform3D(0.998348, -0.0362339, -0.0445871, 0.0123547, 0.89329, -0.449305, 0.0561095, 0.448011, 0.892264, 0.075, -0.25567, -0.001)
 
 [node name="knee_L" parent="playerAvatar/genericAvatar/root/chestBase/hip_L" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.996956, -0.0779028, 0, 0.0779028, 0.996956, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.897518, -0.440966, 0, 0.440966, 0.897518, 0, -0.274171, 0)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/hip_L/knee_L" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -77,10 +81,10 @@ transform = Transform3D(1, 0, 0, -4.65661e-10, 1, -1.49012e-08, -2.23517e-08, -7
 shape = SubResource("ConcavePolygonShape3D_bllhi")
 
 [node name="hip_R" parent="playerAvatar/genericAvatar/root/chestBase" index="1"]
-transform = Transform3D(0.995004, 0.00752847, -0.0995491, 0, 0.997149, 0.0754105, 0.0998334, -0.0750336, 0.99217, -0.075, -0.282, -0.001)
+transform = Transform3D(0.99917, 0.0316759, -0.0256129, 0.0057325, 0.513165, 0.858269, 0.0403303, -0.857701, 0.512558, -0.075, -0.25833, -0.001)
 
 [node name="knee_R" parent="playerAvatar/genericAvatar/root/chestBase/hip_R" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.996956, -0.0779028, 0, 0.0779028, 0.996956, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.91759, -0.397516, 0, 0.397516, 0.91759, 0, -0.274171, 0)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/hip_R/knee_R" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -99,7 +103,7 @@ transform = Transform3D(1, -4.65661e-10, -7.45058e-09, -4.65661e-10, 1, 0, 0, 0,
 shape = SubResource("ConcavePolygonShape3D_6mvmu")
 
 [node name="neck" parent="playerAvatar/genericAvatar/root/chestBase" index="2"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, 0.0374912, 0, -0.0374912, 0.999297, 0, 0.289384, -0.00323021)
+transform = Transform3D(0.998779, 0.00573734, -0.0490599, 0, 0.993232, 0.116154, 0.0493942, -0.116012, 0.992019, 0, 0.289384, -0.00323021)
 
 [node name="voicePlayer" type="AudioStreamPlayer3D" parent="playerAvatar/genericAvatar/root/chestBase/neck" index="11"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
@@ -126,10 +130,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.65661e-10, 0.142511, 0.0193
 shape = SubResource("ConcavePolygonShape3D_hok5u")
 
 [node name="shoulder_L" parent="playerAvatar/genericAvatar/root/chestBase" index="3"]
-transform = Transform3D(0.998776, -0.0491916, 0.00383819, 0.0491705, 0.998771, 0.00540184, -0.00409921, -0.00520652, 0.999975, 0.14978, 0.229681, -0.0014265)
+transform = Transform3D(0.997183, -0.0749293, 0, 0.0728807, 0.969921, 0.232233, -0.0174011, -0.23158, 0.972656, 0.14978, 0.235468, -0.0014265)
 
 [node name="elbowL" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.998599, 0.0528319, 0, -0.0528319, 0.998599, 0.0786937, -0.240458, -0.002611)
+transform = Transform3D(1, 0, 0, 0, 0.844309, 0.535849, 0, -0.535849, 0.844309, 0.0786937, -0.240458, -0.002611)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_L/elbowL" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -148,10 +152,10 @@ transform = Transform3D(1, -1.04774e-09, 0, -1.09867e-09, 1, 0, 0, 1.86265e-09, 
 shape = SubResource("ConcavePolygonShape3D_s58j1")
 
 [node name="shoulder_R" parent="playerAvatar/genericAvatar/root/chestBase" index="4"]
-transform = Transform3D(0.998776, 0.0491916, -0.00383819, -0.0491705, 0.998771, 0.00540184, 0.00409921, -0.00520652, 0.999975, -0.14978, 0.242319, -0.00142637)
+transform = Transform3D(0.997183, 0.0749293, 0, -0.0723153, 0.962395, -0.26183, -0.0196188, 0.261093, 0.96511, -0.14978, 0.236532, -0.00142637)
 
 [node name="elbowR" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_R" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.998598, 0.0528318, 0, -0.0528318, 0.998598, -0.0786937, -0.240458, -0.00261103)
+transform = Transform3D(1, 0, 0, 0, 0.981959, 0.189063, 0, -0.189063, 0.981959, -0.0786937, -0.240458, -0.00261103)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_R/elbowR" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -170,13 +174,13 @@ transform = Transform3D(1, 1.23691e-10, 0, 2.04454e-09, 1, 0, -2.32831e-10, 1.86
 shape = SubResource("ConcavePolygonShape3D_kvt2y")
 
 [node name="tailBase" parent="playerAvatar/genericAvatar/root/chestBase" index="9"]
-transform = Transform3D(0.99187, 0.11283, -0.0588306, 0, 0.462335, 0.886703, 0.127247, -0.879496, 0.458577, 0, 0, -0.088)
+transform = Transform3D(0.877921, -0.437494, 0.194556, 0, 0.406338, 0.91372, -0.478804, -0.802176, 0.356733, 0, 0, -0.088)
 
 [node name="tailMiddle" parent="playerAvatar/genericAvatar/root/chestBase/tailBase" index="0"]
-transform = Transform3D(0.973261, -0.0418602, -0.225858, 0, 0.983252, -0.182235, 0.229704, 0.177362, 0.956962, 0, 0, 0)
+transform = Transform3D(0.988374, -0.0277083, -0.149501, 0, 0.983252, -0.182235, 0.152047, 0.180116, 0.971821, 0, 0, 0)
 
 [node name="tailLast" parent="playerAvatar/genericAvatar/root/chestBase/tailBase/tailMiddle" index="0"]
-transform = Transform3D(0.984624, -0.0496133, -0.167491, 0, 0.95882, -0.284015, 0.174685, 0.279649, 0.944075, 0, 0, 0)
+transform = Transform3D(0.993322, -0.0327691, -0.110626, 0, 0.95882, -0.284015, 0.115378, 0.282119, 0.952414, 0, 0, 0)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase" index="10" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../..")
@@ -204,6 +208,10 @@ collision_mask = 3
 collide_with_areas = true
 
 [node name="hands" type="Node3D" parent="playerAvatar/cameraHandler"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="playerAvatar/cameraHandler/hands"]
+transform = Transform3D(0.971675, -0.204382, -0.118644, -0.201663, -0.455356, -0.86717, 0.123208, 0.866533, -0.483674, 0.415562, -0.349652, -0.156641)
+mesh = SubResource("BoxMesh_x33ch")
 
 [node name="voip" parent="playerAvatar/cameraHandler" instance=ExtResource("3_mkb7a")]
 outputPath = NodePath("../../genericAvatar/root/chestBase/neck/voicePlayer")
@@ -239,6 +247,10 @@ text = "talking"
 
 [node name="spawnSounds" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("5_0xt38")
+
+[node name="footsteps" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("7_jnhys")
+max_polyphony = 8
 
 [node name="ragdollHandler" type="Node3D" parent="."]
 

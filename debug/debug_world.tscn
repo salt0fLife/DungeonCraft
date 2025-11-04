@@ -1,11 +1,11 @@
-[gd_scene load_steps=28 format=3 uid="uid://dntnunlwfyesu"]
+[gd_scene load_steps=33 format=3 uid="uid://dntnunlwfyesu"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_5fl5y"]
 [ext_resource type="Script" path="res://debug/debug_world.gd" id="1_87rlt"]
-[ext_resource type="PackedScene" uid="uid://dly3g0b5sqii7" path="res://assets/environmentPieces/peaceful_island/grass_1.tscn" id="3_5vhho"]
-[ext_resource type="PackedScene" uid="uid://dq5aik6jyb0o6" path="res://assets/environmentPieces/peaceful_island/grass_2.tscn" id="4_4it4o"]
+[ext_resource type="PackedScene" uid="uid://dly3g0b5sqii7" path="res://assets/environmentPieces/level_details/grass_1.tscn" id="3_5vhho"]
+[ext_resource type="PackedScene" uid="uid://dq5aik6jyb0o6" path="res://assets/environmentPieces/level_details/grass_2.tscn" id="4_4it4o"]
 [ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="4_5bd38"]
-[ext_resource type="PackedScene" uid="uid://g6ektn38chvg" path="res://assets/environmentPieces/peaceful_island/grass_3.tscn" id="5_bxdvy"]
+[ext_resource type="PackedScene" uid="uid://g6ektn38chvg" path="res://assets/environmentPieces/level_details/grass_3.tscn" id="5_bxdvy"]
 [ext_resource type="PackedScene" uid="uid://cqm1ptmfpda0v" path="res://assets/environmentPieces/trees/tree_pine_2.tscn" id="6_o0lwk"]
 [ext_resource type="PackedScene" uid="uid://b4tpnh5lsjjto" path="res://assets/environmentPieces/trees/tree_pine_3.tscn" id="7_1t4tn"]
 [ext_resource type="PackedScene" uid="uid://bwiiti130u4h8" path="res://assets/environmentPieces/trees/tree_pine_4.tscn" id="8_xuyly"]
@@ -15,7 +15,12 @@
 [ext_resource type="PackedScene" uid="uid://jmajynm5h4rf" path="res://entities/ragdolls/player_corpse.tscn" id="13_lys41"]
 [ext_resource type="PackedScene" uid="uid://bfn3gjlgpj641" path="res://entities/generic_loose_item.tscn" id="14_ccyrl"]
 [ext_resource type="PackedScene" uid="uid://fwwtve5csj7i" path="res://debug/accessories_debugger.tscn" id="15_ytdhl"]
-[ext_resource type="PackedScene" uid="uid://bj1t8n02ux0ji" path="res://world/levels/level_2_test.tscn" id="16_j3rw5"]
+[ext_resource type="AudioStream" uid="uid://gp0jn6cujh6n" path="res://assets/sounds/music/mainFill.mp3" id="17_1pngb"]
+[ext_resource type="AudioStream" uid="uid://bcaur77rnaxjw" path="res://assets/sounds/music/melody2.mp3" id="18_1ky1v"]
+[ext_resource type="AudioStream" uid="uid://bi3hkffbulo4c" path="res://assets/sounds/music/melody.mp3" id="19_mpwts"]
+[ext_resource type="AudioStream" uid="uid://b3ss5ji72fuf8" path="res://assets/sounds/music/morningFogBaseline.mp3" id="20_cn7hf"]
+[ext_resource type="AudioStream" uid="uid://us4531tbg0sh" path="res://assets/sounds/music/triplets.mp3" id="21_5nv8w"]
+[ext_resource type="PackedScene" uid="uid://cb6ovvv8dnrb1" path="res://world/levels/level_3_test.tscn" id="21_ooxf7"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ks42u"]
 
@@ -183,4 +188,24 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.15502, 1.34547, -5.74185)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5627, 0, -3.93952)
 value = "devil_wings"
 
-[node name="level_2_test" parent="." instance=ExtResource("16_j3rw5")]
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.229399, 2.31994, 25.6229)
+stream = ExtResource("17_1pngb")
+
+[node name="AudioStreamPlayer3D2" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.7706, 2.31994, 25.6229)
+stream = ExtResource("18_1ky1v")
+
+[node name="AudioStreamPlayer3D3" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.7706, 2.31994, -0.340482)
+stream = ExtResource("19_mpwts")
+
+[node name="AudioStreamPlayer3D4" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.229399, 2.31994, -0.340482)
+stream = ExtResource("20_cn7hf")
+
+[node name="AudioStreamPlayer3D5" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.6113, 2.31994, 10.7518)
+stream = ExtResource("21_5nv8w")
+
+[node name="level_3_test" parent="." instance=ExtResource("21_ooxf7")]

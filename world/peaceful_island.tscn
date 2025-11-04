@@ -12,9 +12,9 @@
 [ext_resource type="PackedScene" uid="uid://kj4j6m4j0c82" path="res://assets/environmentPieces/peaceful_island/clump_1.tscn" id="10_643om"]
 [ext_resource type="PackedScene" uid="uid://15iwfae6011h" path="res://assets/environmentPieces/peaceful_island/base_4.tscn" id="11_gcvxv"]
 [ext_resource type="PackedScene" uid="uid://brrpxm2ywgs3k" path="res://assets/environmentPieces/peaceful_island/spire_1.tscn" id="12_l6l31"]
-[ext_resource type="PackedScene" uid="uid://dly3g0b5sqii7" path="res://assets/environmentPieces/peaceful_island/grass_1.tscn" id="13_dgkd7"]
-[ext_resource type="PackedScene" uid="uid://dq5aik6jyb0o6" path="res://assets/environmentPieces/peaceful_island/grass_2.tscn" id="14_2butl"]
-[ext_resource type="PackedScene" uid="uid://g6ektn38chvg" path="res://assets/environmentPieces/peaceful_island/grass_3.tscn" id="15_hhli3"]
+[ext_resource type="PackedScene" uid="uid://dly3g0b5sqii7" path="res://assets/environmentPieces/level_details/grass_1.tscn" id="13_dgkd7"]
+[ext_resource type="PackedScene" uid="uid://dq5aik6jyb0o6" path="res://assets/environmentPieces/level_details/grass_2.tscn" id="14_2butl"]
+[ext_resource type="PackedScene" uid="uid://g6ektn38chvg" path="res://assets/environmentPieces/level_details/grass_3.tscn" id="15_hhli3"]
 [ext_resource type="PackedScene" uid="uid://dft2m1je31oka" path="res://assets/environmentPieces/peaceful_island/portal_1.tscn" id="16_lhmg1"]
 
 [sub_resource type="Curve" id="Curve_o7v4h"]

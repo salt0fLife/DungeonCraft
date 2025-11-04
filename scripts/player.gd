@@ -8,6 +8,7 @@ extends CharacterBody3D
 @onready var body = $playerAvatar/genericAvatar/root
 @onready var voip = $playerAvatar/cameraHandler/voip
 @onready var AG_handler = $playerAvatar/accesories
+@onready var hands = $playerAvatar/cameraHandler/hands
 
 var sprinting = false
 var crouching = false
@@ -80,6 +81,7 @@ func _ready():
 	avatar.eyes.set_surface_override_material(0, emat)
 	var mmat = avatar.mouth.get_active_material(0).duplicate()
 	avatar.mouth.set_surface_override_material(0, mmat)
+	settup_audio()
 	if !is_multiplayer_authority():
 		request_cosmetics.rpc()
 		return
@@ -159,12 +161,17 @@ func _input(event):
 		cameraHandler.rotation.x += TempRotation
 		cameraHandler.rotation.x = clamp(cameraHandler.rotation.x, -1.5, 1.5)
 		graphics.rotation.y -= event.relative.x /1000 * MouseSensitivity
+		hands.rotation.y -= event.relative.x /1000 * MouseSensitivity*0.25
+		hands.rotation.y = clamp(hands.rotation.y, -0.5,0.5)
+		hands.rotation.x += TempRotation
+		hands.rotation.x = clamp(hands.rotation.x, -0.5,0.5)
 		avatar.head_angle.x = -cameraHandler.rotation.x
 		body.rotation.y += event.relative.x /1000 * MouseSensitivity
 		body.rotation.y = clamp(body.rotation.y, -1.5, 1.5)
 		avatar.head_angle.y = -body.rotation.y
 
 func jump():
+	play_footstep()
 	velocity.y = attributes["jump_velocity"]
 	avatar.walk_tilt = 0.0
 	avatar.animation_speed = 4.0
@@ -174,6 +181,11 @@ var last_y_velocity = 0.0
 func _physics_process(delta):
 	if !is_multiplayer_authority():
 		return
+	hands.rotation.x -= (velocity.y / attributes["jump_velocity"])*delta*10.0
+	
+	hands.position = lerp(hands.position, bobHandler.position, delta*64.0)
+	hands.rotation = lerp(hands.rotation, bobHandler.rotation, delta*32.0)
+	
 	
 	if position.y < -200.0:
 		position = Vector3.ZERO
@@ -199,6 +211,7 @@ func _physics_process(delta):
 		avatar.falling = 0.0
 		if airborn:
 			airborn = false
+			play_footstep()
 			avatar.crouching += abs(last_y_velocity/9.8)*0.25
 			#avatar.walk_tilt += abs(last_y_velocity/9.8)*0.25
 	# Get the input direction and handle the movement/deceleration.
@@ -241,8 +254,8 @@ func _physics_process(delta):
 				velocity.x = lerp(velocity.x, direction.x * attributes["speed"]*0.75*speed_multipler, delta*8.0)
 				velocity.z = lerp(velocity.z, direction.z * attributes["speed"]*0.75*speed_multipler, delta*8.0)
 			else:
-				velocity.x = lerp(velocity.x, direction.x * attributes["speed"]*speed_multipler, delta*8.0)
-				velocity.z = lerp(velocity.z, direction.z * attributes["speed"]*speed_multipler, delta*8.0)
+				velocity.x = lerp(velocity.x, direction.x * attributes["speed"]*0.85*speed_multipler, delta*8.0)
+				velocity.z = lerp(velocity.z, direction.z * attributes["speed"]*0.85*speed_multipler, delta*8.0)
 		else:
 			velocity = update_velocity_air(direction, velocity, delta)
 	else:
@@ -295,14 +308,14 @@ var time = 0.0
 var cameraTiltAdd = 0.0
 func bobbing(delta, mult, dir):
 	if airborn:
-		time += delta * 0.25
+		time += delta * 0.25 * (1.0 + (mult-3.0)*0.125)
 	else:
-		time += delta
-	bobHandler.position.x = sin(time*16-PI*0.5)*0.002*mult*2.0
-	bobHandler.position.y = sin(time*16)*0.006*mult*2.0
-	bobHandler.rotation.x = sin(time*16+PI*0.5)*0.001*mult*2.0
-	cameraTiltAdd = lerp(cameraTiltAdd, -dir.x * 0.015 * mult, delta*4.0)
-	bobHandler.rotation.z = sin(time*8)*0.001*mult + cameraTiltAdd
+		time += delta * (1.0 + (mult-3.0)*0.125)
+	bobHandler.position.x = sin(time*16-PI*0.5)*0.002*mult*4.0
+	bobHandler.position.y = sin(time*16)*0.006*mult*4.0
+	bobHandler.rotation.x = sin(time*16+PI*0.5)*0.001*mult*4.0
+	cameraTiltAdd = lerp(cameraTiltAdd, -dir.x * 0.03 * mult, delta*4.0)
+	bobHandler.rotation.z = sin(time*8-PI*0.5)*0.005*mult + cameraTiltAdd
 
 var maxSpeed = attributes["speed"]
 var acceleration = maxSpeed * 10.0
@@ -481,7 +494,24 @@ func process_interact_data(data):
 	match data[0]:
 		interact_return_code.is_item: Inventory.pickup_item(data[1][0],data[1][1]) #is item should pick it up
 
+##audio handling
+func settup_audio():
+	avatar.connect("step",play_footstep)
+	pass
 
+const footstep_sounds = [
+	"res://assets/sounds/player/fabricStep1.ogg",
+	"res://assets/sounds/player/footsteps3.ogg",
+]
+
+func play_footstep():
+	if !is_on_floor():
+		return
+	var p = footstep_sounds.pick_random()
+	$footsteps.stream = load(p)
+	$footsteps.pitch_scale = randf_range(0.9,1.1)
+	$footsteps.play()
+	pass
 
 
 

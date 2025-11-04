@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://beldochqdg4pu"]
+
+[ext_resource type="Shader" path="res://assets/shaders/Ground_Foliage.gdshader" id="1_sqcf0"]
+[ext_resource type="Texture2D" uid="uid://csyrx07ufb18k" path="res://assets/textures/world/red_flower.png" id="2_hswpm"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wn2nh"]
+render_priority = 0
+shader = ExtResource("1_sqcf0")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/point_size = null
+shader_parameter/roughness = null
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = null
+shader_parameter/metallic = null
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = null
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = null
+shader_parameter/speed = 1.0
+shader_parameter/texture_albedo = ExtResource("2_hswpm")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_hsnbv"]
+material = SubResource("ShaderMaterial_wn2nh")
+size = Vector2(0.5, 1)
+subdivide_width = 1
+subdivide_depth = 1
+center_offset = Vector3(0, 0.5, 0)
+orientation = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_htyeb"]
+material = SubResource("ShaderMaterial_wn2nh")
+size = Vector2(0.5, 1)
+subdivide_width = 1
+subdivide_depth = 1
+center_offset = Vector3(0, 0.5, 0)
+orientation = 0
+
+[node name="red_flower" type="Node3D"]
+
+[node name="mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_hsnbv")
+
+[node name="mesh2" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_htyeb")

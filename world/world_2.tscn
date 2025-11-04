@@ -8,9 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://bwiiti130u4h8" path="res://assets/environmentPieces/trees/tree_pine_4.tscn" id="6_t4daj"]
 [ext_resource type="PackedScene" uid="uid://dypxexoxu8otj" path="res://assets/environmentPieces/trees/tree_pine_5.tscn" id="7_cbw8y"]
 [ext_resource type="PackedScene" uid="uid://dthbfvojp4mep" path="res://assets/environmentPieces/trees/tree_pine_small.tscn" id="8_jvsk0"]
-[ext_resource type="PackedScene" uid="uid://dly3g0b5sqii7" path="res://assets/environmentPieces/peaceful_island/grass_1.tscn" id="9_e5ydf"]
-[ext_resource type="PackedScene" uid="uid://dq5aik6jyb0o6" path="res://assets/environmentPieces/peaceful_island/grass_2.tscn" id="10_y8yb7"]
-[ext_resource type="PackedScene" uid="uid://g6ektn38chvg" path="res://assets/environmentPieces/peaceful_island/grass_3.tscn" id="11_8irsv"]
+[ext_resource type="PackedScene" uid="uid://dly3g0b5sqii7" path="res://assets/environmentPieces/level_details/grass_1.tscn" id="9_e5ydf"]
+[ext_resource type="PackedScene" uid="uid://dq5aik6jyb0o6" path="res://assets/environmentPieces/level_details/grass_2.tscn" id="10_y8yb7"]
+[ext_resource type="PackedScene" uid="uid://g6ektn38chvg" path="res://assets/environmentPieces/level_details/grass_3.tscn" id="11_8irsv"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_jbwox"]
 

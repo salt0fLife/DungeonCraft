@@ -1552,22 +1552,24 @@ shadow_mesh = SubResource("ArrayMesh_ktsio")
 [node name="genericAvatar" type="Node3D" parent="."]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 script = ExtResource("1_xe47e")
+animation_state = "walk"
 walk_tilt = 0.15
 eye_lids = Vector2(1.05, 0.32)
 eye_taper = 0.1
 eye_scale = 1.035
+stride_mult = 1.5
 
 [node name="root" type="Node3D" parent="genericAvatar"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.869417, 0)
 
 [node name="chestBase" type="Node3D" parent="genericAvatar/root"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, -0.00158355, -0.0235081, 0.00145244)
+transform = Transform3D(0.99996, -0.00146729, -0.00884219, 0, 0.98651, -0.163703, 0.00896312, 0.163697, 0.986469, 0.000175904, -0.0189575, -0.00187146)
 
 [node name="hip_L" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.995003, -0.0122509, 0.0990787, 0, 0.992438, 0.122714, -0.0998333, -0.122101, 0.987482, 0.075, -0.282, -0.001)
+transform = Transform3D(0.999134, -0.0407689, 0.00816982, 0.0338041, 0.910864, 0.411311, -0.0242104, -0.410678, 0.911457, 0.075, -0.232405, -0.001)
 
 [node name="knee_L" type="Node3D" parent="genericAvatar/root/chestBase/hip_L"]
-transform = Transform3D(1, 0, 0, 0, 0.992133, -0.125195, 0, 0.125195, 0.992133, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.640649, -0.767835, 0, 0.767835, 0.640649, 0, -0.274171, 0)
 
 [node name="leftFootN" type="MeshInstance3D" parent="genericAvatar/root/chestBase/hip_L/knee_L"]
 transform = Transform3D(0.999239, 0.0389944, 0, -0.0389944, 0.999239, 0, 0, 0, 1, -0.00034523, -0.000279844, 0.0477088)
@@ -1614,10 +1616,10 @@ mesh = SubResource("ArrayMesh_yqdh4")
 skeleton = NodePath("")
 
 [node name="hip_R" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.995004, 0.0122509, -0.0990789, 0, 0.992438, 0.122714, 0.0998334, -0.122101, 0.987484, -0.075, -0.282, -0.001)
+transform = Transform3D(0.999904, 0.0107106, 0.00885567, -0.0119497, 0.987936, 0.154375, -0.00709541, -0.154466, 0.987973, -0.075, -0.281595, -0.001)
 
 [node name="knee_R" type="Node3D" parent="genericAvatar/root/chestBase/hip_R"]
-transform = Transform3D(1, 0, 0, 0, 0.992133, -0.125195, 0, 0.125195, 0.992133, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.999951, 0.0099669, 0, -0.0099669, 0.999951, 0, -0.274171, 0)
 
 [node name="rightFootN" type="MeshInstance3D" parent="genericAvatar/root/chestBase/hip_R/knee_R"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00167769, -0.000256211, 0.0477359)
@@ -1664,7 +1666,7 @@ mesh = SubResource("ArrayMesh_lnst2")
 skeleton = NodePath("")
 
 [node name="neck" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, 0.0374912, 0, -0.0374912, 0.999296, 0, 0.289384, -0.00323021)
+transform = Transform3D(0.999905, -0.00194221, 0.0136917, 0, 0.990088, 0.140446, -0.0138288, -0.140433, 0.989992, 0, 0.289384, -0.00323021)
 
 [node name="eyeBrows_L" type="MeshInstance3D" parent="genericAvatar/root/chestBase/neck"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0619893, 0.196939, 0.163494)
@@ -1693,7 +1695,6 @@ skeleton = NodePath("")
 
 [node name="headOutsideP" type="MeshInstance3D" parent="genericAvatar/root/chestBase/neck"]
 transform = Transform3D(1, 0, 0, 2.11758e-22, 1, 0, 0, 0, 1, 0, 0.153, 0.02)
-visible = false
 mesh = SubResource("ArrayMesh_oky5c")
 skeleton = NodePath("")
 
@@ -1735,10 +1736,10 @@ font = ExtResource("3_cyvtf")
 outline_size = 6
 
 [node name="shoulder_L" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.999972, -0.00607338, -0.00473779, 0.00628054, 0.998965, 0.0450051, 0.00445957, -0.0450334, 0.998975, 0.14978, 0.2397, -0.0014265)
+transform = Transform3D(0.99719, -0.0749296, 0, 0.0748088, 0.995577, -0.0568114, 0.00425687, 0.0566517, 0.998384, 0.14978, 0.226162, -0.0014265)
 
 [node name="elbowL" type="Node3D" parent="genericAvatar/root/chestBase/shoulder_L"]
-transform = Transform3D(1, 0, 0, 0, 0.999607, 0.0280207, 0, -0.0280207, 0.999607, 0.0786937, -0.240458, -0.002611)
+transform = Transform3D(1, 0, 0, 0, 0.957682, 0.287827, 0, -0.287827, 0.957682, 0.0786937, -0.240458, -0.002611)
 
 [node name="leftArm2N" type="MeshInstance3D" parent="genericAvatar/root/chestBase/shoulder_L/elbowL"]
 transform = Transform3D(0.994646, 0.103344, 0, -0.103344, 0.994646, 0, 0, 0, 1, 0, 0, 0)
@@ -1781,10 +1782,10 @@ mesh = SubResource("ArrayMesh_qyi5x")
 skeleton = NodePath("")
 
 [node name="shoulder_R" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.999972, 0.00607338, 0.00473779, -0.00628054, 0.998966, 0.0450051, -0.00445957, -0.0450335, 0.998975, -0.14978, 0.2323, -0.00142637)
+transform = Transform3D(0.99719, 0.0749296, 0, -0.0748895, 0.996651, 0.0327844, 0.00245653, -0.0326922, 0.999462, -0.14978, 0.245838, -0.00142637)
 
 [node name="elbowR" type="Node3D" parent="genericAvatar/root/chestBase/shoulder_R"]
-transform = Transform3D(1, 0, 0, 0, 0.999607, 0.0280207, 0, -0.0280207, 0.999607, -0.0786937, -0.240458, -0.00261103)
+transform = Transform3D(1, 0, 0, 0, 0.888489, 0.458897, 0, -0.458897, 0.888489, -0.0786937, -0.240458, -0.00261103)
 
 [node name="rightArm2N" type="MeshInstance3D" parent="genericAvatar/root/chestBase/shoulder_R/elbowR"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00799122, 0.000275373, 0.0298535)
@@ -1845,10 +1846,10 @@ mesh = SubResource("ArrayMesh_6vwim")
 skeleton = NodePath("")
 
 [node name="tailBase" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.988958, -0.1274, 0.0756577, 0, 0.510607, 0.859815, -0.148171, -0.850323, 0.504971, 0, 0, -0.088)
+transform = Transform3D(0.995982, 0.0819071, -0.0361066, 0, 0.40337, 0.915037, 0.0895121, -0.911364, 0.401751, 0, 0, -0.088)
 
 [node name="tailMiddle" type="Node3D" parent="genericAvatar/root/chestBase/tailBase"]
-transform = Transform3D(0.975629, 0.0399869, 0.21575, 0, 0.983255, -0.182235, -0.219424, 0.177794, 0.959291, 0, 0, 0)
+transform = Transform3D(0.952468, 0.0555157, 0.299535, 0, 0.983255, -0.182235, -0.304637, 0.173574, 0.936518, 0, 0, 0)
 
 [node name="tailLast" type="Node3D" parent="genericAvatar/root/chestBase/tailBase/tailMiddle"]
-transform = Transform3D(0.985989, 0.0473769, 0.159941, 0, 0.95882, -0.284016, -0.166811, 0.280036, 0.945385, 0, 0, 0)
+transform = Transform3D(0.972628, 0.0659965, 0.2228, 0, 0.95882, -0.284015, -0.232369, 0.276241, 0.932574, 0, 0, 0)
