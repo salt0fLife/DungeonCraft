@@ -85,6 +85,7 @@ func _ready():
 	if !is_multiplayer_authority():
 		request_cosmetics.rpc()
 		return
+	Global.connect("loaded_world",_on_world_load)
 	Inventory.connect("update_accessories", update_accessories)
 	display_name = Global.display_name
 	update_stats_from_accessories()
@@ -101,12 +102,22 @@ func _ready():
 	#avatar.set_invisible()
 	avatar.set_visibility_layer(1,false)
 	avatar.set_visibility_layer(2,true)
+	hands.visible = true
 	AG_handler.visible = false
+
+func _on_world_load():
+	tp(Vector3.ZERO,Vector3.ZERO)
+
 
 var jump_buffer = 0.0
 func _input(event):
 	if !is_multiplayer_authority() or Global.disable_avatar:
 		return
+	if Input.is_action_just_pressed("emote1"):
+		if current_animation != "wave":
+			play_arm_anim("wave")
+		else:
+			play_arm_anim("")
 	if Input.is_action_just_pressed("interact"):
 		attempt_to_interact()
 	if Input.is_action_just_pressed("lm"):
@@ -122,6 +133,7 @@ func _input(event):
 		if camera.position.z == 0.0:
 			camera.position.z = 2.0
 			avatar.set_visibility_layer(1, true)
+			hands.visible = false
 			AG_handler.visible = true
 		elif camera.position.z == 2.0:
 			camera.position.z = -2.0
@@ -129,6 +141,7 @@ func _input(event):
 		else:
 			camera.rotation.y = 0.0
 			avatar.set_visibility_layer(1, false)
+			hands.visible = true
 			AG_handler.visible = false
 			camera.position.z = 0.0
 	if Input.is_action_just_pressed("sprint") and Input.is_action_pressed("up"):
@@ -407,13 +420,45 @@ func sync_information(pos: Vector3, rot: float, rotB: float, anim_state: String,
 func sync_cosmetics(skin, t: Array, dn: String):
 	avatar.set_display_name(dn)
 	display_name = dn
-	avatar.load_skin(Global.data_to_image(skin), t[0],t[1],t[2],t[3],t[4],t[5])
+	var skin_img = Global.data_to_image(skin)
+	avatar.load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5])
+	load_skin_hands(t[3],skin_img)
+
+@onready var hands_meshes = [
+	$playerAvatar/cameraHandler/hands/handR/rightArm2N,
+	$playerAvatar/cameraHandler/hands/handR/rightArm2NOL,
+	$playerAvatar/cameraHandler/hands/handR/rightArm2S,
+	$playerAvatar/cameraHandler/hands/handR/rightArm2SOL,
+	$playerAvatar/cameraHandler/hands/handR/rightArm1N,
+	$playerAvatar/cameraHandler/hands/handR/rightArm1NOL,
+	$playerAvatar/cameraHandler/hands/handR/rightArm1S,
+	$playerAvatar/cameraHandler/hands/handR/rightArm1SOL
+]
+
+var h_m_slim = [
+	2,3,6,7
+]
+
+func load_skin_hands(slim, img):
+	var mat = hands_meshes[0].get_active_material(0).duplicate()
+	mat.albedo_texture = img
+	for m in hands_meshes:
+		m.set_surface_override_material(0, mat)
+		m.visible = !slim
+	for i in h_m_slim:
+		hands_meshes[i].visible = slim
+
 
 @rpc("any_peer","reliable")
 func request_cosmetics() -> void:
 	if is_multiplayer_authority():
 		sync_cosmetics.rpc(Global.skin, [Global.ears, Global.tail, Global.snout, Global.slim, Global.eyeColor, Global.mouthData], Global.display_name)
 		update_accessories_graphics.rpc(Inventory.accessories)
+		sync_hand_anim.rpc(current_animation)
+
+@rpc("any_peer","reliable")
+func sync_hand_anim(key):
+	play_arm_anim(key)
 
 @rpc("any_peer","unreliable")
 func blink_funny() -> void:
@@ -464,6 +509,7 @@ func die(attacker = "", key = ""):
 
 func _on_left_mouse():
 	Global.emit_signal("spawn_projectile", "arrow", look_reference.global_position, get_look_dir(), display_name)
+	play_arm_anim("punch")
 	pass
 
 @onready var look_reference = $playerAvatar/cameraHandler/lookReference
@@ -513,6 +559,41 @@ func play_footstep():
 	$footsteps.play()
 	pass
 
+##arm animations
+@onready var handR = $playerAvatar/cameraHandler/hands/handR
 
+func play_arm_anim(key):
+	current_animation = key
+	play_avatar_arm_anim(key)
+	play_avatar_arm_anim.rpc(key)
+	anim_time = 1.0
 
+@rpc("any_peer","reliable")
+func play_avatar_arm_anim(key):
+	avatar.play_arm_anim(key)
+
+var anim_time = 0.0
+var current_animation = ""
+func _process(delta):
+	match current_animation:
+		"":
+			handR.rotation_degrees = Vector3(65.4,170.4,-176.9)
+			handR.position = Vector3(0.391,-0.429,0.005)
+			anim_time = 0.0
+		"punch":
+			anim_time -= delta*4.0
+			handR.rotation.x = 1.141445 + sin(anim_time*PI)*0.5
+			handR.rotation.y = 2.96706 + (sin(anim_time*PI-PI*0.2)+0.75)*0.5
+			if anim_time < 0.0:
+				current_animation = ""
+		"wave":
+			anim_time -= delta*0.65
+			handR.rotation.x = 0.575959 - sin(anim_time*PI*2.0)*0.1
+			handR.rotation.z = -3.0874874 + (sin(anim_time*PI*2.0))*0.5
+			handR.position.z = -0.25
+			handR.position.x = 0.5
+			if anim_time < 0.0:
+				anim_time += 1.0
+	
+	pass
 

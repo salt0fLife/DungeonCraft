@@ -246,7 +246,7 @@ _spawnable_scenes = PackedStringArray("res://entities/projectiles/arrow.tscn")
 spawn_path = NodePath(".")
 
 [node name="worldSync" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://world/peaceful_island.tscn", "res://world/world_1.tscn", "res://world/world_2.tscn", "res://debug/debug_world.tscn")
+_spawnable_scenes = PackedStringArray("res://world/peaceful_island.tscn", "res://world/world_1.tscn", "res://world/world_2.tscn", "res://debug/debug_world.tscn", "res://world/gm_construct.tscn")
 spawn_path = NodePath(".")
 
 [node name="postEffects" type="TextureRect" parent="."]

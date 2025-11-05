@@ -149,6 +149,7 @@ func _process(delta):
 			"fly":
 				fly(delta, animation_speed, crouching, head_angle, walk_angle, walk_speed)
 				pass
+		handle_arm_anims(delta)
 	if save_pose:
 		save_pose_transforms()
 		save_pose = false
@@ -215,6 +216,51 @@ func idle(delta, energy, tilt, crouch, head_angle, fall):
 	set_eye_param("shader_parameter/eyeScale", eye_scale)
 	##
 	pass
+
+
+##arm_overide_animations
+@export var arm_override_anim = ""
+@export var arm_anim_speed = 1.0
+var arm_anim_time = 0.0
+
+func handle_arm_anims(delta):
+	match arm_override_anim:
+		"":
+			arm_anim_time = 1.0
+		"punch":
+			arm_punch(delta)
+		"wave":
+			arm_wave(delta)
+	pass
+
+func play_arm_anim(key : String) -> void:
+	arm_anim_time = 1.0
+	arm_override_anim = key
+
+func arm_wave(delta):
+	arm_anim_time -= delta*0.65
+	if arm_anim_time < 0.0:
+		arm_anim_time += 1.0
+	bone_paths[8].rotation.x = PI+(sin(arm_anim_time*PI*2.0)+1.0)*0.1
+	bone_paths[9].rotation.x = -0.1-(sin(arm_anim_time*PI*2.0+1.1)+1.0)*0.1
+	bone_paths[8].rotation.z = sin(arm_anim_time*PI*4.0)*0.5-0.2
+	bone_paths[0].rotation.z += -sin(arm_anim_time*PI*2.0)*0.025-0.1
+	bone_paths[0].position.x = sin(arm_anim_time*PI*2.0)*0.01+0.005
+	bone_paths[1].rotation.z += sin(arm_anim_time*PI*2.0)*0.025+0.1
+	bone_paths[3].rotation.z += sin(arm_anim_time*PI*2.0)*0.025+0.1
+	bone_paths[6].rotation.z += sin(arm_anim_time*PI*2.0)*0.025+0.1
+	pass
+
+func arm_punch(delta):
+	arm_anim_time -= delta * 4.0 * arm_anim_speed
+	bone_paths[8].rotation.x += -sin(arm_anim_time*PI)*1.25
+	bone_paths[8].rotation.y += -sin(arm_anim_time*PI-PI*0.5)*0.34-0.1
+	bone_paths[9].rotation.x += -sin(arm_anim_time*PI-PI*0.25)*0.25-0.25
+	if arm_anim_time < 0.0:
+		arm_override_anim = ""
+		arm_anim_time = 1.0
+## end of arm_anims
+
 
 func force_blink():
 	blink_time = 0.0
@@ -379,7 +425,6 @@ func walk(delta, mult = 1.0, speed = 1.0, angle = 0.0, tilt_in = 0.0, crouching 
 		emit_signal("step")
 	
 	pass
-
 
 func fly(delta, speed = 1.0, crouching = 0.0, head_angle = Vector2(0.0,0.0), angle = 0.0, mult = 0.0):
 	speed += mult

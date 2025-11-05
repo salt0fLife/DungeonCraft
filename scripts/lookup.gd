@@ -18,7 +18,8 @@ const worlds = {
 	"world1" : ["res://world/world_1.tscn", 1.0],
 	"peaceful_island" : ["res://world/peaceful_island.tscn", 0.0],
 	"world2" : ["res://world/world_2.tscn", 0.2],
-	"debug" : ["res://debug/debug_world.tscn", 0.0]
+	"debug" : ["res://debug/debug_world.tscn", 0.0],
+	"gm_construct" : ["res://world/gm_construct.tscn", 0.4]
 }
 
 enum itemType {

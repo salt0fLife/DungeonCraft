@@ -30,6 +30,11 @@ func _ready():
 	multiplayer.server_relay = true
 	multiplayer.connect("server_disconnected", _on_lost_connection)
 	load_skin_info()
+	worldSync.connect("spawned",emit_world_loaded)
+
+signal world_loaded
+func emit_world_loaded():
+	emit_signal("world_loaded")
 
 func load_skin_info():
 	print("loaded skin with key " + str(skin_key))
@@ -87,7 +92,7 @@ func host_local():
 	multiplayer.server_relay = true
 	playerSync.boot(true)
 	hide_menu()
-	_on_change_world("debug")
+	_on_change_world("gm_construct")
 
 func join_local(address = ""):
 	Global.is_host = false
