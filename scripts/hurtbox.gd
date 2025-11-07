@@ -9,9 +9,9 @@ func _ready():
 	get_node(health_handler).connect("died", _on_host_died)
 
 @rpc("any_peer", "call_local")
-func take_damage(val, pos, owned_by):
+func take_damage(val, pos, owned_by, knockback = Vector3.ZERO):
 	var amount = val*damage_mult
-	get_node(health_handler).damage(amount, id, owned_by)
+	get_node(health_handler).damage(amount, id, owned_by, knockback)
 	var h = hitmarker.instantiate()
 	h.val = amount
 	add_child(h)

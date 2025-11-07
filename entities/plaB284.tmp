@@ -577,13 +577,13 @@ script = ExtResource("1_rca1e")
 [node name="playerAvatar" parent="." instance=ExtResource("2_841cm")]
 
 [node name="chestBase" parent="playerAvatar/genericAvatar/root" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.31238e-05, -0.00986751, 0.00127647)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00320341, -0.000161606, 0.00127647)
 
 [node name="hip_L" parent="playerAvatar/genericAvatar/root/chestBase" index="0"]
-transform = Transform3D(0.995004, -0.00295488, 0.0997894, 0, 0.999557, 0.0295981, -0.0998334, -0.0294502, 0.994566, 0.075, -0.282, -0.001)
+transform = Transform3D(0.995004, -4.84008e-05, 0.0998332, 0, 0.999996, 0.000484816, -0.0998334, -0.000482393, 0.995002, 0.075, -0.282, -0.001)
 
 [node name="knee_L" parent="playerAvatar/genericAvatar/root/chestBase/hip_L" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.997572, -0.0695458, 0, 0.0695458, 0.997572, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.999173, -0.0404735, 0, 0.0404735, 0.999173, 0, -0.274171, 0)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/hip_L/knee_L" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -602,10 +602,10 @@ transform = Transform3D(1, 0, 0, -4.65661e-10, 1, -1.49012e-08, -2.23517e-08, -7
 shape = SubResource("ConcavePolygonShape3D_bllhi")
 
 [node name="hip_R" parent="playerAvatar/genericAvatar/root/chestBase" index="1"]
-transform = Transform3D(0.995004, 0.00295487, -0.0997894, 0, 0.999556, 0.0295981, 0.0998334, -0.0294502, 0.994566, -0.075, -0.282, -0.001)
+transform = Transform3D(0.995004, 4.84007e-05, -0.0998332, 0, 0.999995, 0.000484816, 0.0998334, -0.000482393, 0.995002, -0.075, -0.282, -0.001)
 
 [node name="knee_R" parent="playerAvatar/genericAvatar/root/chestBase/hip_R" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.997575, -0.0695461, 0, 0.0695461, 0.997575, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.999176, -0.0404736, 0, 0.0404736, 0.999176, 0, -0.274171, 0)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/hip_R/knee_R" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -651,10 +651,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.65661e-10, 0.142511, 0.0193
 shape = SubResource("ConcavePolygonShape3D_hok5u")
 
 [node name="shoulder_L" parent="playerAvatar/genericAvatar/root/chestBase" index="3"]
-transform = Transform3D(0.999969, -0.00485212, -0.00499764, 0.00499829, 0.999541, 0.0296643, 0.00485144, -0.0296885, 0.999542, 0.14978, 0.240253, -0.0014265)
+transform = Transform3D(0.999927, -0.0107837, -0.00383895, 0.0108044, 0.999921, 0.00540396, 0.00378038, -0.00544508, 0.999973, 0.14978, 0.240253, -0.0014265)
 
 [node name="elbowL" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999795, 0.0200021, 0, -0.0200021, 0.999795, 0.0786937, -0.240458, -0.002611)
+transform = Transform3D(1, 0, 0, 0, 0.9986, 0.0528131, 0, -0.0528131, 0.9986, 0.0786937, -0.240458, -0.002611)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_L/elbowL" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -673,10 +673,10 @@ transform = Transform3D(1, -1.04774e-09, 0, -1.09867e-09, 1, 0, 0, 1.86265e-09, 
 shape = SubResource("ConcavePolygonShape3D_s58j1")
 
 [node name="shoulder_R" parent="playerAvatar/genericAvatar/root/chestBase" index="4"]
-transform = Transform3D(0.999969, 0.00485211, 0.00499765, -0.00499829, 0.99954, 0.0296643, -0.00485144, -0.0296885, 0.999543, -0.14978, 0.231747, -0.00142637)
+transform = Transform3D(0.999927, 0.0107837, 0.00383895, -0.0108044, 0.99992, 0.00540396, -0.00378038, -0.00544508, 0.999974, -0.14978, 0.231747, -0.00142637)
 
 [node name="elbowR" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_R" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999793, 0.020002, 0, -0.020002, 0.999793, -0.0786937, -0.240458, -0.00261103)
+transform = Transform3D(1, 0, 0, 0, 0.998598, 0.0528129, 0, -0.0528129, 0.998598, -0.0786937, -0.240458, -0.00261103)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_R/elbowR" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -695,13 +695,13 @@ transform = Transform3D(1, 1.23691e-10, 0, 2.04454e-09, 1, 0, -2.32831e-10, 1.86
 shape = SubResource("ConcavePolygonShape3D_kvt2y")
 
 [node name="tailBase" parent="playerAvatar/genericAvatar/root/chestBase" index="9"]
-transform = Transform3D(0.936931, 0.316999, -0.147203, 0, 0.42117, 0.906977, 0.349511, -0.849778, 0.394607, 0, 0, -0.088)
+transform = Transform3D(0.885376, 0.426447, -0.185067, 0, 0.398102, 0.917337, 0.464873, -0.812191, 0.35247, 0, 0, -0.088)
 
 [node name="tailMiddle" parent="playerAvatar/genericAvatar/root/chestBase/tailBase" index="0"]
-transform = Transform3D(0.996889, -0.0143611, -0.0774857, 0, 0.983252, -0.182235, 0.0788056, 0.181668, 0.980194, 0, 0, 0)
+transform = Transform3D(0.972555, 0.0424008, 0.228774, 0, 0.983252, -0.182235, -0.232671, 0.177234, 0.956267, 0, 0, 0)
 
 [node name="tailLast" parent="playerAvatar/genericAvatar/root/chestBase/tailBase/tailMiddle" index="0"]
-transform = Transform3D(0.998215, -0.0169635, -0.0572679, 0, 0.95882, -0.284014, 0.0597276, 0.283508, 0.957106, 0, 0, 0)
+transform = Transform3D(0.984218, 0.0502591, 0.169672, 0, 0.95882, -0.284014, -0.17696, 0.279532, 0.943686, 0, 0, 0)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase" index="10" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../..")
@@ -725,12 +725,8 @@ fov = 90.0
 
 [node name="look" type="RayCast3D" parent="playerAvatar/cameraHandler/bobbingHandler"]
 target_position = Vector3(0, 0, -5)
-collision_mask = 11
+collision_mask = 3
 collide_with_areas = true
-
-[node name="attack" type="RayCast3D" parent="playerAvatar/cameraHandler/bobbingHandler"]
-target_position = Vector3(0, 0, -5)
-collision_mask = 9
 
 [node name="hands" type="Node3D" parent="playerAvatar/cameraHandler"]
 visible = false
@@ -860,15 +856,6 @@ layout_mode = 1
 offset_right = 53.0
 offset_bottom = 23.0
 text = "talking"
-
-[node name="health" type="Label" parent="UI"]
-layout_mode = 1
-offset_right = 40.0
-offset_bottom = 23.0
-theme_override_colors/font_color = Color(0.768627, 0.2, 0.2, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 6
-text = "100"
 
 [node name="spawnSounds" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("5_0xt38")

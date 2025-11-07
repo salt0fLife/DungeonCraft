@@ -231,11 +231,29 @@ func handle_arm_anims(delta):
 			arm_punch(delta)
 		"wave":
 			arm_wave(delta)
+		"point":
+			arm_point(delta)
 	pass
 
 func play_arm_anim(key : String) -> void:
 	arm_anim_time = 1.0
 	arm_override_anim = key
+
+func arm_point(delta):
+	bone_paths[8].rotation.x = head_angle.x -1.5
+	bone_paths[6].rotation.z += abs(head_angle.x)*0.2
+	bone_paths[1].rotation.z += clamp(abs(head_angle.x)*0.15,0.0,0.1)
+	bone_paths[3].rotation.z -= clamp(abs(head_angle.x)*0.15,0.0,0.1)
+	bone_paths[0].rotation.y += 0.2
+	bone_paths[1].rotation.y -= 0.2
+	bone_paths[3].rotation.y -= 0.2
+	bone_paths[5].rotation.y -= 0.2
+	if !animation_state == "walk":
+		bone_paths[8].rotation.y = head_angle.y*0.75 -0.2
+	else:
+		bone_paths[8].rotation.y = -head_angle.y*0.75 - walk_angle*0.5 -0.2
+	bone_paths[9].rotation.x *= 0.1
+	pass
 
 func arm_wave(delta):
 	arm_anim_time -= delta*0.65

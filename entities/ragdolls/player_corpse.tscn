@@ -1410,7 +1410,6 @@ script = ExtResource("1_p3k5l")
 [node name="head" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.27617, -0.137028)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="head"]
@@ -1460,7 +1459,6 @@ softness = 0.43
 [node name="torso" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00499817, 0.851378, -0.11444)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="torso"]
@@ -1544,7 +1542,6 @@ node_b = NodePath("../legR2")
 [node name="arm1L" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.229594, 0.985833, -0.122057)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="arm1L"]
@@ -1576,7 +1573,6 @@ skeleton = NodePath("")
 [node name="arm1L2" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.24158, 0.691056, -0.122057)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="arm1L2"]
@@ -1608,7 +1604,6 @@ skeleton = NodePath("")
 [node name="arm1R" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23, 0.986, -0.122)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="arm1R"]
@@ -1640,7 +1635,6 @@ skeleton = NodePath("")
 [node name="arm1R2" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.242, 0.691, -0.122)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="arm1R2"]
@@ -1672,7 +1666,6 @@ skeleton = NodePath("")
 [node name="legR" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0732785, 0.412937, -0.122)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="legR"]
@@ -1704,7 +1697,6 @@ skeleton = NodePath("")
 [node name="legR2" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0685821, 0.0989302, -0.122)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="legR2"]
@@ -1736,7 +1728,6 @@ skeleton = NodePath("")
 [node name="legL" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.073, 0.413, -0.122)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="legL"]
@@ -1768,7 +1759,6 @@ skeleton = NodePath("")
 [node name="legL2" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.069, 0.099, -0.122)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="legL2"]

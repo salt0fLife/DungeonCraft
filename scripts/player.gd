@@ -21,14 +21,18 @@ var attributes = {
 	"flying_speed" : 3.0,
 	"max_health" : 10,
 	"jump_velocity" : 6.0,
-	"can_fly" : false
+	"can_fly" : false,
+	"air_acceleration": 1.0,
+	"strength" : 1.0
 }
 const base_attributes = {
 	"speed" : 3.0,
 	"flying_speed" : 5.0,
 	"max_health" : 10,
 	"jump_velocity" : 6.0,
-	"can_fly" : false
+	"can_fly" : false,
+	"air_acceleration": 1.0,
+	"strength" : 1.0
 }
 var accessories_paths = {
 }
@@ -44,12 +48,13 @@ func update_stats_from_accessories():
 		var val = Inventory.accessories[i]
 		if val != "":
 			var data = Lookup.items[val]
-			for k in data[2][1].keys():
+			for k in data[3][1].keys():
 				if attributes.has(k):
-					if typeof(data[2][1][k]) == TYPE_BOOL:
-						attributes[k] = data[2][1][k]
+					if typeof(data[3][1][k]) == TYPE_BOOL:
+						attributes[k] = data[3][1][k]
 					else:
-						attributes[k] += data[2][1][k]
+						attributes[k] += data[3][1][k]
+	update_health_graphics()
 	pass
 
 @rpc("any_peer", "reliable")
@@ -61,7 +66,7 @@ func update_accessories_graphics(a = Inventory.accessories):
 				accessories_paths[k].queue_free()
 				accessories_paths[k] = null
 		if val != "":
-			var s = load(Lookup.items[val][2][0]).instantiate()
+			var s = load(Lookup.items[val][3][0]).instantiate()
 			AG_handler.add_child(s)
 			accessories_paths[k] = s
 			pass
@@ -85,6 +90,8 @@ func _ready():
 	if !is_multiplayer_authority():
 		request_cosmetics.rpc()
 		return
+	update_health_graphics()
+	settup_team_hurtboxes()
 	Global.connect("loaded_world",_on_world_load)
 	Inventory.connect("update_accessories", update_accessories)
 	display_name = Global.display_name
@@ -105,6 +112,13 @@ func _ready():
 	hands.visible = true
 	AG_handler.visible = false
 
+func settup_team_hurtboxes():
+	for h in hurtboxes:
+		h.set_collision_layer_value(4,false)
+		h.set_collision_layer_value(7,false)
+	pass
+
+
 func _on_world_load():
 	tp(Vector3.ZERO,Vector3.ZERO)
 
@@ -113,6 +127,11 @@ var jump_buffer = 0.0
 func _input(event):
 	if !is_multiplayer_authority() or Global.disable_avatar:
 		return
+	if Input.is_action_just_pressed("emote2"):
+		if current_animation != "point":
+			play_arm_anim("point")
+		else:
+			play_arm_anim("")
 	if Input.is_action_just_pressed("emote1"):
 		if current_animation != "wave":
 			play_arm_anim("wave")
@@ -184,6 +203,7 @@ func _input(event):
 		avatar.head_angle.y = -body.rotation.y
 
 func jump():
+	jumped_last_frame = true
 	play_footstep()
 	velocity.y = attributes["jump_velocity"]
 	avatar.walk_tilt = 0.0
@@ -191,6 +211,7 @@ func jump():
 
 var airborn = false
 var last_y_velocity = 0.0
+var jumped_last_frame = false
 func _physics_process(delta):
 	if !is_multiplayer_authority():
 		return
@@ -204,6 +225,7 @@ func _physics_process(delta):
 		position = Vector3.ZERO
 	# Add the gravity.
 	if not is_on_floor():
+		jumped_last_frame = false
 		avatar.animation_speed = lerp(avatar.animation_speed, 0.25*speed_multipler, delta*40.0)
 		last_y_velocity = velocity.y
 		airborn = true
@@ -226,6 +248,10 @@ func _physics_process(delta):
 			airborn = false
 			play_footstep()
 			avatar.crouching += abs(last_y_velocity/9.8)*0.25
+			var mult = (-last_y_velocity/9.8)*0.9
+			var d = int(pow(mult,3.0))
+			if d > 0:
+				damage(d,"legs","fall_damage",Vector3(0.0,last_y_velocity,0.0))
 			#avatar.walk_tilt += abs(last_y_velocity/9.8)*0.25
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
@@ -259,7 +285,7 @@ func _physics_process(delta):
 		avatar.animation_state = "walk"
 		body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
 		avatar.head_angle.y = body.rotation.y
-		if !airborn:
+		if !airborn and !jumped_last_frame:
 			if sprinting and !crouching:
 				velocity.x = lerp(velocity.x, direction.x * attributes["speed"]*2.2*speed_multipler, delta*8.0)
 				velocity.z = lerp(velocity.z, direction.z * attributes["speed"]*2.2*speed_multipler, delta*8.0)
@@ -277,7 +303,7 @@ func _physics_process(delta):
 			avatar.head_angle.y = -avatar.walk_angle
 			avatar.walk_angle = 0.0
 		avatar.animation_state = "idle"
-		if !airborn:
+		if !airborn and !jumped_last_frame:
 			velocity.x = lerp(velocity.x, 0.0, 16.0*delta)
 			velocity.z = lerp(velocity.z, 0.0, 16.0*delta)
 	
@@ -347,8 +373,8 @@ func update_velocity_air(wishdir : Vector3, vel : Vector3, frame_time : float) -
 	var add_speed = (maxSpeed - current_speed)
 	if add_speed < 0:
 		add_speed = 0
-	elif add_speed > acceleration/4 * frame_time:
-		add_speed = acceleration/4 * frame_time
+	elif add_speed > acceleration/3*attributes["air_acceleration"] * frame_time: #should be accaleration/4 but i made it more fun :D
+		add_speed = acceleration/3*attributes["air_acceleration"] * frame_time
 	return vel + add_speed * wishdir
 
 #stepping
@@ -372,7 +398,7 @@ func snap_down_to_stairs_check() -> void:
 	var did_snap := false
 	var floor_below : bool = $stepDownCheckRaycast.is_colliding() and not is_surface_to_steep($stepDownCheckRaycast.get_collision_normal())
 	var was_on_floor_last_frame = Engine.get_physics_frames() - last_frame_was_on_floor == 1
-	if not is_on_floor() and velocity.y <= 0 and (was_on_floor_last_frame or _snapped_to_stairs_last_frame) and floor_below:
+	if not is_on_floor() and velocity.y <= 0 and (was_on_floor_last_frame or _snapped_to_stairs_last_frame) and floor_below and !jumped_last_frame:
 		var body_test_result = PhysicsTestMotionResult3D.new()
 		if run_body_test_motion(self.global_transform, Vector3(0, -MAX_STEP_HEIGHT, 0), body_test_result):
 			var translate_y = body_test_result.get_travel().y
@@ -382,7 +408,7 @@ func snap_down_to_stairs_check() -> void:
 	_snapped_to_stairs_last_frame = did_snap
 
 func snap_up_to_stairs_check(delta) -> bool:
-	if not is_on_floor() and not _snapped_to_stairs_last_frame: return false
+	if not is_on_floor() and not _snapped_to_stairs_last_frame and not jumped_last_frame: return false
 	var expected_move_motion = self.velocity * Vector3(1, 0, 1) * delta
 	var step_pos_with_clearance = self.global_transform.translated(expected_move_motion + Vector3(0, MAX_STEP_HEIGHT * 2, 0))
 	###
@@ -476,40 +502,80 @@ func despawn():
 	queue_free()
 
 @rpc("any_peer","reliable")
-func tp(pos, rot = graphics.rotation.y):
+func tp(pos : Vector3, rot = graphics.rotation.y):
 	global_position = pos
 	graphics.rotation.y = rot
 
-func damage(amount, id, attacker):
+func damage(amount, id, attacker, knockback = Vector3.ZERO):
 	print(attacker + " hit " + display_name + " with " + str(amount) + " damage in the " + id)
 	health -= amount
+	if !is_multiplayer_authority():
+		return
+	velocity += knockback
 	if health <= 0:
 		var key = ""
 		if id == "head":
 			key = "headshot"
-		die(attacker, key)
+		die(attacker, key, knockback)
+	update_health_graphics()
 
 signal died
 @onready var corpse = preload("res://entities/ragdolls/player_corpse.tscn")
-func die(attacker = "", key = ""):
+func die(attacker = "", key = "",add_vel = Vector3.ZERO):
 	emit_signal("died")
 	health = attributes["max_health"]
-	var c = corpse.instantiate()
-	var pos = position
-	await get_tree().physics_frame
-	c.rotation.y = graphics.rotation.y
-	c.position = pos
-	get_parent().add_child(c)
-	c.activate("", velocity, Vector3(0.0,5.0,0.0))
 	match key:
 		"headshot" : 
 			print(display_name + " was headshot by " + attacker)
-			return
-	print(display_name + " was killed by " + attacker)
+		_:
+			print(display_name + " was killed by " + attacker)
+	if !is_multiplayer_authority():
+		return
+	create_ragdoll(add_vel, position, graphics.rotation.y, velocity)
+	create_ragdoll.rpc(add_vel, position, graphics.rotation.y, velocity)
+	#var c = corpse.instantiate()
+	#var pos = position
+	#await get_tree().physics_frame
+	#c.rotation.y = graphics.rotation.y
+	#c.position = pos
+	#get_parent().add_child(c)
+	#c.activate("", velocity+add_vel, Vector3(0.0,5.0,0.0))
+	velocity = Vector3.ZERO
+	tp(Vector3.ZERO,0.0)
 
+@rpc("any_peer","reliable")
+func create_ragdoll(add_vel,pos,rot,vel):
+	var c = corpse.instantiate()
+	await get_tree().physics_frame
+	c.rotation.y = rot
+	c.position = pos
+	get_parent().add_child(c)
+	c.activate("", vel+add_vel, Vector3(0.0,5.0,0.0))
+
+
+@onready var hurtboxes = [
+	$playerAvatar/genericAvatar/root/chestBase/hip_L/knee_L/hurtbox,
+	$playerAvatar/genericAvatar/root/chestBase/hip_L/hurtbox,
+	$playerAvatar/genericAvatar/root/chestBase/hip_R/knee_R/hurtbox,
+	$playerAvatar/genericAvatar/root/chestBase/hip_R/hurtbox,
+	$playerAvatar/genericAvatar/root/chestBase/neck/hurtbox,
+	$playerAvatar/genericAvatar/root/chestBase/shoulder_L/elbowL/hurtbox,
+	$playerAvatar/genericAvatar/root/chestBase/shoulder_L/hurtbox,
+	$playerAvatar/genericAvatar/root/chestBase/shoulder_R/elbowR/hurtbox,
+	$playerAvatar/genericAvatar/root/chestBase/shoulder_R/hurtbox,
+	$playerAvatar/genericAvatar/root/chestBase/hurtbox
+]
+
+@onready var attack_look = $playerAvatar/cameraHandler/bobbingHandler/attack
 func _on_left_mouse():
-	Global.emit_signal("spawn_projectile", "arrow", look_reference.global_position, get_look_dir(), display_name)
+	#Global.emit_signal("spawn_projectile", "arrow", look_reference.global_position, get_look_dir(), display_name)
 	play_arm_anim("punch")
+	if attack_look.is_colliding():
+		var hit = attack_look.get_collider()
+		var poi = attack_look.get_collision_point()
+		var dir = get_look_dir() + Vector3(0.0,0.5,0.0)
+		if hit.is_in_group("hurtbox"):
+			hit.take_damage.rpc(attributes["strength"],poi,display_name,dir*attributes["strength"]*2.0)
 	pass
 
 @onready var look_reference = $playerAvatar/cameraHandler/lookReference
@@ -584,6 +650,7 @@ func _process(delta):
 			anim_time -= delta*4.0
 			handR.rotation.x = 1.141445 + sin(anim_time*PI)*0.5
 			handR.rotation.y = 2.96706 + (sin(anim_time*PI-PI*0.2)+0.75)*0.5
+			handR.position = Vector3(0.391,-0.429,0.005)
 			if anim_time < 0.0:
 				current_animation = ""
 		"wave":
@@ -594,6 +661,31 @@ func _process(delta):
 			handR.position.x = 0.5
 			if anim_time < 0.0:
 				anim_time += 1.0
-	
+		"point":
+			anim_time -= delta*0.25
+			handR.position = Vector3(0.584,-25429,-0.447)
+			handR.rotation.x = sin(anim_time*PI*2.0)*0.001 + 1.5
+			handR.rotation.y = sin(anim_time*PI*2.0+PI*0.1)*0.001 + 1.675
+			handR.rotation.y = sin(anim_time*PI*2.0+PI*0.5)*0.001 + 1.65
+			if anim_time < 0.0:
+				anim_time += 1.0
 	pass
 
+
+##ui and stuffs
+func update_health_graphics():
+	$UI/health.text = str(health) + " / " + str(attributes["max_health"])
+	var dif = health/attributes["max_health"]
+	var col = Color("GREEN")
+	if dif < 0.75:
+		col = Color("YELLOW")
+	elif dif < 0.5:
+		col = Color("ORANGE")
+	elif dif < 0.25:
+		col = Color("RED")
+	$UI/health.set("theme_override_colors/font_color",col)
+	pass
+
+
+
+##
