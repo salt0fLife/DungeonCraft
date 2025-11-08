@@ -2,7 +2,7 @@ extends Node3D
 
 @onready var avatar = get_parent().get_parent().get_child(0)
 @onready var chest = avatar.bone_paths[0]
-@onready var bone_paths =[
+@onready var bone_paths = [
 	$base,
 	$base/arm1R,
 	$base/arm1R/arm2R,

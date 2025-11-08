@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://bvwhuk8odvygv"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_0qsh3"]
+size = Vector3(0.045, 1, 0.23)
+
+[sub_resource type="BoxMesh" id="BoxMesh_q0nyu"]
+size = Vector3(0.04, 0.15, 0.15)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_0r45n"]
+top_radius = 0.05
+bottom_radius = 0.05
+height = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_ea8ij"]
+size = Vector3(0.105, 0.065, 0.285)
+
+[node name="iron_sword" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.545164, 0)
+mesh = SubResource("BoxMesh_0qsh3")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 1.04798, 0)
+mesh = SubResource("BoxMesh_q0nyu")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2022, 0)
+mesh = SubResource("CylinderMesh_0r45n")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0641957, 0)
+mesh = SubResource("BoxMesh_ea8ij")

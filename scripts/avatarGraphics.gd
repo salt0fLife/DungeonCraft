@@ -661,6 +661,8 @@ var slim = [
 	
 ]
 
+var is_slim = false
+
 @onready var transparent = [
 	$root/chestBase/hip_L/leftLeg1NOL,
 	$root/chestBase/hip_L/leftLeg1SOL,
@@ -705,9 +707,10 @@ func set_cosmetic_visibility(ears, tail, snout):
 	#$root/chestBase/torso/neck/head/snout.visible = snout
 	pass
 
-func load_skin(img, ears, tail, snout, is_slim, eColors, mData):
+func load_skin(img, ears, tail, snout, is_slim_loc, eColors, mData):
 	#img = ImageTexture.create_from_image(Image.load_from_file("res://assets/glb/playerAvatar002_dapper128Secondary.png"))
 	#var meshes = avatar.meshes
+	is_slim = is_slim_loc
 	var mat = meshes[0].get_active_material(0).duplicate()
 	mat.albedo_texture = img
 	set_cosmetic_visibility(ears, tail, snout)

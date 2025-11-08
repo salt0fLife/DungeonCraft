@@ -1437,7 +1437,6 @@ skeleton = NodePath("")
 
 [node name="headOutsideP" type="MeshInstance3D" parent="head"]
 transform = Transform3D(-1, -3.33067e-15, -8.74226e-08, 2.11758e-22, 1, 3.72529e-08, 8.74228e-08, -3.72529e-08, -0.999998, -0.00208682, 0.00898015, 0.00243123)
-visible = false
 mesh = SubResource("ArrayMesh_oky5c")
 skeleton = NodePath("")
 
@@ -1459,7 +1458,7 @@ softness = 0.43
 [node name="torso" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00499817, 0.851378, -0.11444)
 collision_layer = 16
-freeze = true
+contact_monitor = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="torso"]
 transform = Transform3D(-1, -3.27759e-09, -8.73613e-08, 0, 0.999297, -0.0374912, 8.74228e-08, -0.0374912, -0.999296, 0, 0, 0)
@@ -1486,6 +1485,12 @@ transform = Transform3D(-1, -3.27759e-09, -8.73613e-08, 0, 0.999297, -0.0374912,
 visible = false
 mesh = SubResource("ArrayMesh_6vwim")
 skeleton = NodePath("")
+
+[node name="RayCast3D" type="RayCast3D" parent="torso"]
+target_position = Vector3(0, 0, -1)
+
+[node name="RayCast3D2" type="RayCast3D" parent="torso"]
+target_position = Vector3(0, 0, 1)
 
 [node name="HingeJoint3D2" type="ConeTwistJoint3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.155778, 1.05236, -0.11285)

@@ -57,6 +57,35 @@ func update_stats_from_accessories():
 	update_health_graphics()
 	pass
 
+var held_item_data = []
+func update_held_item():
+	held_item_data = Inventory.get_held_item_data()
+	if held_item_data != []:
+		var mp = held_item_data[1]
+		update_held_item_graphics(mp)
+		update_held_item_graphics.rpc(mp)
+	else:
+		update_held_item_graphics("")
+		update_held_item_graphics.rpc("")
+	pass
+
+@onready var fp_item_handler = $playerAvatar/cameraHandler/hands/handR/fp_item_handler
+@onready var tp_item_handler = $playerAvatar/genericAvatar/root/chestBase/shoulder_R/elbowR/tp_item_handler
+
+@rpc("any_peer","reliable")
+func update_held_item_graphics(model_path):
+	for f in fp_item_handler.get_children():
+		f.queue_free()
+	for t in tp_item_handler.get_children():
+		t.queue_free()
+	if model_path == "":
+		return
+	var mf = load(model_path).instantiate()
+	var mt = load(model_path).instantiate()
+	fp_item_handler.add_child(mf)
+	tp_item_handler.add_child(mt)
+
+
 @rpc("any_peer", "reliable")
 func update_accessories_graphics(a = Inventory.accessories):
 	for k in a.keys():
@@ -90,10 +119,11 @@ func _ready():
 	if !is_multiplayer_authority():
 		request_cosmetics.rpc()
 		return
+	settup_team_hurtboxes(true)
 	update_health_graphics()
-	settup_team_hurtboxes()
 	Global.connect("loaded_world",_on_world_load)
 	Inventory.connect("update_accessories", update_accessories)
+	Inventory.connect("update_held_item",update_held_item)
 	display_name = Global.display_name
 	update_stats_from_accessories()
 	update_accessories_graphics()
@@ -112,10 +142,10 @@ func _ready():
 	hands.visible = true
 	AG_handler.visible = false
 
-func settup_team_hurtboxes():
+func settup_team_hurtboxes(is_team):
 	for h in hurtboxes:
-		h.set_collision_layer_value(4,false)
-		h.set_collision_layer_value(7,false)
+		h.set_collision_layer_value(4,!is_team)
+		h.set_collision_layer_value(7,is_team)
 	pass
 
 
@@ -127,6 +157,28 @@ var jump_buffer = 0.0
 func _input(event):
 	if !is_multiplayer_authority() or Global.disable_avatar:
 		return
+	##hotbar
+	if Input.is_action_just_pressed("hotbar_0"):
+		Inventory.change_held_item(0)
+	if Input.is_action_just_pressed("hotbar_1"):
+		Inventory.change_held_item(1)
+	if Input.is_action_just_pressed("hotbar_2"):
+		Inventory.change_held_item(2)
+	if Input.is_action_just_pressed("hotbar_3"):
+		Inventory.change_held_item(3)
+	if Input.is_action_just_pressed("hotbar_4"):
+		Inventory.change_held_item(4)
+	if Input.is_action_just_pressed("hotbar_5"):
+		Inventory.change_held_item(5)
+	if Input.is_action_just_pressed("hotbar_6"):
+		Inventory.change_held_item(6)
+	if Input.is_action_just_pressed("hotbar_7"):
+		Inventory.change_held_item(7)
+	if Input.is_action_just_pressed("hotbar_8"):
+		Inventory.change_held_item(8)
+	if Input.is_action_just_pressed("hotbar_9"):
+		Inventory.change_held_item(9)
+	##
 	if Input.is_action_just_pressed("emote2"):
 		if current_animation != "point":
 			play_arm_anim("point")
@@ -141,10 +193,10 @@ func _input(event):
 		attempt_to_interact()
 	if Input.is_action_just_pressed("lm"):
 		_on_left_mouse()
+	if Input.is_action_just_pressed("rm"):
+		_on_right_mouse()
 	if Input.is_action_just_pressed("push_to_talk"):
 		voip.enabled = !voip.enabled
-	#if Input.is_action_just_released("push_to_talk"):
-		#voip.enabled = false
 	if Input.is_action_just_pressed("blink"):
 		blink_funny()
 		blink_funny.rpc()
@@ -154,6 +206,7 @@ func _input(event):
 			avatar.set_visibility_layer(1, true)
 			hands.visible = false
 			AG_handler.visible = true
+			tp_item_handler.visible = true
 		elif camera.position.z == 2.0:
 			camera.position.z = -2.0
 			camera.rotation.y = PI
@@ -162,6 +215,7 @@ func _input(event):
 			avatar.set_visibility_layer(1, false)
 			hands.visible = true
 			AG_handler.visible = false
+			tp_item_handler.visible = false
 			camera.position.z = 0.0
 	if Input.is_action_just_pressed("sprint") and Input.is_action_pressed("up"):
 		sprinting = true
@@ -203,6 +257,7 @@ func _input(event):
 		avatar.head_angle.y = -body.rotation.y
 
 func jump():
+	jump_buffer = 0.0
 	jumped_last_frame = true
 	play_footstep()
 	velocity.y = attributes["jump_velocity"]
@@ -212,6 +267,7 @@ func jump():
 var airborn = false
 var last_y_velocity = 0.0
 var jumped_last_frame = false
+var vel_last_frame = Vector3.ZERO
 func _physics_process(delta):
 	if !is_multiplayer_authority():
 		return
@@ -258,29 +314,7 @@ func _physics_process(delta):
 	var input_dir = Input.get_vector("left", "right", "up", "down")
 	var direction = (graphics.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if flying:
-		avatar.animation_state = "fly"
-		var input_vertical = Input.get_vector("crouch", "jump", "down", "up")
-		if sprinting:
-			velocity.y = lerp(velocity.y, input_vertical.x * attributes["flying_speed"]*2.2*speed_multipler, delta*8.0)
-		else:
-			velocity.y = lerp(velocity.y, input_vertical.x * attributes["flying_speed"]*speed_multipler, delta*8.0)
-		if direction:
-			body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
-			avatar.head_angle.y = body.rotation.y
-			if sprinting:
-				velocity.x = lerp(velocity.x, direction.x * attributes["flying_speed"]*2.2*speed_multipler, delta*8.0)
-				velocity.z = lerp(velocity.z, direction.z * attributes["flying_speed"]*2.2*speed_multipler, delta*8.0)
-			else:
-				velocity.x = lerp(velocity.x, direction.x * attributes["flying_speed"]*speed_multipler, delta*8.0)
-				velocity.z = lerp(velocity.z, direction.z * attributes["flying_speed"]*speed_multipler, delta*8.0)
-		else:
-			if avatar.walk_angle != 0.0:
-				body.rotation.y = avatar.walk_angle
-				avatar.head_angle.y = -avatar.walk_angle
-				avatar.walk_angle = 0.0
-			velocity.x = lerp(velocity.x, 0.0, 4.0*delta)
-			velocity.z = lerp(velocity.z, 0.0, 4.0*delta)
-		pass
+		update_velocity_flying(delta)
 	elif direction:
 		avatar.animation_state = "walk"
 		body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
@@ -332,10 +366,100 @@ func _physics_process(delta):
 	avatar.walk_speed = true_speed #lerp(avatar.walk_speed, true_speed, delta*4.0)
 	avatar.walk_tilt = lerp(avatar.walk_tilt, 0.15, delta*8.0)
 	bobbing(delta, true_speed, input_dir)
+	vel_last_frame = velocity
 	if not snap_up_to_stairs_check(delta):
 		move_and_slide()
 		snap_down_to_stairs_check()
 	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt)
+
+func update_velocity_gliding(delta):
+	var yawcos = cos(graphics.rotation.y);
+	var yawsin = sin(graphics.rotation.y);
+	var pitchcos = cos(cameraHandler.rotation.x);
+	var pitchsin = sin(cameraHandler.rotation.x);
+	
+	var lookX = yawsin * -pitchcos;
+	var lookY = -pitchsin;
+	var lookZ = yawcos * -pitchcos;
+	
+	var hvel = sqrt(velocity.x * velocity.x + velocity.z * velocity.z); #Vector2(velocity.x,velocity.z).length
+	var hlook = pitchcos;
+	var sqrpitchcos = pitchcos * pitchcos;
+	
+	velocity.y += (-0.08 + sqrpitchcos * 0.06);
+	velocity.y -= gravity * delta
+	if (velocity.y < 0 && hlook > 0):
+		var yacc = velocity.y * -0.1 * sqrpitchcos;
+		velocity.y += yacc;
+		velocity.x += lookX * yacc / hlook ;
+		velocity.z += lookZ * yacc / hlook ;
+	
+	if (-cameraHandler.rotation.x < 0):
+		var yacc = hvel * -pitchsin * 0.04;
+		velocity.y += yacc * 3.5 ;
+		velocity.x -= lookX * yacc / hlook ;
+		velocity.z -= lookZ * yacc / hlook ;
+	
+	if (hlook > 0):
+		velocity.x += (lookX / hlook * hvel - velocity.x) * 0.1 ;
+		velocity.z += (lookZ / hlook * hvel - velocity.z) * 0.1 ;
+		
+	velocity.x *= 0.99 ;
+	velocity.y *= 0.98 ;
+	velocity.z *= 0.99 ;
+
+##flying old
+		#velocity -= velocity*delta*attributes["flying_speed"]*0.5
+		#velocity -= velocity*0.1*delta
+		#avatar.animation_state = "fly"
+		#var input_vertical = Input.get_vector("crouch", "jump", "down", "up")
+		#if sprinting:
+			#velocity.y = lerp(velocity.y, input_vertical.x * attributes["flying_speed"]*2.2*speed_multipler, delta*8.0)
+		#else:
+			#velocity.y = lerp(velocity.y, input_vertical.x * attributes["flying_speed"]*speed_multipler, delta*8.0)
+		#if direction:
+			#body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
+			#avatar.head_angle.y = body.rotation.y
+			#if sprinting:
+				#velocity.x = lerp(velocity.x, direction.x * attributes["flying_speed"]*2.2*speed_multipler, delta*8.0)
+				#velocity.z = lerp(velocity.z, direction.z * attributes["flying_speed"]*2.2*speed_multipler, delta*8.0)
+			#else:
+				#velocity.x = lerp(velocity.x, direction.x * attributes["flying_speed"]*speed_multipler, delta*8.0)
+				#velocity.z = lerp(velocity.z, direction.z * attributes["flying_speed"]*speed_multipler, delta*8.0)
+		#else:
+			#if avatar.walk_angle != 0.0:
+				#body.rotation.y = avatar.walk_angle
+				#avatar.head_angle.y = -avatar.walk_angle
+				#avatar.walk_angle = 0.0
+			#velocity.x = lerp(velocity.x, 0.0, 4.0*delta)
+			#velocity.z = lerp(velocity.z, 0.0, 4.0*delta)
+		#pass
+
+
+func update_velocity_flying(delta):
+	if avatar.walk_angle != 0.0:
+		body.rotation.y = avatar.walk_angle
+		avatar.head_angle.y = -avatar.walk_angle
+		avatar.walk_angle = 0.0
+	var mult = (vel_last_frame - velocity).length()/(attributes["flying_speed"]*2.0)
+	var d = int(pow(mult,3))
+	if d > 0:
+		damage(d,"legs","fall_damage",Vector3(0.0,last_y_velocity,0.0))
+	avatar.animation_state = "fly"
+	var input_vertical = Input.get_vector("crouch", "jump", "down", "up")
+	var look_dir = get_look_dir()
+	var combined_dir = (Vector3(0.0,input_vertical.x,0.0)+look_dir)*0.5
+	var speed = velocity.length()
+	var f_s = attributes["flying_speed"] * 5.0
+	velocity.y -= gravity * delta
+	velocity += combined_dir * f_s * delta
+	
+	var friction = speed/f_s
+	
+	
+	velocity -= velocity * friction * delta
+	body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
+	avatar.head_angle.y = body.rotation.y
 
 func dir_to_angle(dir):
 	if dir.y == 0.0 and dir.x == 0.0:
@@ -408,7 +532,8 @@ func snap_down_to_stairs_check() -> void:
 	_snapped_to_stairs_last_frame = did_snap
 
 func snap_up_to_stairs_check(delta) -> bool:
-	if not is_on_floor() and not _snapped_to_stairs_last_frame and not jumped_last_frame: return false
+	if jumped_last_frame: return false
+	if not is_on_floor() and not _snapped_to_stairs_last_frame: return false
 	var expected_move_motion = self.velocity * Vector3(1, 0, 1) * delta
 	var step_pos_with_clearance = self.global_transform.translated(expected_move_motion + Vector3(0, MAX_STEP_HEIGHT * 2, 0))
 	###
@@ -509,6 +634,10 @@ func tp(pos : Vector3, rot = graphics.rotation.y):
 func damage(amount, id, attacker, knockback = Vector3.ZERO):
 	print(attacker + " hit " + display_name + " with " + str(amount) + " damage in the " + id)
 	health -= amount
+	#var b = load("res://assets/effects/blood_mist.tscn").instantiate()
+	#b.position = position + Vector3(0.0,1.0,0.0)
+	#b.velocity = knockback
+	#get_parent().add_child(b)
 	if !is_multiplayer_authority():
 		return
 	velocity += knockback
@@ -517,6 +646,7 @@ func damage(amount, id, attacker, knockback = Vector3.ZERO):
 		if id == "head":
 			key = "headshot"
 		die(attacker, key, knockback)
+	
 	update_health_graphics()
 
 signal died
@@ -550,6 +680,7 @@ func create_ragdoll(add_vel,pos,rot,vel):
 	c.rotation.y = rot
 	c.position = pos
 	get_parent().add_child(c)
+	c.load_skin(avatar.meshes[0].get_active_material(0).duplicate(),avatar.is_slim)
 	c.activate("", vel+add_vel, Vector3(0.0,5.0,0.0))
 
 
@@ -569,6 +700,19 @@ func create_ragdoll(add_vel,pos,rot,vel):
 @onready var attack_look = $playerAvatar/cameraHandler/bobbingHandler/attack
 func _on_left_mouse():
 	#Global.emit_signal("spawn_projectile", "arrow", look_reference.global_position, get_look_dir(), display_name)
+	
+	var type = -1
+	if held_item_data != []:
+		type = held_item_data[2]
+	
+	match type:
+		Lookup.itemType.weapons_sword:
+			use_sword()
+		_:
+			punch()
+	pass
+
+func punch():
 	play_arm_anim("punch")
 	if attack_look.is_colliding():
 		var hit = attack_look.get_collider()
@@ -577,6 +721,13 @@ func _on_left_mouse():
 		if hit.is_in_group("hurtbox"):
 			hit.take_damage.rpc(attributes["strength"],poi,display_name,dir*attributes["strength"]*2.0)
 	pass
+
+func use_sword():
+	print("used_sword")
+	pass
+
+func _on_right_mouse():
+	Global.emit_signal("spawn_projectile", "arrow", look_reference.global_position, get_look_dir(), display_name)
 
 @onready var look_reference = $playerAvatar/cameraHandler/lookReference
 func get_look_dir():

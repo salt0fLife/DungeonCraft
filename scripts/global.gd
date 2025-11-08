@@ -28,7 +28,8 @@ func data_to_image(data) -> ImageTexture:
 var disable_avatar = false
 
 ##changed to keep it from cluttering up the main folder while debugging
-var savePath = OS.get_executable_path().get_base_dir() + "/"#"res://"#"user://"#"res://tempSaveFolder/"#OS.get_executable_path().get_base_dir() + "/"#"res://"#"user://"
+#var savePath = OS.get_executable_path().get_base_dir() + "/"#"res://"#"user://"#"res://tempSaveFolder/"#OS.get_executable_path().get_base_dir() + "/"#"res://"#"user://"
+var savePath = "res://tempSaveFolder/"#OS.get_executable_path().get_base_dir() + "/"#"res://"#"user://"
 
 func get_skin_list():
 	if DirAccess.dir_exists_absolute(savePath+"/skins"):

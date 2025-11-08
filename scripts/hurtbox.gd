@@ -16,7 +16,6 @@ func take_damage(val, pos, owned_by, knockback = Vector3.ZERO):
 	h.val = amount
 	add_child(h)
 	h.global_position = pos
-	pass
 
 signal remove_shrapnel
 func _on_host_died():

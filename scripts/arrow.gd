@@ -79,7 +79,7 @@ func _physics_process(delta):
 					#hit dead on
 					if hit.hardness == penetration:
 						#penetrates anyway
-						hit.take_damage.rpc(5.0, poi, owned_by)
+						hit.take_damage.rpc(5.0, poi, owned_by, velocity)
 						die(hit, 30.0)
 					else:
 						#snap/spin
@@ -93,7 +93,7 @@ func _physics_process(delta):
 					velocity = norm*speed*(1.0+dot*0.75)*0.5
 					#velocity.bounce(-norm)
 			else:
-				hit.take_damage.rpc(5.0, poi, owned_by)
+				hit.take_damage.rpc(5.0, poi, owned_by, velocity)
 				die(hit, 30.0)
 		else:
 			die(null)

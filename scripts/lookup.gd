@@ -24,12 +24,13 @@ const worlds = {
 
 enum itemType {
 	crafting_throwable, #[damage]
-	accessories_cape,
+	accessories_cape, #[scene_path, {attribute_modifiers}]
 	accessories_shirt,
 	accessories_hat,
 	accessories_pants,
 	accessories_gloves,
 	accessories_shoes,
+	weapons_sword #[damage, range]
 }
 
 
@@ -39,10 +40,13 @@ const items= { #[display_name, graphics_path, type_enum, data]
 	
 	##accessories
 	"devil_wings" : ["devil wings", "res://assets/itemGraphics/rock_graphics.tscn", itemType.accessories_cape, ["res://accessories/cape/wings.tscn", {"can_fly":true,"flying_speed":+2.0,"jump_velocity":+3.0, "speed" : +0.25}]],
-	"iron_chestpiece" : ["res://accessories/shirt/iron_chestpiece.tscn", {"speed" : -0.1, "jump_velocity":-0.1}],
-	"iron_helmet" : ["res://accessories/hat/iron_helmet.tscn", {"speed" : -0.05}],
-	"iron_leggings" : ["res://accessories/pants/iron_leggings.tscn", {"speed" : -0.2, "jump_velocity":-0.1}],
-	"iron_gauntlets" : ["res://accessories/gloves/iron_gauntlets.tscn", {"speed" : - 0.01}],
-	"leather_boots" : ["res://accessories/boots/leather_boots.tscn", {"speed" : +0.25}],
-	"bhoppers" : ["Bhoppers", "res://assets/itemGraphics/rock_graphics.tscn", itemType.accessories_shoes, ["res://accessories/boots/leather_boots.tscn", {"air_acceleration" : +1.0}]]
+	"iron_chestpiece" : ["iron chestpiece", "res://assets/itemGraphics/rock_graphics.tscn", itemType.accessories_shirt, ["res://accessories/shirt/iron_chestpiece.tscn", {"speed" : -0.1, "jump_velocity":-0.1}]],
+	"iron_helmet" : ["iron helmet",  "res://assets/itemGraphics/rock_graphics.tscn", itemType.accessories_hat, ["res://accessories/hat/iron_helmet.tscn", {"speed" : -0.05}]],
+	"iron_leggings" : ["iron leggings", "res://assets/itemGraphics/rock_graphics.tscn", itemType.accessories_pants, ["res://accessories/pants/iron_leggings.tscn", {"speed" : -0.2, "jump_velocity":-0.1}]],
+	"iron_gauntlets" : ["iron gauntlets", "res://assets/itemGraphics/rock_graphics.tscn", itemType.accessories_gloves, ["res://accessories/gloves/iron_gauntlets.tscn", {"speed" : - 0.01}]],
+	"leather_boots" : ["leather boots", "res://assets/itemGraphics/rock_graphics.tscn", itemType.accessories_shoes, ["res://accessories/boots/leather_boots.tscn", {"speed" : +0.25}]],
+	"bhoppers" : ["Bhoppers", "res://assets/itemGraphics/rock_graphics.tscn", itemType.accessories_shoes, ["res://accessories/boots/leather_boots.tscn", {"air_acceleration" : +1.0}]],
+	
+	##weapons
+	"iron_sword" : ["iron sword", "res://assets/itemGraphics/iron_sword.tscn", itemType.weapons_sword, []]
 }
