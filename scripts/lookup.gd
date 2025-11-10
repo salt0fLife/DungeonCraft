@@ -48,5 +48,5 @@ const items= { #[display_name, graphics_path, type_enum, data]
 	"bhoppers" : ["Bhoppers", "res://assets/itemGraphics/rock_graphics.tscn", itemType.accessories_shoes, ["res://accessories/boots/leather_boots.tscn", {"air_acceleration" : +1.0}]],
 	
 	##weapons
-	"iron_sword" : ["iron sword", "res://assets/itemGraphics/iron_sword.tscn", itemType.weapons_sword, []]
+	"iron_sword" : ["iron sword", "res://assets/itemGraphics/iron_sword.tscn", itemType.weapons_sword, [5,6.0]]
 }

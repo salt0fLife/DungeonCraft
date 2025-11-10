@@ -31,6 +31,8 @@ extends Node3D
 	#$root/chestBase/torso/tailBase/tail/tailMiddle/tail_001/tailLast #12
 ]
 
+
+
 const bone_names = [
 	"torso",
 	"hip_L",
@@ -145,7 +147,7 @@ func _process(delta):
 			"walk":
 				walk(delta, walk_speed, animation_speed, walk_angle, walk_tilt, crouching, head_angle, falling, stride_mult)
 			"idle":
-				idle(delta, idle_energy, walk_tilt, crouching, head_angle, falling)
+				idle(delta, idle_energy, walk_tilt, crouching, head_angle, falling,resist_dir)
 			"fly":
 				fly(delta, animation_speed, crouching, head_angle, walk_angle, walk_speed)
 				pass
@@ -160,7 +162,8 @@ func _process(delta):
 		apply_load_pose = false
 	pass
 
-func idle(delta, energy, tilt, crouch, head_angle, fall):
+@export var resist_dir = Vector2.ZERO
+func idle(delta, energy, tilt, crouch, head_angle, fall,res_dir):
 	tilt += crouch*6.0 * 3.1 * (2.0/3.0)
 	if head_angle.x > 0.0:
 		tilt += head_angle.x
@@ -198,6 +201,15 @@ func idle(delta, energy, tilt, crouch, head_angle, fall):
 	bone_paths[10].rotation.y = sin(time*1.5)*0.5* (energy + (1.0-energy)*0.5) + head_angle.y * 0.25
 	bone_paths[11].rotation.y = -sin(time*1.5+PI*0.33)*0.33*(energy + (1.0-energy)*0.5)
 	bone_paths[12].rotation.y = -sin(time*1.5+PI*0.33)*0.25*(energy + (1.0-energy)*0.5)
+	##resist dir
+	bone_paths[0].rotation.x += resist_dir.y*0.5*cos(-head_angle.y)
+	bone_paths[0].rotation.z += resist_dir.y*0.5*sin(-head_angle.y)
+	
+	bone_paths[0].rotation.z += resist_dir.x*0.5*cos(-head_angle.y)
+	bone_paths[0].rotation.x += resist_dir.x*0.5*sin(-head_angle.y)
+	
+	
+	
 	## eyes
 	eye_pos.y = head_angle.x * 0.5
 	eye_pos.x = head_angle.y * 0.5

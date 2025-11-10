@@ -264,6 +264,8 @@ func jump():
 	avatar.walk_tilt = 0.0
 	avatar.animation_speed = 4.0
 
+@onready var dust_particles = $dust_particles
+@onready var impact_particles = $impact_particles
 var airborn = false
 var last_y_velocity = 0.0
 var jumped_last_frame = false
@@ -308,6 +310,9 @@ func _physics_process(delta):
 			var d = int(pow(mult,3.0))
 			if d > 0:
 				damage(d,"legs","fall_damage",Vector3(0.0,last_y_velocity,0.0))
+				if d > 3:
+					heavy_impact()
+					heavy_impact.rpc()
 			#avatar.walk_tilt += abs(last_y_velocity/9.8)*0.25
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
@@ -337,9 +342,20 @@ func _physics_process(delta):
 			avatar.head_angle.y = -avatar.walk_angle
 			avatar.walk_angle = 0.0
 		avatar.animation_state = "idle"
+		avatar.resist_dir = Vector2(0.0,0.0)
+		dust_particles.emitting = false
 		if !airborn and !jumped_last_frame:
-			velocity.x = lerp(velocity.x, 0.0, 16.0*delta)
-			velocity.z = lerp(velocity.z, 0.0, 16.0*delta)
+			if velocity.length() > attributes["speed"]*3.0:
+				dust_particles.emitting = true
+				velocity.x = lerp(velocity.x, 0.0, 2.0*delta)#16.0*delta)
+				velocity.z = lerp(velocity.z, 0.0, 2.0*delta)#16.0*delta)
+				var resist_dir = (velocity.normalized() * (velocity.length()/(attributes["speed"]*4.0))* graphics.transform.basis)
+				if resist_dir.length() > 1.0:
+					resist_dir = resist_dir.normalized()
+				avatar.resist_dir = Vector2(resist_dir.x,resist_dir.z)
+			else:
+				velocity.x = lerp(velocity.x, 0.0, 16.0*delta)
+				velocity.z = lerp(velocity.z, 0.0, 16.0*delta)
 	
 	var true_speed = sqrt(pow(velocity.x,2) + pow(velocity.z,2))/(attributes["speed"]*speed_multipler)
 	#if direction:
@@ -370,7 +386,13 @@ func _physics_process(delta):
 	if not snap_up_to_stairs_check(delta):
 		move_and_slide()
 		snap_down_to_stairs_check()
-	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt)
+	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting)
+
+@rpc("any_peer","unreliable")
+func heavy_impact():
+	dust_particles.emitting = true
+	
+	pass
 
 func update_velocity_gliding(delta):
 	var yawcos = cos(graphics.rotation.y);
@@ -553,7 +575,7 @@ func snap_up_to_stairs_check(delta) -> bool:
 	return false
 
 @rpc("any_peer", "unreliable")
-func sync_information(pos: Vector3, rot: float, rotB: float, anim_state: String, WalkS: float, AnimS: float, C: float, HA: Vector2, F:float, A: float, T: float):
+func sync_information(pos: Vector3, rot: float, rotB: float, anim_state: String, WalkS: float, AnimS: float, C: float, HA: Vector2, F:float, A: float, T: float, res_dir: Vector2, em_dust: bool):
 	position = pos
 	graphics.rotation.y = rot
 	body.rotation.y = rotB
@@ -565,6 +587,8 @@ func sync_information(pos: Vector3, rot: float, rotB: float, anim_state: String,
 	avatar.falling = F
 	avatar.walk_angle = A
 	avatar.walk_tilt = T
+	avatar.resist_dir = res_dir
+	dust_particles.emitting = em_dust
 	pass
 
 @rpc("any_peer", "reliable")
@@ -714,16 +738,12 @@ func _on_left_mouse():
 
 func punch():
 	play_arm_anim("punch")
-	if attack_look.is_colliding():
-		var hit = attack_look.get_collider()
-		var poi = attack_look.get_collision_point()
-		var dir = get_look_dir() + Vector3(0.0,0.5,0.0)
-		if hit.is_in_group("hurtbox"):
-			hit.take_damage.rpc(attributes["strength"],poi,display_name,dir*attributes["strength"]*2.0)
 	pass
 
 func use_sword():
 	print("used_sword")
+	play_arm_anim("slash_1")
+	
 	pass
 
 func _on_right_mouse():
@@ -787,8 +807,10 @@ func play_arm_anim(key):
 
 @rpc("any_peer","reliable")
 func play_avatar_arm_anim(key):
+	anim_event = false
 	avatar.play_arm_anim(key)
 
+var anim_event = false
 var anim_time = 0.0
 var current_animation = ""
 func _process(delta):
@@ -802,26 +824,48 @@ func _process(delta):
 			handR.rotation.x = 1.141445 + sin(anim_time*PI)*0.5
 			handR.rotation.y = 2.96706 + (sin(anim_time*PI-PI*0.2)+0.75)*0.5
 			handR.position = Vector3(0.391,-0.429,0.005)
+			if anim_time < 0.5 and !anim_event:
+				deal_look_damage()
+				anim_event = true
 			if anim_time < 0.0:
 				current_animation = ""
 		"wave":
+			handR.position = Vector3(0.391,-0.429,0.005)
 			anim_time -= delta*0.65
-			handR.rotation.x = 0.575959 - sin(anim_time*PI*2.0)*0.1
-			handR.rotation.z = -3.0874874 + (sin(anim_time*PI*2.0))*0.5
+			handR.rotation.x = 0.575959 - sin(anim_time*PI*4.0)*0.1
+			handR.rotation.z = -3.0874874 + (sin(anim_time*PI*4.0))*0.5
 			handR.position.z = -0.25
 			handR.position.x = 0.5
 			if anim_time < 0.0:
 				anim_time += 1.0
 		"point":
 			anim_time -= delta*0.25
-			handR.position = Vector3(0.584,-25429,-0.447)
+			handR.position = Vector3(0.584,-0.25429,-0.447)
 			handR.rotation.x = sin(anim_time*PI*2.0)*0.001 + 1.5
-			handR.rotation.y = sin(anim_time*PI*2.0+PI*0.1)*0.001 + 1.675
-			handR.rotation.y = sin(anim_time*PI*2.0+PI*0.5)*0.001 + 1.65
+			handR.rotation.y = sin(anim_time*PI*2.0+PI*0.1)*0.001 + 2.96706
+			handR.rotation.z = sin(anim_time*PI*2.0+PI*0.5)*0.001 - 3.0874874
 			if anim_time < 0.0:
 				anim_time += 1.0
+		"slash_1":
+			anim_time -= delta*2.5
+			handR.position = Vector3(0.391,-0.429,0.005)
+			handR.rotation_degrees = Vector3(65.4,170.4,-176.9)
+			handR.rotation.y -= (sin(anim_time*PI*1.5+PI+PI*0.5)-0.5)*PI*0.5
+			if anim_time < 0.5 and !anim_event:
+				deal_look_damage(held_item_data[3][0],held_item_data[3][1])
+				anim_event = true
+			if anim_time < 0.0:
+				current_animation = ""
 	pass
 
+func deal_look_damage(dam := 1, dist := 5.0) -> void:
+	attack_look.target_position = Vector3(0.0,0.0,-dist)
+	if attack_look.is_colliding():
+		var hit = attack_look.get_collider()
+		var poi = attack_look.get_collision_point()
+		var dir = get_look_dir() + Vector3(0.0,0.5,0.0)
+		if hit.is_in_group("hurtbox"):
+			hit.take_damage.rpc(attributes["strength"]*dam,poi,display_name,dir*attributes["strength"]*2.0)
 
 ##ui and stuffs
 func update_health_graphics():
