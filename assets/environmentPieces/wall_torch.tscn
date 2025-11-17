@@ -12,3 +12,4 @@ mesh = SubResource("BoxMesh_5vgtl")
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.338164, 0.163547)
 light_color = Color(0.729412, 0.447059, 0.301961, 1)
+omni_range = 10.0

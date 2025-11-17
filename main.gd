@@ -92,7 +92,7 @@ func host_local():
 	multiplayer.server_relay = true
 	playerSync.boot(true)
 	hide_menu()
-	_on_change_world("gm_construct")
+	_on_change_world("debug")
 
 func join_local(address = ""):
 	Global.is_host = false
@@ -404,7 +404,7 @@ const projectile_limit = 256
 func spawn_projectile(key, pos, dir, owned_by):
 	if projectileSync.get_child_count(false) > (projectile_limit - 1):
 		projectileSync.get_child(0).queue_free()
-	var proj = load(Lookup.Projectiles[key]).instantiate()
+	var proj = Lookup.Projectiles[key].instantiate()
 	proj.dir = dir
 	proj.owned_by = owned_by
 	projectileSync.add_child(proj, true)

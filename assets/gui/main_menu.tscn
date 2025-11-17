@@ -1,4 +1,119 @@
-[gd_scene format=3 uid="uid://ee87m3q231m5"]
+[gd_scene load_steps=25 format=3 uid="uid://ee87m3q231m5"]
+
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_he02m"]
+[ext_resource type="Shader" path="res://assets/shaders/menu_background_1.gdshader" id="2_gvadm"]
+[ext_resource type="Texture2D" uid="uid://di3272xofxkq1" path="res://assets/textures/gui/dungeonCraftLogoTemp.png" id="3_jd857"]
+[ext_resource type="Theme" uid="uid://bxsqmdqtm4i4k" path="res://assets/themes/genericTheme.tres" id="4_1d6yb"]
+
+[sub_resource type="Gradient" id="Gradient_h8svg"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ux2la"]
+gradient = SubResource("Gradient_h8svg")
+fill_from = Vector2(1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_b58ov"]
+noise_type = 2
+frequency = 0.0124
+fractal_type = 2
+fractal_gain = 0.305
+cellular_distance_function = 3
+cellular_jitter = 0.3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_nabap"]
+seamless = true
+noise = SubResource("FastNoiseLite_b58ov")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_sqffk"]
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lh0ul"]
+seamless = true
+noise = SubResource("FastNoiseLite_sqffk")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_4befw"]
+noise_type = 2
+fractal_type = 2
+cellular_distance_function = 1
+cellular_jitter = 0.54
+cellular_return_type = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_o22i1"]
+seamless = true
+noise = SubResource("FastNoiseLite_4befw")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kebdk"]
+shader = ExtResource("2_gvadm")
+shader_parameter/col1 = Color(0.427451, 0.329412, 0.243137, 1)
+shader_parameter/col2 = Color(0.505882, 0.152941, 0.12549, 1)
+shader_parameter/col3 = Color(0.301961, 0.109804, 0.227451, 1)
+shader_parameter/col4 = Color(0.117647, 0.137255, 0.0823529, 1)
+shader_parameter/shine_col = Color(0.2, 0.568627, 0.788235, 1)
+shader_parameter/background_col = Color(0.364706, 0.0941176, 0.0470588, 1)
+shader_parameter/background_col_2 = Color(0.0941176, 0, 0.254902, 1)
+shader_parameter/offset_percent = Vector2(0, 0)
+shader_parameter/n1 = SubResource("NoiseTexture2D_nabap")
+shader_parameter/n2 = SubResource("NoiseTexture2D_lh0ul")
+shader_parameter/title_card = ExtResource("3_jd857")
+shader_parameter/shine = SubResource("NoiseTexture2D_o22i1")
+shader_parameter/gradient = SubResource("GradientTexture2D_ux2la")
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_1ji4s"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_xyyl7"]
+light_mode = 2
+
+[sub_resource type="Gradient" id="Gradient_pulho"]
+interpolation_color_space = 2
+offsets = PackedFloat32Array(0, 0.206667, 1)
+colors = PackedColorArray(0.497971, 0.956817, 1, 1, 0.725557, 0.949214, 0.952697, 1, 0.96604, 0.575903, 0.602171, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_xk7sr"]
+gradient = SubResource("Gradient_pulho")
+
+[sub_resource type="Curve" id="Curve_8dyo2"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.2, 1), 0.0, 0.0, 0, 0, Vector2(0.8, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_oprct"]
+curve = SubResource("Curve_8dyo2")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1adyv"]
+particle_flag_disable_z = true
+emission_shape_offset = Vector3(-400, 0, 0)
+emission_shape = 3
+emission_box_extents = Vector3(100, 200, 1)
+angle_min = 80.9
+angle_max = 80.9
+initial_velocity_min = 100.0
+initial_velocity_max = 320.22
+gravity = Vector3(0, 0, 0)
+linear_accel_min = -2.25
+linear_accel_max = 4.49
+radial_accel_min = -2.25
+radial_accel_max = 0.15
+scale_min = 0.1
+scale_curve = SubResource("CurveTexture_oprct")
+color_ramp = SubResource("GradientTexture1D_xk7sr")
+hue_variation_min = -0.15
+hue_variation_max = 0.15
+
+[sub_resource type="Gradient" id="Gradient_r2ksm"]
+offsets = PackedFloat32Array(0.3, 0.6)
+colors = PackedColorArray(1, 1, 1, 1, 0.993466, 0.598815, 0.585099, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ti4bk"]
+gradient = SubResource("Gradient_r2ksm")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="Gradient" id="Gradient_ion66"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vsh7f"]
+gradient = SubResource("Gradient_ion66")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.8, 0.2)
 
 [node name="mainMenu" type="Control"]
 layout_mode = 3
@@ -7,6 +122,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_he02m")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -15,12 +131,81 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.262745, 0.160784, 0.219608, 1)
+color = Color(0.12549, 0.0117647, 0.0431373, 1)
 
-[node name="Button" type="Button" parent="."]
-layout_mode = 0
-offset_left = 68.0
-offset_top = 60.0
-offset_right = 241.0
-offset_bottom = 102.0
-text = "hostLocalTest"
+[node name="background1" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_kebdk")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("PlaceholderTexture2D_1ji4s")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Control"]
+material = SubResource("CanvasItemMaterial_xyyl7")
+position = Vector2(119, 315)
+amount = 16
+process_material = SubResource("ParticleProcessMaterial_1adyv")
+texture = SubResource("GradientTexture2D_ti4bk")
+lifetime = 10.0
+speed_scale = 0.66
+randomness = 0.2
+trail_enabled = true
+
+[node name="PointLight2D" type="PointLight2D" parent="Control"]
+position = Vector2(246, -49)
+scale = Vector2(13.5312, 12.3767)
+texture = SubResource("GradientTexture2D_vsh7f")
+
+[node name="PointLight2D2" type="PointLight2D" parent="Control"]
+position = Vector2(1219, 510)
+scale = Vector2(15.6301, 14.2965)
+texture = SubResource("GradientTexture2D_vsh7f")
+
+[node name="PointLight2D3" type="PointLight2D" parent="Control"]
+position = Vector2(362, 665)
+scale = Vector2(15.6301, 14.2965)
+texture = SubResource("GradientTexture2D_vsh7f")
+
+[node name="buttonHandler" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -92.0
+offset_top = -66.0
+offset_right = 92.0
+offset_bottom = -26.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="play" type="Button" parent="buttonHandler"]
+layout_mode = 2
+theme = ExtResource("4_1d6yb")
+text = "PLAY"
+
+[node name="settings" type="Button" parent="buttonHandler"]
+layout_mode = 2
+theme = ExtResource("4_1d6yb")
+text = "SETTINGS"
+
+[node name="quit" type="Button" parent="buttonHandler"]
+layout_mode = 2
+theme = ExtResource("4_1d6yb")
+text = "QUIT"
+
+[connection signal="button_down" from="buttonHandler/play" to="." method="_on_play_button_down"]
+[connection signal="button_down" from="buttonHandler/settings" to="." method="_on_settings_button_down"]
+[connection signal="button_down" from="buttonHandler/quit" to="." method="_on_quit_button_down"]

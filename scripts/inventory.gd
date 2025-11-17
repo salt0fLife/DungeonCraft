@@ -14,8 +14,8 @@ var accessories = {
 var hotbar = [
 	"iron_sword", #0
 	"", #1
-	"", #2
-	"", #3
+	"short_bow", #2
+	"magic_bow", #3
 	"", #4
 	"", #5
 	"", #6

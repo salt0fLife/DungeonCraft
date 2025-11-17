@@ -12,7 +12,7 @@ resource_name = "ironArmor"
 cull_mode = 2
 albedo_texture = ExtResource("3_1p0tt")
 metallic = 1.0
-roughness = 0.340909
+roughness = 0.25
 texture_filter = 2
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_lvi3b"]

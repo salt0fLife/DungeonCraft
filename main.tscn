@@ -242,7 +242,7 @@ _spawnable_scenes = PackedStringArray("res://debug/debug_enemy.tscn", "res://ent
 spawn_path = NodePath(".")
 
 [node name="projectileSync" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://entities/projectiles/arrow.tscn")
+_spawnable_scenes = PackedStringArray("res://entities/projectiles/arrow.tscn", "res://entities/projectiles/spark_bolt.tscn")
 spawn_path = NodePath(".")
 
 [node name="worldSync" type="MultiplayerSpawner" parent="."]
@@ -250,6 +250,7 @@ _spawnable_scenes = PackedStringArray("res://world/peaceful_island.tscn", "res:/
 spawn_path = NodePath(".")
 
 [node name="postEffects" type="TextureRect" parent="."]
+visible = false
 material = SubResource("ShaderMaterial_gbjt2")
 anchors_preset = 15
 anchor_right = 1.0

@@ -1,0 +1,199 @@
+[gd_scene load_steps=36 format=3 uid="uid://bj03v42xy714b"]
+
+[ext_resource type="Script" path="res://scripts/spark_bolt.gd" id="1_egkjq"]
+[ext_resource type="Shader" path="res://assets/shaders/spark_bolt.gdshader" id="1_fnxff"]
+[ext_resource type="AudioStream" uid="uid://dtrkn6hvn24f0" path="res://assets/sounds/explosion/smallExplosion.wav" id="3_5wsyb"]
+[ext_resource type="AudioStream" uid="uid://dwmcsv71kia2a" path="res://assets/sounds/misc/lightBuzzingLoop.wav" id="4_dsn4v"]
+
+[sub_resource type="Gradient" id="Gradient_d6iyq"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_kc31g"]
+gradient = SubResource("Gradient_d6iyq")
+fill_from = Vector2(1, 0.294872)
+fill_to = Vector2(1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_5qwa4"]
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7jr48"]
+noise = SubResource("FastNoiseLite_5qwa4")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wmorj"]
+render_priority = 0
+shader = ExtResource("1_fnxff")
+shader_parameter/base_col = Color(0.678431, 0, 0.564706, 1)
+shader_parameter/sec_col = Color(0.635294, 0.337255, 0.87451, 1)
+shader_parameter/n1 = SubResource("NoiseTexture2D_7jr48")
+shader_parameter/gradient = SubResource("GradientTexture2D_kc31g")
+
+[sub_resource type="SphereMesh" id="SphereMesh_6ejl5"]
+material = SubResource("ShaderMaterial_wmorj")
+radius = 0.075
+height = 0.5
+
+[sub_resource type="Gradient" id="Gradient_g0i4q"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_1kjqv"]
+gradient = SubResource("Gradient_g0i4q")
+fill_from = Vector2(1, 0.132479)
+fill_to = Vector2(1, 1)
+
+[sub_resource type="Gradient" id="Gradient_2du6j"]
+offsets = PackedFloat32Array(0.315789, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_bbtnx"]
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_j8jap"]
+color_ramp = SubResource("Gradient_2du6j")
+noise = SubResource("FastNoiseLite_bbtnx")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w3v0m"]
+render_priority = 0
+shader = ExtResource("1_fnxff")
+shader_parameter/base_col = Color(0.737255, 0, 0.368627, 1)
+shader_parameter/sec_col = Color(0.909804, 0.341176, 0.756863, 1)
+shader_parameter/n1 = SubResource("NoiseTexture2D_j8jap")
+shader_parameter/gradient = SubResource("GradientTexture2D_1kjqv")
+
+[sub_resource type="SphereMesh" id="SphereMesh_41kvd"]
+material = SubResource("ShaderMaterial_w3v0m")
+radius = 0.06
+
+[sub_resource type="Gradient" id="Gradient_t63ba"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_f8f48"]
+gradient = SubResource("Gradient_t63ba")
+fill_from = Vector2(1, 0.4)
+fill_to = Vector2(1, 1)
+
+[sub_resource type="Gradient" id="Gradient_phadv"]
+offsets = PackedFloat32Array(0.282895, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_bp2ih"]
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_76mwa"]
+color_ramp = SubResource("Gradient_phadv")
+noise = SubResource("FastNoiseLite_bp2ih")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_63s7e"]
+render_priority = 0
+shader = ExtResource("1_fnxff")
+shader_parameter/base_col = Color(0.733333, 0.352941, 0.917647, 1)
+shader_parameter/sec_col = Color(0.482353, 0.627451, 0.937255, 1)
+shader_parameter/n1 = SubResource("NoiseTexture2D_76mwa")
+shader_parameter/gradient = SubResource("GradientTexture2D_f8f48")
+
+[sub_resource type="SphereMesh" id="SphereMesh_p5g15"]
+material = SubResource("ShaderMaterial_63s7e")
+radius = 0.1
+height = 0.435
+
+[sub_resource type="Gradient" id="Gradient_g8cc8"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ydce6"]
+gradient = SubResource("Gradient_g8cc8")
+fill_from = Vector2(1, 0)
+fill_to = Vector2(1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_uw4c2"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_r3ml8"]
+seamless = true
+noise = SubResource("FastNoiseLite_uw4c2")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bexln"]
+render_priority = 0
+shader = ExtResource("1_fnxff")
+shader_parameter/base_col = Color(0.658824, 0.254902, 0.329412, 1)
+shader_parameter/sec_col = Color(0.619608, 0.145098, 0.376471, 1)
+shader_parameter/n1 = SubResource("NoiseTexture2D_r3ml8")
+shader_parameter/gradient = SubResource("GradientTexture2D_ydce6")
+
+[sub_resource type="SphereMesh" id="SphereMesh_qtahm"]
+material = SubResource("ShaderMaterial_bexln")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_3b46c"]
+radius = 0.101426
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_alk6u"]
+shading_mode = 0
+albedo_color = Color(0.917647, 0.368627, 0.647059, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3xg5r"]
+material = SubResource("StandardMaterial3D_alk6u")
+size = Vector3(0.025, 0.025, 0.025)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6cksg"]
+shading_mode = 0
+albedo_color = Color(0.964706, 0.431373, 0.564706, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kfhtm"]
+material = SubResource("StandardMaterial3D_6cksg")
+size = Vector3(0.05, 0.05, 0.05)
+
+[node name="spark_bolt" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 73
+script = ExtResource("1_egkjq")
+
+[node name="flight_graphics" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="flight_graphics"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.197569)
+mesh = SubResource("SphereMesh_6ejl5")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="flight_graphics"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.478737)
+mesh = SubResource("SphereMesh_41kvd")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="flight_graphics"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.161797)
+mesh = SubResource("SphereMesh_p5g15")
+skeleton = NodePath("../..")
+
+[node name="explosion_graphics" type="Node3D" parent="."]
+visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="explosion_graphics"]
+mesh = SubResource("SphereMesh_qtahm")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+light_color = Color(0.839216, 0.282353, 0.733333, 1)
+omni_range = 1.91776
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_3b46c")
+
+[node name="CPUParticles3D" type="CPUParticles3D" parent="."]
+mesh = SubResource("BoxMesh_3xg5r")
+direction = Vector3(0, 0, -1)
+spread = 15.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+
+[node name="CPUParticles3D2" type="CPUParticles3D" parent="."]
+emitting = false
+amount = 16
+lifetime = 0.25
+one_shot = true
+explosiveness = 1.0
+lifetime_randomness = 1.0
+mesh = SubResource("BoxMesh_kfhtm")
+direction = Vector3(0, 1, 0)
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 5.0
+initial_velocity_max = 10.0
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_5wsyb")
+
+[node name="AudioStreamPlayer3D2" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_dsn4v")
+volume_db = -20.619
+autoplay = true

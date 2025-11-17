@@ -85,7 +85,6 @@ func update_held_item_graphics(model_path):
 	fp_item_handler.add_child(mf)
 	tp_item_handler.add_child(mt)
 
-
 @rpc("any_peer", "reliable")
 func update_accessories_graphics(a = Inventory.accessories):
 	for k in a.keys():
@@ -119,6 +118,7 @@ func _ready():
 	if !is_multiplayer_authority():
 		request_cosmetics.rpc()
 		return
+	tp_item_handler.hide()
 	settup_team_hurtboxes(true)
 	update_health_graphics()
 	Global.connect("loaded_world",_on_world_load)
@@ -148,10 +148,8 @@ func settup_team_hurtboxes(is_team):
 		h.set_collision_layer_value(7,is_team)
 	pass
 
-
 func _on_world_load():
 	tp(Vector3.ZERO,Vector3.ZERO)
-
 
 var jump_buffer = 0.0
 func _input(event):
@@ -732,6 +730,8 @@ func _on_left_mouse():
 	match type:
 		Lookup.itemType.weapons_sword:
 			use_sword()
+		Lookup.itemType.weapons_projectile:
+			use_projectile_weapon()
 		_:
 			punch()
 	pass
@@ -741,13 +741,19 @@ func punch():
 	pass
 
 func use_sword():
-	print("used_sword")
 	play_arm_anim("slash_1")
-	
+	pass
+
+func use_projectile_weapon():
+	var proj_key = held_item_data[3][0]
+	var anim_key = held_item_data[3][1]
+	play_arm_anim(anim_key)
+	Global.emit_signal("spawn_projectile", proj_key, look_reference.global_position, get_look_dir(), display_name)
 	pass
 
 func _on_right_mouse():
-	Global.emit_signal("spawn_projectile", "arrow", look_reference.global_position, get_look_dir(), display_name)
+	#Global.emit_signal("spawn_projectile", "arrow", look_reference.global_position, get_look_dir(), display_name)
+	pass
 
 @onready var look_reference = $playerAvatar/cameraHandler/lookReference
 func get_look_dir():
@@ -816,6 +822,7 @@ var current_animation = ""
 func _process(delta):
 	match current_animation:
 		"":
+			fp_item_handler.rotation = Vector3(-PI*0.5,0.0,0.0)
 			handR.rotation_degrees = Vector3(65.4,170.4,-176.9)
 			handR.position = Vector3(0.391,-0.429,0.005)
 			anim_time = 0.0
@@ -847,16 +854,22 @@ func _process(delta):
 			if anim_time < 0.0:
 				anim_time += 1.0
 		"slash_1":
-			anim_time -= delta*2.5
-			handR.position = Vector3(0.391,-0.429,0.005)
-			handR.rotation_degrees = Vector3(65.4,170.4,-176.9)
-			handR.rotation.y -= (sin(anim_time*PI*1.5+PI+PI*0.5)-0.5)*PI*0.5
+			#fp_item_handler.rotation.x = -PI*0.25 + (1.0 - anim_time)*PI*0.25 - PI*0.5
+			fp_item_handler.rotation.x = -PI*0.5 - (1.0 - anim_time)*PI*0.5
+			anim_time -= delta*3.0
+			handR.position = lerp(Vector3(0.37,-0.415,-0.095), Vector3(-0.272,-0.538,-0.048), (1.0 - anim_time))
+			handR.rotation_degrees = lerp(Vector3(17.1,-101,-112), Vector3(26.6,-17.6,-70.6), (1.0 - anim_time))
+			#handR.position = Vector3(0.391,-0.429,0.005)
+			#handR.rotation_degrees = Vector3(65.4,170.4,-176.9)
+			#handR.rotation.y = -(sin(anim_time*PI*1.5+PI+PI*0.5)-0.5)*PI*0.5
+			#handR.rotation.x = PI*0.75 + (1.0 - anim_time)*PI*0.75
+			#handR.rotation.z = sin(anim_time*PI-PI*0.25)*0.5 + PI
+			#handR.rotation.y = PI
 			if anim_time < 0.5 and !anim_event:
 				deal_look_damage(held_item_data[3][0],held_item_data[3][1])
 				anim_event = true
 			if anim_time < 0.0:
 				current_animation = ""
-	pass
 
 func deal_look_damage(dam := 1, dist := 5.0) -> void:
 	attack_look.target_position = Vector3(0.0,0.0,-dist)

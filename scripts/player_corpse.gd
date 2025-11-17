@@ -65,7 +65,7 @@ func _process(delta):
 			hit.add_child(b)
 			b.global_position = poi + norm*0.01
 			var rot_y = atan2(norm.x,norm.z)
-			var rot_x = atan2(sqrt(pow(norm.x,2.0)+pow(norm.x,2.0)),norm.y)
+			var rot_x = atan2(sqrt(pow(norm.x,2.0)+pow(norm.z,2.0)),norm.y)
 			b.rotation.y = rot_y
 			b.rotation.x = rot_x
 			blood_charges -= 1
@@ -77,7 +77,7 @@ func _process(delta):
 			hit.add_child(b)
 			b.global_position = poi + norm*0.01
 			var rot_y = atan2(norm.x,norm.z)
-			var rot_x = atan2(sqrt(pow(norm.x,2.0)+pow(norm.x,2.0)),norm.y)
+			var rot_x = atan2(sqrt(pow(norm.x,2.0)+pow(norm.z,2.0)),norm.y)
 			b.rotation.y = rot_y
 			b.rotation.x = rot_x
 			blood_charges -= 1

@@ -1,8 +1,9 @@
-[gd_scene load_steps=33 format=3 uid="uid://dntnunlwfyesu"]
+[gd_scene load_steps=34 format=3 uid="uid://dntnunlwfyesu"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_5fl5y"]
 [ext_resource type="Script" path="res://debug/debug_world.gd" id="1_87rlt"]
 [ext_resource type="PackedScene" uid="uid://dly3g0b5sqii7" path="res://assets/environmentPieces/level_details/grass_1.tscn" id="3_5vhho"]
+[ext_resource type="PackedScene" uid="uid://cc8lpiwjggev5" path="res://assets/glb/items/sparkWand.glb" id="3_jyith"]
 [ext_resource type="PackedScene" uid="uid://dq5aik6jyb0o6" path="res://assets/environmentPieces/level_details/grass_2.tscn" id="4_4it4o"]
 [ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="4_5bd38"]
 [ext_resource type="PackedScene" uid="uid://g6ektn38chvg" path="res://assets/environmentPieces/level_details/grass_3.tscn" id="5_bxdvy"]
@@ -42,6 +43,10 @@ sky_material = SubResource("ProceduralSkyMaterial_tgtor")
 [sub_resource type="Environment" id="Environment_s3u0r"]
 background_mode = 2
 sky = SubResource("Sky_jhhr5")
+glow_enabled = true
+glow_normalized = true
+glow_bloom = 0.01
+glow_blend_mode = 1
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_wm3l5"]
 viewport_path = NodePath("SubViewport")
@@ -78,10 +83,13 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_s3u0r")
 
+[node name="sparkWand" parent="WorldEnvironment" instance=ExtResource("3_jyith")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 6)
+
 [node name="SubViewport" type="SubViewport" parent="."]
 
 [node name="Camera3D" type="Camera3D" parent="SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.86149, 1, 10)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewport/Camera3D"]
 transform = Transform3D(0.999986, -8.73064e-08, -0.00533765, -0.00533765, 4.35015e-08, -0.999986, -8.75379e-08, -1, -4.30349e-08, 0, 0, -1)

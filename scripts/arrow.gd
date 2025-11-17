@@ -16,6 +16,8 @@ var soft_death = false
 
 func _physics_process(delta):
 	if graphics_spinning:
+		if dead or soft_death:
+			graphics_spinning = false
 		$graphics.rotation.x += delta*PI*16.0
 	if !is_multiplayer_authority():
 		return

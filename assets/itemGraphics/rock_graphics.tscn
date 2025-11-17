@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://cl13duyrvs6o5"]
+[gd_scene load_steps=2 format=3 uid="uid://ba0pll7d6sq4a"]
 
 [ext_resource type="PackedScene" uid="uid://locdh3npnl70" path="res://assets/spriteBasedObjects/cylinder_sbo.tscn" id="1_d1q5m"]
 

@@ -9,9 +9,9 @@ extends Node
 	#"leather boots" : ["res://accessories/boots/leather_boots.tscn", {"speed" : +0.25}]
 #}
 
-const Projectiles = {
-	"arrow" : "res://entities/projectiles/arrow.tscn"
-	
+@onready var Projectiles = {
+	"arrow" : preload("res://entities/projectiles/arrow.tscn"),
+	"spark_bolt" : preload("res://entities/projectiles/spark_bolt.tscn")
 }
 
 const worlds = {
@@ -30,7 +30,8 @@ enum itemType {
 	accessories_pants,
 	accessories_gloves,
 	accessories_shoes,
-	weapons_sword #[damage, range]
+	weapons_sword, #[damage, range]
+	weapons_projectile #[projectile_key, animation_key]
 }
 
 
@@ -48,5 +49,7 @@ const items= { #[display_name, graphics_path, type_enum, data]
 	"bhoppers" : ["Bhoppers", "res://assets/itemGraphics/rock_graphics.tscn", itemType.accessories_shoes, ["res://accessories/boots/leather_boots.tscn", {"air_acceleration" : +1.0}]],
 	
 	##weapons
-	"iron_sword" : ["iron sword", "res://assets/itemGraphics/iron_sword.tscn", itemType.weapons_sword, [5,6.0]]
+	"iron_sword" : ["iron sword", "res://assets/itemGraphics/iron_sword.tscn", itemType.weapons_sword, [5,6.0]],
+	"short_bow" : ["short bow", "res://assets/itemGraphics/oak_bow.tscn", itemType.weapons_projectile, ["arrow", "punch"]],
+	"magic_bow" : ["magic bow", "res://assets/glb/items/sparkWand.glb", itemType.weapons_projectile, ["spark_bolt", "punch"]]
 }

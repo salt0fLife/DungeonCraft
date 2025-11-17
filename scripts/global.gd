@@ -6,6 +6,7 @@ signal spawnCreature
 signal change_world
 signal set_post_param
 signal spawn_projectile
+signal camera_impact
 var inside = 1.0
 
 var skin = [64,64,false,0,[]]
@@ -40,3 +41,6 @@ func get_skin_list():
 
 func _process(delta):
 	time += delta
+
+func create_camera_impact(pos,power):
+	emit_signal("camera_impact",pos,power)
