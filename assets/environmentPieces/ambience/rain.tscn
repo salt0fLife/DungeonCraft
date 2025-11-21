@@ -1,0 +1,161 @@
+[gd_scene load_steps=13 format=3 uid="uid://c4u7j7ayr1kum"]
+
+[ext_resource type="Script" path="res://scripts/environment_effects.gd" id="1_x6rxq"]
+[ext_resource type="AudioStream" uid="uid://b2wcl671hpr16" path="res://assets/sounds/ambience/Rain Heavy Loud.mp3" id="2_v7avd"]
+[ext_resource type="AudioStream" uid="uid://bj4vgtg6iqqe0" path="res://assets/sounds/ambience/Rain On Rooftop.mp3" id="3_j4nwe"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1npqu"]
+emission_shape_offset = Vector3(0, 25, 0)
+emission_shape = 3
+emission_box_extents = Vector3(15, 15, 15)
+direction = Vector3(0, -1, 0)
+spread = 10.0
+initial_velocity_min = 9.8
+initial_velocity_max = 12.0
+collision_mode = 2
+sub_emitter_mode = 3
+sub_emitter_amount_at_collision = 6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ss6go"]
+diffuse_mode = 1
+specular_mode = 2
+albedo_color = Color(0.380392, 0.596078, 0.752941, 1)
+disable_receive_shadows = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_lb5do"]
+material = SubResource("StandardMaterial3D_ss6go")
+size = Vector3(0.05, 0.5, 0.05)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_re8k3"]
+emission_shape_offset = Vector3(0, 25, 0)
+emission_shape = 3
+emission_box_extents = Vector3(50, 50, 50)
+direction = Vector3(0, -1, 0)
+spread = 10.0
+initial_velocity_min = 9.8
+initial_velocity_max = 12.0
+collision_mode = 2
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_017ri"]
+direction = Vector3(0, 1, 0)
+initial_velocity_min = 2.0
+initial_velocity_max = 3.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n71wx"]
+albedo_color = Color(0.376471, 0.490196, 0.686275, 1)
+refraction_enabled = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_c28bg"]
+material = SubResource("StandardMaterial3D_n71wx")
+size = Vector3(0.02, 0.02, 0.02)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xdtx5"]
+shading_mode = 0
+albedo_color = Color(0.717647, 0.486275, 0.941176, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3yll3"]
+material = SubResource("StandardMaterial3D_xdtx5")
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="rain" type="Node3D"]
+script = ExtResource("1_x6rxq")
+
+[node name="rainNear" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+amount = 2048
+sub_emitter = NodePath("../rainSplash")
+lifetime = 5.0
+collision_base_size = 1.0
+visibility_aabb = AABB(-25, -25, -25, 50, 50, 50)
+process_material = SubResource("ParticleProcessMaterial_1npqu")
+draw_pass_1 = SubResource("BoxMesh_lb5do")
+
+[node name="rainFar" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+amount = 4096
+lifetime = 5.0
+collision_base_size = 1.0
+visibility_aabb = AABB(-25, -25, -25, 50, 50, 50)
+process_material = SubResource("ParticleProcessMaterial_re8k3")
+draw_pass_1 = SubResource("BoxMesh_lb5do")
+
+[node name="rainSplash" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 2048
+lifetime = 0.5
+visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
+process_material = SubResource("ParticleProcessMaterial_017ri")
+draw_pass_1 = SubResource("BoxMesh_c28bg")
+
+[node name="GPUParticlesCollisionHeightField3D" type="GPUParticlesCollisionHeightField3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.82745, 0)
+layers = 9
+size = Vector3(50, 50, 50)
+resolution = 1
+update_mode = 1
+follow_camera_enabled = true
+
+[node name="near" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_v7avd")
+volume_db = -80.0
+mix_target = 1
+
+[node name="far" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_j4nwe")
+volume_db = -80.0
+mix_target = 1
+
+[node name="roofCheck" type="RayCast3D" parent="."]
+target_position = Vector3(0, 50, 0)
+
+[node name="walls_check_lightweight" type="Node3D" parent="."]
+
+[node name="checks" type="Node3D" parent="walls_check_lightweight"]
+
+[node name="north" type="RayCast3D" parent="walls_check_lightweight/checks"]
+target_position = Vector3(0, 0, 15)
+
+[node name="audioHandler" type="Node3D" parent="walls_check_lightweight/checks/north"]
+
+[node name="roof_check" type="RayCast3D" parent="walls_check_lightweight/checks/north/audioHandler"]
+target_position = Vector3(0, 50, 0)
+
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="walls_check_lightweight/checks/north/audioHandler/roof_check"]
+mesh = SubResource("BoxMesh_3yll3")
+skeleton = NodePath("")
+
+[node name="south" type="RayCast3D" parent="walls_check_lightweight/checks"]
+target_position = Vector3(0, 0, -15)
+
+[node name="audioHandler2" type="Node3D" parent="walls_check_lightweight/checks/south"]
+
+[node name="roof_check" type="RayCast3D" parent="walls_check_lightweight/checks/south/audioHandler2"]
+target_position = Vector3(0, 50, 0)
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="walls_check_lightweight/checks/south/audioHandler2/roof_check"]
+mesh = SubResource("BoxMesh_3yll3")
+skeleton = NodePath("")
+
+[node name="east" type="RayCast3D" parent="walls_check_lightweight/checks"]
+target_position = Vector3(-15, 0, 0)
+
+[node name="audioHandler3" type="Node3D" parent="walls_check_lightweight/checks/east"]
+
+[node name="roof_check" type="RayCast3D" parent="walls_check_lightweight/checks/east/audioHandler3"]
+target_position = Vector3(0, 50, 0)
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="walls_check_lightweight/checks/east/audioHandler3/roof_check"]
+mesh = SubResource("BoxMesh_3yll3")
+skeleton = NodePath("")
+
+[node name="west" type="RayCast3D" parent="walls_check_lightweight/checks"]
+target_position = Vector3(15, 0, 0)
+
+[node name="audioHandler4" type="Node3D" parent="walls_check_lightweight/checks/west"]
+
+[node name="roof_check" type="RayCast3D" parent="walls_check_lightweight/checks/west/audioHandler4"]
+target_position = Vector3(0, 50, 0)
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="walls_check_lightweight/checks/west/audioHandler4/roof_check"]
+mesh = SubResource("BoxMesh_3yll3")
+skeleton = NodePath("")

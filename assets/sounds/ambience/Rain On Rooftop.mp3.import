@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bj4vgtg6iqqe0"
+path="res://.godot/imported/Rain On Rooftop.mp3-5151e5ce3dde98a0bcdc1a121d8bcb1a.mp3str"
+
+[deps]
+
+source_file="res://assets/sounds/ambience/Rain On Rooftop.mp3"
+dest_files=["res://.godot/imported/Rain On Rooftop.mp3-5151e5ce3dde98a0bcdc1a121d8bcb1a.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

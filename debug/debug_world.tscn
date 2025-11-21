@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://dntnunlwfyesu"]
+[gd_scene load_steps=43 format=3 uid="uid://dntnunlwfyesu"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_5fl5y"]
 [ext_resource type="Script" path="res://debug/debug_world.gd" id="1_87rlt"]
@@ -22,20 +22,99 @@
 [ext_resource type="AudioStream" uid="uid://b3ss5ji72fuf8" path="res://assets/sounds/music/morningFogBaseline.mp3" id="20_cn7hf"]
 [ext_resource type="AudioStream" uid="uid://us4531tbg0sh" path="res://assets/sounds/music/triplets.mp3" id="21_5nv8w"]
 [ext_resource type="PackedScene" uid="uid://cb6ovvv8dnrb1" path="res://world/levels/level_3_test.tscn" id="21_ooxf7"]
+[ext_resource type="PackedScene" uid="uid://c4u7j7ayr1kum" path="res://assets/environmentPieces/ambience/rain.tscn" id="23_yrjkj"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ks42u"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_njc7h"]
-albedo_texture = ExtResource("1_5fl5y")
-uv1_scale = Vector3(500, 500, 500)
+[sub_resource type="Shader" id="Shader_mq27s"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.2.1.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,filter_linear_mipmap,repeat_enable;
+uniform sampler2D texture_rain : source_color,filter_linear_mipmap,repeat_enable;
+uniform float point_size : hint_range(0,128);
+uniform float roughness : hint_range(0,1);
+uniform sampler2D texture_metallic : hint_default_white,filter_linear_mipmap,repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r,filter_linear_mipmap,repeat_enable;
+uniform float specular;
+uniform float metallic;
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+uniform vec3 puddle_color : source_color;
+
+void vertex() {
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+}
+
+
+
+
+
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
+	float roughness_tex = dot(texture(texture_rain,base_uv*vec2(0.02,0.02)),roughness_texture_channel);
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	ALBEDO = mix(ALBEDO, puddle_color, (1.0 - roughness_tex)*0.5);
+	float metallic_tex = dot(texture(texture_metallic,base_uv),metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	ROUGHNESS = roughness_tex * roughness;
+	SPECULAR = specular;
+}
+"
+
+[sub_resource type="Gradient" id="Gradient_ksdqg"]
+colors = PackedColorArray(0.381703, 0.381703, 0.381703, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ekow4"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_flird"]
+seamless = true
+color_ramp = SubResource("Gradient_ksdqg")
+noise = SubResource("FastNoiseLite_ekow4")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bwjgt"]
+render_priority = 0
+shader = SubResource("Shader_mq27s")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(500, 500, 500)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/puddle_color = Color(0.27451, 0.47451, 0.639216, 1)
+shader_parameter/texture_albedo = ExtResource("1_5fl5y")
+shader_parameter/texture_rain = SubResource("NoiseTexture2D_flird")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_3uj3j"]
-material = SubResource("StandardMaterial3D_njc7h")
+material = SubResource("ShaderMaterial_bwjgt")
 size = Vector2(500, 500)
+
+[sub_resource type="Gradient" id="Gradient_6qbul"]
+colors = PackedColorArray(0.177325, 0.464292, 0.608657, 1, 0.787127, 0.850348, 0.891727, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_y68ia"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1bwa2"]
+seamless = true
+color_ramp = SubResource("Gradient_6qbul")
+noise = SubResource("FastNoiseLite_y68ia")
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tgtor"]
 sky_top_color = Color(0.168627, 0.447059, 0.780392, 1)
 sky_horizon_color = Color(0.647059, 0.654902, 0.670588, 1)
+sky_cover = SubResource("NoiseTexture2D_1bwa2")
 
 [sub_resource type="Sky" id="Sky_jhhr5"]
 sky_material = SubResource("ProceduralSkyMaterial_tgtor")
@@ -43,10 +122,22 @@ sky_material = SubResource("ProceduralSkyMaterial_tgtor")
 [sub_resource type="Environment" id="Environment_s3u0r"]
 background_mode = 2
 sky = SubResource("Sky_jhhr5")
+ssao_enabled = true
 glow_enabled = true
 glow_normalized = true
 glow_bloom = 0.01
 glow_blend_mode = 1
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0353
+volumetric_fog_albedo = Color(0.65098, 0.901961, 0.894118, 1)
+volumetric_fog_anisotropy = 0.04
+adjustment_enabled = true
+adjustment_saturation = 1.2
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_4g4es"]
+exposure_multiplier = 1.5
+auto_exposure_speed = 1.0
+auto_exposure_min_sensitivity = 200.0
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_wm3l5"]
 viewport_path = NodePath("SubViewport")
@@ -82,6 +173,7 @@ shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_s3u0r")
+camera_attributes = SubResource("CameraAttributesPractical_4g4es")
 
 [node name="sparkWand" parent="WorldEnvironment" instance=ExtResource("3_jyith")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 6)
@@ -217,3 +309,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.6113, 2.31994, 10.7518)
 stream = ExtResource("21_5nv8w")
 
 [node name="level_3_test" parent="." instance=ExtResource("21_ooxf7")]
+
+[node name="environmentEffects" parent="." instance=ExtResource("23_yrjkj")]

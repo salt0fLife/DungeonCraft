@@ -48,7 +48,8 @@ void fragment() {
 	//highlight
 	vec2 hlp = vec2(highlightPos.x + eyePos.x*highlightTrackIntensity, highlightPos.y + eyePos.y*highlightTrackIntensity);
 	if (uv.x > hlp.x - highlightSize.x && uv.x < hlp.x + highlightSize.x && uv.y > hlp.y - highlightSize.y && uv.y < hlp.y + highlightSize.y){
-		color = vec3(255.0,255.0,255.0);
+		//color = vec3(255.0,255.0,255.0);
+		color = vec3(1.0,1.0,1.0);
 	}
 	//eyelashes
 	if (uv.y + cos(uv.x)*(eyelashTaper+eyeTaper) < eyeLids.x + eyelashes.x-1.5) {
