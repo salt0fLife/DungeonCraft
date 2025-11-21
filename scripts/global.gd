@@ -27,6 +27,7 @@ func data_to_image(data) -> ImageTexture:
 	return ImageTexture.create_from_image(Image.create_from_data(data[0],data[1],data[2],data[3], data[4]))
 
 var disable_avatar = false
+var camera_transform = Transform3D(Vector3.ZERO,Vector3.ZERO,Vector3.ZERO,Vector3.ZERO)
 
 ##changed to keep it from cluttering up the main folder while debugging
 #var savePath = OS.get_executable_path().get_base_dir() + "/"#"res://"#"user://"#"res://tempSaveFolder/"#OS.get_executable_path().get_base_dir() + "/"#"res://"#"user://"
@@ -44,3 +45,19 @@ func _process(delta):
 
 func create_camera_impact(pos,power):
 	emit_signal("camera_impact",pos,power)
+
+func _input(event):
+	if Input.is_action_just_pressed("debugRenderOff"):
+		get_viewport().debug_draw = Viewport.DEBUG_DRAW_DISABLED
+	if Input.is_action_just_pressed("debugRenderOverdraw"):
+		get_viewport().debug_draw = Viewport.DEBUG_DRAW_OVERDRAW
+	if Input.is_action_just_pressed("debugRenderUnshaded"):
+		get_viewport().debug_draw = Viewport.DEBUG_DRAW_UNSHADED
+	if Input.is_action_just_pressed("debugRenderLighting"):
+		get_viewport().debug_draw = Viewport.DEBUG_DRAW_LIGHTING
+
+func vec3_rot_lerp(rot1: Vector3, rot2: Vector3, val: float):
+	var x = lerp_angle(rot2.x, rot1.x, val)
+	var y = lerp_angle(rot2.y, rot1.y, val)
+	var z = lerp_angle(rot2.z, rot1.z, val)
+	return Vector3(x,y,z)

@@ -1,5 +1,6 @@
 extends Camera3D
 
+var desired_rot = Vector3.ZERO
 func _ready():
 	Global.connect("camera_impact", _on_impact)
 	pass
@@ -25,8 +26,9 @@ func _process(delta):
 	time += delta
 	if time > 64*PI:
 		time -= 64*PI
-	rotation.x = sin(time*frequency)*amplitude * PI *0.25
-	rotation.y = sin(time*frequency*0.9)*amplitude * PI *0.25
-	rotation.z = sin(time*frequency*1.1)*amplitude * PI *0.05
+	rotation.x = sin(time*frequency)*amplitude * PI *0.25 + desired_rot.x
+	rotation.y = sin(time*frequency*0.9)*amplitude * PI *0.25 + desired_rot.y
+	rotation.z = sin(time*frequency*1.1)*amplitude * PI *0.05 + desired_rot.z
 	amplitude -= amplitude * decay * delta
+	Global.camera_transform = global_transform
 	pass

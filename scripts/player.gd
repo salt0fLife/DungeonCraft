@@ -14,6 +14,8 @@ var sprinting = false
 var crouching = false
 var flying = false
 var display_name = ""
+var walk_anim_key = "walk"
+var idle_anim_key = "idle"
 
 ## accessories and weapons
 var attributes = {
@@ -64,10 +66,21 @@ func update_held_item():
 		var mp = held_item_data[1]
 		update_held_item_graphics(mp)
 		update_held_item_graphics.rpc(mp)
+		update_anims_from_item_type(held_item_data[2])
 	else:
 		update_held_item_graphics("")
 		update_held_item_graphics.rpc("")
+		update_anims_from_item_type(-1)
 	pass
+
+func update_anims_from_item_type(type):
+	match type:
+		Lookup.itemType.weapons_sword:
+			walk_anim_key = "walk_weapon"
+			idle_anim_key = "idle_weapon"
+		_:
+			walk_anim_key = "walk"
+			idle_anim_key = "idle"
 
 @onready var fp_item_handler = $playerAvatar/cameraHandler/hands/handR/fp_item_handler
 @onready var tp_item_handler = $playerAvatar/genericAvatar/root/chestBase/shoulder_R/elbowR/tp_item_handler
@@ -207,9 +220,9 @@ func _input(event):
 			tp_item_handler.visible = true
 		elif camera.position.z == 2.0:
 			camera.position.z = -2.0
-			camera.rotation.y = PI
+			camera.desired_rot.y = PI
 		else:
-			camera.rotation.y = 0.0
+			camera.desired_rot.y = 0.0
 			avatar.set_visibility_layer(1, false)
 			hands.visible = true
 			AG_handler.visible = false
@@ -274,7 +287,7 @@ func _physics_process(delta):
 	hands.rotation.x -= (velocity.y / attributes["jump_velocity"])*delta*10.0
 	
 	hands.position = lerp(hands.position, bobHandler.position, delta*64.0)
-	hands.rotation = lerp(hands.rotation, bobHandler.rotation, delta*32.0)
+	hands.rotation = Global.vec3_rot_lerp(hands.rotation, bobHandler.rotation, delta*32.0)
 	
 	
 	if position.y < -200.0:
@@ -319,7 +332,7 @@ func _physics_process(delta):
 	if flying:
 		update_velocity_flying(delta)
 	elif direction:
-		avatar.animation_state = "walk"
+		avatar.animation_state = walk_anim_key
 		body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
 		avatar.head_angle.y = body.rotation.y
 		if !airborn and !jumped_last_frame:
@@ -339,7 +352,7 @@ func _physics_process(delta):
 			body.rotation.y = avatar.walk_angle
 			avatar.head_angle.y = -avatar.walk_angle
 			avatar.walk_angle = 0.0
-		avatar.animation_state = "idle"
+		avatar.animation_state = idle_anim_key
 		avatar.resist_dir = Vector2(0.0,0.0)
 		dust_particles.emitting = false
 		if !airborn and !jumped_last_frame:
@@ -741,8 +754,14 @@ func punch():
 	pass
 
 func use_sword():
-	play_arm_anim("slash_1")
-	pass
+	if Input.is_action_pressed("rm"):
+		play_arm_anim("stab_1")
+	elif current_animation == "slash_1":
+		play_arm_anim("slash_2")
+	elif current_animation == "slash_2":
+		play_arm_anim("stab_1")
+	else:
+		play_arm_anim("slash_1")
 
 func use_projectile_weapon():
 	var proj_key = held_item_data[3][0]
@@ -753,7 +772,31 @@ func use_projectile_weapon():
 
 func _on_right_mouse():
 	#Global.emit_signal("spawn_projectile", "arrow", look_reference.global_position, get_look_dir(), display_name)
+	var type = -1
+	if held_item_data != []:
+		type = held_item_data[2]
+	
+	match type:
+		Lookup.itemType.weapons_sword:
+			use_sword_special()
+		Lookup.itemType.weapons_projectile:
+			use_projectile_special()
+		_:
+			punch_special()
 	pass
+
+func use_sword_special():
+	
+	pass
+
+func use_projectile_special():
+	
+	pass
+
+func punch_special():
+	
+	pass
+
 
 @onready var look_reference = $playerAvatar/cameraHandler/lookReference
 func get_look_dir():
@@ -813,27 +856,28 @@ func play_arm_anim(key):
 
 @rpc("any_peer","reliable")
 func play_avatar_arm_anim(key):
-	anim_event = false
+	anim_event = 0
 	avatar.play_arm_anim(key)
 
-var anim_event = false
+var anim_event = 0
 var anim_time = 0.0
 var current_animation = ""
 func _process(delta):
 	match current_animation:
 		"":
-			fp_item_handler.rotation = Vector3(-PI*0.5,0.0,0.0)
-			handR.rotation_degrees = Vector3(65.4,170.4,-176.9)
-			handR.position = Vector3(0.391,-0.429,0.005)
+			fp_item_handler.rotation = Global.vec3_rot_lerp(fp_item_handler.rotation, Vector3(-PI*0.5,0.0,0.0), delta*6.0)
+			handR.rotation_degrees = Global.vec3_rot_lerp(handR.rotation_degrees, Vector3(65.4,170.4,-176.9),delta*8.0)
+			handR.position = lerp(handR.position, Vector3(0.391,-0.429,0.005), delta*8.0)
 			anim_time = 0.0
+			anim_event = 0
 		"punch":
 			anim_time -= delta*4.0
 			handR.rotation.x = 1.141445 + sin(anim_time*PI)*0.5
 			handR.rotation.y = 2.96706 + (sin(anim_time*PI-PI*0.2)+0.75)*0.5
 			handR.position = Vector3(0.391,-0.429,0.005)
-			if anim_time < 0.5 and !anim_event:
+			if anim_time < 0.5 and anim_event == 0:
 				deal_look_damage()
-				anim_event = true
+				anim_event = 1
 			if anim_time < 0.0:
 				current_animation = ""
 		"wave":
@@ -858,18 +902,50 @@ func _process(delta):
 			fp_item_handler.rotation.x = -PI*0.5 - (1.0 - anim_time)*PI*0.5
 			anim_time -= delta*3.0
 			handR.position = lerp(Vector3(0.37,-0.415,-0.095), Vector3(-0.272,-0.538,-0.048), (1.0 - anim_time))
-			handR.rotation_degrees = lerp(Vector3(17.1,-101,-112), Vector3(26.6,-17.6,-70.6), (1.0 - anim_time))
-			#handR.position = Vector3(0.391,-0.429,0.005)
-			#handR.rotation_degrees = Vector3(65.4,170.4,-176.9)
-			#handR.rotation.y = -(sin(anim_time*PI*1.5+PI+PI*0.5)-0.5)*PI*0.5
-			#handR.rotation.x = PI*0.75 + (1.0 - anim_time)*PI*0.75
-			#handR.rotation.z = sin(anim_time*PI-PI*0.25)*0.5 + PI
-			#handR.rotation.y = PI
-			if anim_time < 0.5 and !anim_event:
+			handR.rotation_degrees = Global.vec3_rot_lerp(Vector3(17.1,-101,-112), Vector3(26.6,-17.6,-70.6), (1.0 - anim_time))
+			if anim_time < 0.5 and anim_event == 0:
 				deal_look_damage(held_item_data[3][0],held_item_data[3][1])
-				anim_event = true
+				anim_event = 1
+			if anim_time < 0.1 and Input.is_action_pressed("lm"):
+				_on_left_mouse()
 			if anim_time < 0.0:
 				current_animation = ""
+		"slash_2":
+			fp_item_handler.rotation.x = -PI*0.5 - (1.0 - anim_time)*PI*0.5
+			anim_time -= delta*3.0
+			handR.position = lerp(Vector3(0.171,-0.193,-0.048), Vector3(0.257,-0.193,-0.048), (1.0 - anim_time))
+			handR.rotation_degrees = Global.vec3_rot_lerp(Vector3(35.8,128.6,92.7), Vector3(15.3,46.5,71.8), (1.0 - anim_time))
+			if anim_time < 0.5 and anim_event == 0:
+				deal_look_damage(held_item_data[3][0],held_item_data[3][1])
+				anim_event = 1
+			if anim_time < 0.1 and Input.is_action_pressed("lm"):
+				_on_left_mouse()
+			if anim_time < 0.0:
+				current_animation = ""
+		"stab_1":
+			anim_time -= delta * 2.0
+			var val = (1.0 - anim_time)
+			if anim_time > 0.5:
+				handR.position = lerp(handR.position, Vector3(0.26,-0.193,0.326), val*2.0)
+				handR.rotation_degrees = Global.vec3_rot_lerp(handR.rotation_degrees, Vector3(16.6,49.6,84.8), val*2.0)
+				fp_item_handler.rotation.x = lerp_angle(fp_item_handler.rotation.x, 2.89724655831, val*2.1)
+			else:
+				handR.position = lerp(Vector3(0.26,-0.193,0.326), Vector3(0.224,-0.19,-0.101),(val*2.0)-1.0)
+				handR.rotation_degrees = Global.vec3_rot_lerp(Vector3(16.6,49.6,84.8), Vector3(16.0,94.5,98.0),(val*2.0)-1.0)
+				if anim_time < 0.25 and anim_event == 0:
+					#stabs deal three hits of halfed damage total 1.5 damage
+					#stabs should not deal knockback
+					deal_look_damage(held_item_data[3][0]*0.75,held_item_data[3][1])
+					anim_event = 1
+				elif anim_time < 0.2 and anim_event == 1:
+					deal_look_damage(held_item_data[3][0]*0.75,held_item_data[3][1])
+					anim_event = 2
+				elif anim_time < 0.15 and anim_event == 2:
+					deal_look_damage(held_item_data[3][0]*0.75,held_item_data[3][1])
+					anim_event = 3
+			if anim_time < 0.0:
+				current_animation = ""
+			pass
 
 func deal_look_damage(dam := 1, dist := 5.0) -> void:
 	attack_look.target_position = Vector3(0.0,0.0,-dist)
