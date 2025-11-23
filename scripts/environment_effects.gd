@@ -29,7 +29,7 @@ func update_rain_lightweight(delta):
 		#find distance_to_wall if one
 		var rc = r.get_child(0).get_child(0)
 		var min_dis = dis
-		for step in range(0, int(dis)):
+		for step in range(1, int(dis)):
 			var pos = lerp(global_position, poi, remap(float(step), 0.0, dis, 0.0, 1.0))
 			rc.global_position = pos
 			rc.force_raycast_update()

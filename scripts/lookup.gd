@@ -51,5 +51,5 @@ const items= { #[display_name, graphics_path, type_enum, data]
 	##weapons
 	"iron_sword" : ["iron sword", "res://assets/itemGraphics/iron_sword.tscn", itemType.weapons_sword, [5,6.0]],
 	"short_bow" : ["short bow", "res://assets/itemGraphics/oak_bow.tscn", itemType.weapons_projectile, ["arrow", "punch"]],
-	"magic_bow" : ["magic bow", "res://assets/glb/items/sparkWand.glb", itemType.weapons_projectile, ["spark_bolt", "punch"]]
+	"magic_bow" : ["spark wand", "res://assets/itemGraphics/spark_wand.tscn", itemType.weapons_projectile, ["spark_bolt", "punch"]]
 }

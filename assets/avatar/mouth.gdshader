@@ -17,6 +17,7 @@ uniform float fangs = 0.0;
 uniform float pointy_teeth = 0.0;
 uniform float open = 0.0;
 uniform float outline_thickness = 0.025;
+uniform float transparency = 0.0;
 
 void vertex() {
 	UV=UV*uv1_scale.xy+uv1_offset.xy;
@@ -78,5 +79,9 @@ void fragment() {
 		col = col_outline;
 	}
 	ALBEDO = col;
+	trans -= transparency * (1.0-ALBEDO.g);
+	if (trans < 0.0){
+		trans = 0.0;
+		}
 	ALPHA = trans;
 }

@@ -1,15 +1,17 @@
-[gd_scene load_steps=61 format=3 uid="uid://bfmtven01nbak"]
+[gd_scene load_steps=67 format=3 uid="uid://bfmtven01nbak"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_rca1e"]
 [ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="2_841cm"]
 [ext_resource type="AudioStream" uid="uid://of43thnf8x5e" path="res://assets/sounds/music/battleBlockTheaterMusic.wav" id="3_743p3"]
 [ext_resource type="PackedScene" uid="uid://q13m3wxawmoj" path="res://tools/voip.tscn" id="3_mkb7a"]
 [ext_resource type="PackedScene" uid="uid://ctjywblutag5l" path="res://assets/entityComponents/hurtbox.tscn" id="4_gmgur"]
+[ext_resource type="Texture2D" uid="uid://dyh661ujm3ahi" path="res://assets/glb/playerAvatar002_eyeBrows2.png" id="4_uef4w"]
 [ext_resource type="AudioStream" uid="uid://cwgksjubbffnp" path="res://assets/sounds/spawnSounds/despawn.ogg" id="5_0xt38"]
 [ext_resource type="Texture2D" uid="uid://c1jgohvyqtrxv" path="res://assets/glb/playerAvatar002_dapper128Secondary.png" id="5_i7c2e"]
 [ext_resource type="Script" path="res://scripts/Camera_shake.gd" id="5_um1o0"]
-[ext_resource type="AudioStream" uid="uid://dfy3f7ydibpug" path="res://assets/sounds/player/footsteps2.ogg" id="7_jnhys"]
+[ext_resource type="Theme" uid="uid://bxsqmdqtm4i4k" path="res://assets/themes/genericTheme.tres" id="9_3pr1d"]
 [ext_resource type="Texture2D" uid="uid://dt5fom6fqdecn" path="res://assets/textures/effects/blood_mist.png" id="9_chvuq"]
+[ext_resource type="AudioStream" uid="uid://qaq4uhrtcc3b" path="res://assets/sounds/footsteps/stone/footstepStone1.wav" id="9_eaglb"]
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ujmkt"]
 data = PackedVector3Array(-0.0617, -0.3077, -0.1433, 0.0873, -0.3019, 0.05, 0.0873, -0.3019, -0.1433, -0.0617, -0.3077, -0.1433, -0.0617, -0.3077, 0.05, 0.0873, -0.3019, 0.05, -0.0737, -0.0011, 0.05, -0.0617, -0.3077, -0.1433, -0.0737, -0.0011, -0.1433, -0.0737, -0.0011, 0.05, -0.0617, -0.3077, 0.05, -0.0617, -0.3077, -0.1433, 0.0873, -0.3019, 0.05, -0.0737, -0.0011, 0.05, 0.0753, 0.0047, 0.05, 0.0873, -0.3019, 0.05, -0.0617, -0.3077, 0.05, -0.0737, -0.0011, 0.05, 0.0873, -0.3019, -0.1433, 0.0753, 0.0047, 0.05, 0.0753, 0.0047, -0.1433, 0.0873, -0.3019, -0.1433, 0.0873, -0.3019, 0.05, 0.0753, 0.0047, 0.05, -0.0737, -0.0011, 0.05, 0.0753, 0.0047, -0.1433, 0.0753, 0.0047, 0.05, -0.0737, -0.0011, 0.05, -0.0737, -0.0011, -0.1433, 0.0753, 0.0047, -0.1433, -0.0617, -0.3077, -0.1433, 0.0753, 0.0047, -0.1433, -0.0737, -0.0011, -0.1433, -0.0617, -0.3077, -0.1433, 0.0873, -0.3019, -0.1433, 0.0753, 0.0047, -0.1433)
@@ -22,6 +24,15 @@ data = PackedVector3Array(0.0736, -0.305, -0.1433, -0.0755, -0.305, 0.05, 0.0737
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_6mvmu"]
 data = PackedVector3Array(0.0694, -0.2676, -0.1165, -0.0797, 0.0041, -0.1165, -0.0797, -0.2676, -0.1165, 0.0694, -0.2676, -0.1165, 0.0694, 0.0041, -0.1165, -0.0797, 0.0041, -0.1165, -0.0797, -0.2676, -0.1165, -0.0797, 0.0041, 0.0768, -0.0797, -0.2676, 0.0768, -0.0797, -0.2676, -0.1165, -0.0797, 0.0041, -0.1165, -0.0797, 0.0041, 0.0768, -0.0797, 0.0041, -0.1165, 0.0694, 0.0041, 0.0768, -0.0797, 0.0041, 0.0768, -0.0797, 0.0041, -0.1165, 0.0694, 0.0041, -0.1165, 0.0694, 0.0041, 0.0768, -0.0797, -0.2676, 0.0768, 0.0694, 0.0041, 0.0768, 0.0694, -0.2676, 0.0768, -0.0797, -0.2676, 0.0768, -0.0797, 0.0041, 0.0768, 0.0694, 0.0041, 0.0768, 0.0694, 0.0041, 0.0768, 0.0694, -0.2676, -0.1165, 0.0694, -0.2676, 0.0768, 0.0694, 0.0041, 0.0768, 0.0694, 0.0041, -0.1165, 0.0694, -0.2676, -0.1165, 0.0694, -0.2676, 0.0768, -0.0797, -0.2676, -0.1165, -0.0797, -0.2676, 0.0768, 0.0694, -0.2676, 0.0768, 0.0694, -0.2676, -0.1165, -0.0797, -0.2676, -0.1165)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cne02"]
+resource_name = "eyeBrows"
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+albedo_texture = ExtResource("4_uef4w")
+texture_filter = 2
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_6h8bs"]
 mix_rate = 12000.0
@@ -596,6 +607,20 @@ point_count = 3
 offsets = PackedFloat32Array(0, 0.612805, 1)
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yl48s"]
+blend_mode = 1
+albedo_color = Color(0.121569, 0.164706, 0.235294, 1)
+proximity_fade_enabled = true
+proximity_fade_distance = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_i4bci"]
+material = SubResource("StandardMaterial3D_yl48s")
+size = Vector3(0.05, 0.05, 0.05)
+
+[sub_resource type="Curve" id="Curve_ichl7"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.275862, 1), 0.0, 0.0, 0, 0, Vector2(0.743295, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
 [node name="player" type="CharacterBody3D" groups=["player"]]
 collision_layer = 6
 script = ExtResource("1_rca1e")
@@ -603,13 +628,13 @@ script = ExtResource("1_rca1e")
 [node name="playerAvatar" parent="." instance=ExtResource("2_841cm")]
 
 [node name="chestBase" parent="playerAvatar/genericAvatar/root" index="0"]
-transform = Transform3D(0.954682, -0.0277333, -0.296334, -0.0602133, 0.957063, -0.283556, 0.291474, 0.288549, 0.912021, 0.00143615, -0.107997, 0.00188721)
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999297, -0.00333414, -0.0274386, -0.0057213)
 
 [node name="hip_L" parent="playerAvatar/genericAvatar/root/chestBase" index="0"]
-transform = Transform3D(0.915454, -0.358968, 0.181887, 0, 0.451979, 0.892028, -0.40242, -0.816606, 0.413769, 0.075, -0.282, -0.001)
+transform = Transform3D(0.995003, -0.0134183, 0.0989276, 0, 0.99092, 0.134408, -0.0998333, -0.133735, 0.985976, 0.075, -0.282, -0.001)
 
 [node name="knee_L" parent="playerAvatar/genericAvatar/root/chestBase/hip_L" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.792947, -0.609273, 0, 0.609273, 0.792947, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.990577, -0.136883, 0, 0.136883, 0.990577, 0, -0.274171, 0)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/hip_L/knee_L" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -628,10 +653,10 @@ transform = Transform3D(1, 0, 0, -4.65661e-10, 1, -1.49012e-08, -2.23517e-08, -7
 shape = SubResource("ConcavePolygonShape3D_bllhi")
 
 [node name="hip_R" parent="playerAvatar/genericAvatar/root/chestBase" index="1"]
-transform = Transform3D(0.928383, 0.362631, -0.0812576, -0.251519, 0.774089, 0.58096, 0.273577, -0.518912, 0.809865, -0.075, -0.282, -0.001)
+transform = Transform3D(0.995004, 0.0134183, -0.0989274, 0, 0.990918, 0.134407, 0.0998334, -0.133735, 0.985974, -0.075, -0.282, -0.001)
 
 [node name="knee_R" parent="playerAvatar/genericAvatar/root/chestBase/hip_R" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.429918, -0.90286, 0, 0.90286, 0.429918, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.99058, -0.136884, 0, 0.136884, 0.99058, 0, -0.274171, 0)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/hip_R/knee_R" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -650,7 +675,13 @@ transform = Transform3D(1, -4.65661e-10, -7.45058e-09, -4.65661e-10, 1, 0, 0, 0,
 shape = SubResource("ConcavePolygonShape3D_6mvmu")
 
 [node name="neck" parent="playerAvatar/genericAvatar/root/chestBase" index="2"]
-transform = Transform3D(0.951057, -0.0876235, 0.296333, 0, 0.958955, 0.283555, -0.309017, -0.269677, 0.91202, 0, 0.289384, -0.00323021)
+transform = Transform3D(1, 0, 0, 0, 0.999296, 0.0374912, 0, -0.0374912, 0.999295, 0, 0.289384, -0.00323021)
+
+[node name="eyeBrows_L" parent="playerAvatar/genericAvatar/root/chestBase/neck" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_cne02")
+
+[node name="eyeBrows_R" parent="playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
+surface_material_override/0 = SubResource("StandardMaterial3D_cne02")
 
 [node name="voicePlayer" type="AudioStreamPlayer3D" parent="playerAvatar/genericAvatar/root/chestBase/neck" index="11"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
@@ -677,10 +708,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.65661e-10, 0.142511, 0.0193
 shape = SubResource("ConcavePolygonShape3D_hok5u")
 
 [node name="shoulder_L" parent="playerAvatar/genericAvatar/root/chestBase" index="3"]
-transform = Transform3D(0.987818, -0.145335, 0.0554542, 0.155255, 0.943254, -0.293526, -0.0096479, 0.298563, 0.954333, 0.14978, 0.237679, -0.0014265)
+transform = Transform3D(0.999921, -0.0111651, -0.00372042, 0.0113522, 0.998426, 0.0548184, 0.00310252, -0.0548571, 0.998481, 0.14978, 0.241, -0.0014265)
 
 [node name="elbowL" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.688045, 0.725658, 0, -0.725658, 0.688045, 0.0786937, -0.240458, -0.002611)
+transform = Transform3D(1, 0, 0, 0, 0.998449, 0.0555437, 0, -0.0555437, 0.998449, 0.0786937, -0.240458, -0.002611)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_L/elbowL" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -699,10 +730,10 @@ transform = Transform3D(1, -1.04774e-09, 0, -1.09867e-09, 1, 0, 0, 1.86265e-09, 
 shape = SubResource("ConcavePolygonShape3D_s58j1")
 
 [node name="shoulder_R" parent="playerAvatar/genericAvatar/root/chestBase" index="4"]
-transform = Transform3D(0.922001, 0.245037, 0.299754, -0.155255, 0.943252, -0.293526, -0.35467, 0.224095, 0.907731, -0.14978, 0.234321, -0.00142637)
+transform = Transform3D(0.999921, 0.0111651, 0.00372042, -0.0113522, 0.998424, 0.0548185, -0.00310252, -0.0548569, 0.998481, -0.14978, 0.241, -0.00142637)
 
 [node name="elbowR" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_R" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.878608, 0.477523, 0, -0.477523, 0.878608, -0.0786937, -0.240458, -0.00261103)
+transform = Transform3D(1, 0, 0, 0, 0.998446, 0.0555436, 0, -0.0555436, 0.998446, -0.0786937, -0.240458, -0.00261103)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_R/elbowR" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -724,13 +755,13 @@ transform = Transform3D(1, 1.23691e-10, 0, 2.04454e-09, 1, 0, -2.32831e-10, 1.86
 shape = SubResource("ConcavePolygonShape3D_kvt2y")
 
 [node name="tailBase" parent="playerAvatar/genericAvatar/root/chestBase" index="9"]
-transform = Transform3D(0.891584, -0.373717, 0.255749, 0, 0.564754, 0.825253, -0.45285, -0.735784, 0.503526, 0, 0, -0.088)
+transform = Transform3D(0.988421, -0.130388, 0.0775578, 0, 0.51122, 0.859443, -0.151711, -0.849496, 0.505302, 0, 0, -0.088)
 
 [node name="tailMiddle" parent="playerAvatar/genericAvatar/root/chestBase/tailBase" index="0"]
-transform = Transform3D(0.998143, -0.011095, -0.0598634, 0, 0.983252, -0.182234, 0.0608831, 0.181896, 0.981427, 0, 0, 0)
+transform = Transform3D(0.948693, -0.0211389, -0.315485, 0, 0.997759, -0.066854, 0.316193, 0.0634241, 0.946568, 0, 0, 0)
 
 [node name="tailLast" parent="playerAvatar/genericAvatar/root/chestBase/tailBase/tailMiddle" index="0"]
-transform = Transform3D(0.998934, -0.0131032, -0.0442357, 0, 0.95882, -0.284013, 0.0461357, 0.283712, 0.957794, 0, 0, 0)
+transform = Transform3D(0.970444, -0.0245264, -0.240067, 0, 0.994822, -0.101635, 0.241317, 0.0986314, 0.965415, 0, 0, 0)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase" index="10" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../..")
@@ -891,14 +922,17 @@ grow_vertical = 2
 [node name="talkingIndicator" type="Label" parent="UI"]
 visible = false
 layout_mode = 1
+offset_top = 23.0
 offset_right = 53.0
-offset_bottom = 23.0
+offset_bottom = 46.0
+theme = ExtResource("9_3pr1d")
 text = "talking"
 
 [node name="health" type="Label" parent="UI"]
 layout_mode = 1
 offset_right = 40.0
 offset_bottom = 23.0
+theme = ExtResource("9_3pr1d")
 theme_override_colors/font_color = Color(0.768627, 0.2, 0.2, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 6
@@ -908,7 +942,7 @@ text = "100"
 stream = ExtResource("5_0xt38")
 
 [node name="footsteps" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("7_jnhys")
+stream = ExtResource("9_eaglb")
 max_polyphony = 8
 
 [node name="wind_sounds" type="AudioStreamPlayer3D" parent="."]
@@ -945,5 +979,16 @@ angle_max = 180.0
 scale_amount_max = 2.0
 scale_amount_curve = SubResource("Curve_55bne")
 color_ramp = SubResource("Gradient_agbhh")
+
+[node name="ghostParticles" type="CPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.996216, 0)
+emitting = false
+amount = 16
+lifetime = 5.0
+mesh = SubResource("BoxMesh_i4bci")
+emission_shape = 1
+emission_sphere_radius = 0.5
+gravity = Vector3(0, -0.1, 0)
+scale_amount_curve = SubResource("Curve_ichl7")
 
 [editable path="playerAvatar"]

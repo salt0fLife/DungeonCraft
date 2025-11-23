@@ -10,5 +10,5 @@ func _process(delta):
 	armL.global_transform = avatar.bone_paths[6].global_transform
 	armR.global_transform = avatar.bone_paths[8].global_transform
 
-func damage(amount, id, owned_by, knockback):
-	player.damage(amount, id, owned_by, knockback)
+func damage(amount, id, owned_by, weapon_name, knockback):
+	player.damage(amount, id, owned_by, weapon_name, knockback)

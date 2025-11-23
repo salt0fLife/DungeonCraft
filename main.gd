@@ -385,7 +385,7 @@ func _on_change_world(key, require_host = false):
 	for i in worldSync.get_children(false):
 		i.queue_free()
 	worldSync.add_child(load(Lookup.worlds[key][0]).instantiate(), true)
-	Global.inside = Lookup.worlds[key][1]
+	#Global.inside = Lookup.worlds[key][1]
 	for p in get_tree().get_nodes_in_group("player"):
 		p.tp(Vector3.ZERO)
 		p.tp.rpc(Vector3.ZERO)

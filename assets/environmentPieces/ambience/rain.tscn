@@ -121,6 +121,7 @@ target_position = Vector3(0, 0, 15)
 target_position = Vector3(0, 50, 0)
 
 [node name="MeshInstance3D8" type="MeshInstance3D" parent="walls_check_lightweight/checks/north/audioHandler/roof_check"]
+visible = false
 mesh = SubResource("BoxMesh_3yll3")
 skeleton = NodePath("")
 
@@ -133,6 +134,7 @@ target_position = Vector3(0, 0, -15)
 target_position = Vector3(0, 50, 0)
 
 [node name="MeshInstance3D7" type="MeshInstance3D" parent="walls_check_lightweight/checks/south/audioHandler2/roof_check"]
+visible = false
 mesh = SubResource("BoxMesh_3yll3")
 skeleton = NodePath("")
 
@@ -145,6 +147,7 @@ target_position = Vector3(-15, 0, 0)
 target_position = Vector3(0, 50, 0)
 
 [node name="MeshInstance3D6" type="MeshInstance3D" parent="walls_check_lightweight/checks/east/audioHandler3/roof_check"]
+visible = false
 mesh = SubResource("BoxMesh_3yll3")
 skeleton = NodePath("")
 
@@ -157,5 +160,6 @@ target_position = Vector3(15, 0, 0)
 target_position = Vector3(0, 50, 0)
 
 [node name="MeshInstance3D7" type="MeshInstance3D" parent="walls_check_lightweight/checks/west/audioHandler4/roof_check"]
+visible = false
 mesh = SubResource("BoxMesh_3yll3")
 skeleton = NodePath("")

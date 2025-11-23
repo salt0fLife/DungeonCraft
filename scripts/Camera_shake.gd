@@ -6,9 +6,9 @@ func _ready():
 	pass
 
 func _on_impact(pos, power):
-	print("camera recieved impact")
-	print(pos)
-	print(power)
+	#print("camera recieved impact")
+	#print(pos)
+	#print(power)
 	var dis = (global_position - pos).length()
 	if dis > max_distance:
 		dis = max_distance

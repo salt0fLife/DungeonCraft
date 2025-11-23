@@ -69,3 +69,9 @@ func equip_accessory(acc_id : String, tag : String):
 		pass
 	emit_signal("update_accessories")
 	pass
+
+func drop_all():
+	for k in accessories.keys():
+		accessories[k] = ""
+	emit_signal("update_accessories")
+	pass

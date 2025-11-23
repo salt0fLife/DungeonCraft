@@ -37,7 +37,7 @@ func settup_audio(id):
 		input.stream = AudioStreamMicrophone.new()
 		input.play()
 		index = AudioServer.get_bus_index("Record")
-		effect = AudioServer.get_bus_effect(index, 1)
+		effect = AudioServer.get_bus_effect(index, 2)
 		#reverb_effect = AudioServer.get_bus_effect(AudioServer.get_bus_index("Reverb"), 0)
 		#muffled_effect = AudioServer.get_bus_effect(AudioServer.get_bus_index("Reverb"), 1)
 	effects_bus_index = AudioServer.bus_count
@@ -56,7 +56,7 @@ func settup_audio(id):
 	if !is_multiplayer_authority():
 		spectrum = AudioServer.get_bus_effect_instance(effects_bus_index,0)
 	else:
-		spectrum = AudioServer.get_bus_effect_instance(2, 2)
+		spectrum = AudioServer.get_bus_effect_instance(2, 3)
 	#muffled_effect.cutoff_hz = 870
 	#muffled_effect.db = 1
 	AudioEffectLowPassFilter.new().cutoff_hz = 10000
@@ -155,6 +155,8 @@ func send_data(data : PackedFloat32Array):
 	#print(receiveBuffer.size())
 	pass
 
+func set_ghostly(val):
+	AudioServer.set_bus_effect_enabled(index, 1, val)
 
 
 

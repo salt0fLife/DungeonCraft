@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://dntnunlwfyesu"]
+[gd_scene load_steps=44 format=3 uid="uid://dntnunlwfyesu"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_5fl5y"]
 [ext_resource type="Script" path="res://debug/debug_world.gd" id="1_87rlt"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cc8lpiwjggev5" path="res://assets/glb/items/sparkWand.glb" id="3_jyith"]
 [ext_resource type="PackedScene" uid="uid://dq5aik6jyb0o6" path="res://assets/environmentPieces/level_details/grass_2.tscn" id="4_4it4o"]
 [ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="4_5bd38"]
+[ext_resource type="PackedScene" uid="uid://dvkd2y2cnusj" path="res://assets/itemGraphics/spark_wand.tscn" id="4_yl0wx"]
 [ext_resource type="PackedScene" uid="uid://g6ektn38chvg" path="res://assets/environmentPieces/level_details/grass_3.tscn" id="5_bxdvy"]
 [ext_resource type="PackedScene" uid="uid://cqm1ptmfpda0v" path="res://assets/environmentPieces/trees/tree_pine_2.tscn" id="6_o0lwk"]
 [ext_resource type="PackedScene" uid="uid://b4tpnh5lsjjto" path="res://assets/environmentPieces/trees/tree_pine_3.tscn" id="7_1t4tn"]
@@ -54,7 +55,23 @@ void vertex() {
 
 
 
+float ripple(vec2 uv, vec2 b_uv) {
+	float ripple = (.1 / length(uv)*(sin(TIME*16.0+b_uv.x*100.0)+1.0)); //* sin(TIME*10.0 + sin(b_uv.x*TIME) + sin(b_uv.y*TIME)) + 1.0
+	//float rays = max(0,1.0 - abs(uv.x * uv.y) * 1000.0) * ripple;
+	//ripple += rays;
+	if (sin((b_uv.x)*5.0 - sin(TIME)*3.0 + 1.0) < 0.99) {
+		ripple = 0.0;
+	}
+	return ripple;
+}
 
+vec2 RandomVec2(vec2 seed) {
+	seed = fract(seed * vec2(123.45, 784.29));
+	seed += dot(seed, seed + 875.34);
+	float x = fract(seed.x * 164.32);
+	float y = fract(seed.y * 287.21);
+	return vec2(x,y) - 0.5; //was 0.0-1.0 now 0.0-0.5
+}
 
 void fragment() {
 	vec2 base_uv = UV;
@@ -67,6 +84,12 @@ void fragment() {
 	METALLIC = metallic_tex * metallic;
 	ROUGHNESS = roughness_tex * roughness;
 	SPECULAR = specular;
+	//vec2 grid_uv = fract(base_uv*10.0) - 0.5;
+	//vec2 grid_id = floor(base_uv*10.0);
+	//vec2 rv = RandomVec2(grid_id);
+	//float size = (rv.x + 0.5);
+	//ALBEDO.r += ripple(grid_uv + rv, rv) * size;
+	//ALBEDO = mix(ALBEDO, puddle_color, ripple(grid_uv + rv, rv) * size*0.25);
 }
 "
 
@@ -178,6 +201,9 @@ camera_attributes = SubResource("CameraAttributesPractical_4g4es")
 [node name="sparkWand" parent="WorldEnvironment" instance=ExtResource("3_jyith")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 6)
 
+[node name="SparkWand" parent="WorldEnvironment" instance=ExtResource("4_yl0wx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.93767, 0, 6.47961)
+
 [node name="SubViewport" type="SubViewport" parent="."]
 
 [node name="Camera3D" type="Camera3D" parent="SubViewport"]
@@ -287,6 +313,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.15502, 1.34547, -5.74185)
 [node name="accessories_debugger" parent="." instance=ExtResource("15_ytdhl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5627, 0, -3.93952)
 value = "devil_wings"
+
+[node name="accessories_debugger2" parent="." instance=ExtResource("15_ytdhl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5627, 0, -3.93952)
+accessory_to_edit = "shirt"
+value = "iron_chestpiece"
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.229399, 2.31994, 25.6229)

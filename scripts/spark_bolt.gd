@@ -55,7 +55,7 @@ func _physics_process(delta):
 					#hit dead on
 					if hit.hardness == penetration:
 						#penetrates anyway
-						hit.take_damage.rpc(damage, poi, owned_by, velocity)
+						hit.take_damage.rpc(damage, poi, owned_by, "spark bolt", velocity)
 						explode(position)
 						explode.rpc(position)
 					else:
@@ -67,7 +67,7 @@ func _physics_process(delta):
 					
 					pass
 			else:
-				hit.take_damage.rpc(damage, poi, owned_by, velocity)
+				hit.take_damage.rpc(damage, poi, owned_by, "spark bolt", velocity)
 				explode(position)
 				explode.rpc(position)
 		else:

@@ -7,7 +7,9 @@ signal change_world
 signal set_post_param
 signal spawn_projectile
 signal camera_impact
-var inside = 1.0
+signal player_death
+signal chat
+var inside = 0.0
 
 var skin = [64,64,false,0,[]]
 
@@ -61,3 +63,11 @@ func vec3_rot_lerp(rot1: Vector3, rot2: Vector3, val: float):
 	var y = lerp_angle(rot2.y, rot1.y, val)
 	var z = lerp_angle(rot2.z, rot1.z, val)
 	return Vector3(x,y,z)
+
+func send_chat(text, dead = false):
+	var txt = "[color=blue]" + str(Steam.getPersonaName()) + "[/color][color=gray]" + text + "[/color]"
+	emit_signal("chat", txt)
+
+func print_chat(text, col = "white"):
+	var txt = "[color=" + col +"]" + text + "[/color]"
+	emit_signal("chat", txt)
