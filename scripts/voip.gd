@@ -9,7 +9,7 @@ var playback : AudioStreamGeneratorPlayback
 @export var mouthPath : NodePath
 @export var inputThreshold : float = 0.005
 var receiveBuffer : PackedFloat32Array
-var enabled = true
+var enabled = false
 var working = false
 var recording = false
 var reverb = 0.0
@@ -156,8 +156,8 @@ func send_data(data : PackedFloat32Array):
 	pass
 
 func set_ghostly(val):
+	AudioServer.set_bus_effect_enabled(index, 0, val)
 	AudioServer.set_bus_effect_enabled(index, 1, val)
-
 
 
 

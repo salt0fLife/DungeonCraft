@@ -912,7 +912,7 @@ var is_slim = false
 	$root/chestBase/hip_R/rightLeg1SOL,
 	$root/chestBase/hip_R/knee_R/rightFootNOL,
 	$root/chestBase/hip_R/knee_R/rightFootSOL,
-	$root/chestBase/neck/headOutside,
+	$root/chestBase/neck/headOutsideP,
 	$root/chestBase/shoulder_L/leftArm1NOL,
 	$root/chestBase/shoulder_L/leftArm1SOL,
 	$root/chestBase/shoulder_L/elbowL/leftArm2NOL,

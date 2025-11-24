@@ -23,6 +23,8 @@ var decay = 2.0
 var amplitude = 0.0
 var time = 0.0
 func _process(delta):
+	if !is_multiplayer_authority():
+		return
 	time += delta
 	if time > 64*PI:
 		time -= 64*PI

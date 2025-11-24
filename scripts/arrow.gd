@@ -1,5 +1,5 @@
 extends CharacterBody3D
-const damage = 5
+const damage = [[Lookup.damageType.stab, 4.0],[Lookup.damageType.blunt, 1.0]]
 const penetration = 2
 
 var owned_by = ""
@@ -81,7 +81,7 @@ func _physics_process(delta):
 					#hit dead on
 					if hit.hardness == penetration:
 						#penetrates anyway
-						hit.take_damage.rpc(5.0, poi, owned_by, "arrow", velocity)
+						hit.take_damage.rpc(damage, poi, owned_by, "arrow", velocity)
 						die(hit, 30.0)
 					else:
 						#snap/spin
@@ -99,7 +99,7 @@ func _physics_process(delta):
 				var r = randf_range(0.0, 100.0)
 				if r > 99.0: #cause why not right
 					t = "perfectly normal arrow"
-				hit.take_damage.rpc(5.0, poi, owned_by, t, velocity)
+				hit.take_damage.rpc(damage, poi, owned_by, "arrow", velocity)
 				die(hit, 30.0)
 		else:
 			die(null)

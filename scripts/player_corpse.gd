@@ -135,3 +135,34 @@ func load_skin(skin_mat,slim):
 	for i in slim_i:
 		meshes[i].visible = slim
 
+
+@onready var accessory_bones = [
+	$torso/accessories,
+	$legL/accessories,
+	$legL2/accessories,
+	$legR/accessories,
+	$legR2/accessories,
+	$head/accessories,
+	$arm1L/accessories,
+	$arm1L2/accessories,
+	$arm1R/accessories,
+	$arm1R2/accessories
+]
+
+var accessories_paths = {}
+
+var accessories = {}
+
+func _ready():
+	update_accessories_graphics()
+
+func update_accessories_graphics():
+	for i in accessories.keys():
+		var k = accessories[i]
+		if k != "":
+			accessories_paths[k] = []
+			for g in Lookup.items[k][3][0]:
+				var s = load(g[0]).instantiate()
+				s.process_mode = PROCESS_MODE_DISABLED
+				accessory_bones[g[1]].add_child(s)
+				accessories_paths[k] += [s]

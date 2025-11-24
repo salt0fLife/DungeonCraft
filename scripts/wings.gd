@@ -1,7 +1,7 @@
 extends Node3D
 
-@onready var avatar = get_parent().get_parent().get_child(0)
-@onready var chest = avatar.bone_paths[0]
+@onready var avatar = get_parent().get_parent().get_parent()#.get_child(0)
+#@onready var chest = avatar.bone_paths[0]
 @onready var bone_paths = [
 	$base,
 	$base/arm1R,
@@ -29,8 +29,8 @@ var time = 0.0
 func _process(delta):
 	if time > 64.0 * PI:
 		time -= 64.0*PI
-	global_position = chest.global_position
-	rotation = chest.rotation * Vector3(-1.0,1.0,-1.0) + Vector3(0.0, chest.get_parent().rotation.y,0.0)
+	#global_position = chest.global_position
+	#rotation = chest.rotation * Vector3(-1.0,1.0,-1.0) + Vector3(0.0, chest.get_parent().rotation.y,0.0)
 	open = avatar.falling*0.5
 	flapping = avatar.walk_speed * 0.1
 	animation_speed = avatar.walk_speed*0.15+0.75

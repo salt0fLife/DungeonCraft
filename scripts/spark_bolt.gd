@@ -1,5 +1,5 @@
 extends CharacterBody3D
-const damage = 20
+const damage = [[Lookup.damageType.magic, 10.0]]
 const penetration = 1
 
 var owned_by = ""

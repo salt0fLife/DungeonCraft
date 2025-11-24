@@ -33,7 +33,7 @@ var camera_transform = Transform3D(Vector3.ZERO,Vector3.ZERO,Vector3.ZERO,Vector
 
 ##changed to keep it from cluttering up the main folder while debugging
 #var savePath = OS.get_executable_path().get_base_dir() + "/"#"res://"#"user://"#"res://tempSaveFolder/"#OS.get_executable_path().get_base_dir() + "/"#"res://"#"user://"
-var savePath = "res://tempSaveFolder/"#OS.get_executable_path().get_base_dir() + "/"#"res://"#"user://"
+var savePath = "res://tempSaveFolder/"#OS.get_executable_path().get_base_dir() + "/"#"res://"#"user://" 
 
 func get_skin_list():
 	if DirAccess.dir_exists_absolute(savePath+"/skins"):
@@ -65,9 +65,17 @@ func vec3_rot_lerp(rot1: Vector3, rot2: Vector3, val: float):
 	return Vector3(x,y,z)
 
 func send_chat(text, dead = false):
-	var txt = "[color=blue]" + str(Steam.getPersonaName()) + "[/color][color=gray]" + text + "[/color]"
-	emit_signal("chat", txt)
+	var col = eyeColor[2]
+	var txt = "[color=blue][player][/color][color=#" + str(int(col.r*9.0))+ str(int(col.g*9.0))+ str(int(col.b*9.0)) + "]" + display_name + ": [/color][color=gray]" + text + "[/color]"
+	_on_chat(txt)
+	_on_chat.rpc(txt)
+	
 
 func print_chat(text, col = "white"):
 	var txt = "[color=" + col +"]" + text + "[/color]"
-	emit_signal("chat", txt)
+	_on_chat(txt)
+	_on_chat.rpc(txt)
+
+@rpc("any_peer","reliable")
+func _on_chat(text):
+	emit_signal("chat", text)

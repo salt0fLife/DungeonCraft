@@ -326,6 +326,7 @@ func _on_skin_editor_button_down():
 ##pause menu stuffs
 var is_paused = false
 @onready var pause_menu = $pauseMenu
+@onready var chat_input = $chat_display/VBoxContainer/TextEdit
 func _input(event):
 	if Input.is_action_just_pressed("pause"):
 		if $Control.visible:
@@ -335,11 +336,30 @@ func _input(event):
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 			Global.disable_avatar = false
 			pause_menu.hide()
+			chat_input.hide()
 		else:
 			is_paused = true
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			Global.disable_avatar = true
 			pause_menu.show()
+	if Input.is_action_just_pressed("chat"):
+		if $Control.visible:
+			return
+		if is_paused:
+			is_paused = false
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			Global.disable_avatar = false
+			pause_menu.hide()
+			chat_input.hide()
+			chat_input.release_focus()
+			$chat_display._on_text_edit_text_submitted(chat_input.text)
+		else:
+			is_paused = true
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			Global.disable_avatar = true
+			chat_input.show()
+			chat_input.grab_focus()
+			$chat_display.fade_in()
 
 func _on_resume_button_down():
 	is_paused = false

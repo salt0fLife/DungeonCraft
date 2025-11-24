@@ -6,9 +6,12 @@ const damp = 0.2
 const gravity = Vector3(0.0,-0.5,0.0)
 var val = 0
 var lifetime = 1.0
+var type = 0
+
 
 func _ready():
 	velocity = Vector3(randf_range(-max_vel,max_vel), randf_range(-max_vel,max_vel),randf_range(-max_vel,max_vel))
+	modulate = Lookup.damageType_color_lookup[type]
 	if val > 0:
 		text = "+" + str(val)
 	else:
