@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cm7d5y2llo0ky"]
+[gd_scene load_steps=17 format=3 uid="uid://cm7d5y2llo0ky"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_s7ggu"]
 [ext_resource type="Script" path="res://scripts/steam.gd" id="2_35c3e"]
@@ -7,9 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://bfmtven01nbak" path="res://entities/player.tscn" id="4_rgl0b"]
 [ext_resource type="Shader" path="res://assets/shaders/postEffects.gdshader" id="6_ghpdg"]
 [ext_resource type="Script" path="res://scripts/postEffects.gd" id="6_knuf1"]
-
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jhn6c"]
-blend_mode = 2
+[ext_resource type="Script" path="res://scripts/chat_display.gd" id="8_8non7"]
+[ext_resource type="Theme" uid="uid://bxsqmdqtm4i4k" path="res://assets/themes/genericTheme.tres" id="9_486y8"]
 
 [sub_resource type="Gradient" id="Gradient_83ynv"]
 colors = PackedColorArray(0.868985, 0.868985, 0.868985, 1, 1, 1, 1, 1)
@@ -31,11 +30,28 @@ shader_parameter/noise_1 = SubResource("NoiseTexture2D_h3kr7")
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_1goxy"]
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jhn6c"]
+blend_mode = 2
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_2c8rd"]
+blend_mode = 3
+
 [node name="main" type="Node"]
 script = ExtResource("1_s7ggu")
 
 [node name="steam" type="Node" parent="."]
 script = ExtResource("2_35c3e")
+
+[node name="postEffects" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_gbjt2")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("PlaceholderTexture2D_1goxy")
+script = ExtResource("6_knuf1")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -242,23 +258,60 @@ _spawnable_scenes = PackedStringArray("res://debug/debug_enemy.tscn", "res://ent
 spawn_path = NodePath(".")
 
 [node name="projectileSync" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://entities/projectiles/arrow.tscn")
+_spawnable_scenes = PackedStringArray("res://entities/projectiles/arrow.tscn", "res://entities/projectiles/spark_bolt.tscn")
 spawn_path = NodePath(".")
 
 [node name="worldSync" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://world/peaceful_island.tscn", "res://world/world_1.tscn", "res://world/world_2.tscn", "res://debug/debug_world.tscn")
+_spawnable_scenes = PackedStringArray("res://world/peaceful_island.tscn", "res://world/world_1.tscn", "res://world/world_2.tscn", "res://debug/debug_world.tscn", "res://world/gm_construct.tscn")
 spawn_path = NodePath(".")
 
-[node name="postEffects" type="TextureRect" parent="."]
-material = SubResource("ShaderMaterial_gbjt2")
+[node name="chat_display" type="Control" parent="."]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = SubResource("PlaceholderTexture2D_1goxy")
-script = ExtResource("6_knuf1")
+script = ExtResource("8_8non7")
+
+[node name="background" type="ColorRect" parent="chat_display"]
+material = SubResource("CanvasItemMaterial_2c8rd")
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.676
+anchor_bottom = 1.0
+offset_top = -0.0480347
+offset_right = 333.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.862745, 0.890196, 0.882353, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="chat_display"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.675926
+anchor_right = 0.289062
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="chat_display/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("9_486y8")
+bbcode_enabled = true
+text = "yayayayay"
+scroll_following = true
+metadata/_edit_use_anchors_ = true
+
+[node name="TextEdit" type="LineEdit" parent="chat_display/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme = ExtResource("9_486y8")
+placeholder_text = "send message"
+metadata/_edit_use_anchors_ = true
 
 [connection signal="button_down" from="Control/hostLocal" to="." method="_on_host_local_button_down"]
 [connection signal="button_down" from="Control/joinLocal" to="." method="_on_join_local_button_down"]

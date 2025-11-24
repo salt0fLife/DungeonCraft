@@ -1,5 +1,5 @@
 extends CharacterBody3D
-const damage = 5
+const damage = [[Lookup.damageType.stab, 4.0],[Lookup.damageType.blunt, 1.0]]
 const penetration = 2
 
 var owned_by = ""
@@ -16,6 +16,8 @@ var soft_death = false
 
 func _physics_process(delta):
 	if graphics_spinning:
+		if dead or soft_death:
+			graphics_spinning = false
 		$graphics.rotation.x += delta*PI*16.0
 	if !is_multiplayer_authority():
 		return
@@ -79,7 +81,7 @@ func _physics_process(delta):
 					#hit dead on
 					if hit.hardness == penetration:
 						#penetrates anyway
-						hit.take_damage.rpc(5.0, poi, owned_by)
+						hit.take_damage.rpc(damage, poi, owned_by, "arrow", velocity)
 						die(hit, 30.0)
 					else:
 						#snap/spin
@@ -93,7 +95,11 @@ func _physics_process(delta):
 					velocity = norm*speed*(1.0+dot*0.75)*0.5
 					#velocity.bounce(-norm)
 			else:
-				hit.take_damage.rpc(5.0, poi, owned_by)
+				var t = "arrow"
+				var r = randf_range(0.0, 100.0)
+				if r > 99.0: #cause why not right
+					t = "perfectly normal arrow"
+				hit.take_damage.rpc(damage, poi, owned_by, "arrow", velocity)
 				die(hit, 30.0)
 		else:
 			die(null)

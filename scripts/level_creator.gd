@@ -4,12 +4,14 @@ extends Node3D
 
 var world_size = Vector3i(64,16,64)
 var blocks = []
-var level_name = "level_2_test"
+var level_name = "level_3_test"
 var level_path = "res://world/levels/"
+var graphics_paths = []
 
 func _ready():
 	if reload:
 		quick_build()
+	
 
 func resize_blocks():
 	blocks = []
@@ -34,7 +36,21 @@ func generate_world():
 						blocks[x][y][z] = living_dirt
 					else: blocks[x][y][z] = dead_dirt
 				elif y > 10:
-					blocks[x][y][z] = metal
+					if x > 48 and z > 48:
+						blocks[x][y][z] = air
+					else:
+						blocks[x][y][z] = metal
+				
+				if y > 13 and x >11 and x < 33 and z > 11 and z < 33:
+					blocks[x][y][z] = brick
+					pass
+				
+				if y > 13 and x >12 and x < 32 and z > 12 and z < 32:
+					if y > 14:
+						blocks[x][y][z] = air
+					else:
+						blocks[x][y][z] = living_dirt
+					
 	blocks[0][1][1] = air
 	blocks[0][1][2] = air
 	blocks[0][1][3] = air
@@ -134,30 +150,92 @@ func generate_world():
 
 func add_effects():
 	var n = Node3D.new()
+	var sn = Node3D.new()
 	n.name = "plant_parent"
+	sn.name = "junk_parent"
 	add_child(n,true)
-	n.owner = get_tree().edited_scene_root
+	add_child(sn,true)
+	n.owner = self
+	sn.owner = self
 	var noise_1 = FastNoiseLite.new()
 	for x in range(0,blocks.size()):
 		for y in range(0,blocks[x].size()):
 			for z in range(0,blocks[x][y].size()):
 				var type = blocks[x][y][z]
+				#grow grass on fertile blocks
 				if block_data[type]["fertile"]:
-					if float(y)+1.0>=world_size.y or blocks[x][y+1][z] == air:
-						var grow = noise_1.get_noise_3d(x*16,y*16,z*16)
-						if grow > -0.1:
-							grow_plants(x,y,z,1.0, n)
+					if can_see_sky(x,y,z):
+						if float(y)+1.0>=world_size.y or blocks[x][y+1][z] == air:
+							var grow = noise_1.get_noise_3d(x*16,y*16,z*16)
+							if grow > -0.1:
+								grow_plants(x,y,z,1.0, n, true)
+					else:
+						if float(y)+1.0>=world_size.y or blocks[x][y+1][z] == air:
+							var grow = noise_1.get_noise_3d(x*16,y*16,z*16)
+							if grow > 0.25:
+								grow_plants(x,y,z,1.0, n, false)
+				
+				#perform block specific functions
+				match type:
+					brick:
+						var bp = noise_1.get_noise_3d(x*50,y*50,z*50)
+						if bp > 0.35:
+							add_brick(x,y,z,sn)
+							pass
+				
 
+func can_see_sky(x,y,z) -> bool:
+	var check = 0
+	while y+check+1<world_size.y:
+		check += 1
+		var type = blocks[x][y+check][z]
+		if !block_data[type]["transparent"]:
+			return false
+	return true
+
+func get_open_edges(x,y,z) -> Array:
+	var v = [false]
+	#x
+	if (x + 1 >= world_size.x):
+		v[0] = true
+		v += [Vector2(1.0,0.0)]
+	elif block_data[blocks[x+1][y][z]]["transparent"]:
+		v[0] = true
+		v += [Vector2(1.0,0.0)]
+	if (x - 1 < 0):
+		v[0] = true
+		v += [Vector2(-1.0,0.0)]
+	elif block_data[blocks[x-1][y][z]]["transparent"]:
+		v[0] = true
+		v += [Vector2(-1.0,0.0)]
+	#z
+	if (z + 1 >= world_size.z):
+		v[0] = true
+		v += [Vector2(0.0,1.0)]
+	elif block_data[blocks[x][y][z+1]]["transparent"]:
+		v[0] = true
+		v += [Vector2(0.0,1.0)]
+	if (z - 1 < 0):
+		v[0] = true
+		v += [Vector2(0.0,-1.0)]
+	elif block_data[blocks[x][y][z-1]]["transparent"]:
+		v[0] = true
+		v += [Vector2(0.0,-1.0)]
+	return v
 
 const plants = [
-	"res://assets/environmentPieces/peaceful_island/grass_2.tscn",
-	"res://assets/environmentPieces/peaceful_island/grass_1.tscn",
-	"res://assets/environmentPieces/peaceful_island/grass_3.tscn"
-	
-	
+	"res://assets/environmentPieces/level_details/grass_1.tscn",
+	"res://assets/environmentPieces/level_details/grass_2.tscn",
+	"res://assets/environmentPieces/level_details/grass_3.tscn",
+	"res://assets/environmentPieces/level_details/flower_1.tscn"
 	]
 
-func grow_plants(x,y,z,scale_mult, node):
+const hardy_plants = [
+	0,1,2
+]
+
+func grow_plants(x,y,z,scale_mult, node, sky = true):
+	await get_tree().process_frame
 	var free_x = 1.0
 	var mod_x = 0.0
 	var free_z = 1.0
@@ -193,7 +271,17 @@ func grow_plants(x,y,z,scale_mult, node):
 		free_z -= 0.5
 	
 	var n = FastNoiseLite.new()
-	var p = load(plants.pick_random()).instantiate()
+	var i = 0
+	if sky: 
+		i = int(abs(n.get_noise_3d(x*75.0,y*75.0,z*75.0)*255.0))
+		while i > plants.size()-1:
+			i -= plants.size()
+	else:
+		i = int(abs(n.get_noise_3d(x*75.0,y*75.0,z*75.0)*255.0))
+		while i > hardy_plants.size()-1:
+			i -= hardy_plants.size()
+		i = hardy_plants[i]
+	var p = load(plants[i]).instantiate()
 	p.position = Vector3(x*unit_scale+unit_scale*0.5,y*unit_scale+unit_scale,z*unit_scale+unit_scale*0.5)
 	p.position.x += (n.get_noise_3d(x*100.0,y*100.0,z*100.0)*unit_scale + mod_x)*free_x
 	p.position.z += (n.get_noise_3d(x*100.0,y*100.0,z*100.0)*unit_scale + mod_z)*free_z
@@ -201,7 +289,41 @@ func grow_plants(x,y,z,scale_mult, node):
 	p.scale = Vector3(s*(free_x+unit_scale),s*1.5,s*(free_z+unit_scale))
 	p.rotation.y = n.get_noise_3d(x*64.0,y*64.0,z*64.0)*0.5
 	node.add_child(p,true)
-	p.owner = get_tree().edited_scene_root
+	p.owner = self
+	pass
+
+func add_brick(x,y,z,node):
+	await get_tree().process_frame
+	var b = load("res://assets/environmentPieces/level_details/brick.tscn").instantiate()
+	var n = FastNoiseLite.new()
+	var r = n.get_noise_3d(x,y,z)
+	var length = unit_scale*randf_range(0.9,1.6)
+	var off_y = unit_scale*randf_range(-1.0,1.0)*0.1
+	var off_hori = unit_scale*randf_range(-1.0,1.0)*0.1
+	b.position = Vector3(x,y,z) * unit_scale + Vector3(unit_scale,unit_scale,unit_scale)*0.5
+	b.position.y += off_y
+	
+	var o_s = get_open_edges(x,y,z)
+	if ! o_s[0]:
+		#nowhere to put brick :(
+		return
+	#somewhere to put brick :D
+	o_s.remove_at(0)
+	
+	var i = randi_range(0, o_s.size()-1.0)
+	var dir = o_s[i]
+	
+	b.scale.z = length
+	
+	b.position.x += dir.x*unit_scale*randf_range(0.25,0.5)
+	b.position.z += dir.y*unit_scale*randf_range(0.25,0.5)
+	
+	b.position.z += dir.x*off_hori
+	b.position.x += dir.y*off_hori
+	
+	node.add_child(b,true)
+	b.owner = self
+	b.rotation.y += PI*0.5*dir.y
 	pass
 
 const unit_scale = 0.4
@@ -219,38 +341,6 @@ enum {
 	metal
 }
 
-#const block_data = {
-	#air : {
-		#"transparent" : true
-	#},
-	#brick : {
-		#"transparent" : false,
-		#"up" : Vector2(0,0),
-		#"down" : Vector2(1,1),
-		#"north" : Vector2(1,0),
-		#"south" : Vector2(1,0),
-		#"east" : Vector2(2,0),
-		#"west" : Vector2(0,1)
-	#},
-	#grass : {
-		#"transparent" : false,
-		#"up" : Vector2(2,1),
-		#"down" : Vector2(1,2),
-		#"north" : Vector2(0,2),
-		#"south" : Vector2(0,2),
-		#"east" : Vector2(0,2),
-		#"west" : Vector2(0,2)
-	#},
-	#metal : {
-		#"transparent" : false,
-		#"up" : Vector2(2,2),
-		#"down" : Vector2(2,2),
-		#"north" : Vector2(2,2),
-		#"south" : Vector2(2,2),
-		#"east" : Vector2(2,2),
-		#"west" : Vector2(2,2)
-	#},
-#}
 const block_data = {
 	air : {
 		"transparent" : true,
@@ -318,6 +408,7 @@ func create_mesh():
 				var type = blocks[x][y][z]
 				if type != air:
 					create_block(type, Vector3(x,y,z))
+	st.generate_normals()
 	var m = st.commit()
 	mi.mesh = m
 	mi.set_surface_override_material(0,material)
@@ -328,9 +419,11 @@ func create_mesh():
 	var shape = CollisionShape3D.new()  #mi.mesh.create_trimesh_shape()
 	shape.shape = mi.mesh.create_trimesh_shape()
 	col.add_child(shape,true)
-	mi.owner = get_tree().edited_scene_root
-	col.owner = get_tree().edited_scene_root
-	shape.owner = get_tree().edited_scene_root
+	mi.owner = self
+	col.owner = self
+	shape.owner = self
+	graphics_paths += [mi]
+	graphics_paths += [col]
 
 
 
@@ -653,9 +746,9 @@ func create_greedy_mesh():
 	var shape = CollisionShape3D.new()  #mi.mesh.create_trimesh_shape()
 	shape.shape = mi.mesh.create_trimesh_shape()
 	col.add_child(shape,true)
-	mi.owner = get_tree().edited_scene_root
-	col.owner = get_tree().edited_scene_root
-	shape.owner = get_tree().edited_scene_root
+	mi.owner = self
+	col.owner = self
+	shape.owner = self
 
 
 func block_safe(x,y,z) -> bool:
@@ -682,17 +775,17 @@ func create_block(id, coords):
 	if !(coords.z - 1 < 0):
 		TS = block_data[blocks[coords.x][coords.y][coords.z-1]]["transparent"]
 	if TU:
-		create_face(UP, coords, block_data[id]["up"])
+		create_face(UP, coords, block_data[id][UP])
 	if TD:
-		create_face(DOWN, coords, block_data[id]["down"])
+		create_face(DOWN, coords, block_data[id][DOWN])
 	if TN:
-		create_face(NORTH, coords, block_data[id]["north"])
+		create_face(NORTH, coords, block_data[id][NORTH])
 	if TS:
-		create_face(SOUTH, coords, block_data[id]["south"])
+		create_face(SOUTH, coords, block_data[id][SOUTH])
 	if TE:
-		create_face(EAST, coords, block_data[id]["east"])
+		create_face(EAST, coords, block_data[id][EAST])
 	if TW:
-		create_face(WEST, coords, block_data[id]["west"])
+		create_face(WEST, coords, block_data[id][WEST])
 
 
 const vertices = [
@@ -721,7 +814,7 @@ func create_face(i, coords, texture_atlas_offset):
 	var c = (vertices[i[2]] + coords)*unit_scale
 	var d = (vertices[i[3]] + coords)*unit_scale
 	
-	var uv_offset = texture_atlas_offset / atlas_size
+	var uv_offset = Vector2.ZERO / atlas_size
 	
 	var height = 1.0 / atlas_size.y
 	var width = 1.0 / atlas_size.x
@@ -735,24 +828,86 @@ func create_face(i, coords, texture_atlas_offset):
 	st.add_triangle_fan(([a, b, c]), ([uv_a, uv_b, uv_c]))
 	st.add_triangle_fan(([a, c, d]), ([uv_a, uv_c, uv_d]))
 
+func final_build():
+	for c in get_children(false):
+		c.queue_free()
+	await get_tree().process_frame
+	#resize_blocks()
+	#await get_tree().process_frame
+	#generate_world()
+	#await get_tree().process_frame
+	#create_mesh()
+	create_greedy_mesh()
+	await get_tree().process_frame
+	add_effects()
+	await get_tree().process_frame
+	if !Engine.is_editor_hint():
+		save_level()
+		await get_tree().process_frame
+		print("done")
+		#var c_b = load("res://tools/creative_builder.tscn").instantiate()
+		#add_child(c_b)
+		#c_b.connect("final_build", save_and_close)
+		get_tree().quit(0)
+
+func save_and_close():
+	save_level()
+	await get_tree().process_frame
+	get_tree().quit(0)
+	pass
+
+
 func quick_build():
 	for c in get_children(false):
 		c.queue_free()
+	await get_tree().process_frame
 	resize_blocks()
+	await get_tree().process_frame
 	generate_world()
-	#create_mesh()
-	create_greedy_mesh()
-	add_effects()
+	await get_tree().process_frame
+	create_mesh()
+	await get_tree().process_frame
 	if !Engine.is_editor_hint():
-		save_level()
-		get_tree().quit(0)
+		var c_b = load("res://tools/creative_builder.tscn").instantiate()
+		add_child(c_b)
+		c_b.connect("place",place_block)
+		c_b.connect("final_build", final_build)
+
+func fast_update():
+	for i in graphics_paths:
+		i.queue_free()
+	graphics_paths = []
+	create_mesh()
 
 func save_level():
-	var l = self.duplicate()
+	#var l = self.duplicate(true)
+	#l.set_script(load("res://scripts/world_level.gd"))
+	#add_child(l,true)
+	#for ch in l.get_children(false):
+		#ch.owner = l
+		#for c in ch.get_children(false):
+			#c.owner = ch
+	var l = Node3D.new()
+	for i in get_children():
+		i.reparent(l)
+		i.owner = l
+		for c in i.get_children():
+			c.owner = l
 	l.name = level_name
-	l.set_script(load("res://scripts/world_level.gd"))
 	#l.blocks = blocks
 	var scene = PackedScene.new()
 	scene.pack(l)
 	ResourceSaver.save(scene, (level_path + level_name + ".tscn"))
+	pass
+
+func place_block(x,y,z,type) -> void:
+	if x >= world_size.x or x < 0:
+		return
+	if y >= world_size.y or y < 0:
+		return
+	if z >= world_size.z or z < 0:
+		return
+	blocks[x][y][z] = type
+	fast_update()
+	
 	pass

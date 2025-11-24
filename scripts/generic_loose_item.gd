@@ -14,6 +14,7 @@ func _ready():
 	var item = Lookup.items[item_key]
 	display_name = item[0]
 	var model = load(item[1]).instantiate()
+	model.process_mode = PROCESS_MODE_DISABLED
 	add_child(model)
 	type = item[2]
 	rotation.y = randf_range(-PI, PI)

@@ -21,6 +21,7 @@ uniform float highlightTrackIntensity = 0.75;
 uniform vec2 eyelashes;
 uniform vec3 eyelashCol : source_color;
 uniform float eyelashTaper;
+uniform float transparency = 0.0;
 
 void vertex() {
 	UV=UV*uv1_scale.xy+uv1_offset.xy;
@@ -48,7 +49,8 @@ void fragment() {
 	//highlight
 	vec2 hlp = vec2(highlightPos.x + eyePos.x*highlightTrackIntensity, highlightPos.y + eyePos.y*highlightTrackIntensity);
 	if (uv.x > hlp.x - highlightSize.x && uv.x < hlp.x + highlightSize.x && uv.y > hlp.y - highlightSize.y && uv.y < hlp.y + highlightSize.y){
-		color = vec3(255.0,255.0,255.0);
+		//color = vec3(255.0,255.0,255.0);
+		color = vec3(1.0,1.0,1.0);
 	}
 	//eyelashes
 	if (uv.y + cos(uv.x)*(eyelashTaper+eyeTaper) < eyeLids.x + eyelashes.x-1.5) {
@@ -60,7 +62,7 @@ void fragment() {
 	
 	ALBEDO = color;
 	EMISSION = color*0.25;
-	float trans = 1.0;
+	float trans = 1.0 - (transparency*(1.0-ALBEDO.g));
 	if (uv.y + cos(uv.x)* eyeTaper < eyeLids.x-1.5) {
 		trans = 0.0;
 	}

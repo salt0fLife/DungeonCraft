@@ -30,6 +30,11 @@ func _ready():
 	multiplayer.server_relay = true
 	multiplayer.connect("server_disconnected", _on_lost_connection)
 	load_skin_info()
+	worldSync.connect("spawned",emit_world_loaded)
+
+signal world_loaded
+func emit_world_loaded():
+	emit_signal("world_loaded")
 
 func load_skin_info():
 	print("loaded skin with key " + str(skin_key))
@@ -321,6 +326,7 @@ func _on_skin_editor_button_down():
 ##pause menu stuffs
 var is_paused = false
 @onready var pause_menu = $pauseMenu
+@onready var chat_input = $chat_display/VBoxContainer/TextEdit
 func _input(event):
 	if Input.is_action_just_pressed("pause"):
 		if $Control.visible:
@@ -330,11 +336,30 @@ func _input(event):
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 			Global.disable_avatar = false
 			pause_menu.hide()
+			chat_input.hide()
 		else:
 			is_paused = true
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			Global.disable_avatar = true
 			pause_menu.show()
+	if Input.is_action_just_pressed("chat"):
+		if $Control.visible:
+			return
+		if is_paused:
+			is_paused = false
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			Global.disable_avatar = false
+			pause_menu.hide()
+			chat_input.hide()
+			chat_input.release_focus()
+			$chat_display._on_text_edit_text_submitted(chat_input.text)
+		else:
+			is_paused = true
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			Global.disable_avatar = true
+			chat_input.show()
+			chat_input.grab_focus()
+			$chat_display.fade_in()
 
 func _on_resume_button_down():
 	is_paused = false
@@ -380,7 +405,7 @@ func _on_change_world(key, require_host = false):
 	for i in worldSync.get_children(false):
 		i.queue_free()
 	worldSync.add_child(load(Lookup.worlds[key][0]).instantiate(), true)
-	Global.inside = Lookup.worlds[key][1]
+	#Global.inside = Lookup.worlds[key][1]
 	for p in get_tree().get_nodes_in_group("player"):
 		p.tp(Vector3.ZERO)
 		p.tp.rpc(Vector3.ZERO)
@@ -399,7 +424,7 @@ const projectile_limit = 256
 func spawn_projectile(key, pos, dir, owned_by):
 	if projectileSync.get_child_count(false) > (projectile_limit - 1):
 		projectileSync.get_child(0).queue_free()
-	var proj = load(Lookup.Projectiles[key]).instantiate()
+	var proj = Lookup.Projectiles[key].instantiate()
 	proj.dir = dir
 	proj.owned_by = owned_by
 	projectileSync.add_child(proj, true)

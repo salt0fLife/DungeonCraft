@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://dkdj140vlduv4"]
+
+[ext_resource type="Script" path="res://scripts/creative_builder.gd" id="1_7ilh5"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ydprg"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="creative_builder" type="Node3D"]
+script = ExtResource("1_7ilh5")
+
+[node name="cameraHandler" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="cameraHandler"]
+
+[node name="RayCast3D" type="RayCast3D" parent="cameraHandler"]
+target_position = Vector3(0, 0, -50)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="cameraHandler/RayCast3D"]
+top_level = true
+mesh = SubResource("BoxMesh_ydprg")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="cameraHandler"]

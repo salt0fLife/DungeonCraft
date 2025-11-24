@@ -1,0 +1,89 @@
+[gd_scene load_steps=7 format=3 uid="uid://dwt332uhqiw8y"]
+
+[ext_resource type="PackedScene" uid="uid://bfmtven01nbak" path="res://entities/player.tscn" id="2_hfy31"]
+[ext_resource type="PackedScene" uid="uid://buvgyaes3qr86" path="res://assets/environmentPieces/wall_torch.tscn" id="2_mlrmg"]
+[ext_resource type="VoxelGIData" uid="uid://d2nwqfkwerjey" path="res://world/lightingInformation/dias_room_1.VoxelGI_data.res" id="3_j5l1h"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1hj7q"]
+sky_top_color = Color(0.337255, 0.180392, 0.105882, 1)
+sky_horizon_color = Color(0.835294, 0.572549, 0.215686, 1)
+sky_curve = 0.0588439
+ground_bottom_color = Color(0.298039, 0.207843, 0.113725, 1)
+ground_horizon_color = Color(0.756863, 0.423529, 0.25098, 1)
+
+[sub_resource type="Sky" id="Sky_rig78"]
+sky_material = SubResource("ProceduralSkyMaterial_1hj7q")
+
+[sub_resource type="Environment" id="Environment_bddhk"]
+background_mode = 2
+sky = SubResource("Sky_rig78")
+ambient_light_source = 3
+reflected_light_source = 2
+ssr_enabled = true
+ssr_max_steps = 32
+ssao_enabled = true
+
+[node name="diasRoom1" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_bddhk")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+visible = false
+light_energy = 0.0
+
+[node name="lighting" type="Node3D" parent="."]
+
+[node name="wallTorch" parent="lighting" instance=ExtResource("2_mlrmg")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 9.5, 2, 4)
+
+[node name="wallTorch2" parent="lighting" instance=ExtResource("2_mlrmg")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 9.5, 2, -1)
+
+[node name="wallTorch3" parent="lighting" instance=ExtResource("2_mlrmg")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 9.5, 2, -6)
+
+[node name="wallTorch4" parent="lighting" instance=ExtResource("2_mlrmg")]
+transform = Transform3D(1.19209e-07, 0, 1, 0, 1, 0, -1, 0, 1.19209e-07, -9.5, 2, -6)
+
+[node name="wallTorch5" parent="lighting" instance=ExtResource("2_mlrmg")]
+transform = Transform3D(1.19209e-07, 0, 1, 0, 1, 0, -1, 0, 1.19209e-07, -9.5, 2, -1)
+
+[node name="wallTorch6" parent="lighting" instance=ExtResource("2_mlrmg")]
+transform = Transform3D(1.19209e-07, 0, 1, 0, 1, 0, -1, 0, 1.19209e-07, -9.5, 2, 4)
+
+[node name="wallTorch7" parent="lighting" instance=ExtResource("2_mlrmg")]
+transform = Transform3D(1, 0, -1.62921e-07, 0, 1, 0, 1.62921e-07, 0, 1, 0, 2, -9.5)
+
+[node name="wallTorch8" parent="lighting" instance=ExtResource("2_mlrmg")]
+transform = Transform3D(1, 0, -1.62921e-07, 0, 1, 0, 1.62921e-07, 0, 1, 5, 2, -9.5)
+
+[node name="wallTorch9" parent="lighting" instance=ExtResource("2_mlrmg")]
+transform = Transform3D(1, 0, -1.62921e-07, 0, 1, 0, 1.62921e-07, 0, 1, -5, 2, -9.5)
+
+[node name="player" parent="." instance=ExtResource("2_hfy31")]
+
+[node name="VoxelGI" type="VoxelGI" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.58856, 0.378967)
+subdiv = 0
+size = Vector3(20, 5.4281, 20.7579)
+data = ExtResource("3_j5l1h")
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+flip_faces = true
+size = Vector3(13, 4, 13)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+flip_faces = true
+size = Vector3(19, 4.5, 19)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 2)
+flip_faces = true
+size = Vector3(9, 5, 17)

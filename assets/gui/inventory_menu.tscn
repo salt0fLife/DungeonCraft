@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://b7s8ume16tah0"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_d5ftn"]
+blend_mode = 3
+
+[node name="inventory_menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("CanvasItemMaterial_d5ftn")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.729412, 0.729412, 0.729412, 1)
+
+[node name="scrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.182
+anchor_bottom = 0.776
+offset_right = 0.335983
+offset_bottom = 0.151978
+
+[node name="HFlowContainer" type="HFlowContainer" parent="scrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

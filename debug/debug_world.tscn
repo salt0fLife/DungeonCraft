@@ -1,11 +1,13 @@
-[gd_scene load_steps=28 format=3 uid="uid://dntnunlwfyesu"]
+[gd_scene load_steps=44 format=3 uid="uid://dntnunlwfyesu"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_5fl5y"]
 [ext_resource type="Script" path="res://debug/debug_world.gd" id="1_87rlt"]
-[ext_resource type="PackedScene" uid="uid://dly3g0b5sqii7" path="res://assets/environmentPieces/peaceful_island/grass_1.tscn" id="3_5vhho"]
-[ext_resource type="PackedScene" uid="uid://dq5aik6jyb0o6" path="res://assets/environmentPieces/peaceful_island/grass_2.tscn" id="4_4it4o"]
+[ext_resource type="PackedScene" uid="uid://dly3g0b5sqii7" path="res://assets/environmentPieces/level_details/grass_1.tscn" id="3_5vhho"]
+[ext_resource type="PackedScene" uid="uid://cc8lpiwjggev5" path="res://assets/glb/items/sparkWand.glb" id="3_jyith"]
+[ext_resource type="PackedScene" uid="uid://dq5aik6jyb0o6" path="res://assets/environmentPieces/level_details/grass_2.tscn" id="4_4it4o"]
 [ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="4_5bd38"]
-[ext_resource type="PackedScene" uid="uid://g6ektn38chvg" path="res://assets/environmentPieces/peaceful_island/grass_3.tscn" id="5_bxdvy"]
+[ext_resource type="PackedScene" uid="uid://dvkd2y2cnusj" path="res://assets/itemGraphics/spark_wand.tscn" id="4_yl0wx"]
+[ext_resource type="PackedScene" uid="uid://g6ektn38chvg" path="res://assets/environmentPieces/level_details/grass_3.tscn" id="5_bxdvy"]
 [ext_resource type="PackedScene" uid="uid://cqm1ptmfpda0v" path="res://assets/environmentPieces/trees/tree_pine_2.tscn" id="6_o0lwk"]
 [ext_resource type="PackedScene" uid="uid://b4tpnh5lsjjto" path="res://assets/environmentPieces/trees/tree_pine_3.tscn" id="7_1t4tn"]
 [ext_resource type="PackedScene" uid="uid://bwiiti130u4h8" path="res://assets/environmentPieces/trees/tree_pine_4.tscn" id="8_xuyly"]
@@ -15,21 +17,127 @@
 [ext_resource type="PackedScene" uid="uid://jmajynm5h4rf" path="res://entities/ragdolls/player_corpse.tscn" id="13_lys41"]
 [ext_resource type="PackedScene" uid="uid://bfn3gjlgpj641" path="res://entities/generic_loose_item.tscn" id="14_ccyrl"]
 [ext_resource type="PackedScene" uid="uid://fwwtve5csj7i" path="res://debug/accessories_debugger.tscn" id="15_ytdhl"]
-[ext_resource type="PackedScene" uid="uid://bj1t8n02ux0ji" path="res://world/levels/level_2_test.tscn" id="16_j3rw5"]
+[ext_resource type="AudioStream" uid="uid://gp0jn6cujh6n" path="res://assets/sounds/music/mainFill.mp3" id="17_1pngb"]
+[ext_resource type="AudioStream" uid="uid://bcaur77rnaxjw" path="res://assets/sounds/music/melody2.mp3" id="18_1ky1v"]
+[ext_resource type="AudioStream" uid="uid://bi3hkffbulo4c" path="res://assets/sounds/music/melody.mp3" id="19_mpwts"]
+[ext_resource type="AudioStream" uid="uid://b3ss5ji72fuf8" path="res://assets/sounds/music/morningFogBaseline.mp3" id="20_cn7hf"]
+[ext_resource type="AudioStream" uid="uid://us4531tbg0sh" path="res://assets/sounds/music/triplets.mp3" id="21_5nv8w"]
+[ext_resource type="PackedScene" uid="uid://cb6ovvv8dnrb1" path="res://world/levels/level_3_test.tscn" id="21_ooxf7"]
+[ext_resource type="PackedScene" uid="uid://c4u7j7ayr1kum" path="res://assets/environmentPieces/ambience/rain.tscn" id="23_yrjkj"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ks42u"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_njc7h"]
-albedo_texture = ExtResource("1_5fl5y")
-uv1_scale = Vector3(500, 500, 500)
+[sub_resource type="Shader" id="Shader_mq27s"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.2.1.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,filter_linear_mipmap,repeat_enable;
+uniform sampler2D texture_rain : source_color,filter_linear_mipmap,repeat_enable;
+uniform float point_size : hint_range(0,128);
+uniform float roughness : hint_range(0,1);
+uniform sampler2D texture_metallic : hint_default_white,filter_linear_mipmap,repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r,filter_linear_mipmap,repeat_enable;
+uniform float specular;
+uniform float metallic;
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+uniform vec3 puddle_color : source_color;
+
+void vertex() {
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+}
+
+
+
+
+float ripple(vec2 uv, vec2 b_uv) {
+	float ripple = (.1 / length(uv)*(sin(TIME*16.0+b_uv.x*100.0)+1.0)); //* sin(TIME*10.0 + sin(b_uv.x*TIME) + sin(b_uv.y*TIME)) + 1.0
+	//float rays = max(0,1.0 - abs(uv.x * uv.y) * 1000.0) * ripple;
+	//ripple += rays;
+	if (sin((b_uv.x)*5.0 - sin(TIME)*3.0 + 1.0) < 0.99) {
+		ripple = 0.0;
+	}
+	return ripple;
+}
+
+vec2 RandomVec2(vec2 seed) {
+	seed = fract(seed * vec2(123.45, 784.29));
+	seed += dot(seed, seed + 875.34);
+	float x = fract(seed.x * 164.32);
+	float y = fract(seed.y * 287.21);
+	return vec2(x,y) - 0.5; //was 0.0-1.0 now 0.0-0.5
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
+	float roughness_tex = dot(texture(texture_rain,base_uv*vec2(0.02,0.02)),roughness_texture_channel);
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	ALBEDO = mix(ALBEDO, puddle_color, (1.0 - roughness_tex)*0.5);
+	float metallic_tex = dot(texture(texture_metallic,base_uv),metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	ROUGHNESS = roughness_tex * roughness;
+	SPECULAR = specular;
+	//vec2 grid_uv = fract(base_uv*10.0) - 0.5;
+	//vec2 grid_id = floor(base_uv*10.0);
+	//vec2 rv = RandomVec2(grid_id);
+	//float size = (rv.x + 0.5);
+	//ALBEDO.r += ripple(grid_uv + rv, rv) * size;
+	//ALBEDO = mix(ALBEDO, puddle_color, ripple(grid_uv + rv, rv) * size*0.25);
+}
+"
+
+[sub_resource type="Gradient" id="Gradient_ksdqg"]
+colors = PackedColorArray(0.381703, 0.381703, 0.381703, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ekow4"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_flird"]
+seamless = true
+color_ramp = SubResource("Gradient_ksdqg")
+noise = SubResource("FastNoiseLite_ekow4")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bwjgt"]
+render_priority = 0
+shader = SubResource("Shader_mq27s")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(500, 500, 500)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/puddle_color = Color(0.27451, 0.47451, 0.639216, 1)
+shader_parameter/texture_albedo = ExtResource("1_5fl5y")
+shader_parameter/texture_rain = SubResource("NoiseTexture2D_flird")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_3uj3j"]
-material = SubResource("StandardMaterial3D_njc7h")
+material = SubResource("ShaderMaterial_bwjgt")
 size = Vector2(500, 500)
+
+[sub_resource type="Gradient" id="Gradient_6qbul"]
+colors = PackedColorArray(0.177325, 0.464292, 0.608657, 1, 0.787127, 0.850348, 0.891727, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_y68ia"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1bwa2"]
+seamless = true
+color_ramp = SubResource("Gradient_6qbul")
+noise = SubResource("FastNoiseLite_y68ia")
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tgtor"]
 sky_top_color = Color(0.168627, 0.447059, 0.780392, 1)
 sky_horizon_color = Color(0.647059, 0.654902, 0.670588, 1)
+sky_cover = SubResource("NoiseTexture2D_1bwa2")
 
 [sub_resource type="Sky" id="Sky_jhhr5"]
 sky_material = SubResource("ProceduralSkyMaterial_tgtor")
@@ -37,6 +145,22 @@ sky_material = SubResource("ProceduralSkyMaterial_tgtor")
 [sub_resource type="Environment" id="Environment_s3u0r"]
 background_mode = 2
 sky = SubResource("Sky_jhhr5")
+ssao_enabled = true
+glow_enabled = true
+glow_normalized = true
+glow_bloom = 0.01
+glow_blend_mode = 1
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0353
+volumetric_fog_albedo = Color(0.65098, 0.901961, 0.894118, 1)
+volumetric_fog_anisotropy = 0.04
+adjustment_enabled = true
+adjustment_saturation = 1.2
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_4g4es"]
+exposure_multiplier = 1.5
+auto_exposure_speed = 1.0
+auto_exposure_min_sensitivity = 200.0
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_wm3l5"]
 viewport_path = NodePath("SubViewport")
@@ -72,11 +196,18 @@ shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_s3u0r")
+camera_attributes = SubResource("CameraAttributesPractical_4g4es")
+
+[node name="sparkWand" parent="WorldEnvironment" instance=ExtResource("3_jyith")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 6)
+
+[node name="SparkWand" parent="WorldEnvironment" instance=ExtResource("4_yl0wx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.93767, 0, 6.47961)
 
 [node name="SubViewport" type="SubViewport" parent="."]
 
 [node name="Camera3D" type="Camera3D" parent="SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.86149, 1, 10)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewport/Camera3D"]
 transform = Transform3D(0.999986, -8.73064e-08, -0.00533765, -0.00533765, 4.35015e-08, -0.999986, -8.75379e-08, -1, -4.30349e-08, 0, 0, -1)
@@ -183,4 +314,35 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.15502, 1.34547, -5.74185)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5627, 0, -3.93952)
 value = "devil_wings"
 
-[node name="level_2_test" parent="." instance=ExtResource("16_j3rw5")]
+[node name="accessories_debugger2" parent="." instance=ExtResource("15_ytdhl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5627, 0, -3.93952)
+accessory_to_edit = "shirt"
+value = "iron_chestpiece"
+
+[node name="accessories_debugger3" parent="." instance=ExtResource("15_ytdhl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5627, 0, -3.93952)
+value = "debug_cape"
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.229399, 2.31994, 25.6229)
+stream = ExtResource("17_1pngb")
+
+[node name="AudioStreamPlayer3D2" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.7706, 2.31994, 25.6229)
+stream = ExtResource("18_1ky1v")
+
+[node name="AudioStreamPlayer3D3" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.7706, 2.31994, -0.340482)
+stream = ExtResource("19_mpwts")
+
+[node name="AudioStreamPlayer3D4" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.229399, 2.31994, -0.340482)
+stream = ExtResource("20_cn7hf")
+
+[node name="AudioStreamPlayer3D5" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.6113, 2.31994, 10.7518)
+stream = ExtResource("21_5nv8w")
+
+[node name="level_3_test" parent="." instance=ExtResource("21_ooxf7")]
+
+[node name="environmentEffects" parent="." instance=ExtResource("23_yrjkj")]

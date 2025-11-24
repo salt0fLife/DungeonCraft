@@ -31,6 +31,8 @@ extends Node3D
 	#$root/chestBase/torso/tailBase/tail/tailMiddle/tail_001/tailLast #12
 ]
 
+
+
 const bone_names = [
 	"torso",
 	"hip_L",
@@ -67,6 +69,9 @@ const pos_and_rot_only = [
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	var ebm = $root/chestBase/neck/eyeBrows_L.get_active_material(0).duplicate()
+	$root/chestBase/neck/eyeBrows_L.set_surface_override_material(0, ebm)
+	$root/chestBase/neck/eyeBrows_R.set_surface_override_material(0, ebm)
 	#save_pose_transforms()
 	#apply_pose(arm_test)
 	pass # Replace with function body.
@@ -143,12 +148,16 @@ func _process(delta):
 	if animated:
 		match animation_state:
 			"walk":
-				walk(delta, walk_speed, animation_speed, walk_angle, walk_tilt, crouching, head_angle, falling)
+				walk(delta, walk_speed, animation_speed, walk_angle, walk_tilt, crouching, head_angle, falling, stride_mult)
 			"idle":
-				idle(delta, idle_energy, walk_tilt, crouching, head_angle, falling)
+				idle(delta, idle_energy, walk_tilt, crouching, head_angle, falling,resist_dir)
 			"fly":
 				fly(delta, animation_speed, crouching, head_angle, walk_angle, walk_speed)
-				pass
+			"idle_weapon":
+				idle_weapon(delta, idle_energy, walk_tilt, crouching, head_angle, falling,resist_dir)
+			"walk_weapon":
+				walk_weapon(delta, walk_speed, animation_speed, walk_angle, walk_tilt, crouching, head_angle, falling, stride_mult)
+		handle_arm_anims(delta)
 	if save_pose:
 		save_pose_transforms()
 		save_pose = false
@@ -159,7 +168,8 @@ func _process(delta):
 		apply_load_pose = false
 	pass
 
-func idle(delta, energy, tilt, crouch, head_angle, fall):
+@export var resist_dir = Vector2.ZERO
+func idle(delta, energy, tilt, crouch, head_angle, fall,res_dir):
 	tilt += crouch*6.0 * 3.1 * (2.0/3.0)
 	if head_angle.x > 0.0:
 		tilt += head_angle.x
@@ -197,6 +207,17 @@ func idle(delta, energy, tilt, crouch, head_angle, fall):
 	bone_paths[10].rotation.y = sin(time*1.5)*0.5* (energy + (1.0-energy)*0.5) + head_angle.y * 0.25
 	bone_paths[11].rotation.y = -sin(time*1.5+PI*0.33)*0.33*(energy + (1.0-energy)*0.5)
 	bone_paths[12].rotation.y = -sin(time*1.5+PI*0.33)*0.25*(energy + (1.0-energy)*0.5)
+	##resist dir
+	bone_paths[0].rotation.x += resist_dir.y*0.5*cos(-head_angle.y)
+	bone_paths[0].rotation.z += resist_dir.y*0.5*sin(-head_angle.y)
+	
+	bone_paths[0].rotation.z += resist_dir.x*0.5*cos(-head_angle.y)
+	bone_paths[0].rotation.x += resist_dir.x*0.5*sin(-head_angle.y)
+	
+	bone_paths[8].position.y = 0.241
+	bone_paths[6].position.y = 0.241
+	
+	
 	## eyes
 	eye_pos.y = head_angle.x * 0.5
 	eye_pos.x = head_angle.y * 0.5
@@ -216,12 +237,220 @@ func idle(delta, energy, tilt, crouch, head_angle, fall):
 	##
 	pass
 
+func idle_weapon(delta, energy, tilt, crouch, head_angle, fall,res_dir):
+	tilt += crouch*6.0 * 3.1 * (2.0/3.0)
+	if head_angle.x > 0.0:
+		tilt += head_angle.x
+		eye_lids = Vector2(1.05, 0.32)
+	else:
+		eye_lids = Vector2(1.05+head_angle.x*0.35, 0.32)
+		tilt += head_angle.x * 0.1
+	time += delta * (energy + fall*4.0)
+	tilt += 1.0
+	bone_paths[0].position.y = sin(time*2.0)*0.01*energy-0.01*energy - abs(tilt*0.05) - crouch * 0.25 + fall*0.1- tilt*0.04
+	bone_paths[0].position.x = sin(time*1.0+PI*0.5)*0.005*energy
+	bone_paths[0].rotation.x = tilt * 0.25
+	bone_paths[0].rotation.y = head_angle.y * (1.0/3.0) - PI*0.1
+	bone_paths[0].rotation.z = 0.0 - PI*0.02
+	bone_paths[1].rotation.x = -tilt*0.4*energy + sin(time*2.0)*0.03*energy-0.03 - head_angle.y * 0.05 - falling*0.5 - PI*0.2
+	bone_paths[1].rotation.y = energy*0.1 - head_angle.y * 0.1 + falling*0.5 + PI*0.1
+	bone_paths[1].rotation.z = abs(tilt * head_angle.y)*0.05
+	bone_paths[1].position = Vector3(0.075, -0.282, -0.001)
+	bone_paths[2].rotation.x = tilt*0.25*energy - sin(time*2.0)*0.03*energy-0.03 + energy * 0.1 + abs(head_angle.y * 0.05) + falling*0.75 + PI*0.1 + head_angle.y * 0.1
+	bone_paths[3].rotation.x = -tilt*0.5*energy + sin(time*2.0)*0.03*energy-0.03 + head_angle.y * 0.05 - falling * 0.2 - PI*0.01
+	bone_paths[3].rotation.y =  -energy*0.1 - head_angle.y * 0.1 - falling * 0.25
+	bone_paths[3].rotation.z = -abs(tilt * head_angle.y)*0.05 - PI*0.1
+	bone_paths[3].position = Vector3(-0.075, -0.282, -0.001)
+	bone_paths[4].rotation.x = tilt*0.25*energy - sin(time*2.0)*0.03*energy-0.03 + energy * 0.1 + abs(head_angle.y * 0.05) + falling*0.3 + PI*0.25 - abs(head_angle.y * 0.2)
+	bone_paths[5].rotation.x = -tilt * 0.25 + head_angle.x * (2.0/3.0) + abs((head_angle.y * crouch))
+	bone_paths[5].rotation.y = head_angle.y * (2.0/3.0) * 0.5 + PI*0.1 ## edited for eyes
+	bone_paths[6].rotation.y = -sin(time*1.0)*0.005*energy + falling*0.5 + PI*0.02
+	bone_paths[6].rotation.z = -sin(time*1.0)*0.025*energy + 0.03* (energy + falling*20.0) + PI*0.05
+	bone_paths[6].rotation.x = sin(time*2.0)*0.025*energy - 0.03*(energy + falling*10.0) + PI*0.1
+	bone_paths[7].rotation.x = -sin(time*2.0+PI*0.5)*0.04*energy - 0.06*(energy + falling*20.0) - PI*0.25
+	bone_paths[8].rotation.y = sin(time*1.0)*0.005*energy - falling*0.5 + PI*0.1
+	bone_paths[8].rotation.z = sin(time*1.0)*0.025*energy - 0.03*(energy + falling*20.0) - PI*0.05
+	bone_paths[8].rotation.x = sin(time*2.0)*0.025*energy - 0.03*(energy + falling*10.0) + PI *0.1
+	bone_paths[9].rotation.x = -sin(time*2.0+PI*0.5)*0.04*energy - 0.06*(energy + falling*20.0) - PI*0.15
+	bone_paths[10].rotation.x = sin(time*1.5)*0.1 - 1.06465
+	bone_paths[10].rotation.y = sin(time*1.5)*0.5* (energy + (1.0-energy)*0.5) + head_angle.y * 0.25
+	bone_paths[11].rotation.y = -sin(time*1.5+PI*0.33)*0.33*(energy + (1.0-energy)*0.5)
+	bone_paths[12].rotation.y = -sin(time*1.5+PI*0.33)*0.25*(energy + (1.0-energy)*0.5)
+	##resist dir
+	bone_paths[0].rotation.x += resist_dir.y*0.5*cos(-head_angle.y)
+	bone_paths[0].rotation.z += resist_dir.y*0.5*sin(-head_angle.y)
+	
+	bone_paths[0].rotation.z += resist_dir.x*0.5*cos(-head_angle.y)
+	bone_paths[0].rotation.x += resist_dir.x*0.5*sin(-head_angle.y)
+	
+	bone_paths[8].position.y = 0.241
+	bone_paths[6].position.y = 0.241
+	
+	
+	## eyes
+	eye_pos.y = head_angle.x * 0.5
+	eye_pos.x = head_angle.y * 0.5
+	blink_time += delta * blink_speed
+	if blink_time > time_between_blinks*blink_speed:
+		blink_time -= time_between_blinks * blink_speed
+	if blink_time < PI:
+		blink = sin(blink_time)
+	else:
+		blink = 0.0
+	eye_rot = eye_pos
+	eye_lids = lerp(eye_lids, Vector2(2.0,0.0), blink)
+	set_eye_param("shader_parameter/eyePos", eye_pos)
+	set_eye_param("shader_parameter/eyeLids", eye_lids)
+	set_eye_param("shader_parameter/eyeTaper", eye_taper)
+	set_eye_param("shader_parameter/eyeScale", eye_scale)
+	##
+	pass
+
+
+##arm_overide_animations
+@export var arm_override_anim = ""
+@export var arm_anim_speed = 1.0
+var arm_anim_time = 0.0
+
+func handle_arm_anims(delta):
+	match arm_override_anim:
+		"":
+			arm_anim_time = 1.0
+		"punch":
+			arm_punch(delta)
+		"wave":
+			arm_wave(delta)
+		"point":
+			arm_point(delta)
+		"slash_1":
+			arm_slash_1(delta)
+		"slash_2":
+			arm_slash_2(delta)
+		"draw_weapon":
+			draw_weapon(delta)
+	pass
+
+func play_arm_anim(key : String) -> void:
+	arm_anim_time = 1.0
+	arm_override_anim = key
+
+func draw_weapon(delta):
+	arm_anim_time -= delta * arm_anim_speed * 3.0
+	#general motion
+	bone_paths[8].rotation.x = head_angle.x*0.5 -PI*0.75 + (1.0 - arm_anim_time)*PI*0.75
+	bone_paths[9].rotation.x = -PI*0.5 + (1.0 - arm_anim_time)*PI*0.25
+	bone_paths[8].rotation.y = head_angle.x*0.5 -PI*0.45 + (1.0 - arm_anim_time)*PI*0.45
+	if arm_anim_time < 0.0:
+		arm_override_anim = ""
+		#play_arm_anim("draw_weapon")
+
+func arm_slash_1(delta):
+	arm_anim_time -= delta * arm_anim_speed *3.0
+	#general motion
+	bone_paths[8].rotation.x = head_angle.x*0.5 -PI*0.75 + (1.0 - arm_anim_time)*PI
+	bone_paths[8].rotation.y = PI*0.25 - arm_anim_time#-arm_anim_time*PI*0.1 - PI*0.1
+	bone_paths[8].rotation.x -= PI*0.25
+	bone_paths[9].rotation.x = -PI*0.25 + (1.0 - arm_anim_time)*PI*0.25
+	
+	if animation_state == "walk":
+		bone_paths[8].rotation.z = -sin(arm_anim_time*PI-PI*0.25)*0.75 - head_angle.y*0.5
+	else:
+		bone_paths[8].rotation.z = -sin(arm_anim_time*PI-PI*0.25)*0.75 + head_angle.y*0.5
+	#bone_paths[8].rotation.x += arm_anim_time
+	bone_paths[0].rotation.y += sin(arm_anim_time*PI)*0.2
+	bone_paths[5].rotation.y -= sin(arm_anim_time*PI)*0.2
+	bone_paths[1].rotation.y -= sin(arm_anim_time*PI)*0.2
+	bone_paths[3].rotation.y -= sin(arm_anim_time*PI)*0.2
+	
+	bone_paths[6].rotation.z += sin(arm_anim_time*PI+PI*0.25)*0.1
+	bone_paths[6].rotation.x += sin(arm_anim_time*PI)*0.15
+	if arm_anim_time < 0.0:
+		arm_override_anim = ""
+		#play_arm_anim("slash_1")
+	pass
+
+func arm_slash_2(delta):
+	arm_anim_time -= delta * arm_anim_speed *3.0
+	#general motion
+	bone_paths[8].rotation.x = head_angle.x*0.5 -PI*0.75 + (1.0 - arm_anim_time)*PI
+	bone_paths[8].rotation.x -= PI*0.25
+	bone_paths[9].rotation.x = -PI*0.25 + (1.0 - arm_anim_time)*PI*0.25
+	#bone_paths[8].rotation.y = -(PI*0.25 - arm_anim_time)#-arm_anim_time*PI*0.1 - PI*0.1
+	
+	if animation_state == "walk":
+		bone_paths[8].rotation.z = sin(arm_anim_time*PI-PI*0.25)*0.75 - head_angle.y*0.5
+	else:
+		bone_paths[8].rotation.z = sin(arm_anim_time*PI-PI*0.25)*0.75 + head_angle.y*0.5
+	#bone_paths[8].rotation.z -= arm_anim_time*0.1 - PI*0.5
+	bone_paths[8].rotation.y -= arm_anim_time*0.5 - PI*0.1
+	bone_paths[0].rotation.y += sin(arm_anim_time*PI)*0.2
+	bone_paths[5].rotation.y -= sin(arm_anim_time*PI)*0.2
+	bone_paths[1].rotation.y -= sin(arm_anim_time*PI)*0.2
+	bone_paths[3].rotation.y -= sin(arm_anim_time*PI)*0.2
+	
+	bone_paths[6].rotation.z += sin(arm_anim_time*PI+PI*0.25)*0.1
+	bone_paths[6].rotation.x += sin(arm_anim_time*PI)*0.15
+	if arm_anim_time < 0.0:
+		arm_override_anim = ""
+		#play_arm_anim("slash_2")
+	pass
+
+func arm_stab_1(delta):
+	
+	
+	pass
+
+func arm_point(delta):
+	bone_paths[8].rotation.x = head_angle.x -1.5
+	bone_paths[6].rotation.z += abs(head_angle.x)*0.2
+	bone_paths[1].rotation.z += clamp(abs(head_angle.x)*0.15,0.0,0.1)
+	bone_paths[3].rotation.z -= clamp(abs(head_angle.x)*0.15,0.0,0.1)
+	bone_paths[0].rotation.y += 0.2
+	bone_paths[1].rotation.y -= 0.2
+	bone_paths[3].rotation.y -= 0.2
+	bone_paths[5].rotation.y -= 0.2
+	if !animation_state == "walk":
+		bone_paths[8].rotation.y = head_angle.y*0.75 -0.2
+	else:
+		bone_paths[8].rotation.y = -head_angle.y*0.75 - walk_angle*0.5 -0.2
+	bone_paths[9].rotation.x *= 0.1
+	pass
+
+func arm_wave(delta):
+	arm_anim_time -= delta*0.65
+	if arm_anim_time < 0.0:
+		arm_anim_time += 1.0
+	bone_paths[8].rotation.x = PI+(sin(arm_anim_time*PI*2.0)+1.0)*0.1
+	bone_paths[9].rotation.x = -0.1-(sin(arm_anim_time*PI*2.0+1.1)+1.0)*0.1
+	bone_paths[8].rotation.z = sin(arm_anim_time*PI*4.0)*0.5-0.2
+	bone_paths[0].rotation.z += -sin(arm_anim_time*PI*2.0)*0.025-0.1
+	bone_paths[0].position.x = sin(arm_anim_time*PI*2.0)*0.01+0.005
+	bone_paths[1].rotation.z += sin(arm_anim_time*PI*2.0)*0.025+0.1
+	bone_paths[3].rotation.z += sin(arm_anim_time*PI*2.0)*0.025+0.1
+	bone_paths[6].rotation.z += sin(arm_anim_time*PI*2.0)*0.025+0.1
+	pass
+
+func arm_punch(delta):
+	arm_anim_time -= delta * 4.0 * arm_anim_speed
+	bone_paths[8].rotation.x += -sin(arm_anim_time*PI)*1.25
+	bone_paths[8].rotation.y += -sin(arm_anim_time*PI-PI*0.5)*0.34-0.1
+	bone_paths[9].rotation.x += -sin(arm_anim_time*PI-PI*0.25)*0.25-0.25
+	if arm_anim_time < 0.0:
+		arm_override_anim = ""
+		arm_anim_time = 1.0
+## end of arm_anims
+
+
 func force_blink():
 	blink_time = 0.0
 	pass
 
+signal step
+
+var right_stepped = false
 #var leg_bones = [1,2,3,4]
-func walk(delta, mult = 1.0, speed = 1.0, angle = 0.0, tilt_in = 0.0, crouching = 0.0, head_angle = Vector2(0.0,0.0), fall = 0.0):
+@export var stride_mult = 1.0
+func walk_old(delta, mult = 1.0, speed = 1.0, angle = 0.0, tilt_in = 0.0, crouching = 0.0, head_angle = Vector2(0.0,0.0), fall = 0.0):
 	time += delta * (mult + (1.0-mult)*0.9) * speed
 	if mult > 3.0:
 		mult = 3.0
@@ -285,6 +514,174 @@ func walk(delta, mult = 1.0, speed = 1.0, angle = 0.0, tilt_in = 0.0, crouching 
 	set_eye_param("shader_parameter/eyeTaper", eye_taper)
 	set_eye_param("shader_parameter/eyeScale", eye_scale)
 	##
+	
+	
+	##stepping
+	if sin(time*8)*pow(mult,2) > 0.0 and right_stepped:
+		right_stepped = false
+		emit_signal("step")
+	elif sin(time*8)*pow(mult,2) < 0.0 and !right_stepped:
+		right_stepped = true
+		emit_signal("step")
+	
+	pass
+
+func walk(delta, mult = 1.0, speed = 1.0, angle = 0.0, tilt_in = 0.0, crouching = 0.0, head_angle = Vector2(0.0,0.0), fall = 0.0, stride = 1.0):
+	time += delta * (mult + (1.0-mult)*0.9) * (speed + (abs(mult)-3.0)*0.125)
+	if mult > 3.0:
+		mult = 3.0
+	stride = stride - abs(mult)*0.5 + 0.5
+	if stride < 1.0:
+		stride = 1.0
+	head_angle.x = head_angle.x * 0.8
+	var tilt = tilt_in * mult + sin(time*16+0.1)*0.05*(abs(mult)-0.8) + 0.05*(abs(mult)-0.8)
+	bone_paths[0].position.z = sin(time*16-PI*0.5)*0.002*mult - crouching*0.5
+	bone_paths[0].position.y = sin(time*16+PI*0.05)*0.008*pow(mult+crouching,2) - 0.2*abs(tilt) - crouching*1.1 - abs(head_angle.x * 0.025) + falling*0.1 + sin(time*16.0+PI*0.4)*(stride-1.0)*0.05-stride*0.01
+	bone_paths[0].rotation.x = tilt + crouching * 3.0 + head_angle.x*(1.0/3.0)
+	bone_paths[0].rotation.y = (angle-head_angle.y) * 0.5 + sin(time*8)*0.05
+	angle = head_angle.y + angle
+	bone_paths[0].rotation.z = -((angle) * tilt_in)*(walk_speed-0.5)
+	bone_paths[1].rotation.x = sin(time*8)*0.5*mult*stride+(1.0-stride)*0.25 - tilt - (crouching * 8.0) - head_angle.x*(1.0/3.0)
+	bone_paths[1].rotation.y = angle*0.5 - sin(time*8)*0.05 + crouching
+	bone_paths[1].rotation.z = sin(time*8-PI*0.5)*0.025*mult+0.0125 - crouching*angle*3.0
+	bone_paths[3].rotation.x = -sin(time*8)*0.5*mult*stride+(1.0-stride)*0.25 - tilt - (crouching * 8.0)  - head_angle.x*(1.0/3.0)
+	bone_paths[3].rotation.y = angle*0.5 - sin(time*8*mult)*0.05 - crouching
+	bone_paths[3].rotation.z = -sin(time*8-PI*0.5)*0.025*mult+0.0125 - crouching*angle*3.0
+	bone_paths[5].rotation.y = -angle*0.5*0.5 - sin(time*8+0.1)*0.05 ##edited for eyes
+	bone_paths[5].rotation.x = -(tilt*0.8)+(abs(angle) * tilt)*0.5 + sin(time*16-PI*0.5)*0.01*mult - crouching * 2.0 + head_angle.x*(2.0/3.0)
+	bone_paths[2].rotation.x = -sin(time*8+PI*(0.5*clamp(mult, -1.0, 1.0)))*0.3*mult*stride-(1.0-stride)*0.25+PI*(0.09+crouching*0.5) + pow(mult,3)*0.025 + (crouching * 4.0)
+	bone_paths[4].rotation.x = sin(time*8+PI*(0.5*clamp(mult, -1.0, 1.0)))*0.3*mult*stride-(1.0-stride)*0.25+PI*(0.09+crouching*0.5) + pow(mult,3)*0.025 + (crouching * 4.0)
+	bone_paths[10].rotation_degrees.x = -61.5 + ((abs((abs(mult) + (1.0-abs(mult))*0.3))-1.0) * 30) - abs((tilt/PI * 180) * 0.5) - ((crouching/PI)*180)*2.0 - (head_angle.x*(1.0/3.0)/PI * 180)
+	bone_paths[10].position.z = -0.088 + crouching*0.1
+	bone_paths[11].rotation_degrees.x = 10.5 - ((mult-1.0) * 10 / mult)
+	bone_paths[12].rotation_degrees.x = 16.5 - ((mult-1.0) * 16 / mult)
+	bone_paths[10].rotation.y = sin(time*8)*0.5* (mult + (1.0-mult)*0.5) + angle * 0.5
+	bone_paths[11].rotation.y = -sin(time*8+PI*0.33)*0.33*(mult + (1.0-mult)*0.5)
+	bone_paths[12].rotation.y = -sin(time*8+PI*0.33)*0.25*(mult + (1.0-mult)*0.5)
+	bone_paths[6].rotation.x = -sin(time*8)*0.25*mult+PI*0.03 - tilt*0.5 - crouching*2.0  + falling*0.5
+	bone_paths[6].rotation.y = angle*0.25  + falling*0.5
+	bone_paths[7].rotation.x = -sin(time*8+(0.3*mult))*0.2*mult-PI*0.07-abs(tilt) - falling
+	bone_paths[8].rotation.x = sin(time*8)*0.25*mult+PI*0.03 - tilt*0.5 - crouching*2.0  + falling*0.5
+	bone_paths[8].rotation.y = angle*0.25  - falling*0.5
+	bone_paths[9].rotation.x = sin(time*8+(0.3*mult))*0.2*mult-PI*0.07-abs(tilt)  - falling
+	
+	bone_paths[6].rotation.z = abs(mult/1.0)*0.075  + falling*0.5
+	bone_paths[8].rotation.z = -abs(mult/1.0)*0.075  - falling*0.5
+	
+	#bounce
+	bone_paths[1].position.y = sin(time*8-PI*0.5)*0.025*abs(mult) - 0.282 + 0.025*abs(mult)
+	bone_paths[3].position.y = sin(time*8+PI*0.5)*0.025*abs(mult) - 0.282 + 0.025*abs(mult)
+	#Vector3(-0.075, -0.282,0.001)
+	bone_paths[6].position.y = sin(time*8+PI*0.5)*0.01*mult + 0.241 - 0.01*mult*0.5
+	bone_paths[8].position.y = sin(time*8-PI*0.5)*0.01*mult + 0.241 - 0.01*mult*0.5
+	#Vector3(0.15,0.241,-0.001)
+	
+	##eyes
+	eye_pos.y = head_angle.x * 0.25
+	eye_pos.x = -head_angle.y * 0.25
+	blink_time += delta * blink_speed * 0.8
+	if blink_time > time_between_blinks*blink_speed:
+		blink_time -= time_between_blinks * blink_speed
+	if blink_time < PI:
+		blink = sin(blink_time)
+	else:
+		blink = 0.0
+	eye_rot = eye_pos
+	eye_lids = lerp(Vector2(1.05,0.32), Vector2(2.0,0.0), blink)
+	set_eye_param("shader_parameter/eyePos", eye_pos)
+	set_eye_param("shader_parameter/eyeLids", eye_lids)
+	set_eye_param("shader_parameter/eyeTaper", eye_taper)
+	set_eye_param("shader_parameter/eyeScale", eye_scale)
+	##
+	
+	
+	##stepping
+	if sin(time*8+PI*0.1)*pow(mult,2) > 0.0 and right_stepped:
+		right_stepped = false
+		emit_signal("step")
+	elif sin(time*8+PI*0.1)*pow(mult,2) < 0.0 and !right_stepped:
+		right_stepped = true
+		emit_signal("step")
+	
+	pass
+
+func walk_weapon(delta, mult = 1.0, speed = 1.0, angle = 0.0, tilt_in = 0.0, crouching = 0.0, head_angle = Vector2(0.0,0.0), fall = 0.0, stride = 1.0):
+	time += delta * (mult + (1.0-mult)*0.9) * (speed + (abs(mult)-3.0)*0.125)
+	if mult > 3.0:
+		mult = 3.0
+	stride = stride - abs(mult)*0.5 + 0.5
+	if stride < 1.0:
+		stride = 1.0
+	head_angle.x = head_angle.x * 0.8
+	var tilt = tilt_in * mult + sin(time*16+0.1)*0.05*(abs(mult)-0.8) + 0.05*(abs(mult)-0.8)  + (3.0 - mult) * 0.01 * PI
+	bone_paths[0].position.z = sin(time*16-PI*0.5)*0.002*mult - crouching*0.5
+	bone_paths[0].position.y = sin(time*16+PI*0.05)*0.008*pow(mult+crouching,2) - 0.2*abs(tilt) - crouching*1.1 - abs(head_angle.x * 0.025) + falling*0.1 + sin(time*16.0+PI*0.4)*(stride-1.0)*0.05-stride*0.01  - (3.0 - mult) * 0.05
+	bone_paths[0].rotation.x = tilt + crouching * 3.0 + head_angle.x*(1.0/3.0)
+	bone_paths[0].rotation.y = (angle-head_angle.y) * 0.5 + sin(time*8)*0.05 - PI*0.05
+	angle = head_angle.y + angle
+	bone_paths[0].rotation.z = -((angle) * tilt_in)*(walk_speed-0.5) - PI*0.0075*mult
+	bone_paths[1].rotation.x = sin(time*8)*0.5*mult*stride+(1.0-stride)*0.25 - tilt - (crouching * 8.0) - head_angle.x*(1.0/3.0) - (3.0 - mult) * 0.05 * PI
+	bone_paths[1].rotation.y = angle*0.5 - sin(time*8)*0.05 + crouching + PI*0.05
+	bone_paths[1].rotation.z = sin(time*8-PI*0.5)*0.025*mult+0.0125 - crouching*angle*3.0
+	bone_paths[3].rotation.x = -sin(time*8)*0.5*mult*stride+(1.0-stride)*0.25 - tilt - (crouching * 8.0)  - head_angle.x*(1.0/3.0)  - (3.0 - mult) * 0.05 * PI
+	bone_paths[3].rotation.y = angle*0.5 - sin(time*8*mult)*0.05 - crouching + PI*0.05
+	bone_paths[3].rotation.z = -sin(time*8-PI*0.5)*0.025*mult+0.0125 - crouching*angle*3.0
+	bone_paths[5].rotation.y = -angle*0.5*0.5 - sin(time*8+0.1)*0.05 + PI*0.05 ##edited for eyes
+	bone_paths[5].rotation.x = -(tilt*0.8)+(abs(angle) * tilt)*0.5 + sin(time*16-PI*0.5)*0.01*mult - crouching * 2.0 + head_angle.x*(2.0/3.0)
+	bone_paths[2].rotation.x = -sin(time*8+PI*(0.5*clamp(mult, -1.0, 1.0)))*0.3*mult*stride-(1.0-stride)*0.25+PI*(0.09+crouching*0.5) + pow(mult,3)*0.025 + (crouching * 4.0) + (3.0 - mult) * 0.05 * PI
+	bone_paths[4].rotation.x = sin(time*8+PI*(0.5*clamp(mult, -1.0, 1.0)))*0.3*mult*stride-(1.0-stride)*0.25+PI*(0.09+crouching*0.5) + pow(mult,3)*0.025 + (crouching * 4.0) + (3.0 - mult) * 0.05 * PI
+	bone_paths[10].rotation_degrees.x = -61.5 + ((abs((abs(mult) + (1.0-abs(mult))*0.3))-1.0) * 30) - abs((tilt/PI * 180) * 0.5) - ((crouching/PI)*180)*2.0 - (head_angle.x*(1.0/3.0)/PI * 180)
+	bone_paths[10].position.z = -0.088 + crouching*0.1
+	bone_paths[11].rotation_degrees.x = 10.5 - ((mult-1.0) * 10 / mult)
+	bone_paths[12].rotation_degrees.x = 16.5 - ((mult-1.0) * 16 / mult)
+	bone_paths[10].rotation.y = sin(time*8)*0.5* (mult + (1.0-mult)*0.5) + angle * 0.5
+	bone_paths[11].rotation.y = -sin(time*8+PI*0.33)*0.33*(mult + (1.0-mult)*0.5)
+	bone_paths[12].rotation.y = -sin(time*8+PI*0.33)*0.25*(mult + (1.0-mult)*0.5)
+	bone_paths[6].rotation.x = -sin(time*8)*0.25*mult+PI*0.04 - tilt*0.5 - crouching*2.0  + falling*0.5 - PI*0.05
+	bone_paths[6].rotation.y = angle*0.25  + falling*0.5
+	bone_paths[7].rotation.x = -sin(time*8+(0.3*mult))*0.2*mult-PI*0.07-abs(tilt) - falling
+	bone_paths[8].rotation.x = sin(time*8)*0.1*mult+PI*0.03 - tilt*0.5 - crouching*2.0  + falling*0.5 +PI*0.1
+	bone_paths[8].rotation.y = angle*0.25  - falling*0.5 - (3.0 - mult) *PI*0.05
+	bone_paths[9].rotation.x = sin(time*8+(0.3*mult))*0.1*mult-PI*0.07-abs(tilt)  - falling
+	
+	bone_paths[6].rotation.z = abs(mult/1.0)*0.075  + falling*0.5
+	bone_paths[8].rotation.z = -abs(mult/1.0)*0.075  - falling*0.5 - PI*0.025
+	
+	#bounce
+	bone_paths[1].position.y = sin(time*8-PI*0.5)*0.025*abs(mult) - 0.282 + 0.025*abs(mult)
+	bone_paths[3].position.y = sin(time*8+PI*0.5)*0.025*abs(mult) - 0.282 + 0.025*abs(mult)
+	#Vector3(-0.075, -0.282,0.001)
+	bone_paths[6].position.y = sin(time*8+PI*0.5)*0.01*mult + 0.241 - 0.01*mult*0.5
+	bone_paths[8].position.y = sin(time*8-PI*0.5)*0.01*mult + 0.241 - 0.01*mult*0.5
+	#Vector3(0.15,0.241,-0.001)
+	
+	##eyes
+	eye_pos.y = head_angle.x * 0.25
+	eye_pos.x = -head_angle.y * 0.25
+	blink_time += delta * blink_speed * 0.8
+	if blink_time > time_between_blinks*blink_speed:
+		blink_time -= time_between_blinks * blink_speed
+	if blink_time < PI:
+		blink = sin(blink_time)
+	else:
+		blink = 0.0
+	eye_rot = eye_pos
+	eye_lids = lerp(Vector2(1.05,0.32), Vector2(2.0,0.0), blink)
+	set_eye_param("shader_parameter/eyePos", eye_pos)
+	set_eye_param("shader_parameter/eyeLids", eye_lids)
+	set_eye_param("shader_parameter/eyeTaper", eye_taper)
+	set_eye_param("shader_parameter/eyeScale", eye_scale)
+	##
+	
+	
+	##stepping
+	if sin(time*8+PI*0.1)*pow(mult,2) > 0.0 and right_stepped:
+		right_stepped = false
+		emit_signal("step")
+	elif sin(time*8+PI*0.1)*pow(mult,2) < 0.0 and !right_stepped:
+		right_stepped = true
+		emit_signal("step")
+	
 	pass
 
 func fly(delta, speed = 1.0, crouching = 0.0, head_angle = Vector2(0.0,0.0), angle = 0.0, mult = 0.0):
@@ -504,6 +901,8 @@ var slim = [
 	
 ]
 
+var is_slim = false
+
 @onready var transparent = [
 	$root/chestBase/hip_L/leftLeg1NOL,
 	$root/chestBase/hip_L/leftLeg1SOL,
@@ -513,7 +912,7 @@ var slim = [
 	$root/chestBase/hip_R/rightLeg1SOL,
 	$root/chestBase/hip_R/knee_R/rightFootNOL,
 	$root/chestBase/hip_R/knee_R/rightFootSOL,
-	$root/chestBase/neck/headOutside,
+	$root/chestBase/neck/headOutsideP,
 	$root/chestBase/shoulder_L/leftArm1NOL,
 	$root/chestBase/shoulder_L/leftArm1SOL,
 	$root/chestBase/shoulder_L/elbowL/leftArm2NOL,
@@ -548,9 +947,10 @@ func set_cosmetic_visibility(ears, tail, snout):
 	#$root/chestBase/torso/neck/head/snout.visible = snout
 	pass
 
-func load_skin(img, ears, tail, snout, is_slim, eColors, mData):
+func load_skin(img, ears, tail, snout, is_slim_loc, eColors, mData):
 	#img = ImageTexture.create_from_image(Image.load_from_file("res://assets/glb/playerAvatar002_dapper128Secondary.png"))
 	#var meshes = avatar.meshes
+	is_slim = is_slim_loc
 	var mat = meshes[0].get_active_material(0).duplicate()
 	mat.albedo_texture = img
 	set_cosmetic_visibility(ears, tail, snout)
@@ -643,3 +1043,22 @@ func spectrum_to_mouth(spectrum, delta = 1.0):
 		#var energy = clamp((MIN_DB + linear_to_db(f.length()))/MIN_DB,0,1)
 		#var height = energy * HEIGHT
 		#prev_hz = hz
+
+func set_ghost(val):
+	if !val:
+		meshes[0].get_active_material(0).set("blend_mode", 0)
+		meshes[1].get_active_material(0).set("blend_mode", 0)
+		meshes[0].get_active_material(0).set("proximity_fade_enabled", false)
+		meshes[1].get_active_material(0).set("proximity_fade_enabled", false)
+		set_eye_param("shader_parameter/transparency", 0.0)
+		set_mouth_param("shader_parameter/transparency", 0.0)
+		$root/chestBase/neck/eyeBrows_L.get_active_material(0).set("blend_mode", 0)
+	else:
+		meshes[0].get_active_material(0).set("blend_mode", 1)
+		meshes[1].get_active_material(0).set("blend_mode", 1)
+		set_eye_param("shader_parameter/transparency", 0.75)
+		set_mouth_param("shader_parameter/transparency", 0.75)
+		meshes[0].get_active_material(0).set("proximity_fade_enabled", true)
+		meshes[1].get_active_material(0).set("proximity_fade_enabled", true)
+		$root/chestBase/neck/eyeBrows_L.get_active_material(0).set("blend_mode", 1)
+	pass

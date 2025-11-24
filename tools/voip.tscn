@@ -42,3 +42,7 @@ bus = &"Record"
 
 [node name="occlusion_check" type="RayCast3D" parent="."]
 top_level = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_yewc8")
+bus = &"Record"

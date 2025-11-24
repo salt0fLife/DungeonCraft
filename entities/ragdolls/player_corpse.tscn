@@ -106,6 +106,7 @@ shader_parameter/highlightTrackIntensity = 0.75
 shader_parameter/eyelashes = Vector2(0.345, 0.24)
 shader_parameter/eyelashCol = Color(0, 0, 0, 1)
 shader_parameter/eyelashTaper = 0.205
+shader_parameter/transparency = 0.0
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_tycrd"]
 _surfaces = [{
@@ -233,6 +234,7 @@ shader_parameter/fangs = 0.0
 shader_parameter/pointy_teeth = 0.0
 shader_parameter/open = 0.0
 shader_parameter/outline_thickness = 0.04
+shader_parameter/transparency = 0.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ovs56"]
 size = Vector3(0.29, 0.57, 0.15)
@@ -1410,7 +1412,6 @@ script = ExtResource("1_p3k5l")
 [node name="head" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.27617, -0.137028)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="head"]
@@ -1438,7 +1439,6 @@ skeleton = NodePath("")
 
 [node name="headOutsideP" type="MeshInstance3D" parent="head"]
 transform = Transform3D(-1, -3.33067e-15, -8.74226e-08, 2.11758e-22, 1, 3.72529e-08, 8.74228e-08, -3.72529e-08, -0.999998, -0.00208682, 0.00898015, 0.00243123)
-visible = false
 mesh = SubResource("ArrayMesh_oky5c")
 skeleton = NodePath("")
 
@@ -1447,6 +1447,9 @@ transform = Transform3D(-1, -8.74226e-08, 7.15203e-15, 2.11758e-21, -6.4585e-09,
 mesh = SubResource("PlaneMesh_tuqqr")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("ShaderMaterial_o3yod")
+
+[node name="accessories" type="Node3D" parent="head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
 
 [node name="neck" type="ConeTwistJoint3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 1.1282, -0.128959)
@@ -1460,8 +1463,7 @@ softness = 0.43
 [node name="torso" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00499817, 0.851378, -0.11444)
 collision_layer = 16
-collision_mask = 3
-freeze = true
+contact_monitor = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="torso"]
 transform = Transform3D(-1, -3.27759e-09, -8.73613e-08, 0, 0.999297, -0.0374912, 8.74228e-08, -0.0374912, -0.999296, 0, 0, 0)
@@ -1488,6 +1490,15 @@ transform = Transform3D(-1, -3.27759e-09, -8.73613e-08, 0, 0.999297, -0.0374912,
 visible = false
 mesh = SubResource("ArrayMesh_6vwim")
 skeleton = NodePath("")
+
+[node name="RayCast3D" type="RayCast3D" parent="torso"]
+target_position = Vector3(0, 0, -1)
+
+[node name="RayCast3D2" type="RayCast3D" parent="torso"]
+target_position = Vector3(0, 0, 1)
+
+[node name="accessories" type="Node3D" parent="torso"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="HingeJoint3D2" type="ConeTwistJoint3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.155778, 1.05236, -0.11285)
@@ -1544,7 +1555,6 @@ node_b = NodePath("../legR2")
 [node name="arm1L" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.229594, 0.985833, -0.122057)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="arm1L"]
@@ -1573,10 +1583,12 @@ visible = false
 mesh = SubResource("ArrayMesh_qyi5x")
 skeleton = NodePath("")
 
+[node name="accessories" type="Node3D" parent="arm1L"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 0.12, 0)
+
 [node name="arm1L2" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.24158, 0.691056, -0.122057)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="arm1L2"]
@@ -1605,10 +1617,12 @@ visible = false
 mesh = SubResource("ArrayMesh_ndj4r")
 skeleton = NodePath("")
 
+[node name="accessories" type="Node3D" parent="arm1L2"]
+transform = Transform3D(0.998541, 0.0539917, 0, -0.0539917, 0.998541, 0, 0, 0, 1, 0, 0.16, 0)
+
 [node name="arm1R" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23, 0.986, -0.122)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="arm1R"]
@@ -1637,10 +1651,12 @@ visible = false
 mesh = SubResource("ArrayMesh_6t7bo")
 skeleton = NodePath("")
 
+[node name="accessories" type="Node3D" parent="arm1R"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.07, 0.115, 0)
+
 [node name="arm1R2" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.242, 0.691, -0.122)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="arm1R2"]
@@ -1669,10 +1685,12 @@ visible = false
 mesh = SubResource("ArrayMesh_ocsuc")
 skeleton = NodePath("")
 
+[node name="accessories" type="Node3D" parent="arm1R2"]
+transform = Transform3D(0.999038, -0.0438461, 0, 0.0438461, 0.999038, 0, 0, 0, 1, 0, 0.17, 0)
+
 [node name="legR" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0732785, 0.412937, -0.122)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="legR"]
@@ -1701,10 +1719,12 @@ visible = false
 mesh = SubResource("ArrayMesh_lnst2")
 skeleton = NodePath("")
 
+[node name="accessories" type="Node3D" parent="legR"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0)
+
 [node name="legR2" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0685821, 0.0989302, -0.122)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="legR2"]
@@ -1733,10 +1753,12 @@ visible = false
 mesh = SubResource("ArrayMesh_tmyus")
 skeleton = NodePath("")
 
+[node name="accessories" type="Node3D" parent="legR2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.19, 0)
+
 [node name="legL" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.073, 0.413, -0.122)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="legL"]
@@ -1765,10 +1787,12 @@ visible = false
 mesh = SubResource("ArrayMesh_yqdh4")
 skeleton = NodePath("")
 
+[node name="accessories" type="Node3D" parent="legL"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.165, 0)
+
 [node name="legL2" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.069, 0.099, -0.122)
 collision_layer = 16
-collision_mask = 3
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="legL2"]
@@ -1796,3 +1820,6 @@ transform = Transform3D(-0.994236, -0.0390489, -0.0998331, -0.0352231, 0.998584,
 visible = false
 mesh = SubResource("ArrayMesh_ad5xj")
 skeleton = NodePath("")
+
+[node name="accessories" type="Node3D" parent="legL2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.185, 0)

@@ -1,8 +1,14 @@
-[gd_resource type="AudioBusLayout" load_steps=4 format=3 uid="uid://cnldcg5xh6486"]
+[gd_resource type="AudioBusLayout" load_steps=5 format=3 uid="uid://cnldcg5xh6486"]
 
-[sub_resource type="AudioEffectCompressor" id="AudioEffectCompressor_prqim"]
-resource_name = "Compressor"
-threshold = -10.8
+[sub_resource type="AudioEffectPitchShift" id="AudioEffectPitchShift_68nn1"]
+resource_name = "PitchShift"
+pitch_scale = 1.25
+
+[sub_resource type="AudioEffectChorus" id="AudioEffectChorus_wuqru"]
+resource_name = "Chorus"
+wet = 1.0
+voice/1/delay_ms = 11.79
+voice/1/pan = -1.0
 
 [sub_resource type="AudioEffectCapture" id="AudioEffectCapture_l6bhk"]
 resource_name = "Capture"
@@ -25,9 +31,11 @@ bus/2/mute = false
 bus/2/bypass_fx = false
 bus/2/volume_db = 0.0
 bus/2/send = &"Mute Bus"
-bus/2/effect/0/effect = SubResource("AudioEffectCompressor_prqim")
-bus/2/effect/0/enabled = true
-bus/2/effect/1/effect = SubResource("AudioEffectCapture_l6bhk")
-bus/2/effect/1/enabled = true
-bus/2/effect/2/effect = SubResource("AudioEffectSpectrumAnalyzer_lus6c")
+bus/2/effect/0/effect = SubResource("AudioEffectPitchShift_68nn1")
+bus/2/effect/0/enabled = false
+bus/2/effect/1/effect = SubResource("AudioEffectChorus_wuqru")
+bus/2/effect/1/enabled = false
+bus/2/effect/2/effect = SubResource("AudioEffectCapture_l6bhk")
 bus/2/effect/2/enabled = true
+bus/2/effect/3/effect = SubResource("AudioEffectSpectrumAnalyzer_lus6c")
+bus/2/effect/3/enabled = true

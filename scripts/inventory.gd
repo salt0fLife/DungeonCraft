@@ -1,5 +1,6 @@
 extends Node
 signal update_accessories
+signal update_held_item
 
 var accessories = {
 	"cape" : "",
@@ -10,11 +11,39 @@ var accessories = {
 	"shoes" : ""
 }
 
+var hotbar = [
+	"iron_sword", #0
+	"", #1
+	"short_bow", #2
+	"magic_bow", #3
+	"", #4
+	"", #5
+	"", #6
+	"", #7
+	"", #8
+	"" #9
+]
+
+var held_item = 0 # 0 - 9 for hotbar
+
 var items = [
 	
 	
 	
 ]
+
+func get_held_item_data():
+	var key = hotbar[held_item]
+	if key != "":
+		return Lookup.items[hotbar[held_item]]
+	else:
+		return []
+
+func change_held_item(index):
+	held_item = index
+	emit_signal("update_held_item")
+	pass
+
 
 func pickup_item(id, count) -> void:
 	print("picked up " + str(count) + " " + str(id))
@@ -38,5 +67,11 @@ func equip_accessory(acc_id : String, tag : String):
 		var existing = accessories[acc_id]
 		pickup_item(existing,1)
 		pass
+	emit_signal("update_accessories")
+	pass
+
+func drop_all():
+	for k in accessories.keys():
+		accessories[k] = ""
 	emit_signal("update_accessories")
 	pass
