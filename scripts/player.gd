@@ -21,12 +21,14 @@ var idle_anim_key = "idle"
 ## accessories and weapons
 var attributes = {
 	"speed" : 3.0,
+	"speed_multiplier" : 1.0,
 	"flying_speed" : 3.0,
 	"max_health" : 10.0,
 	"jump_velocity" : 6.0,
 	"can_fly" : false,
 	"air_acceleration": 1.0,
 	"strength" : 1.0,
+	"size" : 1.0,
 	#defense
 	"defense_head" : 1.0,
 	"defense_torso" : 1.0,
@@ -41,12 +43,14 @@ var attributes = {
 }
 const base_attributes = {
 	"speed" : 3.0,
+	"speed_multiplier" : 1.0,
 	"flying_speed" : 5.0,
 	"max_health" : 10.0,
 	"jump_velocity" : 6.0,
 	"can_fly" : false,
 	"air_acceleration": 1.0,
 	"strength" : 1.0,
+	"size" : 1.0,
 	##defenses
 	#localized_generic_defense
 	"defense_head" : 1.0,
@@ -73,11 +77,14 @@ const base_attributes = {
 }
 var accessories_paths = {
 }
+var status_effects = []
 
 func update_accessories():
 	update_stats_from_accessories()
 	update_accessories_graphics()
 	update_accessories_graphics.rpc(Inventory.accessories)
+	update_attribute_graphics()
+	update_attribute_graphics.rpc(attributes["size"])
 
 func update_stats_from_accessories():
 	set_stats_to_default()
@@ -158,12 +165,17 @@ func update_accessories_graphics(a = Inventory.accessories):
 			#accessories_paths[k] = s
 			pass
 
+@rpc("any_peer", "reliable")
+func update_attribute_graphics(s = attributes["size"]):
+	scale = Vector3(s,s,s)
+	pass
+
 func set_stats_to_default():
 	attributes = base_attributes.duplicate(true)
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * 1.5
-@export var speed_multipler = 1.0
+#var speed_multipler = 1.0
 
 var health = 0.0
 func _ready():
@@ -351,7 +363,7 @@ func _physics_process(delta):
 	# Add the gravity.
 	if not is_on_floor():
 		jumped_last_frame = false
-		avatar.animation_speed = lerp(avatar.animation_speed, 0.25*speed_multipler, delta*40.0)
+		avatar.animation_speed = lerp(avatar.animation_speed, 0.25*attributes["speed_multiplier"], delta*40.0)
 		last_y_velocity = velocity.y
 		airborn = true
 		if !flying and !ghost:
@@ -367,7 +379,7 @@ func _physics_process(delta):
 		flying = false
 		if jump_buffer > 0.0:
 			jump()
-		avatar.animation_speed = 1.0*speed_multipler
+		avatar.animation_speed = 1.0*attributes["speed_multiplier"]
 		avatar.falling = 0.0
 		if airborn:
 			airborn = false
@@ -394,18 +406,18 @@ func _physics_process(delta):
 		avatar.animation_state = "fly"
 		var input_vertical = Input.get_vector("crouch", "jump", "down", "up")
 		if sprinting:
-			velocity.y = lerp(velocity.y, input_vertical.x * attributes["flying_speed"]*2.2*speed_multipler, delta*8.0)
+			velocity.y = lerp(velocity.y, input_vertical.x * attributes["flying_speed"]*2.2*attributes["speed_multiplier"], delta*8.0)
 		else:
-			velocity.y = lerp(velocity.y, input_vertical.x * attributes["flying_speed"]*speed_multipler, delta*8.0)
+			velocity.y = lerp(velocity.y, input_vertical.x * attributes["flying_speed"]*attributes["speed_multiplier"], delta*8.0)
 		if direction:
 			body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
 			avatar.head_angle.y = body.rotation.y
 			if sprinting:
-				velocity.x = lerp(velocity.x, direction.x * attributes["flying_speed"]*2.2*speed_multipler, delta*8.0)
-				velocity.z = lerp(velocity.z, direction.z * attributes["flying_speed"]*2.2*speed_multipler, delta*8.0)
+				velocity.x = lerp(velocity.x, direction.x * attributes["flying_speed"]*2.2*attributes["speed_multiplier"], delta*8.0)
+				velocity.z = lerp(velocity.z, direction.z * attributes["flying_speed"]*2.2*attributes["speed_multiplier"], delta*8.0)
 			else:
-				velocity.x = lerp(velocity.x, direction.x * attributes["flying_speed"]*speed_multipler, delta*8.0)
-				velocity.z = lerp(velocity.z, direction.z * attributes["flying_speed"]*speed_multipler, delta*8.0)
+				velocity.x = lerp(velocity.x, direction.x * attributes["flying_speed"]*attributes["speed_multiplier"], delta*8.0)
+				velocity.z = lerp(velocity.z, direction.z * attributes["flying_speed"]*attributes["speed_multiplier"], delta*8.0)
 		else:
 			if avatar.walk_angle != 0.0:
 				body.rotation.y = avatar.walk_angle
@@ -421,14 +433,14 @@ func _physics_process(delta):
 		avatar.head_angle.y = body.rotation.y
 		if !airborn and !jumped_last_frame:
 			if sprinting and !crouching:
-				velocity.x = lerp(velocity.x, direction.x * attributes["speed"]*2.2*speed_multipler, delta*8.0)
-				velocity.z = lerp(velocity.z, direction.z * attributes["speed"]*2.2*speed_multipler, delta*8.0)
+				velocity.x = lerp(velocity.x, direction.x * attributes["speed"]*2.2*attributes["speed_multiplier"], delta*8.0)
+				velocity.z = lerp(velocity.z, direction.z * attributes["speed"]*2.2*attributes["speed_multiplier"], delta*8.0)
 			elif crouching:
-				velocity.x = lerp(velocity.x, direction.x * attributes["speed"]*0.75*speed_multipler, delta*8.0)
-				velocity.z = lerp(velocity.z, direction.z * attributes["speed"]*0.75*speed_multipler, delta*8.0)
+				velocity.x = lerp(velocity.x, direction.x * attributes["speed"]*0.75*attributes["speed_multiplier"], delta*8.0)
+				velocity.z = lerp(velocity.z, direction.z * attributes["speed"]*0.75*attributes["speed_multiplier"], delta*8.0)
 			else:
-				velocity.x = lerp(velocity.x, direction.x * attributes["speed"]*0.85*speed_multipler, delta*8.0)
-				velocity.z = lerp(velocity.z, direction.z * attributes["speed"]*0.85*speed_multipler, delta*8.0)
+				velocity.x = lerp(velocity.x, direction.x * attributes["speed"]*0.85*attributes["speed_multiplier"], delta*8.0)
+				velocity.z = lerp(velocity.z, direction.z * attributes["speed"]*0.85*attributes["speed_multiplier"], delta*8.0)
 		else:
 			velocity = update_velocity_air(direction, velocity, delta)
 	else:
@@ -452,7 +464,7 @@ func _physics_process(delta):
 				velocity.x = lerp(velocity.x, 0.0, 16.0*delta)
 				velocity.z = lerp(velocity.z, 0.0, 16.0*delta)
 	
-	var true_speed = sqrt(pow(velocity.x,2) + pow(velocity.z,2))/(attributes["speed"]*speed_multipler)
+	var true_speed = sqrt(pow(velocity.x,2) + pow(velocity.z,2))/(base_attributes["speed"]*attributes["speed_multiplier"])
 	#if direction:
 		#true_speed = 1.0
 		#if sprinting:
@@ -560,7 +572,7 @@ func update_velocity_flying(delta):
 	var mult = (vel_last_frame - velocity).length()/(attributes["flying_speed"]*2.0)
 	var d = int(pow(mult,3))
 	if d > 0:
-		damage([Lookup.damageType.blunt],"","",Vector3(0.0,last_y_velocity,0.0))
+		damage([[Lookup.damageType.blunt, d]],"","",Vector3(0.0,last_y_velocity,0.0))
 	avatar.animation_state = "fly"
 	var input_vertical = Input.get_vector("crouch", "jump", "down", "up")
 	var look_dir = get_look_dir()
@@ -723,6 +735,7 @@ func request_cosmetics() -> void:
 	if is_multiplayer_authority():
 		sync_cosmetics.rpc(Global.skin, [Global.ears, Global.tail, Global.snout, Global.slim, Global.eyeColor, Global.mouthData], Global.display_name)
 		update_accessories_graphics.rpc(Inventory.accessories)
+		update_attribute_graphics.rpc(attributes["size"])
 		sync_hand_anim.rpc(current_animation)
 		set_ghost.rpc(ghost)
 
@@ -1203,4 +1216,16 @@ func update_health_graphics():
 	$UI/health.set("theme_override_colors/font_color",col)
 	pass
 
-##
+##status effects
+func set_status_effect_graphics(id: int, val: bool):
+	match id:
+		Lookup.statusEffectType.burning:
+			
+			pass
+		Lookup.statusEffectType.bleeding:
+			
+			pass
+		Lookup.statusEffectType.bleeding:
+			
+			pass
+	pass

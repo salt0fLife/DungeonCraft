@@ -8,7 +8,10 @@ var accessories = {
 	"hat" : "",
 	"pants" : "",
 	"gloves" : "",
-	"shoes" : ""
+	"shoes" : "",
+	##racial changes
+	"ears" : "",
+	"tail" : ""
 }
 
 var hotbar = [

@@ -129,7 +129,7 @@ colors = PackedColorArray(0.177325, 0.464292, 0.608657, 1, 0.787127, 0.850348, 0
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_y68ia"]
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1bwa2"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_2dpou"]
 seamless = true
 color_ramp = SubResource("Gradient_6qbul")
 noise = SubResource("FastNoiseLite_y68ia")
@@ -137,14 +137,14 @@ noise = SubResource("FastNoiseLite_y68ia")
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tgtor"]
 sky_top_color = Color(0.168627, 0.447059, 0.780392, 1)
 sky_horizon_color = Color(0.647059, 0.654902, 0.670588, 1)
-sky_cover = SubResource("NoiseTexture2D_1bwa2")
+sky_cover = SubResource("NoiseTexture2D_2dpou")
 
-[sub_resource type="Sky" id="Sky_jhhr5"]
+[sub_resource type="Sky" id="Sky_pquje"]
 sky_material = SubResource("ProceduralSkyMaterial_tgtor")
 
 [sub_resource type="Environment" id="Environment_s3u0r"]
 background_mode = 2
-sky = SubResource("Sky_jhhr5")
+sky = SubResource("Sky_pquje")
 ssao_enabled = true
 glow_enabled = true
 glow_normalized = true
@@ -322,6 +322,21 @@ value = "iron_chestpiece"
 [node name="accessories_debugger3" parent="." instance=ExtResource("15_ytdhl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5627, 0, -3.93952)
 value = "debug_cape"
+
+[node name="accessories_debugger4" parent="." instance=ExtResource("15_ytdhl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8593, 0, -3.93952)
+accessory_to_edit = "shoes"
+value = "speed_boots"
+
+[node name="accessories_debugger5" parent="." instance=ExtResource("15_ytdhl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.8593, 0, -3.93952)
+accessory_to_edit = "shoes"
+value = "debug_speed_boots"
+
+[node name="accessories_debugger6" parent="." instance=ExtResource("15_ytdhl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.8593, 0, -3.93952)
+accessory_to_edit = "tail"
+value = "debug_tail"
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.229399, 2.31994, 25.6229)

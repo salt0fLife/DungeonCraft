@@ -11,6 +11,8 @@
 resource_name = "skin1"
 specular_mode = 1
 albedo_texture = ExtResource("4_k1ino")
+emission = Color(0.529412, 0.870588, 0.239216, 1)
+emission_energy_multiplier = 0.1
 texture_filter = 2
 proximity_fade_distance = 0.25
 distance_fade_max_distance = 1.0
@@ -576,7 +578,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_e1mb0")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xpd87"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kiti4"]
 resource_name = "eyeBrows"
 transparency = 2
 alpha_scissor_threshold = 0.5
@@ -1435,7 +1437,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_3uqmk")
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_v4jtc"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_eo0jc"]
 _surfaces = [{
 "aabb": AABB(-0.149124, -0.282011, -0.0966619, 0.298247, 0.57125, 0.193334),
 "format": 34896613377,
@@ -1465,7 +1467,7 @@ _surfaces = [{
 "vertex_data": PackedByteArray(0, 0, 0, 0, 251, 255, 255, 127, 0, 0, 0, 0, 251, 255, 255, 191, 0, 0, 0, 0, 251, 255, 255, 255, 0, 0, 255, 255, 251, 255, 255, 127, 0, 0, 255, 255, 251, 255, 255, 191, 0, 0, 255, 255, 251, 255, 255, 255, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 255, 191, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 191, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 0, 0, 251, 255, 255, 127, 255, 255, 0, 0, 251, 255, 255, 191, 255, 255, 0, 0, 251, 255, 255, 191, 255, 255, 255, 255, 251, 255, 255, 127, 255, 255, 255, 255, 251, 255, 255, 191, 255, 255, 255, 255, 251, 255, 255, 191, 255, 255, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 255, 191, 255, 255, 0, 0, 0, 0, 255, 191, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 255, 191, 255, 255, 255, 255, 0, 0, 255, 191, 255, 127, 255, 255, 0, 0, 255, 127, 255, 63, 255, 127, 255, 127, 255, 255, 255, 255, 255, 127, 255, 63, 255, 127, 255, 255, 255, 127, 0, 0, 255, 127, 255, 63, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 63, 255, 127, 255, 127, 255, 255, 0, 0, 255, 127, 255, 127, 0, 0, 255, 127, 255, 255, 255, 255, 255, 127, 255, 127, 0, 0, 255, 255, 255, 127, 0, 0, 255, 127, 255, 127, 0, 0, 255, 255, 255, 127, 255, 255, 255, 127, 255, 127, 0, 0)
 }]
 blend_shape_mode = 0
-shadow_mesh = SubResource("ArrayMesh_v4jtc")
+shadow_mesh = SubResource("ArrayMesh_eo0jc")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fik51"]
 resource_name = "skin1"
@@ -1474,11 +1476,12 @@ alpha_hash_scale = 1.0
 alpha_antialiasing_mode = 0
 specular_mode = 1
 albedo_texture = ExtResource("4_k1ino")
+emission = Color(0.356863, 0.654902, 0.168627, 1)
 texture_filter = 2
 proximity_fade_distance = 0.0
 distance_fade_max_distance = 1.0
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_dfpp7"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_5m4kd"]
 _surfaces = [{
 "aabb": AABB(-0.159711, -0.296172, -0.103525, 0.319423, 0.599573, 0.20706),
 "format": 34896613377,
@@ -1508,7 +1511,7 @@ _surfaces = [{
 "vertex_data": PackedByteArray(0, 0, 0, 0, 251, 255, 255, 127, 0, 0, 0, 0, 251, 255, 255, 191, 0, 0, 0, 0, 251, 255, 255, 255, 0, 0, 255, 255, 251, 255, 255, 127, 0, 0, 255, 255, 251, 255, 255, 191, 0, 0, 255, 255, 251, 255, 255, 255, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 255, 191, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 191, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 0, 0, 251, 255, 255, 127, 255, 255, 0, 0, 251, 255, 255, 191, 255, 255, 0, 0, 251, 255, 255, 191, 255, 255, 255, 255, 251, 255, 255, 127, 255, 255, 255, 255, 251, 255, 255, 191, 255, 255, 255, 255, 251, 255, 255, 191, 255, 255, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 255, 191, 255, 255, 0, 0, 0, 0, 255, 191, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 255, 191, 255, 255, 255, 255, 0, 0, 255, 191, 255, 127, 255, 255, 0, 0, 255, 127, 255, 63, 255, 127, 255, 127, 255, 255, 255, 255, 255, 127, 255, 63, 255, 127, 255, 255, 255, 127, 0, 0, 255, 127, 255, 63, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 63, 255, 127, 255, 127, 255, 255, 0, 0, 255, 127, 255, 127, 0, 0, 255, 127, 255, 255, 255, 255, 255, 127, 255, 127, 0, 0, 255, 255, 255, 127, 0, 0, 255, 127, 255, 127, 0, 0, 255, 255, 255, 127, 255, 255, 255, 127, 255, 127, 0, 0)
 }]
 blend_shape_mode = 0
-shadow_mesh = SubResource("ArrayMesh_dfpp7")
+shadow_mesh = SubResource("ArrayMesh_5m4kd")
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_v37rb"]
 _surfaces = [{
@@ -1587,19 +1590,19 @@ walk_tilt = 0.15
 eye_lids = Vector2(1.05, 0.32)
 eye_taper = 0.1
 eye_scale = 1.035
-stride_mult = 1.5
+stride_mult = 1.2
 
 [node name="root" type="Node3D" parent="genericAvatar"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.869417, 0)
 
 [node name="chestBase" type="Node3D" parent="genericAvatar/root"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, -0.00493291, -0.0142786, -0.00335458)
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, -0.00499577, -0.0166779, 0.000153183)
 
 [node name="hip_L" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.995002, -0.00950322, 0.0993799, 0, 0.995453, 0.0951911, -0.0998332, -0.0947152, 0.990484, 0.075, -0.282, -0.001)
+transform = Transform3D(0.995002, -0.0102183, 0.0993089, 0, 0.994741, 0.102354, -0.0998332, -0.101842, 0.989776, 0.075, -0.282, -0.001)
 
 [node name="knee_L" type="Node3D" parent="genericAvatar/root/chestBase/hip_L"]
-transform = Transform3D(1, 0, 0, 0, 0.995217, -0.0976796, 0, 0.0976796, 0.995217, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.994488, -0.104841, 0, 0.104841, 0.994488, 0, -0.274171, 0)
 
 [node name="leftFootN" type="MeshInstance3D" parent="genericAvatar/root/chestBase/hip_L/knee_L"]
 transform = Transform3D(0.999239, 0.0389944, 0, -0.0389944, 0.999239, 0, 0, 0, 1, -0.00034523, -0.000279844, 0.0477088)
@@ -1646,10 +1649,10 @@ mesh = SubResource("ArrayMesh_yqdh4")
 skeleton = NodePath("")
 
 [node name="hip_R" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.995003, 0.00950324, -0.09938, 0, 0.995455, 0.0951912, 0.0998333, -0.0947154, 0.990485, -0.075, -0.282, -0.001)
+transform = Transform3D(0.995003, 0.0102183, -0.099309, 0, 0.994744, 0.102354, 0.0998333, -0.101842, 0.989778, -0.075, -0.282, -0.001)
 
 [node name="knee_R" type="Node3D" parent="genericAvatar/root/chestBase/hip_R"]
-transform = Transform3D(1, 0, 0, 0, 0.995216, -0.0976795, 0, 0.0976795, 0.995216, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.994487, -0.104841, 0, 0.104841, 0.994487, 0, -0.274171, 0)
 
 [node name="rightFootN" type="MeshInstance3D" parent="genericAvatar/root/chestBase/hip_R/knee_R"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00167769, -0.000256211, 0.0477359)
@@ -1702,13 +1705,13 @@ transform = Transform3D(1, 0, 0, 0, 0.999297, 0.0374911, 0, -0.0374912, 0.999295
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0619893, 0.196939, 0.163494)
 mesh = SubResource("ArrayMesh_tre6c")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("StandardMaterial3D_xpd87")
+surface_material_override/0 = SubResource("StandardMaterial3D_kiti4")
 
 [node name="eyeBrows_R" type="MeshInstance3D" parent="genericAvatar/root/chestBase/neck"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0619893, 0.196939, 0.1646)
 mesh = SubResource("ArrayMesh_t454n")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("StandardMaterial3D_xpd87")
+surface_material_override/0 = SubResource("StandardMaterial3D_kiti4")
 
 [node name="eyes" type="MeshInstance3D" parent="genericAvatar/root/chestBase/neck"]
 mesh = SubResource("ArrayMesh_utghw")
@@ -1769,10 +1772,10 @@ font = ExtResource("3_cyvtf")
 outline_size = 6
 
 [node name="shoulder_L" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.999419, -0.0340928, 0.000816117, 0.0340668, 0.999177, 0.0219446, -0.0015636, -0.021904, 0.999757, 0.14978, 0.241, -0.0014265)
+transform = Transform3D(0.999519, -0.0310292, 0.00020562, 0.0310114, 0.999127, 0.027941, -0.00107243, -0.0279212, 0.999608, 0.14978, 0.241, -0.0014265)
 
 [node name="elbowL" type="Node3D" parent="genericAvatar/root/chestBase/shoulder_L"]
-transform = Transform3D(1, 0, 0, 0, 0.995215, 0.0977115, 0, -0.0977115, 0.995215, 0.0786937, -0.240458, -0.002611)
+transform = Transform3D(1, 0, 0, 0, 0.995017, 0.0996986, 0, -0.0996986, 0.995017, 0.0786937, -0.240458, -0.002611)
 
 [node name="leftArm2N" type="MeshInstance3D" parent="genericAvatar/root/chestBase/shoulder_L/elbowL"]
 transform = Transform3D(0.994646, 0.103344, 0, -0.103344, 0.994646, 0, 0, 0, 1, 0, 0, 0)
@@ -1815,10 +1818,10 @@ mesh = SubResource("ArrayMesh_qyi5x")
 skeleton = NodePath("")
 
 [node name="shoulder_R" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.99942, 0.0340928, -0.000816118, -0.0340668, 0.999177, 0.0219446, 0.00156361, -0.021904, 0.999758, -0.15, 0.241, -0.001)
+transform = Transform3D(0.99952, 0.0310292, -0.00020562, -0.0310115, 0.999127, 0.0279411, 0.00107243, -0.0279212, 0.999609, -0.15, 0.241, -0.001)
 
 [node name="elbowR" type="Node3D" parent="genericAvatar/root/chestBase/shoulder_R"]
-transform = Transform3D(1, 0, 0, 0, 0.995215, 0.0977115, 0, -0.0977115, 0.995215, -0.0786937, -0.240458, -0.00261103)
+transform = Transform3D(1, 0, 0, 0, 0.995017, 0.0996986, 0, -0.0996986, 0.995017, -0.0786937, -0.240458, -0.00261103)
 
 [node name="rightArm2N" type="MeshInstance3D" parent="genericAvatar/root/chestBase/shoulder_R/elbowR"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00799122, 0.000275373, 0.0298535)
@@ -1879,10 +1882,10 @@ mesh = SubResource("ArrayMesh_6vwim")
 skeleton = NodePath("")
 
 [node name="tailBase" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.884698, -0.383913, 0.26442, 0, 0.567228, 0.823561, -0.466161, -0.728604, 0.501826, 0, 0, -0.088)
+transform = Transform3D(0.878037, 0.439621, -0.189161, 0, 0.395247, 0.918575, 0.478589, -0.806545, 0.347042, 0, 0, -0.088)
 
 [node name="tailMiddle" type="Node3D" parent="genericAvatar/root/chestBase/tailBase"]
-transform = Transform3D(0.995609, -0.00625878, -0.0934085, 0, 0.997763, -0.0668543, 0.0936181, 0.0665608, 0.99338, 0, 0, 0)
+transform = Transform3D(0.98875, 0.0272585, 0.147073, 0, 0.983255, -0.182236, -0.149578, 0.180186, 0.972192, 0, 0, 0)
 
 [node name="tailLast" type="Node3D" parent="genericAvatar/root/chestBase/tailBase/tailMiddle"]
-transform = Transform3D(0.997481, -0.00721275, -0.0705996, 0, 0.994822, -0.101635, 0.0709673, 0.101379, 0.992314, 0, 0, 0)
+transform = Transform3D(0.993541, 0.0322353, 0.108825, 0, 0.95882, -0.284015, -0.113499, 0.28218, 0.952624, 0, 0, 0)
