@@ -17,8 +17,10 @@ var accessories = {
 	"shoeL" : "",
 	"greaves" : "",
 	#jewelry
-	"necklace" : "",
-	"necklace_secondary" : "",
+	"necklace1" : "",
+	"necklace2" : "",
+	"necklace3" : "",
+	"necklace4" : "",
 	"crown" : "",
 	"braceletR" : "",
 	"braceletL" : "",

@@ -16,7 +16,21 @@ func _ready():
 	for i in range(0,$hotbar/slots/itemIcons.get_children().size()):
 		var n = $hotbar/slots/itemIcons.get_child(i)
 		n.connect("mouse_entered", preview_hotbar_indx.bind(i))
-		#n.connect("mouse_exited", preview_hide)
+		n.connect("mouse_exited", preview_hide)
+		n.connect("button_down", _on_hotbar_pressed.bind(i))
+	for k in accessory_buttons.keys():
+		var b = accessory_buttons[k]
+		b.connect("mouse_entered", preview_equipment_key.bind(k))
+		b.connect("mouse_exited", preview_hide)
+		b.connect("button_down", _on_equipment_pressed.bind(k))
+	pass
+
+func preview_equipment_key(k: String):
+	var key = Inventory.accessories[k]
+	if key == "":
+		return
+	$itemPreview.visible = true
+	$itemPreview.update_graphics_from_key(key)
 	pass
 
 func preview_hotbar_indx(i: int):
@@ -36,10 +50,18 @@ func update_hotbar_graphics():
 		var k = Inventory.hotbar[i]
 		var node = $hotbar/slots/itemIcons.get_child(i)
 		if k == "":
-			node.hide()
+			#node.hide()
+			node.texture_normal = null
 		else:
-			node.texture = Inventory.get_item_texture(k)
+			node.texture_normal = Inventory.get_item_texture(k)
 			node.visible = true
+	pass
+
+func _on_hotbar_pressed(index):
+	print(index)
+
+func _on_equipment_pressed(key):
+	print(key)
 	pass
 
 func show_hotbar():
@@ -62,12 +84,12 @@ func _on_hotbar_slot_changed():
 
 func _process(delta):
 	if $accessories.visible:
-		var pos = get_viewport().get_mouse_position() - get_viewport_rect().size*0.1
+		var pos = get_viewport().get_mouse_position() - Vector2(get_viewport_rect().size.x*0.5,get_viewport_rect().size.y*0.17)
 		pos = pos/get_viewport_rect().size
 		avatar.head_angle = Vector2(pos.y*PI*0.5,pos.x*PI*0.5)
 		pass
 	if $itemPreview.visible:
-		$itemPreview.position = get_viewport().get_mouse_position()
+		$itemPreview.position = get_viewport().get_mouse_position() + Vector2(0.0,-216.0)
 	if moving_indicator:
 		if moving_time > 0.0:
 			moving_time -= delta
@@ -108,8 +130,41 @@ func close():
 	$itemPreview.hide()
 	pass
 
+@onready var accessory_buttons = {
+	#armor and clothes
+	"cape" : $accessories/gearR/TabContainer/clothes2/cape,
+	"shirt" : $accessories/gearL/TabContainer/clothes/shirt,
+	"chestplate" : $accessories/gearL/TabContainer/clothes/chestplate,
+	"hat" : $accessories/gearL/TabContainer/clothes/hat,
+	"pants" : $accessories/gearL/TabContainer/clothes/pants,
+	"leggings" : $accessories/gearL/TabContainer/clothes/leggings,
+	"gloveR" : $accessories/gearR/TabContainer/clothes2/gloveR,
+	"gloveL" : $accessories/gearR/TabContainer/clothes2/gloveL,
+	"shoeR" : $accessories/gearR/TabContainer/clothes2/shoeR,
+	"shoeL" : $accessories/gearR/TabContainer/clothes2/shoeL,
+	"greaves" : $accessories/gearL/TabContainer/clothes/greaves,
+	##jewelry
+	#"necklace1" : "",
+	#"necklace2" : "",
+	#"necklace3" : "",
+	#"necklace4" : "",
+	#"crown" : "",
+	#"braceletR" : "",
+	#"braceletL" : "",
+	#"belt" : "",
+	##rings
+	#"ringFR" : "",
+	#"ringSR" : "",
+	#"ringVowR" : "",
+	#"ringPR" : "",
+	#"ringFL" : "",
+	#"ringSL" : "",
+	#"ringVowL" : "",
+	#"ringPL" : "",
+}
+
 var accessories_paths = {}
-@onready var avatar = $accessories/SubViewport/SubViewport/playerAvatar/genericAvatar
+@onready var avatar = $accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar
 func load_accessories(a = Inventory.accessories):
 	for k in a.keys():
 		var val = a[k]
@@ -124,6 +179,17 @@ func load_accessories(a = Inventory.accessories):
 				var s = load(g[0]).instantiate()
 				avatar.bone_paths[g[1]].add_child(s)
 				accessories_paths[k] += [s]
+			
+			if accessory_buttons.has(k):
+				var tn = accessory_buttons[k]
+				#tn.show()
+				tn.texture_normal = Inventory.get_item_texture(val)
+		elif accessory_buttons.has(k):
+			var tn = accessory_buttons[k]
+			#tn.hide()
+			tn.texture_normal = null
+			#adding graphics to menu
+			
 
 func load_skin():
 	var t = [Global.ears, Global.tail, Global.snout, Global.slim, Global.eyeColor, Global.mouthData]

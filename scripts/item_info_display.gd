@@ -9,8 +9,13 @@ func update_graphics_from_key(key):
 	if key == "":
 		return
 	var data = Lookup.items[key]
+	for n in $workingArea/HFlowContainer.get_children(false):
+		n.queue_free()
 	$item_name.text = data[0]
-	$workingArea/HFlowContainer/textureDisplay.texture = Inventory.get_item_texture(key)
+	var dt = TextureRect.new()
+	dt.texture = Inventory.get_item_texture(key)
+	$workingArea/HFlowContainer.add_child(dt)
+	#$workingArea/HFlowContainer/textureDisplay.texture = Inventory.get_item_texture(key)
 	var type = data[2]
 	
 	if Lookup.accessories_types.has(type):

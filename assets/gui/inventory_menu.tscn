@@ -1,17 +1,20 @@
-[gd_scene load_steps=12 format=3 uid="uid://b7s8ume16tah0"]
+[gd_scene load_steps=15 format=3 uid="uid://b7s8ume16tah0"]
 
 [ext_resource type="Script" path="res://scripts/inventory_menu.gd" id="1_4xxg4"]
 [ext_resource type="Texture2D" uid="uid://bkjpum8rx7i4g" path="res://assets/textures/gui/emptyHotbar.png" id="2_jil2a"]
+[ext_resource type="Theme" uid="uid://bxsqmdqtm4i4k" path="res://assets/themes/genericTheme.tres" id="2_rw5i1"]
 [ext_resource type="Texture2D" uid="uid://gfn2du2qig8l" path="res://assets/textures/gui/selectedSlotHotbar2.png" id="3_oaqoa"]
 [ext_resource type="Texture2D" uid="uid://0n6mtgg18yb" path="res://assets/textures/gui/selectedSlotHotbar1.png" id="4_1g88p"]
 [ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="5_5sgb8"]
+[ext_resource type="Texture2D" uid="uid://vpqidy2evccs" path="res://assets/textures/gui/clothes.png" id="5_bf3cd"]
+[ext_resource type="Texture2D" uid="uid://bcrmi3bgrmo3u" path="res://assets/textures/gui/clothes2.png" id="6_3lrdu"]
 [ext_resource type="Texture2D" uid="uid://dyh661ujm3ahi" path="res://assets/glb/playerAvatar002_eyeBrows2.png" id="6_h0cdh"]
 [ext_resource type="PackedScene" uid="uid://bnf5uy3kr73aa" path="res://assets/gui/item_info_display.tscn" id="7_ud8gy"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_d5ftn"]
 blend_mode = 3
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nhoev"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vo0kf"]
 resource_name = "eyeBrows"
 transparency = 2
 alpha_scissor_threshold = 0.5
@@ -58,74 +61,319 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.729412, 0.729412, 0.729412, 1)
 
-[node name="SubViewport" type="SubViewportContainer" parent="accessories"]
-layout_mode = 0
-offset_right = 256.0
-offset_bottom = 512.0
+[node name="Control" type="Control" parent="accessories"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="SubViewport" type="SubViewport" parent="accessories/SubViewport"]
+[node name="preview_window" type="Control" parent="accessories"]
+layout_mode = 1
+anchor_left = 0.389
+anchor_top = 0.062
+anchor_right = 0.611
+anchor_bottom = 0.852
+offset_left = -0.128021
+offset_top = -0.176003
+offset_right = 0.127991
+offset_bottom = -0.0960083
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="svBG" type="Panel" parent="accessories/preview_window"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_rw5i1")
+
+[node name="SubViewport" type="SubViewportContainer" parent="accessories/preview_window"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="accessories/preview_window/SubViewport"]
 own_world_3d = true
 transparent_bg = true
 handle_input_locally = false
 size = Vector2i(256, 512)
 render_target_update_mode = 0
 
-[node name="Camera3D" type="Camera3D" parent="accessories/SubViewport/SubViewport"]
+[node name="Camera3D" type="Camera3D" parent="accessories/preview_window/SubViewport/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.74904)
 fov = 30.0
 
-[node name="playerAvatar" parent="accessories/SubViewport/SubViewport" instance=ExtResource("5_5sgb8")]
+[node name="playerAvatar" parent="accessories/preview_window/SubViewport/SubViewport" instance=ExtResource("5_5sgb8")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, -0.774223, 0)
 
-[node name="chestBase" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, -0.00253162, -0.00876749, 0.000153183)
+[node name="chestBase" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, 0.0041587, -0.00826493, 0.000153183)
 
-[node name="hip_L" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="0"]
-transform = Transform3D(0.995002, -0.00785892, 0.0995233, 0, 0.996889, 0.0787207, -0.0998332, -0.0783271, 0.991914, 0.075, -0.282, -0.001)
+[node name="hip_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="0"]
+transform = Transform3D(0.995002, -0.00770886, 0.0995351, 0, 0.997006, 0.0772176, -0.0998332, -0.0768315, 0.99203, 0.075, -0.282, -0.001)
 
-[node name="knee_L" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/hip_L" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.996696, -0.0812129, 0, 0.0812129, 0.996696, 0, -0.274171, 0)
+[node name="knee_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/hip_L" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.996818, -0.0797101, 0, 0.0797101, 0.996818, 0, -0.274171, 0)
 
-[node name="hip_R" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="1"]
-transform = Transform3D(0.995003, 0.00785895, -0.0995235, 0, 0.996892, 0.0787209, 0.0998333, -0.0783273, 0.991916, -0.075, -0.282, -0.001)
+[node name="hip_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="1"]
+transform = Transform3D(0.995003, 0.00770888, -0.0995352, 0, 0.99701, 0.0772178, 0.0998333, -0.0768317, 0.992032, -0.075, -0.282, -0.001)
 
-[node name="knee_R" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/hip_R" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.996695, -0.0812128, 0, 0.0812128, 0.996695, 0, -0.274171, 0)
+[node name="knee_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/hip_R" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.996816, -0.07971, 0, 0.07971, 0.996816, 0, -0.274171, 0)
 
-[node name="neck" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="2"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, 0.0374911, 0, -0.0374912, 0.999295, 0, 0.289384, -0.00323021)
+[node name="eyeBrows_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_vo0kf")
 
-[node name="eyeBrows_L" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="0"]
-surface_material_override/0 = SubResource("StandardMaterial3D_nhoev")
+[node name="eyeBrows_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
+surface_material_override/0 = SubResource("StandardMaterial3D_vo0kf")
 
-[node name="eyeBrows_R" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
-surface_material_override/0 = SubResource("StandardMaterial3D_nhoev")
-
-[node name="nameTag" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="11"]
+[node name="nameTag" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="11"]
 visible = false
 
-[node name="shoulder_L" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="3"]
-transform = Transform3D(0.99866, -0.0515704, 0.00431155, 0.051534, 0.998636, 0.00816863, -0.00472694, -0.00793549, 0.999956, 0.14978, 0.241, -0.0014265)
+[node name="shoulder_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="3"]
+transform = Transform3D(0.999866, -0.0161009, -0.00277576, 0.0161198, 0.999844, 0.00691226, 0.00266404, -0.00695607, 0.999971, 0.14978, 0.241, -0.0014265)
 
-[node name="elbowL" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999179, 0.040498, 0, -0.040498, 0.999179, 0.0786937, -0.240458, -0.002611)
+[node name="elbowL" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.997162, 0.0752719, 0, -0.0752719, 0.997162, 0.0786937, -0.240458, -0.002611)
 
-[node name="shoulder_R" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="4"]
-transform = Transform3D(0.99866, 0.0515704, -0.00431156, -0.051534, 0.998636, 0.00816864, 0.00472695, -0.00793549, 0.999957, -0.15, 0.241, -0.001)
+[node name="shoulder_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="4"]
+transform = Transform3D(0.999867, 0.0161009, 0.00277576, -0.0161198, 0.999844, 0.00691226, -0.00266404, -0.00695607, 0.999972, -0.15, 0.241, -0.001)
 
-[node name="elbowR" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/shoulder_R" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999179, 0.040498, 0, -0.040498, 0.999179, -0.0786937, -0.240458, -0.00261103)
+[node name="elbowR" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/shoulder_R" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.997162, 0.0752719, 0, -0.0752719, 0.997162, -0.0786937, -0.240458, -0.00261103)
 
-[node name="tailBase" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="9"]
-transform = Transform3D(0.999983, -0.00479749, 0.00266619, 0, 0.48577, 0.874086, -0.00548857, -0.874074, 0.485763, 0, 0, -0.088)
+[node name="tailBase" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="9"]
+transform = Transform3D(0.926317, 0.342617, -0.156672, 0, 0.415863, 0.909426, 0.376739, -0.84242, 0.385221, 0, 0, -0.088)
 
-[node name="tailMiddle" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/tailBase" index="0"]
-transform = Transform3D(0.960449, 0.0507444, 0.27379, 0, 0.983255, -0.182236, -0.278454, 0.175029, 0.944365, 0, 0, 0)
+[node name="tailMiddle" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/tailBase" index="0"]
+transform = Transform3D(0.952293, 0.0556157, 0.300073, 0, 0.983255, -0.182236, -0.305184, 0.173543, 0.936345, 0, 0, 0)
 
-[node name="tailLast" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/tailBase/tailMiddle" index="0"]
-transform = Transform3D(0.97724, 0.060254, 0.203415, 0, 0.95882, -0.284015, -0.212152, 0.27755, 0.936994, 0, 0, 0)
+[node name="tailLast" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/tailBase/tailMiddle" index="0"]
+transform = Transform3D(0.972529, 0.0661165, 0.223206, 0, 0.95882, -0.284015, -0.232793, 0.276212, 0.932477, 0, 0, 0)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="accessories/SubViewport/SubViewport"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="accessories/preview_window/SubViewport/SubViewport"]
+
+[node name="gearL" type="Control" parent="accessories"]
+layout_mode = 1
+anchor_left = 0.100694
+anchor_top = 0.0617284
+anchor_right = 0.376736
+anchor_bottom = 0.851852
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="TabContainer" type="TabContainer" parent="accessories/gearL"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_rw5i1")
+
+[node name="clothes" type="Control" parent="accessories/gearL/TabContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="accessories/gearL/TabContainer/clothes"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_bf3cd")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="hat" type="TextureButton" parent="accessories/gearL/TabContainer/clothes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.326
+anchor_top = 0.034
+anchor_right = 0.681
+anchor_bottom = 0.265
+offset_left = -0.0600052
+offset_top = -0.184
+offset_right = -0.110016
+offset_bottom = -0.140007
+stretch_mode = 0
+
+[node name="chestplate" type="TextureButton" parent="accessories/gearL/TabContainer/clothes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.145355
+anchor_top = 0.269294
+anchor_right = 0.500355
+anchor_bottom = 0.500294
+offset_left = -0.0600052
+offset_top = -0.184
+offset_right = -0.110016
+offset_bottom = -0.140007
+stretch_mode = 0
+
+[node name="shirt" type="TextureButton" parent="accessories/gearL/TabContainer/clothes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.506645
+anchor_top = 0.269294
+anchor_right = 0.861645
+anchor_bottom = 0.500294
+offset_left = -0.0600052
+offset_top = -0.184
+offset_right = -0.110016
+offset_bottom = -0.140007
+stretch_mode = 0
+
+[node name="leggings" type="TextureButton" parent="accessories/gearL/TabContainer/clothes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.145355
+anchor_top = 0.504588
+anchor_right = 0.500355
+anchor_bottom = 0.735588
+offset_left = -0.0600052
+offset_top = -0.184
+offset_right = -0.110016
+offset_bottom = -0.140007
+stretch_mode = 0
+
+[node name="pants" type="TextureButton" parent="accessories/gearL/TabContainer/clothes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.506645
+anchor_top = 0.504588
+anchor_right = 0.861645
+anchor_bottom = 0.735588
+offset_left = -0.0600052
+offset_top = -0.184
+offset_right = -0.110016
+offset_bottom = -0.140007
+stretch_mode = 0
+
+[node name="greaves" type="TextureButton" parent="accessories/gearL/TabContainer/clothes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.326
+anchor_top = 0.739882
+anchor_right = 0.681
+anchor_bottom = 0.970882
+offset_left = -0.0600052
+offset_top = -0.184
+offset_right = -0.110016
+offset_bottom = -0.140007
+stretch_mode = 0
+
+[node name="jewelry" type="Control" parent="accessories/gearL/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="gearR" type="Control" parent="accessories"]
+layout_mode = 1
+anchor_left = 0.625868
+anchor_top = 0.0617284
+anchor_right = 0.90191
+anchor_bottom = 0.851852
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="TabContainer" type="TabContainer" parent="accessories/gearR"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_rw5i1")
+
+[node name="clothes2" type="Control" parent="accessories/gearR/TabContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="accessories/gearR/TabContainer/clothes2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_3lrdu")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="cape" type="TextureButton" parent="accessories/gearR/TabContainer/clothes2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.326
+anchor_top = 0.034
+anchor_right = 0.681
+anchor_bottom = 0.265
+offset_left = -0.0600052
+offset_top = -0.184
+offset_right = -0.110016
+offset_bottom = -0.140007
+stretch_mode = 0
+
+[node name="gloveR" type="TextureButton" parent="accessories/gearR/TabContainer/clothes2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.145355
+anchor_top = 0.269294
+anchor_right = 0.500355
+anchor_bottom = 0.500294
+offset_left = -0.0600052
+offset_top = -0.184
+offset_right = -0.110016
+offset_bottom = -0.140007
+stretch_mode = 0
+
+[node name="gloveL" type="TextureButton" parent="accessories/gearR/TabContainer/clothes2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.506645
+anchor_top = 0.269294
+anchor_right = 0.861645
+anchor_bottom = 0.500294
+offset_left = -0.0600052
+offset_top = -0.184
+offset_right = -0.110016
+offset_bottom = -0.140007
+stretch_mode = 0
+
+[node name="shoeR" type="TextureButton" parent="accessories/gearR/TabContainer/clothes2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.145355
+anchor_top = 0.504588
+anchor_right = 0.500355
+anchor_bottom = 0.735588
+offset_left = -0.0600052
+offset_top = -0.184
+offset_right = -0.110016
+offset_bottom = -0.140007
+stretch_mode = 0
+
+[node name="shoeL" type="TextureButton" parent="accessories/gearR/TabContainer/clothes2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.506645
+anchor_top = 0.504588
+anchor_right = 0.861645
+anchor_bottom = 0.735588
+offset_left = -0.0600052
+offset_top = -0.184
+offset_right = -0.110016
+offset_bottom = -0.140007
+stretch_mode = 0
+
+[node name="rings" type="Control" parent="accessories/gearR/TabContainer"]
+visible = false
+layout_mode = 2
 
 [node name="hotbar" type="Control" parent="."]
 layout_mode = 1
@@ -181,84 +429,65 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="0" type="TextureRect" parent="hotbar/slots/itemIcons"]
-visible = false
+[node name="0" type="TextureButton" parent="hotbar/slots/itemIcons"]
 layout_mode = 2
 offset_right = 64.0
 offset_bottom = 64.0
-texture = SubResource("GradientTexture2D_j0oxw")
+texture_normal = SubResource("GradientTexture2D_j0oxw")
 
-[node name="1" type="TextureRect" parent="hotbar/slots/itemIcons"]
-visible = false
+[node name="1" type="TextureButton" parent="hotbar/slots/itemIcons"]
 layout_mode = 2
 offset_left = 64.0
 offset_right = 128.0
 offset_bottom = 64.0
-texture = SubResource("GradientTexture2D_j0oxw")
 
-[node name="2" type="TextureRect" parent="hotbar/slots/itemIcons"]
-visible = false
+[node name="2" type="TextureButton" parent="hotbar/slots/itemIcons"]
 layout_mode = 2
 offset_left = 128.0
 offset_right = 192.0
 offset_bottom = 64.0
-texture = SubResource("GradientTexture2D_j0oxw")
 
-[node name="3" type="TextureRect" parent="hotbar/slots/itemIcons"]
-visible = false
+[node name="3" type="TextureButton" parent="hotbar/slots/itemIcons"]
 layout_mode = 2
 offset_left = 192.0
 offset_right = 256.0
 offset_bottom = 64.0
-texture = SubResource("GradientTexture2D_j0oxw")
 
-[node name="4" type="TextureRect" parent="hotbar/slots/itemIcons"]
-visible = false
+[node name="4" type="TextureButton" parent="hotbar/slots/itemIcons"]
 layout_mode = 2
 offset_left = 256.0
 offset_right = 320.0
 offset_bottom = 64.0
-texture = SubResource("GradientTexture2D_j0oxw")
 
-[node name="5" type="TextureRect" parent="hotbar/slots/itemIcons"]
-visible = false
+[node name="5" type="TextureButton" parent="hotbar/slots/itemIcons"]
 layout_mode = 2
 offset_left = 320.0
 offset_right = 384.0
 offset_bottom = 64.0
-texture = SubResource("GradientTexture2D_j0oxw")
 
-[node name="6" type="TextureRect" parent="hotbar/slots/itemIcons"]
-visible = false
+[node name="6" type="TextureButton" parent="hotbar/slots/itemIcons"]
 layout_mode = 2
 offset_left = 384.0
 offset_right = 448.0
 offset_bottom = 64.0
-texture = SubResource("GradientTexture2D_j0oxw")
 
-[node name="7" type="TextureRect" parent="hotbar/slots/itemIcons"]
-visible = false
+[node name="7" type="TextureButton" parent="hotbar/slots/itemIcons"]
 layout_mode = 2
 offset_left = 448.0
 offset_right = 512.0
 offset_bottom = 64.0
-texture = SubResource("GradientTexture2D_j0oxw")
 
-[node name="8" type="TextureRect" parent="hotbar/slots/itemIcons"]
-visible = false
+[node name="8" type="TextureButton" parent="hotbar/slots/itemIcons"]
 layout_mode = 2
 offset_left = 512.0
 offset_right = 576.0
 offset_bottom = 64.0
-texture = SubResource("GradientTexture2D_j0oxw")
 
-[node name="9" type="TextureRect" parent="hotbar/slots/itemIcons"]
-visible = false
+[node name="9" type="TextureButton" parent="hotbar/slots/itemIcons"]
 layout_mode = 2
 offset_left = 576.0
 offset_right = 640.0
 offset_bottom = 64.0
-texture = SubResource("GradientTexture2D_j0oxw")
 
 [node name="above" type="TextureRect" parent="hotbar/slots"]
 layout_mode = 1
@@ -271,4 +500,4 @@ texture = ExtResource("4_1g88p")
 visible = false
 layout_mode = 1
 
-[editable path="accessories/SubViewport/SubViewport/playerAvatar"]
+[editable path="accessories/preview_window/SubViewport/SubViewport/playerAvatar"]

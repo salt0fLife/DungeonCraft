@@ -21,6 +21,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme = ExtResource("1_axd3m")
 
 [node name="corner" type="TextureRect" parent="panel"]
@@ -71,6 +72,7 @@ offset_right = 35.0
 offset_bottom = 45.0
 grow_vertical = 0
 rotation = 4.71239
+mouse_filter = 2
 texture = ExtResource("2_x5eku")
 
 [node name="item_name" type="Label" parent="."]
@@ -121,6 +123,7 @@ offset_right = -9.0
 offset_bottom = -9.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="HFlowContainer" type="HFlowContainer" parent="workingArea"]
 layout_mode = 1
