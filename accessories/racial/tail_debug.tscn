@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dpq811cqx5h2y"]
+[gd_scene load_steps=13 format=3 uid="uid://dpq811cqx5h2y"]
 
 [ext_resource type="Script" path="res://scripts/tail.gd" id="1_gb8vx"]
 [ext_resource type="Texture2D" uid="uid://c1jgohvyqtrxv" path="res://assets/glb/playerAvatar002_dapper128Secondary.png" id="2_kkaqa"]
@@ -45,22 +45,37 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_v4jtc")
 
-[sub_resource type="BoxMesh" id="BoxMesh_xca7h"]
-size = Vector3(0.06, 0.2, 0.06)
+[sub_resource type="BoxMesh" id="BoxMesh_baioo"]
+size = Vector3(0.06, 0.0714286, 0.06)
 
-[sub_resource type="BoxMesh" id="BoxMesh_j7nv5"]
-size = Vector3(0.06, 0.2, 0.06)
+[sub_resource type="BoxMesh" id="BoxMesh_wid2u"]
+size = Vector3(0.06, 0.0714286, 0.06)
 
-[sub_resource type="BoxMesh" id="BoxMesh_sdq5u"]
-size = Vector3(0.06, 0.2, 0.06)
+[sub_resource type="BoxMesh" id="BoxMesh_7bquj"]
+size = Vector3(0.06, 0.0714286, 0.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_afv8b"]
+size = Vector3(0.06, 0.0714286, 0.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0m34u"]
+size = Vector3(0.06, 0.0714286, 0.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dkrpn"]
+size = Vector3(0.06, 0.0714286, 0.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_n35ar"]
+size = Vector3(0.06, 0.0714286, 0.06)
 
 [node name="debug_tail" type="Node3D"]
 transform = Transform3D(0.999999, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("1_gb8vx")
+number_of_segments = 7
+dimensions = Vector3(0.06, 0.5, 0.06)
 damp = 0.5
 damp_joint_effect = 0.1
 spring = 180.0
 sway_amplitude = 0.25
+sway_speed = 4.0
 sway_joint_offset = 0.25
 
 [node name="torsoN" type="MeshInstance3D" parent="."]
@@ -72,22 +87,49 @@ skeleton = NodePath("")
 transform = Transform3D(1, 0, 0, 0, -0.895344, 0.445375, 0, -0.445375, -0.895344, 0, -0.264819, -0.0907725)
 
 [node name="spine0" type="Node3D" parent="root"]
-transform = Transform3D(0.98038, 0.197119, 0, -0.197119, 0.98038, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="root/spine0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
-mesh = SubResource("BoxMesh_xca7h")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0357143, 0)
+mesh = SubResource("BoxMesh_baioo")
 
 [node name="spine1" type="Node3D" parent="root/spine0"]
-transform = Transform3D(0.998863, 0.0476682, 0, -0.0476682, 0.998863, 0, 0, 0, 1, 0, 0.2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0714286, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="root/spine0/spine1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
-mesh = SubResource("BoxMesh_j7nv5")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0357143, 0)
+mesh = SubResource("BoxMesh_wid2u")
 
 [node name="spine2" type="Node3D" parent="root/spine0/spine1"]
-transform = Transform3D(0.991434, -0.130605, 0, 0.130605, 0.991434, 0, 0, 0, 1, 0, 0.2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0714286, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="root/spine0/spine1/spine2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
-mesh = SubResource("BoxMesh_sdq5u")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0357143, 0)
+mesh = SubResource("BoxMesh_7bquj")
+
+[node name="spine3" type="Node3D" parent="root/spine0/spine1/spine2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0714286, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="root/spine0/spine1/spine2/spine3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0357143, 0)
+mesh = SubResource("BoxMesh_afv8b")
+
+[node name="spine4" type="Node3D" parent="root/spine0/spine1/spine2/spine3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0714286, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="root/spine0/spine1/spine2/spine3/spine4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0357143, 0)
+mesh = SubResource("BoxMesh_0m34u")
+
+[node name="spine5" type="Node3D" parent="root/spine0/spine1/spine2/spine3/spine4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0714286, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="root/spine0/spine1/spine2/spine3/spine4/spine5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0357143, 0)
+mesh = SubResource("BoxMesh_dkrpn")
+
+[node name="spine6" type="Node3D" parent="root/spine0/spine1/spine2/spine3/spine4/spine5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0714286, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="root/spine0/spine1/spine2/spine3/spine4/spine5/spine6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0357143, 0)
+mesh = SubResource("BoxMesh_n35ar")

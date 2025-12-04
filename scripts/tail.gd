@@ -14,10 +14,11 @@ func _ready():
 	pass
 
 @export var number_of_segments := 3
-@export var segment_dimensions = Vector3(0.06,0.2,0.06)
+@export var dimensions = Vector3(0.06,0.2,0.06)
 func generate_tail():
 	for n in $root.get_children(false):
 		n.queue_free()
+	var segment_dimensions = Vector3(dimensions.x,dimensions.y/number_of_segments,dimensions.z)
 	
 	var last_bone = $root
 	var first = true
@@ -58,11 +59,11 @@ var speed = 0.0
 var time = 0.0
 func _process(delta):
 	
-	speed += (global_position - last_pos).length()*delta
-	$root.rotation.x = -2.68 + remap(speed, 0.0, 6.0, 0.0, PI*0.4)
+	speed += (global_position - last_pos).length()*delta*25.0
+	$root.rotation.x = -2.68 + remap(clamp(speed,0.0,6.0), 0.0, 6.0, 0.0, PI)
+	speed -= speed*delta*damp*25.0
 	
-	
-	time += delta * sway_speed
+	time += delta * sway_speed * remap(clamp(speed,0.0,6.0),0.0,6.0,1.0,4.0)
 	if time > 64*PI:
 		time -= 64*PI
 	for i in range(0,bone_paths.size()):

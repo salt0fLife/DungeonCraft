@@ -16,6 +16,7 @@ func _ready():
 		text = "+" + str(val)
 	else:
 		text = "-" + str(val)
+	$Sprite3D.frame = type
 
 func _physics_process(delta):
 	velocity += gravity * delta

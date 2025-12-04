@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://cm7d5y2llo0ky"]
+[gd_scene load_steps=27 format=3 uid="uid://cm7d5y2llo0ky"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_s7ggu"]
 [ext_resource type="Script" path="res://scripts/steam.gd" id="2_35c3e"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://bj3uo4xlqklj1" path="res://assets/textures/misc/Screenshot 2025-11-24 220401.png" id="6_ybl52"]
 [ext_resource type="Script" path="res://scripts/chat_display.gd" id="8_8non7"]
 [ext_resource type="Theme" uid="uid://bxsqmdqtm4i4k" path="res://assets/themes/genericTheme.tres" id="9_486y8"]
+[ext_resource type="PackedScene" uid="uid://b7s8ume16tah0" path="res://assets/gui/inventory_menu.tscn" id="11_ws5gg"]
 
 [sub_resource type="Gradient" id="Gradient_awrvk"]
 offsets = PackedFloat32Array(0, 0.33, 0.66, 1)
@@ -353,6 +354,8 @@ layout_mode = 2
 theme = ExtResource("9_486y8")
 placeholder_text = "send message"
 metadata/_edit_use_anchors_ = true
+
+[node name="inventory_menu" parent="." instance=ExtResource("11_ws5gg")]
 
 [connection signal="button_down" from="Control/hostLocal" to="." method="_on_host_local_button_down"]
 [connection signal="button_down" from="Control/joinLocal" to="." method="_on_join_local_button_down"]

@@ -63,6 +63,7 @@ func _process(delta):
 			var norm = $torso/RayCast3D.get_collision_normal()
 			var b = preload("res://assets/effects/blood_decal.tscn").instantiate()
 			hit.add_child(b)
+			b.global_scale = Vector3(1.0,1.0,1.0)
 			b.global_position = poi + norm*0.01
 			var rot_y = atan2(norm.x,norm.z)
 			var rot_x = atan2(sqrt(pow(norm.x,2.0)+pow(norm.z,2.0)),norm.y)

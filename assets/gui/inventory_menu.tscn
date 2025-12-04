@@ -1,7 +1,33 @@
-[gd_scene load_steps=2 format=3 uid="uid://b7s8ume16tah0"]
+[gd_scene load_steps=12 format=3 uid="uid://b7s8ume16tah0"]
+
+[ext_resource type="Script" path="res://scripts/inventory_menu.gd" id="1_4xxg4"]
+[ext_resource type="Texture2D" uid="uid://bkjpum8rx7i4g" path="res://assets/textures/gui/emptyHotbar.png" id="2_jil2a"]
+[ext_resource type="Texture2D" uid="uid://gfn2du2qig8l" path="res://assets/textures/gui/selectedSlotHotbar2.png" id="3_oaqoa"]
+[ext_resource type="Texture2D" uid="uid://0n6mtgg18yb" path="res://assets/textures/gui/selectedSlotHotbar1.png" id="4_1g88p"]
+[ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="5_5sgb8"]
+[ext_resource type="Texture2D" uid="uid://dyh661ujm3ahi" path="res://assets/glb/playerAvatar002_eyeBrows2.png" id="6_h0cdh"]
+[ext_resource type="PackedScene" uid="uid://bnf5uy3kr73aa" path="res://assets/gui/item_info_display.tscn" id="7_ud8gy"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_d5ftn"]
 blend_mode = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nhoev"]
+resource_name = "eyeBrows"
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+albedo_texture = ExtResource("6_h0cdh")
+texture_filter = 2
+
+[sub_resource type="Gradient" id="Gradient_ruwo5"]
+offsets = PackedFloat32Array(0.9, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_j0oxw"]
+gradient = SubResource("Gradient_ruwo5")
+fill = 2
+fill_from = Vector2(0.5, 0.5)
 
 [node name="inventory_menu" type="Control"]
 layout_mode = 3
@@ -10,8 +36,19 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_4xxg4")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="accessories" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="accessories"]
 material = SubResource("CanvasItemMaterial_d5ftn")
 layout_mode = 1
 anchors_preset = 15
@@ -21,15 +58,217 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.729412, 0.729412, 0.729412, 1)
 
-[node name="scrollContainer" type="ScrollContainer" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 0.182
-anchor_bottom = 0.776
-offset_right = 0.335983
-offset_bottom = 0.151978
+[node name="SubViewport" type="SubViewportContainer" parent="accessories"]
+layout_mode = 0
+offset_right = 256.0
+offset_bottom = 512.0
 
-[node name="HFlowContainer" type="HFlowContainer" parent="scrollContainer"]
+[node name="SubViewport" type="SubViewport" parent="accessories/SubViewport"]
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(256, 512)
+render_target_update_mode = 0
+
+[node name="Camera3D" type="Camera3D" parent="accessories/SubViewport/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.74904)
+fov = 30.0
+
+[node name="playerAvatar" parent="accessories/SubViewport/SubViewport" instance=ExtResource("5_5sgb8")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, -0.774223, 0)
+
+[node name="chestBase" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, -0.00253162, -0.00876749, 0.000153183)
+
+[node name="hip_L" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="0"]
+transform = Transform3D(0.995002, -0.00785892, 0.0995233, 0, 0.996889, 0.0787207, -0.0998332, -0.0783271, 0.991914, 0.075, -0.282, -0.001)
+
+[node name="knee_L" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/hip_L" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.996696, -0.0812129, 0, 0.0812129, 0.996696, 0, -0.274171, 0)
+
+[node name="hip_R" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="1"]
+transform = Transform3D(0.995003, 0.00785895, -0.0995235, 0, 0.996892, 0.0787209, 0.0998333, -0.0783273, 0.991916, -0.075, -0.282, -0.001)
+
+[node name="knee_R" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/hip_R" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.996695, -0.0812128, 0, 0.0812128, 0.996695, 0, -0.274171, 0)
+
+[node name="neck" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="2"]
+transform = Transform3D(1, 0, 0, 0, 0.999297, 0.0374911, 0, -0.0374912, 0.999295, 0, 0.289384, -0.00323021)
+
+[node name="eyeBrows_L" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_nhoev")
+
+[node name="eyeBrows_R" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
+surface_material_override/0 = SubResource("StandardMaterial3D_nhoev")
+
+[node name="nameTag" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="11"]
+visible = false
+
+[node name="shoulder_L" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="3"]
+transform = Transform3D(0.99866, -0.0515704, 0.00431155, 0.051534, 0.998636, 0.00816863, -0.00472694, -0.00793549, 0.999956, 0.14978, 0.241, -0.0014265)
+
+[node name="elbowL" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.999179, 0.040498, 0, -0.040498, 0.999179, 0.0786937, -0.240458, -0.002611)
+
+[node name="shoulder_R" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="4"]
+transform = Transform3D(0.99866, 0.0515704, -0.00431156, -0.051534, 0.998636, 0.00816864, 0.00472695, -0.00793549, 0.999957, -0.15, 0.241, -0.001)
+
+[node name="elbowR" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/shoulder_R" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.999179, 0.040498, 0, -0.040498, 0.999179, -0.0786937, -0.240458, -0.00261103)
+
+[node name="tailBase" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="9"]
+transform = Transform3D(0.999983, -0.00479749, 0.00266619, 0, 0.48577, 0.874086, -0.00548857, -0.874074, 0.485763, 0, 0, -0.088)
+
+[node name="tailMiddle" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/tailBase" index="0"]
+transform = Transform3D(0.960449, 0.0507444, 0.27379, 0, 0.983255, -0.182236, -0.278454, 0.175029, 0.944365, 0, 0, 0)
+
+[node name="tailLast" parent="accessories/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/tailBase/tailMiddle" index="0"]
+transform = Transform3D(0.97724, 0.060254, 0.203415, 0, 0.95882, -0.284015, -0.212152, 0.27755, 0.936994, 0, 0, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="accessories/SubViewport/SubViewport"]
+
+[node name="hotbar" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 80.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="background" type="TextureRect" parent="hotbar"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -324.0
+offset_top = -76.0
+offset_right = 324.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("2_jil2a")
+
+[node name="slots" type="Control" parent="hotbar"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -320.0
+offset_top = -68.0
+offset_right = 320.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="below" type="TextureRect" parent="hotbar/slots"]
+layout_mode = 1
+offset_right = 64.0
+offset_bottom = 64.0
+mouse_filter = 2
+texture = ExtResource("3_oaqoa")
+
+[node name="itemIcons" type="Control" parent="hotbar/slots"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="0" type="TextureRect" parent="hotbar/slots/itemIcons"]
+visible = false
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+offset_right = 64.0
+offset_bottom = 64.0
+texture = SubResource("GradientTexture2D_j0oxw")
+
+[node name="1" type="TextureRect" parent="hotbar/slots/itemIcons"]
+visible = false
+layout_mode = 2
+offset_left = 64.0
+offset_right = 128.0
+offset_bottom = 64.0
+texture = SubResource("GradientTexture2D_j0oxw")
+
+[node name="2" type="TextureRect" parent="hotbar/slots/itemIcons"]
+visible = false
+layout_mode = 2
+offset_left = 128.0
+offset_right = 192.0
+offset_bottom = 64.0
+texture = SubResource("GradientTexture2D_j0oxw")
+
+[node name="3" type="TextureRect" parent="hotbar/slots/itemIcons"]
+visible = false
+layout_mode = 2
+offset_left = 192.0
+offset_right = 256.0
+offset_bottom = 64.0
+texture = SubResource("GradientTexture2D_j0oxw")
+
+[node name="4" type="TextureRect" parent="hotbar/slots/itemIcons"]
+visible = false
+layout_mode = 2
+offset_left = 256.0
+offset_right = 320.0
+offset_bottom = 64.0
+texture = SubResource("GradientTexture2D_j0oxw")
+
+[node name="5" type="TextureRect" parent="hotbar/slots/itemIcons"]
+visible = false
+layout_mode = 2
+offset_left = 320.0
+offset_right = 384.0
+offset_bottom = 64.0
+texture = SubResource("GradientTexture2D_j0oxw")
+
+[node name="6" type="TextureRect" parent="hotbar/slots/itemIcons"]
+visible = false
+layout_mode = 2
+offset_left = 384.0
+offset_right = 448.0
+offset_bottom = 64.0
+texture = SubResource("GradientTexture2D_j0oxw")
+
+[node name="7" type="TextureRect" parent="hotbar/slots/itemIcons"]
+visible = false
+layout_mode = 2
+offset_left = 448.0
+offset_right = 512.0
+offset_bottom = 64.0
+texture = SubResource("GradientTexture2D_j0oxw")
+
+[node name="8" type="TextureRect" parent="hotbar/slots/itemIcons"]
+visible = false
+layout_mode = 2
+offset_left = 512.0
+offset_right = 576.0
+offset_bottom = 64.0
+texture = SubResource("GradientTexture2D_j0oxw")
+
+[node name="9" type="TextureRect" parent="hotbar/slots/itemIcons"]
+visible = false
+layout_mode = 2
+offset_left = 576.0
+offset_right = 640.0
+offset_bottom = 64.0
+texture = SubResource("GradientTexture2D_j0oxw")
+
+[node name="above" type="TextureRect" parent="hotbar/slots"]
+layout_mode = 1
+offset_right = 64.0
+offset_bottom = 64.0
+mouse_filter = 2
+texture = ExtResource("4_1g88p")
+
+[node name="itemPreview" parent="." instance=ExtResource("7_ud8gy")]
+visible = false
+layout_mode = 1
+
+[editable path="accessories/SubViewport/SubViewport/playerAvatar"]
