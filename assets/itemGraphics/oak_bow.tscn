@@ -18,29 +18,3 @@ mesh = SubResource("BoxMesh_4aawi")
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
 transform = Transform3D(-4.2222e-08, -1.13133e-08, 1, -0.258819, 0.965926, 0, -0.965926, -0.258819, -4.37114e-08, 0.00326389, -0.533828, 0.0620499)
 mesh = SubResource("BoxMesh_4aawi")
-
-[node name="ColorRect" type="ColorRect" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -1.0
-offset_top = -16.0
-offset_right = 1.0
-offset_bottom = 16.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ColorRect2" type="ColorRect" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -16.0
-offset_top = -1.0
-offset_right = 16.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2

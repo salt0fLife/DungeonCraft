@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c6rgnffiybpgi"]
+[gd_scene load_steps=13 format=3 uid="uid://c6rgnffiybpgi"]
 
 [ext_resource type="Script" path="res://scripts/generic_cape.gd" id="1_hjefa"]
 
@@ -77,6 +77,22 @@ subdivide_width = 1
 subdivide_height = 3
 subdivide_depth = 1
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7ulv1"]
+render_priority = 0
+shader = SubResource("Shader_ir0u0")
+shader_parameter/albedo = Color(0.219608, 0.427451, 0.572549, 1)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/wind = 0.0
+shader_parameter/movement_weight = SubResource("GradientTexture2D_rerub")
+
 [sub_resource type="QuadMesh" id="QuadMesh_84dxm"]
 material = SubResource("ShaderMaterial_nkcy7")
 size = Vector2(0.31, 0.645)
@@ -98,7 +114,6 @@ material = SubResource("StandardMaterial3D_14e4y")
 size = Vector2(0.09, 0.115)
 
 [node name="cape" type="Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("1_hjefa")
 max_speed = 0.05
 
@@ -108,6 +123,7 @@ transform = Transform3D(1, 5.67526e-43, -8.17413e-07, -5.67526e-43, 0.999999, 1.
 [node name="fabric" type="MeshInstance3D" parent="Node3D"]
 transform = Transform3D(1, 3.65239e-15, 5.6726e-14, 0, 0.997934, -0.0642536, -5.68434e-14, 0.0642536, 0.997934, 0, -0.318, -0.033)
 mesh = SubResource("BoxMesh_titsv")
+surface_material_override/0 = SubResource("ShaderMaterial_7ulv1")
 
 [node name="fabricold" type="MeshInstance3D" parent="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 0.997934, -0.0642536, 0, 0.0642536, 0.997934, -7.10543e-15, -0.317837, -0.0256269)

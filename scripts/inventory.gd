@@ -1,14 +1,44 @@
 extends Node
 signal update_accessories
 signal update_held_item
+signal update_hotbar
 
 var accessories = {
+	#armor and clothes
 	"cape" : "",
 	"shirt" : "",
+	"chestplate" : "",
 	"hat" : "",
 	"pants" : "",
-	"gloves" : "",
-	"shoes" : ""
+	"leggings" : "",
+	"gloveR" : "",
+	"gloveL" : "",
+	"shoeR" : "",
+	"shoeL" : "",
+	"greaves" : "",
+	#jewelry
+	"necklace1" : "",
+	"necklace2" : "",
+	"necklace3" : "",
+	"necklace4" : "",
+	"crown" : "",
+	"braceletR" : "",
+	"braceletL" : "",
+	"belt" : "",
+	#rings
+	"ringFR" : "",
+	"ringSR" : "",
+	"ringVowR" : "",
+	"ringPR" : "",
+	"ringFL" : "",
+	"ringSL" : "",
+	"ringVowL" : "",
+	"ringPL" : "",
+	
+	
+	##racial changes
+	"race" : "",
+	"sub_race" : "",
 }
 
 var hotbar = [
@@ -20,7 +50,7 @@ var hotbar = [
 	"", #5
 	"", #6
 	"", #7
-	"", #8
+	"debug_speed_boot_R", #8
 	"" #9
 ]
 
@@ -75,3 +105,14 @@ func drop_all():
 		accessories[k] = ""
 	emit_signal("update_accessories")
 	pass
+
+func get_item_texture(key : String) -> Texture:
+	if !Lookup.items.has(key):
+		return load("res://assets/textures/items/missingItemTexture.png")
+	var data = Lookup.items[key]
+	var image_path = ""
+	if data.size() > 4: #makes sure item has entry
+		image_path = data[4]
+	if image_path == "": #placeholder for textures that have not been made yet
+		image_path = "res://assets/textures/items/missingItemTexture.png"
+	return load(image_path)

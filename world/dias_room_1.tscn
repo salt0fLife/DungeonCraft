@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://dwt332uhqiw8y"]
 
-[ext_resource type="PackedScene" uid="uid://bfmtven01nbak" path="res://entities/player.tscn" id="2_hfy31"]
+[ext_resource type="PackedScene" uid="uid://bfmtven01nbak" path="res://entities/player/player.tscn" id="2_hfy31"]
 [ext_resource type="PackedScene" uid="uid://buvgyaes3qr86" path="res://assets/environmentPieces/wall_torch.tscn" id="2_mlrmg"]
 [ext_resource type="VoxelGIData" uid="uid://d2nwqfkwerjey" path="res://world/lightingInformation/dias_room_1.VoxelGI_data.res" id="3_j5l1h"]
 

@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=6 format=3 uid="uid://bxsqmdqtm4i4k"]
+[gd_resource type="Theme" load_steps=8 format=3 uid="uid://bxsqmdqtm4i4k"]
 
 [ext_resource type="FontFile" uid="uid://d04jqh1m2w8v1" path="res://assets/fonts/PIXELOIDSANSBOLD-PKNYD.TTF" id="1_epc4j"]
 
@@ -27,6 +27,22 @@ expand_margin_right = 2.0
 expand_margin_bottom = 2.0
 shadow_size = 8
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m2rii"]
+bg_color = Color(0.180392, 0.180392, 0.2, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.580392, 0.580392, 0.580392, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yukli"]
+bg_color = Color(0.211765, 0.207843, 0.219608, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.564706, 0.564706, 0.564706, 1)
+
 [resource]
 default_font = ExtResource("1_epc4j")
 Button/colors/font_color = Color(0.878431, 0.956863, 1, 1)
@@ -39,3 +55,5 @@ Button/styles/focus = SubResource("StyleBoxFlat_8x6qf")
 Button/styles/hover = SubResource("StyleBoxFlat_o2bao")
 Button/styles/normal = SubResource("StyleBoxFlat_hvya4")
 Button/styles/pressed = SubResource("StyleBoxFlat_a4p60")
+Panel/styles/panel = SubResource("StyleBoxFlat_m2rii")
+TabContainer/styles/panel = SubResource("StyleBoxFlat_yukli")

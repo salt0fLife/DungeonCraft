@@ -9,6 +9,7 @@ signal spawn_projectile
 signal camera_impact
 signal player_death
 signal chat
+signal update_skin
 var inside = 0.0
 
 var skin = [64,64,false,0,[]]

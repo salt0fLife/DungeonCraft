@@ -1,0 +1,48 @@
+[gd_scene load_steps=8 format=3 uid="uid://dtdp0xkmjwtre"]
+
+[ext_resource type="Script" path="res://scripts/punching_bag.gd" id="1_lx4nv"]
+[ext_resource type="PackedScene" uid="uid://ctjywblutag5l" path="res://assets/entityComponents/hurtbox.tscn" id="2_d3bc4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fwmtd"]
+size = Vector3(0.75, 1.75, 0.75)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ytkv5"]
+albedo_color = Color(0.631373, 0.443137, 0.352941, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8o806"]
+material = SubResource("StandardMaterial3D_ytkv5")
+size = Vector3(0.75, 1.25, 0.75)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m30yq"]
+albedo_color = Color(0.898039, 0.792157, 0.603922, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_38t4w"]
+material = SubResource("StandardMaterial3D_m30yq")
+size = Vector3(0.125, 1, 0.125)
+
+[node name="punchingBag" type="Node3D"]
+script = ExtResource("1_lx4nv")
+
+[node name="hurtbox" parent="." instance=ExtResource("2_d3bc4")]
+health_handler = NodePath("..")
+id = "bag"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="hurtbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+shape = SubResource("BoxShape3D_fwmtd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.125, 0)
+mesh = SubResource("BoxMesh_8o806")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_38t4w")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -0.0179958, 0)
+mesh = SubResource("BoxMesh_38t4w")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.91069e-15, 4.37114e-08, 1, 1, -4.37114e-08, 0, 4.37114e-08, 1, -4.37114e-08, 0, -0.0179958, 0)
+mesh = SubResource("BoxMesh_38t4w")

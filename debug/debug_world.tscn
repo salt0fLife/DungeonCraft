@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://dntnunlwfyesu"]
+[gd_scene load_steps=45 format=3 uid="uid://dntnunlwfyesu"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_5fl5y"]
 [ext_resource type="Script" path="res://debug/debug_world.gd" id="1_87rlt"]
@@ -24,6 +24,7 @@
 [ext_resource type="AudioStream" uid="uid://us4531tbg0sh" path="res://assets/sounds/music/triplets.mp3" id="21_5nv8w"]
 [ext_resource type="PackedScene" uid="uid://cb6ovvv8dnrb1" path="res://world/levels/level_3_test.tscn" id="21_ooxf7"]
 [ext_resource type="PackedScene" uid="uid://c4u7j7ayr1kum" path="res://assets/environmentPieces/ambience/rain.tscn" id="23_yrjkj"]
+[ext_resource type="PackedScene" uid="uid://dtdp0xkmjwtre" path="res://entities/punching_bag.tscn" id="25_2gtog"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ks42u"]
 
@@ -129,7 +130,7 @@ colors = PackedColorArray(0.177325, 0.464292, 0.608657, 1, 0.787127, 0.850348, 0
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_y68ia"]
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1bwa2"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_2dpou"]
 seamless = true
 color_ramp = SubResource("Gradient_6qbul")
 noise = SubResource("FastNoiseLite_y68ia")
@@ -137,14 +138,14 @@ noise = SubResource("FastNoiseLite_y68ia")
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tgtor"]
 sky_top_color = Color(0.168627, 0.447059, 0.780392, 1)
 sky_horizon_color = Color(0.647059, 0.654902, 0.670588, 1)
-sky_cover = SubResource("NoiseTexture2D_1bwa2")
+sky_cover = SubResource("NoiseTexture2D_2dpou")
 
-[sub_resource type="Sky" id="Sky_jhhr5"]
+[sub_resource type="Sky" id="Sky_pquje"]
 sky_material = SubResource("ProceduralSkyMaterial_tgtor")
 
 [sub_resource type="Environment" id="Environment_s3u0r"]
 background_mode = 2
-sky = SubResource("Sky_jhhr5")
+sky = SubResource("Sky_pquje")
 ssao_enabled = true
 glow_enabled = true
 glow_normalized = true
@@ -304,24 +305,38 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -2)
 [node name="playerCorpse" parent="." instance=ExtResource("13_lys41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -5)
 
-[node name="genericLooseItem" parent="." instance=ExtResource("14_ccyrl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.25509, 1.34546, -2.57884)
-
-[node name="genericLooseItem2" parent="." instance=ExtResource("14_ccyrl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.15502, 1.34547, -5.74185)
-
 [node name="accessories_debugger" parent="." instance=ExtResource("15_ytdhl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5627, 0, -3.93952)
 value = "devil_wings"
 
 [node name="accessories_debugger2" parent="." instance=ExtResource("15_ytdhl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5627, 0, -3.93952)
-accessory_to_edit = "shirt"
+accessory_to_edit = "chestplate"
 value = "iron_chestpiece"
 
 [node name="accessories_debugger3" parent="." instance=ExtResource("15_ytdhl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5627, 0, -3.93952)
 value = "debug_cape"
+
+[node name="accessories_debugger4" parent="." instance=ExtResource("15_ytdhl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8593, 0, -3.93952)
+accessory_to_edit = "shoeR"
+value = "speed_boots"
+
+[node name="accessories_debugger5" parent="." instance=ExtResource("15_ytdhl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.8593, 0, -3.93952)
+accessory_to_edit = "shoeL"
+value = "debug_speed_boot_L"
+
+[node name="accessories_debugger7" parent="." instance=ExtResource("15_ytdhl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.8593, 0, -6.93952)
+accessory_to_edit = "shoeR"
+value = "debug_speed_boot_R"
+
+[node name="accessories_debugger6" parent="." instance=ExtResource("15_ytdhl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.8593, 0, -3.93952)
+accessory_to_edit = "tail"
+value = "debug_tail"
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.229399, 2.31994, 25.6229)
@@ -346,3 +361,18 @@ stream = ExtResource("21_5nv8w")
 [node name="level_3_test" parent="." instance=ExtResource("21_ooxf7")]
 
 [node name="environmentEffects" parent="." instance=ExtResource("23_yrjkj")]
+
+[node name="genericLooseItem3" parent="." instance=ExtResource("14_ccyrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.06554, 4.59802, -7.35984)
+item_key = "debug_speed_boot_R"
+
+[node name="genericLooseItem4" parent="." instance=ExtResource("14_ccyrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3188, 5.06808, -8.55499)
+item_key = "iron_sword"
+
+[node name="genericLooseItem5" parent="." instance=ExtResource("14_ccyrl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3188, 5.06808, -11.4726)
+item_key = "debug_cape"
+
+[node name="punchingBag" parent="." instance=ExtResource("25_2gtog")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.64017, 0, -9.12931)
