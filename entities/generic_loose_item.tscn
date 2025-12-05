@@ -4,7 +4,7 @@
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_2l2ns"]
 
-[node name="genericLooseItem" type="StaticBody3D" groups=["interact", "tooltip"]]
+[node name="genericLooseItem" type="StaticBody3D" groups=["interact", "tool_tip"]]
 collision_layer = 128
 collision_mask = 128
 script = ExtResource("1_4sspg")
@@ -13,3 +13,5 @@ script = ExtResource("1_4sspg")
 shape = SubResource("SphereShape3D_2l2ns")
 
 [node name="RayCast3D" type="RayCast3D" parent="."]
+
+[node name="graphics" type="Node3D" parent="."]

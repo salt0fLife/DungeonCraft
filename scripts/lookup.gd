@@ -31,6 +31,12 @@ enum itemType {
 	accessories_pants,
 	accessories_gloves,
 	accessories_shoes,
+	accessories_greaves,
+	accessories_necklace,
+	accessories_ring,
+	accessories_crown,
+	accessories_bracelet,
+	accessories_belt,
 	racial_changes,
 	subclass_changes,
 	weapons_sword, #[damage, range, damage_stab, block_defense]
@@ -118,3 +124,8 @@ enum statusEffectType {
 	tripping
 }
 
+enum interact_return_code {
+	dont_do_anything, #returns null
+	is_item, #returns item_key that should be picked up
+	print, #returns a string that should be printed
+}

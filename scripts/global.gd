@@ -10,6 +10,7 @@ signal camera_impact
 signal player_death
 signal chat
 signal update_skin
+signal create_item
 var inside = 0.0
 
 var skin = [64,64,false,0,[]]
@@ -80,3 +81,6 @@ func print_chat(text, col = "white"):
 @rpc("any_peer","reliable")
 func _on_chat(text):
 	emit_signal("chat", text)
+
+func create_loose_item(key, position):
+	emit_signal("create_item", key, position)

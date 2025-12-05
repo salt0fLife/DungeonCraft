@@ -158,6 +158,9 @@ func update_held_item_graphics(model_path):
 		return
 	var mf = load(model_path).instantiate()
 	var mt = load(model_path).instantiate()
+	if mf.has_method("enable_item_mode"):
+		mf.enable_item_mode()
+		mt.enable_item_mode()
 	fp_item_handler.add_child(mf)
 	tp_item_handler.add_child(mt)
 
@@ -344,12 +347,24 @@ func _input(event):
 		body.rotation.y = clamp(body.rotation.y, -1.5, 1.5)
 		avatar.head_angle.y = -body.rotation.y
 	
+	##items and stuff
+	if Input.is_action_just_pressed("drop_item"):
+		Inventory.drop_hotbar_item(Inventory.held_item, get_non_clipped_look_reference())
 	
 	##debug stuffs
 	if Input.is_action_just_pressed("perish"):
 		die(display_name, "perish", "",Vector3(0.0,1.0,0.0))
 	if Input.is_action_just_pressed("respawn"):
 		respawn()
+
+@onready var look_reference_check = $playerAvatar/cameraHandler/look_reference_check
+func get_non_clipped_look_reference() -> Vector3:
+	if look_reference_check.is_colliding():
+		var poi = look_reference_check.get_collision_point()
+		poi +=  look_reference_check.get_collision_normal()*0.1
+		return poi
+	else:
+		return look_reference.global_position
 
 func jump():
 	jump_buffer = 0.0
@@ -514,7 +529,7 @@ func _physics_process(delta):
 @rpc("any_peer","unreliable")
 func heavy_impact():
 	dust_particles.emitting = true
-	
+	Global.create_camera_impact(position, 0.002)
 	pass
 
 func update_velocity_gliding(delta):
@@ -916,7 +931,7 @@ func die(attacker = "", key = "", weapon_name = "", add_vel = Vector3.ZERO, dama
 	await  get_tree().process_frame
 	emit_signal("died")
 	phantom_signal.rpc("died")
-	Inventory.drop_all()
+	Inventory.drop_all(position)
 	#tp(Vector3.ZERO,0.0)
 
 @rpc("unreliable","call_remote")
@@ -1061,26 +1076,28 @@ func get_look_dir():
 
 
 ##items and interacting
-enum interact_return_code {
-	dont_do_anything, #returns null
-	is_item, #returns item_key that should be picked up
-	print, #returns a string that should be printed
-}
 #interact returns should be formatted like so
 @onready var look = $playerAvatar/cameraHandler/bobbingHandler/look
-func attempt_to_interact():
+func attempt_to_interact(primary_interact = true):
 	if look.is_colliding():
 		var hit = look.get_collider()
 		if hit.is_in_group("interact"):
 			var ret = hit.interact()
 			print(ret)
-			process_interact_data(ret)
+			process_interact_data(ret, primary_interact, hit)
 			return
 	print("invalid interact")
 
-func process_interact_data(data):
+func process_interact_data(data, normal, hit):
 	match data[0]:
-		interact_return_code.is_item: Inventory.pickup_item(data[1][0],data[1][1]) #is item should pick it up
+		Lookup.interact_return_code.is_item: 
+			if Inventory.pickup_item(data[1], !normal):#is item should pick it up
+				hit.call_deferred("queue_free")
+			else:
+				print("cant pick up inventory full")
+
+
+
 
 ##audio handling
 func settup_audio():
@@ -1210,6 +1227,16 @@ func _process(delta):
 			if anim_time < 0.0:
 				current_animation = ""
 			pass
+	if !is_multiplayer_authority():
+		return
+	$UI/tooltip.visible = false
+	if look.is_colliding():
+		var hit = look.get_collider()
+		if hit != null:
+			if hit.is_in_group("tool_tip"):
+				$UI/tooltip.visible = true
+				$UI/tooltip.text = hit.tool_tip
+				$UI/tooltip.modulate = hit.tool_tip_color
 
 func deal_look_damage(dam := [[Lookup.damageType.generic, 1]], dist := 2.0) -> void:
 	var weapon_name = "hands"

@@ -18,6 +18,7 @@ func _ready():
 	Global.connect("spawn_projectile", _on_spawn_projectile)
 	Global.connect("spawnCreature", _on_spawn_creature)
 	Global.connect("change_world", _on_change_world)
+	Global.connect("create_item", _on_create_item)
 	skin_key = load_file("", "skin_key.dat")
 	print("loaded skin_key " + str(skin_key))
 	if skin_key == null:
@@ -451,3 +452,46 @@ func spawn_projectile(key, pos, dir, owned_by):
 	projectileSync.add_child(proj, true)
 	proj.position = pos
 	proj.velocity = proj.dir*proj.speed
+
+@onready var loose_item = preload("res://entities/generic_loose_item.tscn")
+@onready var itemHandler = $itemHandler
+func _on_create_item(key, pos):
+	add_item_to_world(key,pos)
+	add_item_to_world.rpc(key,pos)
+
+@rpc("any_peer", "reliable")
+func add_item_to_world(key, pos):
+	var li = loose_item.instantiate()
+	li.position = pos
+	li.item_key = key
+	itemHandler.add_child(li)
+
+var item_sync_index = 0
+func _process(delta):
+	item_sync_index += 1 #syncs a new item every frame to improve preformance
+	if hosting:
+		if itemHandler.get_child_count() == 0:
+			return #no items to sync
+		if itemHandler.get_child_count() <= item_sync_index:
+			item_sync_index = 0
+		var item = itemHandler.get_child(item_sync_index)
+		sync_item.rpc(item_sync_index, item.position, item.item_key)
+
+@rpc("call_remote","reliable")
+func sync_item(index, pos, key):
+	if itemHandler.get_child_count() <= index:
+		add_item_to_world(key, pos)
+	else:
+		itemHandler.get_child(index).position = pos
+
+@rpc("reliable", "any_peer")
+func destroy_item(index):
+	if itemHandler.get_child_count() <= index:
+		return #cant delete something that never existed
+	else:
+		itemHandler.get_child(index).call_deferred("queue_free")
+	
+	pass
+
+func _on_item_handler_child_exiting_tree(node):
+	destroy_item.rpc(node.get_index())

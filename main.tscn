@@ -307,6 +307,8 @@ spawn_path = NodePath(".")
 _spawnable_scenes = PackedStringArray("res://world/peaceful_island.tscn", "res://world/world_1.tscn", "res://world/world_2.tscn", "res://debug/debug_world.tscn", "res://world/gm_construct.tscn", "res://world/skywars_prot_rainy.tscn")
 spawn_path = NodePath(".")
 
+[node name="itemHandler" type="Node3D" parent="."]
+
 [node name="chat_display" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
@@ -370,3 +372,4 @@ metadata/_edit_use_anchors_ = true
 [connection signal="button_down" from="Control/skinEditor" to="." method="_on_skin_editor_button_down"]
 [connection signal="button_down" from="pauseMenu/VBoxContainer/Resume" to="." method="_on_resume_button_down"]
 [connection signal="button_down" from="pauseMenu/VBoxContainer/leave" to="." method="_on_leave_button_down"]
+[connection signal="child_exiting_tree" from="itemHandler" to="." method="_on_item_handler_child_exiting_tree"]
