@@ -1092,7 +1092,7 @@ func process_interact_data(data, normal, hit):
 	match data[0]:
 		Lookup.interact_return_code.is_item: 
 			if Inventory.pickup_item(data[1], !normal):#is item should pick it up
-				hit.call_deferred("queue_free")
+				hit.destroy()
 			else:
 				print("cant pick up inventory full")
 

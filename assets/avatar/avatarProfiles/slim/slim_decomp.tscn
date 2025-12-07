@@ -1,0 +1,33 @@
+[gd_scene load_steps=10 format=3 uid="uid://c8xyg3bqueku7"]
+
+[ext_resource type="PackedScene" uid="uid://ch6yhuonh8542" path="res://assets/avatar/avatarProfiles/slim/left_foot_slim.tscn" id="1_sccyp"]
+[ext_resource type="PackedScene" uid="uid://kx7y2p102ev8" path="res://assets/avatar/avatarProfiles/slim/left_leg_1_slim.tscn" id="2_covkl"]
+[ext_resource type="PackedScene" uid="uid://w5s5qh5ra7ua" path="res://assets/avatar/avatarProfiles/slim/right_foot_slim.tscn" id="3_2jl1h"]
+[ext_resource type="PackedScene" uid="uid://wqwblucerq5v" path="res://assets/avatar/avatarProfiles/slim/right_leg_1_slim.tscn" id="4_17fni"]
+[ext_resource type="PackedScene" uid="uid://hyyj6lnsqmjl" path="res://assets/avatar/avatarProfiles/slim/left_arm_2_slim.tscn" id="5_f6eb6"]
+[ext_resource type="PackedScene" uid="uid://ccqycttqv05sl" path="res://assets/avatar/avatarProfiles/slim/left_arm_1_slim.tscn" id="6_m8r1l"]
+[ext_resource type="PackedScene" uid="uid://ciiylvbsmieel" path="res://assets/avatar/avatarProfiles/slim/right_arm_2_slim.tscn" id="7_0jq64"]
+[ext_resource type="PackedScene" uid="uid://cl8wowgipqpg2" path="res://assets/avatar/avatarProfiles/slim/right_arm_1_slim.tscn" id="8_vr2yr"]
+[ext_resource type="PackedScene" uid="uid://bnrbmbpwjllm0" path="res://assets/avatar/avatarProfiles/slim/torso_slim.tscn" id="9_6jxpw"]
+
+[node name="slimDecomp" type="Node3D"]
+
+[node name="playerAvatarSlim" type="Node3D" parent="."]
+
+[node name="leftFootSlim" parent="playerAvatarSlim" instance=ExtResource("1_sccyp")]
+
+[node name="leftLeg1Slim" parent="playerAvatarSlim" instance=ExtResource("2_covkl")]
+
+[node name="rightFootSlim" parent="playerAvatarSlim" instance=ExtResource("3_2jl1h")]
+
+[node name="rightLeg1Slim" parent="playerAvatarSlim" instance=ExtResource("4_17fni")]
+
+[node name="leftArm2Slim" parent="playerAvatarSlim" instance=ExtResource("5_f6eb6")]
+
+[node name="leftArm1Slim" parent="playerAvatarSlim" instance=ExtResource("6_m8r1l")]
+
+[node name="rightArm2Slim" parent="playerAvatarSlim" instance=ExtResource("7_0jq64")]
+
+[node name="rightArm1Slim" parent="playerAvatarSlim" instance=ExtResource("8_vr2yr")]
+
+[node name="torsoSlim" parent="playerAvatarSlim" instance=ExtResource("9_6jxpw")]

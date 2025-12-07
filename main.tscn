@@ -372,4 +372,3 @@ metadata/_edit_use_anchors_ = true
 [connection signal="button_down" from="Control/skinEditor" to="." method="_on_skin_editor_button_down"]
 [connection signal="button_down" from="pauseMenu/VBoxContainer/Resume" to="." method="_on_resume_button_down"]
 [connection signal="button_down" from="pauseMenu/VBoxContainer/leave" to="." method="_on_leave_button_down"]
-[connection signal="child_exiting_tree" from="itemHandler" to="." method="_on_item_handler_child_exiting_tree"]

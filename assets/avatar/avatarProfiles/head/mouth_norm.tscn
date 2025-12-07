@@ -1,0 +1,47 @@
+[gd_scene load_steps=5 format=3 uid="uid://cbog6x42ahnc"]
+
+[ext_resource type="Texture2D" uid="uid://cc1h6luk1w0po" path="res://assets/glb/avatarProfiles/playerAvatarHeadNorm_128x-dapper128Secondary.png" id="1_muca7"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5qe4c"]
+resource_name = "skin1"
+transparency = 4
+cull_mode = 2
+albedo_texture = ExtResource("1_muca7")
+texture_filter = 2
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_1hd0o"]
+_surfaces = [{
+"aabb": AABB(-0.12518, -0.000552177, 0.162444, 0.25036, 0.107297, 9.99868e-06),
+"format": 34896613377,
+"index_count": 6,
+"index_data": PackedByteArray(3, 0, 0, 0, 1, 0, 3, 0, 2, 0, 0, 0),
+"name": "skin1",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0)
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_jk6ra"]
+resource_name = "playerAvatarHeadNorm_Cube_054"
+_surfaces = [{
+"aabb": AABB(-0.12518, -0.000552177, 0.162444, 0.25036, 0.107297, 9.99868e-06),
+"attribute_data": PackedByteArray(0, 0, 255, 5, 0, 0, 0, 0, 255, 13, 255, 5, 255, 13, 0, 0),
+"format": 34896613399,
+"index_count": 6,
+"index_data": PackedByteArray(3, 0, 0, 0, 1, 0, 3, 0, 2, 0, 0, 0),
+"material": SubResource("StandardMaterial3D_5qe4c"),
+"name": "skin1",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 255, 127, 0, 0, 255, 255, 0, 0, 255, 127, 255, 255, 0, 0, 0, 0, 255, 127, 255, 255, 255, 255, 0, 0, 255, 127, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255)
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_1hd0o")
+
+[node name="mouthNorm" type="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13938, -0.00323021)
+mesh = SubResource("ArrayMesh_jk6ra")
+skeleton = NodePath("")

@@ -46,12 +46,12 @@ var hotbar = [
 	"", #1
 	"short_bow", #2
 	"magic_bow", #3
-	"", #4
-	"", #5
-	"", #6
-	"", #7
-	"debug_speed_boot_R", #8
-	"" #9
+	"rusted_copper_leggings", #4
+	"copper_chestplate", #5
+	"copper_helmet", #6
+	"rusted_copper_helmet", #7
+	"rusted_iron_helmet", #8
+	"iron_helmet" #9
 ]
 
 var held_item = 0 # 0 - 9 for hotbar
@@ -157,10 +157,10 @@ const accessories_accepted_item_types = {
 	#armor and clothes
 	"cape" : Lookup.itemType.accessories_cape,
 	"shirt" : Lookup.itemType.accessories_shirt,
-	"chestplate" : Lookup.itemType.accessories_shirt,
+	"chestplate" : Lookup.itemType.accessories_chestplate,
 	"hat" : Lookup.itemType.accessories_hat,
 	"pants" : Lookup.itemType.accessories_pants,
-	"leggings" : Lookup.itemType.accessories_pants,
+	"leggings" : Lookup.itemType.accessories_leggings,
 	"gloveR" : Lookup.itemType.accessories_gloves,
 	"gloveL" : Lookup.itemType.accessories_gloves,
 	"shoeR" : Lookup.itemType.accessories_shoes,

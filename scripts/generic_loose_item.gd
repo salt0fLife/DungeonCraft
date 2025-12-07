@@ -53,6 +53,9 @@ func interact():
 	return [Lookup.interact_return_code.is_item, item_key]
 	#[interact_return_code,item_data]
 
-
+signal destroyed
+func destroy():
+	emit_signal("destroyed", self)
+	call_deferred("queue_free")
 
 

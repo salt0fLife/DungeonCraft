@@ -1,0 +1,52 @@
+[gd_scene load_steps=5 format=3 uid="uid://33c3bp5s7mxc"]
+
+[ext_resource type="Texture2D" uid="uid://dv6mtae0yib0" path="res://assets/glb/avatarProfiles/playerAvatarHeadNorm_eyes.png" id="1_qwymo"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b7oen"]
+resource_name = "eyes"
+transparency = 4
+cull_mode = 2
+albedo_texture = ExtResource("1_qwymo")
+emission_enabled = true
+emission_texture = ExtResource("1_qwymo")
+uv1_scale = Vector3(2, 2, 1)
+uv1_offset = Vector3(-9.96, 31.5, 0)
+texture_filter = 2
+texture_repeat = false
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_0pwwp"]
+_surfaces = [{
+"aabb": AABB(-0.0986319, 0.105928, 0.163494, 0.197264, 0.0732954, 9.99868e-06),
+"format": 34896613377,
+"index_count": 12,
+"index_data": PackedByteArray(0, 0, 3, 0, 2, 0, 0, 0, 1, 0, 3, 0, 4, 0, 7, 0, 5, 0, 4, 0, 6, 0, 7, 0),
+"name": "eyes",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray(228, 160, 246, 255, 0, 0, 0, 0, 255, 255, 246, 255, 0, 0, 0, 0, 228, 160, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 26, 95, 246, 255, 0, 0, 0, 0, 0, 0, 246, 255, 0, 0, 0, 0, 26, 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_tp3xp"]
+resource_name = "playerAvatarHeadNorm_Plane_012"
+_surfaces = [{
+"aabb": AABB(-0.0986319, 0.105928, 0.163494, 0.197264, 0.0732954, 9.99868e-06),
+"attribute_data": PackedByteArray(65, 0, 65, 0, 189, 255, 65, 0, 65, 0, 189, 255, 189, 255, 189, 255, 189, 255, 65, 0, 65, 0, 65, 0, 189, 255, 189, 255, 65, 0, 189, 255),
+"format": 34896613399,
+"index_count": 12,
+"index_data": PackedByteArray(0, 0, 3, 0, 2, 0, 0, 0, 1, 0, 3, 0, 4, 0, 7, 0, 5, 0, 4, 0, 6, 0, 7, 0),
+"material": SubResource("StandardMaterial3D_b7oen"),
+"name": "eyes",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray(228, 160, 246, 255, 0, 0, 255, 127, 255, 255, 246, 255, 0, 0, 255, 127, 228, 160, 0, 0, 0, 0, 255, 127, 255, 255, 0, 0, 0, 0, 255, 127, 26, 95, 246, 255, 0, 0, 255, 127, 0, 0, 246, 255, 0, 0, 255, 127, 26, 95, 0, 0, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 255, 127, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255)
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_0pwwp")
+
+[node name="eyesNorm" type="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13938, -0.00323021)
+mesh = SubResource("ArrayMesh_tp3xp")
+skeleton = NodePath("")

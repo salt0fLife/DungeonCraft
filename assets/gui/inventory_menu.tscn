@@ -14,7 +14,7 @@
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_d5ftn"]
 blend_mode = 3
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8g4lp"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ved8"]
 resource_name = "eyeBrows"
 transparency = 2
 alpha_scissor_threshold = 0.5
@@ -112,52 +112,52 @@ fov = 30.0
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, -0.774223, 0)
 
 [node name="chestBase" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, 0.000548102, -0.0196792, 0.000153183)
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, 0.00384646, -0.00767003, 0.000153183)
 
 [node name="hip_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="0"]
-transform = Transform3D(0.995002, -0.011112, 0.0992128, 0, 0.993778, 0.111306, -0.0998332, -0.11075, 0.988819, 0.075, -0.282, -0.001)
+transform = Transform3D(0.995002, -0.00753121, 0.0995487, 0, 0.997142, 0.0754382, -0.0998332, -0.0750609, 0.992167, 0.075, -0.282, -0.001)
 
 [node name="knee_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/hip_L" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.993504, -0.113791, 0, 0.113791, 0.993504, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.996958, -0.0779309, 0, 0.0779309, 0.996958, 0, -0.274171, 0)
 
 [node name="hip_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="1"]
-transform = Transform3D(0.995003, 0.0111121, -0.0992129, 0, 0.993782, 0.111306, 0.0998333, -0.11075, 0.98882, -0.075, -0.282, -0.001)
+transform = Transform3D(0.995003, 0.00753124, -0.0995488, 0, 0.997146, 0.0754382, 0.0998333, -0.0750612, 0.992168, -0.075, -0.282, -0.001)
 
 [node name="knee_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/hip_R" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.993502, -0.11379, 0, 0.11379, 0.993502, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.996956, -0.0779308, 0, 0.0779308, 0.996956, 0, -0.274171, 0)
 
 [node name="neck" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="2"]
 transform = Transform3D(1, 0, 0, 0, 0.999297, 0.0374911, 0, -0.0374912, 0.999295, 0, 0.289384, -0.00323021)
 
 [node name="eyeBrows_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="0"]
-surface_material_override/0 = SubResource("StandardMaterial3D_8g4lp")
+surface_material_override/0 = SubResource("StandardMaterial3D_7ved8")
 
 [node name="eyeBrows_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
-surface_material_override/0 = SubResource("StandardMaterial3D_8g4lp")
+surface_material_override/0 = SubResource("StandardMaterial3D_7ved8")
 
 [node name="nameTag" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="11"]
 visible = false
 
 [node name="shoulder_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="3"]
-transform = Transform3D(0.998473, -0.0549969, 0.00496672, 0.0547874, 0.997866, 0.0354405, -0.00690526, -0.0351143, 0.999358, 0.14978, 0.241, -0.0014265)
+transform = Transform3D(0.999896, -0.0140097, -0.00319443, 0.0140269, 0.999884, 0.00542504, 0.00311807, -0.00546928, 0.999979, 0.14978, 0.241, -0.0014265)
 
 [node name="elbowL" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999779, 0.0209598, 0, -0.0209598, 0.999779, 0.0786937, -0.240458, -0.002611)
+transform = Transform3D(1, 0, 0, 0, 0.997732, 0.0672938, 0, -0.0672938, 0.997732, 0.0786937, -0.240458, -0.002611)
 
 [node name="shoulder_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="4"]
-transform = Transform3D(0.998474, 0.0549969, -0.00496672, -0.0547874, 0.997866, 0.0354406, 0.00690527, -0.0351143, 0.999359, -0.15, 0.241, -0.001)
+transform = Transform3D(0.999897, 0.0140097, 0.00319443, -0.0140269, 0.999884, 0.00542504, -0.00311807, -0.00546928, 0.99998, -0.15, 0.241, -0.001)
 
 [node name="elbowR" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/shoulder_R" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999779, 0.0209598, 0, -0.0209598, 0.999779, -0.0786937, -0.240458, -0.00261103)
+transform = Transform3D(1, 0, 0, 0, 0.997732, 0.0672938, 0, -0.0672938, 0.997732, -0.0786937, -0.240458, -0.00261103)
 
 [node name="tailBase" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="9"]
-transform = Transform3D(0.918408, -0.329295, 0.21929, 0, 0.554279, 0.83233, -0.39563, -0.76442, 0.509055, 0, 0, -0.088)
+transform = Transform3D(0.908505, -0.346674, 0.233307, 0, 0.558325, 0.829621, -0.417869, -0.753716, 0.507242, 0, 0, -0.088)
 
 [node name="tailMiddle" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/tailBase" index="0"]
-transform = Transform3D(0.95479, -0.0541755, -0.292302, 0, 0.983255, -0.182236, 0.29728, 0.173998, 0.9388, 0, 0, 0)
+transform = Transform3D(0.958608, -0.0518881, -0.279961, 0, 0.983255, -0.182236, 0.284729, 0.174694, 0.942554, 0, 0, 0)
 
 [node name="tailLast" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/tailBase/tailMiddle" index="0"]
-transform = Transform3D(0.973971, -0.0643809, -0.217347, 0, 0.95882, -0.284014, 0.226682, 0.276621, 0.93386, 0, 0, 0)
+transform = Transform3D(0.976176, -0.0616283, -0.208054, 0, 0.95882, -0.284014, 0.216991, 0.277247, 0.935974, 0, 0, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="accessories/preview_window/SubViewport/SubViewport"]
 

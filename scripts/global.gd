@@ -84,3 +84,52 @@ func _on_chat(text):
 
 func create_loose_item(key, position):
 	emit_signal("create_item", key, position)
+
+const bone_names = [
+	"torso",
+	"hip_L",
+	"knee_L",
+	"hip_R",
+	"knee_R",
+	"neck",
+	"shoulder_L",
+	"elbowL",
+	"shoulder_R",
+	"elbowR",
+	"tail",
+	"tail_001",
+	"tail_002",
+	"eyebrows_L",
+	"eyebrows_R"
+]
+
+
+const avatar_profiles = {
+	"normal" : [
+	"res://assets/avatar/avatarProfiles/normal/torso_norm.tscn",
+	"res://assets/avatar/avatarProfiles/normal/left_leg_1_norm.tscn",
+	"res://assets/avatar/avatarProfiles/normal/left_foot_norm.tscn",
+	"res://assets/avatar/avatarProfiles/normal/right_leg_1_norm.tscn",
+	"res://assets/avatar/avatarProfiles/normal/right_foot_norm.tscn",
+	"res://assets/avatar/avatarProfiles/head/head_norm.tscn",
+	"res://assets/avatar/avatarProfiles/normal/left_arm_1_norm.tscn",
+	"res://assets/avatar/avatarProfiles/normal/left_arm_2_norm.tscn",
+	"res://assets/avatar/avatarProfiles/normal/right_arm_1_norm.tscn",
+	"res://assets/avatar/avatarProfiles/normal/right_arm_2_norm.tscn",
+	],
+	"slim" : [
+	"res://assets/avatar/avatarProfiles/slim/torso_slim.tscn",
+	"res://assets/avatar/avatarProfiles/slim/left_leg_1_slim.tscn",
+	"res://assets/avatar/avatarProfiles/slim/left_foot_slim.tscn",
+	"res://assets/avatar/avatarProfiles/slim/right_leg_1_slim.tscn",
+	"res://assets/avatar/avatarProfiles/slim/right_foot_slim.tscn",
+	"res://assets/avatar/avatarProfiles/head/head_norm.tscn",
+	"res://assets/avatar/avatarProfiles/slim/left_arm_1_slim.tscn",
+	"res://assets/avatar/avatarProfiles/slim/left_arm_2_slim.tscn",
+	"res://assets/avatar/avatarProfiles/slim/right_arm_1_slim.tscn",
+	"res://assets/avatar/avatarProfiles/slim/right_arm_2_slim.tscn",
+	]
+	
+	
+	
+}

@@ -1,0 +1,33 @@
+[gd_scene load_steps=10 format=3 uid="uid://d2si0c28wr5xw"]
+
+[ext_resource type="PackedScene" uid="uid://2mg0txhhwrx5" path="res://assets/avatar/avatarProfiles/normal/left_foot_norm.tscn" id="1_yb1xg"]
+[ext_resource type="PackedScene" uid="uid://vu6npk7m024o" path="res://assets/avatar/avatarProfiles/normal/left_leg_1_norm.tscn" id="2_umat3"]
+[ext_resource type="PackedScene" uid="uid://g3voy5yohalg" path="res://assets/avatar/avatarProfiles/normal/right_foot_norm.tscn" id="3_58hro"]
+[ext_resource type="PackedScene" uid="uid://jcxwfcj40tkh" path="res://assets/avatar/avatarProfiles/normal/right_leg_1_norm.tscn" id="4_7jueh"]
+[ext_resource type="PackedScene" uid="uid://dwvq7bou2g175" path="res://assets/avatar/avatarProfiles/normal/left_arm_2_norm.tscn" id="5_hacqi"]
+[ext_resource type="PackedScene" uid="uid://c6d3q7uqdbg60" path="res://assets/avatar/avatarProfiles/normal/left_arm_1_norm.tscn" id="6_5afd1"]
+[ext_resource type="PackedScene" uid="uid://5fdkt46r3d3u" path="res://assets/avatar/avatarProfiles/normal/right_arm_2_norm.tscn" id="7_d6ec4"]
+[ext_resource type="PackedScene" uid="uid://6auorb7ldl7v" path="res://assets/avatar/avatarProfiles/normal/right_arm_1_norm.tscn" id="8_2ajx5"]
+[ext_resource type="PackedScene" uid="uid://rptrx6feun7i" path="res://assets/avatar/avatarProfiles/normal/torso_norm.tscn" id="9_pnc1e"]
+
+[node name="decomp" type="Node3D"]
+
+[node name="playerAvatarNorm" type="Node3D" parent="."]
+
+[node name="leftFootNorm" parent="playerAvatarNorm" instance=ExtResource("1_yb1xg")]
+
+[node name="leftLeg1Norm" parent="playerAvatarNorm" instance=ExtResource("2_umat3")]
+
+[node name="rightFootNorm" parent="playerAvatarNorm" instance=ExtResource("3_58hro")]
+
+[node name="rightLeg1Norm" parent="playerAvatarNorm" instance=ExtResource("4_7jueh")]
+
+[node name="leftArm2Norm" parent="playerAvatarNorm" instance=ExtResource("5_hacqi")]
+
+[node name="leftArm1Norm" parent="playerAvatarNorm" instance=ExtResource("6_5afd1")]
+
+[node name="rightArm2Norm" parent="playerAvatarNorm" instance=ExtResource("7_d6ec4")]
+
+[node name="rightArm1Norm" parent="playerAvatarNorm" instance=ExtResource("8_2ajx5")]
+
+[node name="torsoNorm" parent="playerAvatarNorm" instance=ExtResource("9_pnc1e")]

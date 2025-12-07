@@ -464,7 +464,9 @@ func add_item_to_world(key, pos):
 	var li = loose_item.instantiate()
 	li.position = pos
 	li.item_key = key
+	li.connect("destroyed", _on_item_destruction)
 	itemHandler.add_child(li)
+	
 
 var item_sync_index = 0
 func _process(delta):
@@ -475,23 +477,33 @@ func _process(delta):
 		if itemHandler.get_child_count() <= item_sync_index:
 			item_sync_index = 0
 		var item = itemHandler.get_child(item_sync_index)
-		sync_item.rpc(item_sync_index, item.position, item.item_key)
+		sync_item.rpc(item_sync_index, item.position, item.item_key, itemHandler.get_child_count())
 
 @rpc("call_remote","reliable")
-func sync_item(index, pos, key):
+func sync_item(index, pos, key, total_items):
 	if itemHandler.get_child_count() <= index:
-		add_item_to_world(key, pos)
+		add_item_to_world(key, pos) #adds item if not already there
 	else:
-		itemHandler.get_child(index).position = pos
+		var ti = itemHandler.get_child(index)
+		ti.position = pos
+		if ti.item_key != key: #items do not match, make match
+			ti.item_key = key
+			#need to make update_graphics func in gli
+	if total_items > itemHandler.get_child_count():
+		var dif = itemHandler.get_child_count() - total_items
+		for i in range(0,dif):
+			itemHandler.get_child(total_items+dif).queue_free()
+
+
 
 @rpc("reliable", "any_peer")
 func destroy_item(index):
 	if itemHandler.get_child_count() <= index:
 		return #cant delete something that never existed
 	else:
-		itemHandler.get_child(index).call_deferred("queue_free")
+		itemHandler.get_child(index).queue_free()#call_deferred("queue_free")
 	
 	pass
 
-func _on_item_handler_child_exiting_tree(node):
+func _on_item_destruction(node):
 	destroy_item.rpc(node.get_index())
