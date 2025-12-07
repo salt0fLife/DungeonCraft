@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://b4sp02a61ff46"]
+
+[ext_resource type="PackedScene" uid="uid://33c3bp5s7mxc" path="res://assets/avatar/avatarProfiles/head/eyes_norm.tscn" id="1_xftum"]
+[ext_resource type="PackedScene" uid="uid://cl4h68t46k147" path="res://assets/avatar/avatarProfiles/head/head_norm.tscn" id="2_qwvvx"]
+[ext_resource type="PackedScene" uid="uid://cbog6x42ahnc" path="res://assets/avatar/avatarProfiles/head/mouth_norm.tscn" id="3_8070n"]
+
+[node name="headDecomp" type="Node3D"]
+
+[node name="playerAvatarHeadNorm" type="Node3D" parent="."]
+
+[node name="eyesNorm" parent="playerAvatarHeadNorm" instance=ExtResource("1_xftum")]
+
+[node name="headNorm" parent="playerAvatarHeadNorm" instance=ExtResource("2_qwvvx")]
+
+[node name="mouthNorm" parent="playerAvatarHeadNorm" instance=ExtResource("3_8070n")]

@@ -27,10 +27,18 @@ enum itemType {
 	crafting_throwable, #[damage]
 	accessories_cape, #[[[scene_path, bone_parent_index],[scene_path, bone_parent_index]], {attribute_modifiers}]
 	accessories_shirt,
+	accessories_chestplate,
 	accessories_hat,
 	accessories_pants,
 	accessories_gloves,
 	accessories_shoes,
+	accessories_leggings,
+	accessories_greaves,
+	accessories_necklace,
+	accessories_ring,
+	accessories_crown,
+	accessories_bracelet,
+	accessories_belt,
 	racial_changes,
 	subclass_changes,
 	weapons_sword, #[damage, range, damage_stab, block_defense]
@@ -96,6 +104,15 @@ const items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonu
 	"debug_speed_boot_L" : ["speed boots 2", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 2]], {"speed" : +0.25, "speed_multiplier" : +0.5, "defense_footL" : +0.1}], "","debug_speed_boots"],
 	"debug_speed_boot_R" : ["speed boots 2", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 4]], {"speed" : +0.25, "speed_multiplier" : +0.5, "defense_footR" : +0.1}], "","debug_speed_boots"],
 	
+	##armor
+	"rusted_copper_helmet" : ["rusted copper helmet", "res://assets/itemGraphics/armor/rustedCopper/rustedCopperHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/rustedCopper/rustedCopperHelmet.glb", 5]], {"defense_head" : +0.1, "speed": -0.1}], "res://assets/textures/items/rusted copper helmet tn.png"],
+	"copper_helmet" : ["copper helmet", "res://assets/itemGraphics/armor/copper/copperHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/copper/copperHelmet.glb", 5]], {"defense_head" : +0.2, "speed": -0.1}], "res://assets/textures/items/copper helmet tn.png"],
+	"rusted_iron_helmet" : ["rusted iron helmet", "res://assets/itemGraphics/armor/rustedIron/rustedIronHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/rustedIron/rustedIronHelmet.glb", 5]], {"defense_head" : +0.2, "speed": -0.15}], "res://assets/textures/items/rusted iron helmet tn.png"],
+	"iron_helmet" : ["iron helmet", "res://assets/itemGraphics/armor/iron/ironHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/iron/ironHelmet.glb", 5]], {"defense_head" : +0.4, "speed": -0.15}], "res://assets/textures/items/iron helmet tn.png"],
+	"copper_chestplate" : ["copper chestplate", "res://assets/itemGraphics/armor/copper/CopperChestplate.glb", itemType.accessories_chestplate, [[["res://assets/itemGraphics/armor/copper/CopperChestplate.glb", 0],["res://assets/itemGraphics/armor/copper/CopperPauldronL.glb", 6],["res://assets/itemGraphics/armor/copper/CopperPauldronR.glb", 8]], {"defense_body" : +0.2,"defense_arms" : +0.2, "speed": -0.2}], "res://assets/textures/items/copper chestplate tn.png"],
+	"rusted_copper_leggings" : ["rusted copper leggings", "res://assets/itemGraphics/armor/rustedCopper/rustedCopperGreavesR.glb", itemType.accessories_leggings, [[["res://assets/itemGraphics/armor/rustedCopper/rustedCopperGreavesR.glb", 1],["res://assets/itemGraphics/armor/rustedCopper/rustedCopperGreavesL.glb", 3]], {"defense_legs" : +0.1, "speed": -0.2}], "res://assets/textures/items/rusted copper greaves tn.png"],
+	
+	
 	##racial accessories
 	"debug_tail" : ["debug tail", "res://accessories/racial/tail_debug.tscn", itemType.racial_changes, [[["res://accessories/racial/tail_debug.tscn", 0]], {"size" = -0.25}], ""],
 	
@@ -118,3 +135,8 @@ enum statusEffectType {
 	tripping
 }
 
+enum interact_return_code {
+	dont_do_anything, #returns null
+	is_item, #returns item_key that should be picked up
+	print, #returns a string that should be printed
+}

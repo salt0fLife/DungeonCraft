@@ -24,7 +24,7 @@ data = PackedVector3Array(0.0736, -0.305, -0.1433, -0.0755, -0.305, 0.05, 0.0737
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_6mvmu"]
 data = PackedVector3Array(0.0694, -0.2676, -0.1165, -0.0797, 0.0041, -0.1165, -0.0797, -0.2676, -0.1165, 0.0694, -0.2676, -0.1165, 0.0694, 0.0041, -0.1165, -0.0797, 0.0041, -0.1165, -0.0797, -0.2676, -0.1165, -0.0797, 0.0041, 0.0768, -0.0797, -0.2676, 0.0768, -0.0797, -0.2676, -0.1165, -0.0797, 0.0041, -0.1165, -0.0797, 0.0041, 0.0768, -0.0797, 0.0041, -0.1165, 0.0694, 0.0041, 0.0768, -0.0797, 0.0041, 0.0768, -0.0797, 0.0041, -0.1165, 0.0694, 0.0041, -0.1165, 0.0694, 0.0041, 0.0768, -0.0797, -0.2676, 0.0768, 0.0694, 0.0041, 0.0768, 0.0694, -0.2676, 0.0768, -0.0797, -0.2676, 0.0768, -0.0797, 0.0041, 0.0768, 0.0694, 0.0041, 0.0768, 0.0694, 0.0041, 0.0768, 0.0694, -0.2676, -0.1165, 0.0694, -0.2676, 0.0768, 0.0694, 0.0041, 0.0768, 0.0694, 0.0041, -0.1165, 0.0694, -0.2676, -0.1165, 0.0694, -0.2676, 0.0768, -0.0797, -0.2676, -0.1165, -0.0797, -0.2676, 0.0768, 0.0694, -0.2676, 0.0768, 0.0694, -0.2676, -0.1165, -0.0797, -0.2676, -0.1165)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f522p"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tt123"]
 resource_name = "eyeBrows"
 transparency = 2
 alpha_scissor_threshold = 0.5
@@ -627,13 +627,13 @@ script = ExtResource("1_rca1e")
 [node name="playerAvatar" parent="." instance=ExtResource("2_841cm")]
 
 [node name="chestBase" parent="playerAvatar/genericAvatar/root" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999297, 0.000754714, -0.0145157, -0.0057213)
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999297, 0.00276302, -0.0267113, -0.0057213)
 
-[node name="hip_L" parent="playerAvatar/genericAvatar/root/chestBase" index="0"]
-transform = Transform3D(0.995003, -0.00957391, 0.0993734, 0, 0.995383, 0.0958997, -0.0998333, -0.0954198, 0.990419, 0.075, -0.282, -0.001)
+[node name="hip_L" parent="playerAvatar/genericAvatar/root/chestBase" index="1"]
+transform = Transform3D(0.995003, -0.0132024, 0.0989567, 0, 0.991208, 0.132245, -0.0998333, -0.131583, 0.986266, 0.075, -0.282, -0.001)
 
-[node name="knee_L" parent="playerAvatar/genericAvatar/root/chestBase/hip_L" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.995137, -0.0983866, 0, 0.0983866, 0.995137, 0, -0.274171, 0)
+[node name="knee_L" parent="playerAvatar/genericAvatar/root/chestBase/hip_L" index="1"]
+transform = Transform3D(1, 0, 0, 0, 0.990871, -0.134721, 0, 0.134721, 0.990871, 0, -0.274171, 0)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/hip_L/knee_L" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -652,11 +652,11 @@ id = "legL"
 transform = Transform3D(1, 0, 0, -4.65661e-10, 1, -1.49012e-08, -2.23517e-08, -7.45058e-09, 1, -0.0046076, -0.00506747, 0.0209225)
 shape = SubResource("ConcavePolygonShape3D_bllhi")
 
-[node name="hip_R" parent="playerAvatar/genericAvatar/root/chestBase" index="1"]
-transform = Transform3D(0.995004, 0.00957389, -0.099373, 0, 0.995381, 0.0958994, 0.0998334, -0.0954196, 0.990416, -0.075, -0.282, -0.001)
+[node name="hip_R" parent="playerAvatar/genericAvatar/root/chestBase" index="2"]
+transform = Transform3D(0.995004, 0.0132024, -0.0989563, 0, 0.991206, 0.132245, 0.0998334, -0.131583, 0.986262, -0.075, -0.282, -0.001)
 
-[node name="knee_R" parent="playerAvatar/genericAvatar/root/chestBase/hip_R" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.995139, -0.0983869, 0, 0.0983869, 0.995139, 0, -0.274171, 0)
+[node name="knee_R" parent="playerAvatar/genericAvatar/root/chestBase/hip_R" index="1"]
+transform = Transform3D(1, 0, 0, 0, 0.990874, -0.134722, 0, 0.134722, 0.990874, 0, -0.274171, 0)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/hip_R/knee_R" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -675,14 +675,14 @@ id = "legR"
 transform = Transform3D(1, -4.65661e-10, -7.45058e-09, -4.65661e-10, 1, 0, 0, 0, 1, 0.00594004, -0.0050438, 0.0209496)
 shape = SubResource("ConcavePolygonShape3D_6mvmu")
 
-[node name="neck" parent="playerAvatar/genericAvatar/root/chestBase" index="2"]
+[node name="neck" parent="playerAvatar/genericAvatar/root/chestBase" index="3"]
 transform = Transform3D(1, 0, 0, 0, 0.999296, 0.0374911, 0, -0.0374912, 0.999295, 0, 0.289384, -0.00323021)
 
-[node name="eyeBrows_L" parent="playerAvatar/genericAvatar/root/chestBase/neck" index="0"]
-surface_material_override/0 = SubResource("StandardMaterial3D_f522p")
+[node name="eyeBrows_L" parent="playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
+surface_material_override/0 = SubResource("StandardMaterial3D_tt123")
 
-[node name="eyeBrows_R" parent="playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
-surface_material_override/0 = SubResource("StandardMaterial3D_f522p")
+[node name="eyeBrows_R" parent="playerAvatar/genericAvatar/root/chestBase/neck" index="2"]
+surface_material_override/0 = SubResource("StandardMaterial3D_tt123")
 
 [node name="voicePlayer" type="AudioStreamPlayer3D" parent="playerAvatar/genericAvatar/root/chestBase/neck" index="11"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
@@ -704,11 +704,11 @@ damage_mult = 1.5
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.65661e-10, 0.142511, 0.0193813)
 shape = SubResource("ConcavePolygonShape3D_hok5u")
 
-[node name="shoulder_L" parent="playerAvatar/genericAvatar/root/chestBase" index="3"]
-transform = Transform3D(0.999963, -0.00517493, -0.00494139, 0.00528501, 0.999727, 0.0225372, 0.00482343, -0.0225629, 0.999723, 0.14978, 0.241, -0.0014265)
+[node name="shoulder_L" parent="playerAvatar/genericAvatar/root/chestBase" index="4"]
+transform = Transform3D(0.998677, -0.0510341, 0.0041613, 0.0507422, 0.9973, 0.0530027, -0.00685505, -0.0527224, 0.998574, 0.14978, 0.241, -0.0014265)
 
 [node name="elbowL" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999753, 0.0218208, 0, -0.0218208, 0.999753, 0.0786937, -0.240458, -0.002611)
+transform = Transform3D(1, 0, 0, 0, 0.999003, 0.0444146, 0, -0.0444146, 0.999003, 0.0786937, -0.240458, -0.002611)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_L/elbowL" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -727,11 +727,11 @@ id = "armL"
 transform = Transform3D(1, -1.04774e-09, 0, -1.09867e-09, 1, 0, 0, 1.86265e-09, 1, -0.00637262, 0.00831723, 0.0028315)
 shape = SubResource("ConcavePolygonShape3D_s58j1")
 
-[node name="shoulder_R" parent="playerAvatar/genericAvatar/root/chestBase" index="4"]
-transform = Transform3D(0.999963, 0.00517491, 0.00494139, -0.00528501, 0.999724, 0.0225372, -0.00482343, -0.0225628, 0.999724, -0.14978, 0.241, -0.00142637)
+[node name="shoulder_R" parent="playerAvatar/genericAvatar/root/chestBase" index="5"]
+transform = Transform3D(0.998677, 0.0510339, -0.0041613, -0.0507422, 0.997296, 0.0530028, 0.00685505, -0.0527222, 0.998575, -0.14978, 0.241, -0.00142637)
 
 [node name="elbowR" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_R" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999751, 0.0218207, 0, -0.0218207, 0.999751, -0.0786937, -0.240458, -0.00261103)
+transform = Transform3D(1, 0, 0, 0, 0.999003, 0.0444146, 0, -0.0444146, 0.999003, -0.0786937, -0.240458, -0.00261103)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_R/elbowR" index="4" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -753,15 +753,6 @@ id = "armR"
 transform = Transform3D(1, 1.23691e-10, 0, 2.04454e-09, 1, 0, -2.32831e-10, 1.86265e-09, 1, 0.00631981, 0.00793326, 0.00280035)
 shape = SubResource("ConcavePolygonShape3D_kvt2y")
 
-[node name="tailBase" parent="playerAvatar/genericAvatar/root/chestBase" index="9"]
-transform = Transform3D(0.911394, 0.375536, -0.168299, 0, 0.408964, 0.912544, 0.411524, -0.831691, 0.372729, 0, 0, -0.088)
-
-[node name="tailMiddle" parent="playerAvatar/genericAvatar/root/chestBase/tailBase" index="0"]
-transform = Transform3D(0.999965, -0.000530405, -0.00791603, 0, 0.997757, -0.0668537, 0.0079338, 0.0668515, 0.997725, 0, 0, 0)
-
-[node name="tailLast" parent="playerAvatar/genericAvatar/root/chestBase/tailBase/tailMiddle" index="0"]
-transform = Transform3D(0.999979, -0.000610884, -0.00597933, 0, 0.994822, -0.101635, 0.00601048, 0.101634, 0.994796, 0, 0, 0)
-
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase" index="10" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../..")
 id = "torso"
@@ -769,6 +760,15 @@ id = "torso"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="playerAvatar/genericAvatar/root/chestBase/hurtbox"]
 transform = Transform3D(1, -2.22045e-16, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("ConcavePolygonShape3D_ihomt")
+
+[node name="tailBase" parent="playerAvatar/genericAvatar/root/chestBase" index="11"]
+transform = Transform3D(0.878609, -0.392577, 0.271883, 0, 0.569347, 0.82209, -0.477533, -0.722298, 0.500235, 0, 0, -0.088)
+
+[node name="tailMiddle" parent="playerAvatar/genericAvatar/root/chestBase/tailBase" index="1"]
+transform = Transform3D(0.990081, -0.00939055, -0.140149, 0, 0.997757, -0.0668536, 0.140464, 0.0661908, 0.987865, 0, 0, 0)
+
+[node name="tailLast" parent="playerAvatar/genericAvatar/root/chestBase/tailBase/tailMiddle" index="1"]
+transform = Transform3D(0.994303, -0.0108305, -0.10601, 0, 0.994822, -0.101634, 0.106562, 0.101057, 0.989149, 0, 0, 0)
 
 [node name="accesories" type="Node3D" parent="playerAvatar"]
 
@@ -785,7 +785,7 @@ script = ExtResource("5_um1o0")
 
 [node name="look" type="RayCast3D" parent="playerAvatar/cameraHandler/bobbingHandler"]
 target_position = Vector3(0, 0, -4)
-collision_mask = 11
+collision_mask = 139
 collide_with_areas = true
 
 [node name="attack" type="RayCast3D" parent="playerAvatar/cameraHandler/bobbingHandler"]
@@ -902,6 +902,9 @@ mouthPath = NodePath("../../genericAvatar")
 [node name="lookReference" type="Node3D" parent="playerAvatar/cameraHandler"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 
+[node name="look_reference_check" type="RayCast3D" parent="playerAvatar/cameraHandler"]
+target_position = Vector3(0, 0, -1)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.747046, 0)
 shape = SubResource("CapsuleShape3D_0qdw2")
@@ -937,6 +940,23 @@ theme_override_colors/font_color = Color(0.768627, 0.2, 0.2, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 6
 text = "100"
+
+[node name="tooltip" type="Label" parent="UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("9_3pr1d")
+text = "tooltip!"
 
 [node name="spawnSounds" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("5_0xt38")

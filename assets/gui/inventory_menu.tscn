@@ -14,7 +14,7 @@
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_d5ftn"]
 blend_mode = 3
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vo0kf"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ved8"]
 resource_name = "eyeBrows"
 transparency = 2
 alpha_scissor_threshold = 0.5
@@ -112,49 +112,52 @@ fov = 30.0
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, -0.774223, 0)
 
 [node name="chestBase" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, 0.0041587, -0.00826493, 0.000153183)
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, 0.00384646, -0.00767003, 0.000153183)
 
 [node name="hip_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="0"]
-transform = Transform3D(0.995002, -0.00770886, 0.0995351, 0, 0.997006, 0.0772176, -0.0998332, -0.0768315, 0.99203, 0.075, -0.282, -0.001)
+transform = Transform3D(0.995002, -0.00753121, 0.0995487, 0, 0.997142, 0.0754382, -0.0998332, -0.0750609, 0.992167, 0.075, -0.282, -0.001)
 
 [node name="knee_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/hip_L" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.996818, -0.0797101, 0, 0.0797101, 0.996818, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.996958, -0.0779309, 0, 0.0779309, 0.996958, 0, -0.274171, 0)
 
 [node name="hip_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="1"]
-transform = Transform3D(0.995003, 0.00770888, -0.0995352, 0, 0.99701, 0.0772178, 0.0998333, -0.0768317, 0.992032, -0.075, -0.282, -0.001)
+transform = Transform3D(0.995003, 0.00753124, -0.0995488, 0, 0.997146, 0.0754382, 0.0998333, -0.0750612, 0.992168, -0.075, -0.282, -0.001)
 
 [node name="knee_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/hip_R" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.996816, -0.07971, 0, 0.07971, 0.996816, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.996956, -0.0779308, 0, 0.0779308, 0.996956, 0, -0.274171, 0)
+
+[node name="neck" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="2"]
+transform = Transform3D(1, 0, 0, 0, 0.999297, 0.0374911, 0, -0.0374912, 0.999295, 0, 0.289384, -0.00323021)
 
 [node name="eyeBrows_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="0"]
-surface_material_override/0 = SubResource("StandardMaterial3D_vo0kf")
+surface_material_override/0 = SubResource("StandardMaterial3D_7ved8")
 
 [node name="eyeBrows_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
-surface_material_override/0 = SubResource("StandardMaterial3D_vo0kf")
+surface_material_override/0 = SubResource("StandardMaterial3D_7ved8")
 
 [node name="nameTag" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="11"]
 visible = false
 
 [node name="shoulder_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="3"]
-transform = Transform3D(0.999866, -0.0161009, -0.00277576, 0.0161198, 0.999844, 0.00691226, 0.00266404, -0.00695607, 0.999971, 0.14978, 0.241, -0.0014265)
+transform = Transform3D(0.999896, -0.0140097, -0.00319443, 0.0140269, 0.999884, 0.00542504, 0.00311807, -0.00546928, 0.999979, 0.14978, 0.241, -0.0014265)
 
 [node name="elbowL" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.997162, 0.0752719, 0, -0.0752719, 0.997162, 0.0786937, -0.240458, -0.002611)
+transform = Transform3D(1, 0, 0, 0, 0.997732, 0.0672938, 0, -0.0672938, 0.997732, 0.0786937, -0.240458, -0.002611)
 
 [node name="shoulder_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="4"]
-transform = Transform3D(0.999867, 0.0161009, 0.00277576, -0.0161198, 0.999844, 0.00691226, -0.00266404, -0.00695607, 0.999972, -0.15, 0.241, -0.001)
+transform = Transform3D(0.999897, 0.0140097, 0.00319443, -0.0140269, 0.999884, 0.00542504, -0.00311807, -0.00546928, 0.99998, -0.15, 0.241, -0.001)
 
 [node name="elbowR" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/shoulder_R" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.997162, 0.0752719, 0, -0.0752719, 0.997162, -0.0786937, -0.240458, -0.00261103)
+transform = Transform3D(1, 0, 0, 0, 0.997732, 0.0672938, 0, -0.0672938, 0.997732, -0.0786937, -0.240458, -0.00261103)
 
 [node name="tailBase" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="9"]
-transform = Transform3D(0.926317, 0.342617, -0.156672, 0, 0.415863, 0.909426, 0.376739, -0.84242, 0.385221, 0, 0, -0.088)
+transform = Transform3D(0.908505, -0.346674, 0.233307, 0, 0.558325, 0.829621, -0.417869, -0.753716, 0.507242, 0, 0, -0.088)
 
 [node name="tailMiddle" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/tailBase" index="0"]
-transform = Transform3D(0.952293, 0.0556157, 0.300073, 0, 0.983255, -0.182236, -0.305184, 0.173543, 0.936345, 0, 0, 0)
+transform = Transform3D(0.958608, -0.0518881, -0.279961, 0, 0.983255, -0.182236, 0.284729, 0.174694, 0.942554, 0, 0, 0)
 
 [node name="tailLast" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/tailBase/tailMiddle" index="0"]
-transform = Transform3D(0.972529, 0.0661165, 0.223206, 0, 0.95882, -0.284015, -0.232793, 0.276212, 0.932477, 0, 0, 0)
+transform = Transform3D(0.976176, -0.0616283, -0.208054, 0, 0.95882, -0.284014, 0.216991, 0.277247, 0.935974, 0, 0, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="accessories/preview_window/SubViewport/SubViewport"]
 
@@ -499,5 +502,11 @@ texture = ExtResource("4_1g88p")
 [node name="itemPreview" parent="." instance=ExtResource("7_ud8gy")]
 visible = false
 layout_mode = 1
+
+[node name="held_item" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
 
 [editable path="accessories/preview_window/SubViewport/SubViewport/playerAvatar"]

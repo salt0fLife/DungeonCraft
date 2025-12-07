@@ -25,8 +25,11 @@ var time = 0.0
 @export var flapping = 0.0
 @export var flapping_speed = 1.0
 @export var base_rot = Vector3.ZERO
+var item_mode = false
 
 func _process(delta):
+	if item_mode:
+		return
 	if time > 64.0 * PI:
 		time -= 64.0*PI
 	#global_position = chest.global_position
@@ -61,4 +64,8 @@ func idle(delta):
 	bone_paths[10].rotation = -Vector3(0.0, sin(time-PI)*0.05, cos(time-PI)*0.025+con_open*0.5) - Vector3(0.0,0.0,cos(time*flapping_speed*8.0-PI*1.68)*PI*flapping*0.05+flapping*0.05)
 	bone_paths[11].rotation = -bone_paths[3].rotation*0.6
 	bone_paths[12].rotation = -bone_paths[3].rotation*0.3
+	pass
+
+func enable_item_mode():
+	item_mode = true
 	pass

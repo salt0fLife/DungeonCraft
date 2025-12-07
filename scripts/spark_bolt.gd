@@ -13,6 +13,9 @@ var exploding = false
 var autonomy_check_timer = 0.0
 var desired_velocity = Vector3.ZERO
 var explode_timer = 1.0
+const frames_between_syncs = 32
+var frame_counter = 0
+var frame_to_sync = randi_range(0,frames_between_syncs)
 
 func _physics_process(delta):
 	if exploding == true:
@@ -30,6 +33,7 @@ func _physics_process(delta):
 		desired_velocity = velocity
 	look_at(global_position + velocity)
 	if !is_multiplayer_authority():
+		position += velocity*delta #move and slide not working for whatever reason :/
 		return
 	if autonomy_check_timer < 0.0:
 		desired_velocity += Vector3(randf_range(-1.0,1.0),randf_range(-1.0,1.0),randf_range(-1.0,1.0))*autonomy_strength
@@ -74,7 +78,11 @@ func _physics_process(delta):
 			#environmental explosion
 			explode(position)
 			explode.rpc(position)
-	sync.rpc(position, rotation,velocity)
+	if frame_counter == frame_to_sync:
+		sync.rpc(position, rotation,velocity)
+	frame_counter += 1
+	if frame_counter > frames_between_syncs:
+		frame_counter = 0
 
 
 @rpc("any_peer","unreliable")

@@ -6,6 +6,14 @@ var moving_indicator = false
 var desired_pos = 0.0
 var moving_time = 0.0
 var hide_want = true
+var held_item = ""
+
+func update_held_item_graphics():
+	if held_item == "":
+		$held_item.hide()
+	else:
+		$held_item.show()
+		$held_item.texture = Inventory.get_item_texture(held_item)
 
 func _ready():
 	#_on_hotbar_slot_changed()
@@ -59,10 +67,24 @@ func update_hotbar_graphics():
 
 func _on_hotbar_pressed(index):
 	print(index)
+	var temp = held_item
+	held_item = Inventory.hotbar[index]
+	Inventory.hotbar[index] = temp
+	update_held_item_graphics()
+	update_hotbar_graphics()
+	preview_hotbar_indx(index)
 
 func _on_equipment_pressed(key):
 	print(key)
-	pass
+	if held_item != "":
+		if !Inventory.can_item_go_in_accessory(held_item, key):
+			return # makes sure you cant put equipment in wrong slots
+	var temp = held_item
+	held_item = Inventory.accessories[key]
+	Inventory.accessories[key] = temp
+	update_held_item_graphics()
+	load_accessories()
+	preview_equipment_key(key)
 
 func show_hotbar():
 	unused_hide_timer = time_till_hide
@@ -83,6 +105,8 @@ func _on_hotbar_slot_changed():
 	pass
 
 func _process(delta):
+	if $held_item.visible:
+		$held_item.position = get_viewport().get_mouse_position() - Vector2(32.0,32.0)
 	if $accessories.visible:
 		var pos = get_viewport().get_mouse_position() - Vector2(get_viewport_rect().size.x*0.5,get_viewport_rect().size.y*0.17)
 		pos = pos/get_viewport_rect().size
@@ -128,7 +152,13 @@ func close():
 	hide_want = true
 	hide_accessories()
 	$itemPreview.hide()
-	pass
+	Inventory.emit_signal("update_hotbar")
+	Inventory.emit_signal("update_held_item")
+	Inventory.emit_signal("update_accessories")
+	for k in accessory_buttons:
+		accessory_buttons[k].release_focus()
+	for b in $hotbar/slots/itemIcons.get_children():
+		b.release_focus()
 
 @onready var accessory_buttons = {
 	#armor and clothes

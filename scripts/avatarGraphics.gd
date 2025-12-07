@@ -14,8 +14,8 @@ extends Node3D
 	$root/chestBase/tailBase,
 	$root/chestBase/tailBase/tailMiddle,
 	$root/chestBase/tailBase/tailMiddle/tailLast,
-	$root/chestBase/neck/eyeBrows_L,
-	$root/chestBase/neck/eyeBrows_R
+	#$root/chestBase/neck/eyeBrows_L,
+	#$root/chestBase/neck/eyeBrows_R
 	#$root/chestBase/torso,
 	#$root/chestBase/torso/hip_L,
 	#$root/chestBase/torso/hip_L/leftLeg1/knee_L, #2
@@ -30,8 +30,6 @@ extends Node3D
 	#$root/chestBase/torso/tailBase/tail/tailMiddle, # 11
 	#$root/chestBase/torso/tailBase/tail/tailMiddle/tail_001/tailLast #12
 ]
-
-
 
 const bone_names = [
 	"torso",
@@ -933,6 +931,7 @@ var is_slim = false
 ]
 
 func set_visibility_layer(layer_id, value = true):
+	return #:3 we will fix this later
 	for m in meshes:
 		m.set_layer_mask_value(layer_id, value)
 	for o_m in non_skin_meshes:
@@ -951,7 +950,7 @@ func load_skin(img, ears, tail, snout, is_slim_loc, eColors, mData):
 	#img = ImageTexture.create_from_image(Image.load_from_file("res://assets/glb/playerAvatar002_dapper128Secondary.png"))
 	#var meshes = avatar.meshes
 	is_slim = is_slim_loc
-	var mat = meshes[0].get_active_material(0).duplicate()
+	var mat = load("res://assets/avatar/playerSkin.tres").duplicate()#meshes[0].get_active_material(0).duplicate()
 	mat.albedo_texture = img
 	set_cosmetic_visibility(ears, tail, snout)
 	for m in meshes:
@@ -960,12 +959,32 @@ func load_skin(img, ears, tail, snout, is_slim_loc, eColors, mData):
 	tran.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 	#$root/chestBase/torso/neck/head/ear1.set_surface_override_material(0, tran)
 	#$root/chestBase/torso/neck/head/ear2.set_surface_override_material(0, tran)
-	for t in transparent:
-		t.set_surface_override_material(0, tran)
-	for n in normal:
-		meshes[n].visible = !is_slim
-	for s in slim:
-		meshes[s].visible = is_slim
+	#for t in transparent:
+		#t.set_surface_override_material(0, tran)
+	#for n in normal:
+		#meshes[n].visible = !is_slim
+	#for s in slim:
+		#meshes[s].visible = is_slim
+	
+	##removing old meshes
+	for ghpi in range(0,bone_paths.size()):
+		#print(ghpi)
+		for og in bone_paths[ghpi].get_child(0).get_children():
+			og.queue_free()
+	
+	##adding meshes
+	var key = "normal"
+	if is_slim:
+		key = "slim"
+	var limbs_path_array = Global.avatar_profiles[key]
+	for l in range(0, limbs_path_array.size()):
+		var g = load(limbs_path_array[l]).instantiate()
+		bone_paths[l].get_child(0).add_child(g) #gets gh of respective bone
+		g.position = Vector3.ZERO
+		g.set_surface_override_material(0,mat)
+		g.get_child(0,true).set_surface_override_material(0,tran)
+	
+	
 	set_eye_param("shader_parameter/pupilColor", eColors[0])
 	set_eye_param("shader_parameter/eyeColor2", eColors[1])
 	set_eye_param("shader_parameter/eyeColor", eColors[2])
