@@ -128,6 +128,30 @@ const avatar_profiles = {
 	"res://assets/avatar/avatarProfiles/slim/left_arm_2_slim.tscn",
 	"res://assets/avatar/avatarProfiles/slim/right_arm_1_slim.tscn",
 	"res://assets/avatar/avatarProfiles/slim/right_arm_2_slim.tscn",
+	],
+	"nice" : [
+	"res://assets/avatar/avatarProfiles/nice/torso_slim_001.tscn",
+	"res://assets/avatar/avatarProfiles/nice/left_leg_1_slim_001.tscn",
+	"res://assets/avatar/avatarProfiles/nice/left_foot_slim_001.tscn",
+	"res://assets/avatar/avatarProfiles/nice/right_leg_1_slim_001.tscn",
+	"res://assets/avatar/avatarProfiles/nice/right_foot_slim_001.tscn",
+	"res://assets/avatar/avatarProfiles/head/head_norm.tscn",
+	"res://assets/avatar/avatarProfiles/nice/left_arm_1_slim_001.tscn",
+	"res://assets/avatar/avatarProfiles/nice/left_arm_2_slim_001.tscn",
+	"res://assets/avatar/avatarProfiles/nice/right_arm_1_slim_001.tscn",
+	"res://assets/avatar/avatarProfiles/nice/right_arm_2_slim_001.tscn",
+	],
+	"bitMuch" : [
+	"res://assets/avatar/avatarProfiles/aBitMuch/a_bit_much_body.tscn",
+	"res://assets/avatar/avatarProfiles/nice/left_leg_1_slim_001.tscn",
+	"res://assets/avatar/avatarProfiles/nice/left_foot_slim_001.tscn",
+	"res://assets/avatar/avatarProfiles/nice/right_leg_1_slim_001.tscn",
+	"res://assets/avatar/avatarProfiles/nice/right_foot_slim_001.tscn",
+	"res://assets/avatar/avatarProfiles/head/head_norm.tscn",
+	"res://assets/avatar/avatarProfiles/nice/left_arm_1_slim_001.tscn",
+	"res://assets/avatar/avatarProfiles/nice/left_arm_2_slim_001.tscn",
+	"res://assets/avatar/avatarProfiles/nice/right_arm_1_slim_001.tscn",
+	"res://assets/avatar/avatarProfiles/nice/right_arm_2_slim_001.tscn",
 	]
 	
 	

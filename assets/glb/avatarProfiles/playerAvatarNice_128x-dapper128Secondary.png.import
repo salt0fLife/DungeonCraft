@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dnwqkrnr01556"
-path.s3tc="res://.godot/imported/rustedCopperChestplate_rusted copper chestplate.png-6eb5e64d86d21c3542190d10b6232be0.s3tc.ctex"
+uid="uid://cklqrpsyup4ck"
+path.s3tc="res://.godot/imported/playerAvatarNice_128x-dapper128Secondary.png-8c32348354dba37272faaea3cfe6c177.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ generator_parameters={}
 
 [deps]
 
-source_file="res://assets/itemGraphics/armor/rustedCopper/rustedCopperChestplate_rusted copper chestplate.png"
-dest_files=["res://.godot/imported/rustedCopperChestplate_rusted copper chestplate.png-6eb5e64d86d21c3542190d10b6232be0.s3tc.ctex"]
+source_file="res://assets/glb/avatarProfiles/playerAvatarNice_128x-dapper128Secondary.png"
+dest_files=["res://.godot/imported/playerAvatarNice_128x-dapper128Secondary.png-8c32348354dba37272faaea3cfe6c177.s3tc.ctex"]
 
 [params]
 

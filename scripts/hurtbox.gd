@@ -23,3 +23,7 @@ func take_damage(val, pos, owned_by, weapon_name, knockback = Vector3.ZERO, reme
 signal remove_shrapnel
 func _on_host_died():
 	emit_signal("remove_shrapnel")
+
+func apply_status_effect(effect_id:int,time:float):
+	get_node(health_handler).add_status_effect(effect_id,time)
+	pass

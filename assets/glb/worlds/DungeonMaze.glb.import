@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dxquxudpt232o"
-path="res://.godot/imported/rustedCopperGreavesR.glb-cebb2066191a50fecc7d3788c321b028.scn"
+uid="uid://der1k5bo7tqm5"
+path="res://.godot/imported/DungeonMaze.glb-8174a95616dbc552bb62a39970380e69.scn"
 
 [deps]
 
-source_file="res://assets/itemGraphics/armor/rustedCopper/rustedCopperGreavesR.glb"
-dest_files=["res://.godot/imported/rustedCopperGreavesR.glb-cebb2066191a50fecc7d3788c321b028.scn"]
+source_file="res://assets/glb/worlds/DungeonMaze.glb"
+dest_files=["res://.godot/imported/DungeonMaze.glb-8174a95616dbc552bb62a39970380e69.scn"]
 
 [params]
 

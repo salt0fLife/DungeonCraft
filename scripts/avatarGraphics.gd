@@ -64,12 +64,14 @@ const pos_and_rot_only = [
 @onready var a_pose = load_file("player_poses/", "a_pose.dat")
 @onready var arm_test = load_file("player_poses/", "test.dat")
 #const default_pose = 
-
+var fire_mat = null
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	var ebm = $root/chestBase/neck/eyeBrows_L.get_active_material(0).duplicate()
 	$root/chestBase/neck/eyeBrows_L.set_surface_override_material(0, ebm)
 	$root/chestBase/neck/eyeBrows_R.set_surface_override_material(0, ebm)
+	fire_mat = $"../fire".get_active_material(0).duplicate()
+	$"../fire".set_surface_override_material(0,fire_mat)
 	#save_pose_transforms()
 	#apply_pose(arm_test)
 	pass # Replace with function body.
@@ -78,6 +80,8 @@ func _ready():
 @export var pose_name = "pose001"
 @export var folder_name = "poseTesting"
 @export var apply_load_pose = false
+var base_skin_mat = null
+var tran_skin_mat = null
 
 func save_pose_transforms():
 	var pose = {}
@@ -849,79 +853,11 @@ func load_file(subFolder : String, fileName : String):
 ## 
 
 @onready var meshes = [
-	$root/chestBase/hip_L/leftLeg1N, #0
-	$root/chestBase/hip_L/leftLeg1NOL, #1
-	$root/chestBase/hip_L/leftLeg1S,
-	$root/chestBase/hip_L/leftLeg1SOL,
-	$root/chestBase/hip_L/knee_L/leftFootN, #4
-	$root/chestBase/hip_L/knee_L/leftFootNOL, #5
-	$root/chestBase/hip_L/knee_L/leftFootS,
-	$root/chestBase/hip_L/knee_L/leftFootSOL,
-	$root/chestBase/hip_R/rightLeg1N, #8
-	$root/chestBase/hip_R/rightLeg1NOL, #9
-	$root/chestBase/hip_R/rightLeg1S,
-	$root/chestBase/hip_R/rightLeg1SOL,
-	$root/chestBase/hip_R/knee_R/rightFootN, #12
-	$root/chestBase/hip_R/knee_R/rightFootNOL, #13
-	$root/chestBase/hip_R/knee_R/rightFootS,
-	$root/chestBase/hip_R/knee_R/rightFootSOL,
-	$root/chestBase/neck/head,
-	#$root/chestBase/neck/headOutside,
-	$root/chestBase/neck/headOutsideP,
-	$root/chestBase/shoulder_L/leftArm1N, #18
-	$root/chestBase/shoulder_L/leftArm1NOL, #19
-	$root/chestBase/shoulder_L/leftArm1S,
-	$root/chestBase/shoulder_L/leftArm1SOL,
-	$root/chestBase/shoulder_L/elbowL/leftArm2N, #22
-	$root/chestBase/shoulder_L/elbowL/leftArm2NOL, #23
-	$root/chestBase/shoulder_L/elbowL/leftArm2S,
-	$root/chestBase/shoulder_L/elbowL/leftArm2SOL,
-	$root/chestBase/shoulder_R/rightArm1N, #26
-	$root/chestBase/shoulder_R/rightArm1NOL, #27
-	$root/chestBase/shoulder_R/rightArm1S,
-	$root/chestBase/shoulder_R/rightArm1SOL,
-	$root/chestBase/shoulder_R/elbowR/rightArm2N, #30
-	$root/chestBase/shoulder_R/elbowR/rightArm2NOL, #31
-	$root/chestBase/shoulder_R/elbowR/rightArm2S,
-	$root/chestBase/shoulder_R/elbowR/rightArm2SOL,
-	$root/chestBase/torsoN, #34
-	$root/chestBase/torsoNOL, #35
-	$root/chestBase/torsoS,
-	$root/chestBase/torsoSOL
 ]
 
-var normal = [
-	0,1,4,5,8,9,12,13,18,19,22,23,26,27,30,31,34,35
-]
-
-var slim = [
-	2,3,6,7,10,11,14,15,20,21,24,25,28,29,32,33,36,37
-	
-]
 
 var is_slim = false
 
-@onready var transparent = [
-	$root/chestBase/hip_L/leftLeg1NOL,
-	$root/chestBase/hip_L/leftLeg1SOL,
-	$root/chestBase/hip_L/knee_L/leftFootNOL,
-	$root/chestBase/hip_L/knee_L/leftFootSOL,
-	$root/chestBase/hip_R/rightLeg1NOL,
-	$root/chestBase/hip_R/rightLeg1SOL,
-	$root/chestBase/hip_R/knee_R/rightFootNOL,
-	$root/chestBase/hip_R/knee_R/rightFootSOL,
-	$root/chestBase/neck/headOutsideP,
-	$root/chestBase/shoulder_L/leftArm1NOL,
-	$root/chestBase/shoulder_L/leftArm1SOL,
-	$root/chestBase/shoulder_L/elbowL/leftArm2NOL,
-	$root/chestBase/shoulder_L/elbowL/leftArm2SOL,
-	$root/chestBase/shoulder_R/rightArm1NOL,
-	$root/chestBase/shoulder_R/rightArm1SOL,
-	$root/chestBase/shoulder_R/elbowR/rightArm2NOL,
-	$root/chestBase/shoulder_R/elbowR/rightArm2SOL,
-	$root/chestBase/torsoNOL,
-	$root/chestBase/torsoSOL
-]
 
 @onready var non_skin_meshes = [
 	$root/chestBase/neck/eyes,
@@ -946,17 +882,20 @@ func set_cosmetic_visibility(ears, tail, snout):
 	#$root/chestBase/torso/neck/head/snout.visible = snout
 	pass
 
+const skin_mat_path = "res://assets/avatar/playerSkinShaderMat.tres"#"res://assets/avatar/playerSkin.tres"#
 func load_skin(img, ears, tail, snout, is_slim_loc, eColors, mData):
 	#img = ImageTexture.create_from_image(Image.load_from_file("res://assets/glb/playerAvatar002_dapper128Secondary.png"))
 	#var meshes = avatar.meshes
 	is_slim = is_slim_loc
-	var mat = load("res://assets/avatar/playerSkin.tres").duplicate()#meshes[0].get_active_material(0).duplicate()
-	mat.albedo_texture = img
+	var mat = load(skin_mat_path).duplicate()#meshes[0].get_active_material(0).duplicate()
+	#mat.set("albedo_texture",img)
+	mat.set("shader_parameter/texture_albedo",img)
 	set_cosmetic_visibility(ears, tail, snout)
-	for m in meshes:
-		m.set_surface_override_material(0, mat)
-	var tran = mat.duplicate()
-	tran.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	var tran = mat#.duplicate()
+	base_skin_mat = mat
+	tran_skin_mat = tran
+	#tran.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	#testing something
 	#$root/chestBase/torso/neck/head/ear1.set_surface_override_material(0, tran)
 	#$root/chestBase/torso/neck/head/ear2.set_surface_override_material(0, tran)
 	#for t in transparent:
@@ -971,6 +910,12 @@ func load_skin(img, ears, tail, snout, is_slim_loc, eColors, mData):
 		#print(ghpi)
 		for og in bone_paths[ghpi].get_child(0).get_children():
 			og.queue_free()
+	meshes = [
+		$root/chestBase/neck/eyes,
+		$root/chestBase/neck/mouth,
+		$root/chestBase/neck/lashes1,
+		$root/chestBase/neck/lashes2
+	]
 	
 	##adding meshes
 	var key = "normal"
@@ -983,6 +928,7 @@ func load_skin(img, ears, tail, snout, is_slim_loc, eColors, mData):
 		g.position = Vector3.ZERO
 		g.set_surface_override_material(0,mat)
 		g.get_child(0,true).set_surface_override_material(0,tran)
+		#meshes += [g,g.get_child(true)] #adds both to meshes
 	
 	
 	set_eye_param("shader_parameter/pupilColor", eColors[0])
@@ -1063,21 +1009,41 @@ func spectrum_to_mouth(spectrum, delta = 1.0):
 		#var height = energy * HEIGHT
 		#prev_hz = hz
 
-func set_ghost(val):
+func set_ghost(val: bool) -> void:
 	if !val:
-		meshes[0].get_active_material(0).set("blend_mode", 0)
-		meshes[1].get_active_material(0).set("blend_mode", 0)
-		meshes[0].get_active_material(0).set("proximity_fade_enabled", false)
-		meshes[1].get_active_material(0).set("proximity_fade_enabled", false)
+		#base_skin_mat.set("blend_mode", 0)
+		#base_skin_mat.set("proximity_fade_enabled", false)
+		#tran_skin_mat.set("blend_mode", 0)
+		#tran_skin_mat.set("proximity_fade_enabled", false)
+		base_skin_mat.set("shader_parameter/ghostly", 0.0)
+		#bone_paths[0].get_child(0).get_child(0).get_active_material(0).set("blend_mode", 0)
+		#meshes[0].get_active_material(0).set("blend_mode", 0)
+		#meshes[1].get_active_material(0).set("blend_mode", 0)
+		#meshes[0].get_active_material(0).set("proximity_fade_enabled", false)
+		#meshes[1].get_active_material(0).set("proximity_fade_enabled", false)
 		set_eye_param("shader_parameter/transparency", 0.0)
 		set_mouth_param("shader_parameter/transparency", 0.0)
 		$root/chestBase/neck/eyeBrows_L.get_active_material(0).set("blend_mode", 0)
 	else:
-		meshes[0].get_active_material(0).set("blend_mode", 1)
-		meshes[1].get_active_material(0).set("blend_mode", 1)
+		#base_skin_mat.set("blend_mode", 1)
+		#base_skin_mat.set("proximity_fade_enabled", true)
+		#tran_skin_mat.set("blend_mode", 1)
+		#tran_skin_mat.set("proximity_fade_enabled", true)
+		base_skin_mat.set("shader_parameter/ghostly", 1.0)
+		#meshes[0].get_active_material(0).set("blend_mode", 1)
+		#meshes[1].get_active_material(0).set("blend_mode", 1)
 		set_eye_param("shader_parameter/transparency", 0.75)
 		set_mouth_param("shader_parameter/transparency", 0.75)
-		meshes[0].get_active_material(0).set("proximity_fade_enabled", true)
-		meshes[1].get_active_material(0).set("proximity_fade_enabled", true)
+		#meshes[0].get_active_material(0).set("proximity_fade_enabled", true)
+		#meshes[1].get_active_material(0).set("proximity_fade_enabled", true)
 		$root/chestBase/neck/eyeBrows_L.get_active_material(0).set("blend_mode", 1)
 	pass
+
+
+func set_burning(val : bool,col := Color.ORANGE_RED) -> void:
+	base_skin_mat.set("shader_parameter/burning", val)
+	base_skin_mat.set("shader_parameter/fire_col", col)
+	$"../fire".visible = val
+	$"../fire".get_active_material(0).set("shader_parameter/fire_col", col)
+	$"../fire_light".visible = val
+	$"../fire_light".light_color = col

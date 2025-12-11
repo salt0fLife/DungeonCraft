@@ -20,7 +20,8 @@ const worlds = {
 	"world2" : ["res://world/world_2.tscn", 0.2],
 	"debug" : ["res://debug/debug_world.tscn", 0.0],
 	"gm_construct" : ["res://world/gm_construct.tscn", 0.4],
-	"skywas_test" : ["res://world/skywars_prot_rainy.tscn", 0.0]
+	"skywas_test" : ["res://world/skywars_prot_rainy.tscn", 0.0],
+	"dungeon_world" : ["res://world/dungeon_world.tscn", 0.0]
 }
 
 enum itemType {
@@ -105,12 +106,75 @@ const items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonu
 	"debug_speed_boot_R" : ["speed boots 2", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 4]], {"speed" : +0.25, "speed_multiplier" : +0.5, "defense_footR" : +0.1}], "","debug_speed_boots"],
 	
 	##armor
-	"rusted_copper_helmet" : ["rusted copper helmet", "res://assets/itemGraphics/armor/rustedCopper/rustedCopperHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/rustedCopper/rustedCopperHelmet.glb", 5]], {"defense_head" : +0.1, "speed": -0.1}], "res://assets/textures/items/rusted copper helmet tn.png"],
 	"copper_helmet" : ["copper helmet", "res://assets/itemGraphics/armor/copper/copperHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/copper/copperHelmet.glb", 5]], {"defense_head" : +0.2, "speed": -0.1}], "res://assets/textures/items/copper helmet tn.png"],
 	"rusted_iron_helmet" : ["rusted iron helmet", "res://assets/itemGraphics/armor/rustedIron/rustedIronHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/rustedIron/rustedIronHelmet.glb", 5]], {"defense_head" : +0.2, "speed": -0.15}], "res://assets/textures/items/rusted iron helmet tn.png"],
 	"iron_helmet" : ["iron helmet", "res://assets/itemGraphics/armor/iron/ironHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/iron/ironHelmet.glb", 5]], {"defense_head" : +0.4, "speed": -0.15}], "res://assets/textures/items/iron helmet tn.png"],
 	"copper_chestplate" : ["copper chestplate", "res://assets/itemGraphics/armor/copper/CopperChestplate.glb", itemType.accessories_chestplate, [[["res://assets/itemGraphics/armor/copper/CopperChestplate.glb", 0],["res://assets/itemGraphics/armor/copper/CopperPauldronL.glb", 6],["res://assets/itemGraphics/armor/copper/CopperPauldronR.glb", 8]], {"defense_body" : +0.2,"defense_arms" : +0.2, "speed": -0.2}], "res://assets/textures/items/copper chestplate tn.png"],
-	"rusted_copper_leggings" : ["rusted copper leggings", "res://assets/itemGraphics/armor/rustedCopper/rustedCopperGreavesR.glb", itemType.accessories_leggings, [[["res://assets/itemGraphics/armor/rustedCopper/rustedCopperGreavesR.glb", 1],["res://assets/itemGraphics/armor/rustedCopper/rustedCopperGreavesL.glb", 3]], {"defense_legs" : +0.1, "speed": -0.2}], "res://assets/textures/items/rusted copper greaves tn.png"],
+	
+	#rusted copper
+	#helmet
+	"rusted_copper_helmet" : ["rusted copper helmet", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_helmet.tscn", 
+	itemType.accessories_hat, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_helmet.tscn", 5]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
+	#chestplate
+	"rusted_copper_chestplate" : ["rusted copper chestplate", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate.tscn", 
+	itemType.accessories_chestplate, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate.tscn", 0],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate_r.tscn", 8],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate_l.tscn", 6],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate_arm_2_r.tscn", 9],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate_arm_2_l.tscn", 7]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
+	#leggings
+	"rusted_copper_leggings" : ["rusted copper leggings", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings.tscn", 
+	itemType.accessories_leggings, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings_r.tscn", 1],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings_l.tscn", 3],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings_r_2.tscn", 1],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings_l_2.tscn", 3],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings.tscn", 0]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
+	#greaves
+	"rusted_copper_greaves" : ["rusted copper greaves", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings.tscn", 
+	itemType.accessories_greaves, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_greave_l.tscn", 2],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_greave_r.tscn", 4]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
+	#boots
+	"rusted_copper_boot_l" : ["rusted copper left boot", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_boot_l.tscn", 
+	itemType.accessories_shoes, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_boot_l.tscn", 2]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
+	"rusted_copper_boot_r" : ["rusted copper right boot", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_boot_r.tscn", 
+	itemType.accessories_shoes, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_boot_r.tscn", 4]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
+	#gloves
+	"rusted_copper_glove_l" : ["rusted copper left glove", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_glove_l.tscn", 
+	itemType.accessories_gloves, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_glove_l.tscn", 7]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
+	"rusted_copper_glove_r" : ["rusted copper right glove", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_glove_r.tscn", 
+	itemType.accessories_gloves, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_glove_r.tscn", 9]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
 	
 	
 	##racial accessories
@@ -132,11 +196,22 @@ enum statusEffectType {
 	cursed,
 	bleeding,
 	frozen,
-	tripping
+	lofty
 }
+
+const status_effect_names = [
+	"burning",
+	"poisoned",
+	"cursed",
+	"bleeding",
+	"frozen",
+	"lofty"
+]
 
 enum interact_return_code {
 	dont_do_anything, #returns null
 	is_item, #returns item_key that should be picked up
 	print, #returns a string that should be printed
 }
+
+const fire_colors = [Color.ORANGE_RED, Color.AQUA, Color.DARK_RED,Color.SPRING_GREEN,Color.WEB_PURPLE]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://dntnunlwfyesu"]
+[gd_scene load_steps=46 format=3 uid="uid://dntnunlwfyesu"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_5fl5y"]
 [ext_resource type="Script" path="res://debug/debug_world.gd" id="1_87rlt"]
@@ -24,6 +24,8 @@
 [ext_resource type="PackedScene" uid="uid://cb6ovvv8dnrb1" path="res://world/levels/level_3_test.tscn" id="21_ooxf7"]
 [ext_resource type="PackedScene" uid="uid://c4u7j7ayr1kum" path="res://assets/environmentPieces/ambience/rain.tscn" id="23_yrjkj"]
 [ext_resource type="PackedScene" uid="uid://dtdp0xkmjwtre" path="res://entities/punching_bag.tscn" id="25_2gtog"]
+[ext_resource type="Script" path="res://debug/avatar_state_tester.gd" id="25_un0qr"]
+[ext_resource type="PackedScene" uid="uid://dokv4awf7hm7b" path="res://debug/debug_effectbox.tscn" id="26_uei57"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ks42u"]
 
@@ -241,9 +243,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38, 0, 0)
 [node name="treePine5" parent="SubViewport" instance=ExtResource("9_hirog")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 51, 0, 0)
 
-[node name="playerAvatar" parent="." instance=ExtResource("4_5bd38")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.69142, 0, -4.15712)
-
 [node name="StaticBody3D2" type="StaticBody3D" parent="."]
 transform = Transform3D(0.625583, 0, -0.780158, 0, 1, 0, 0.780158, 0, 0.625583, -3.63709, 0, 1.85641)
 
@@ -337,6 +336,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.8593, 0, -3.93952)
 accessory_to_edit = "tail"
 value = "debug_tail"
 
+[node name="accessories_debugger8" parent="." instance=ExtResource("15_ytdhl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.8593, 0, -3.93952)
+accessory_to_edit = "shoeR"
+value = "rusted_copper_boot_r"
+
+[node name="accessories_debugger9" parent="." instance=ExtResource("15_ytdhl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.8593, 0, -7.93952)
+accessory_to_edit = "shoeL"
+value = "rusted_copper_boot_l"
+
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.229399, 2.31994, 25.6229)
 stream = ExtResource("17_1pngb")
@@ -363,3 +372,32 @@ stream = ExtResource("21_5nv8w")
 
 [node name="punchingBag" parent="." instance=ExtResource("25_2gtog")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.64017, 0, -9.12931)
+
+[node name="avatar_state_tester" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 0, 0)
+script = ExtResource("25_un0qr")
+
+[node name="playerAvatar" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -4.15712)
+
+[node name="playerAvatar2" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -5.15712)
+
+[node name="playerAvatar3" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -6.15712)
+
+[node name="playerAvatar4" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -7.15712)
+
+[node name="playerAvatar5" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -8.15712)
+
+[node name="playerAvatar6" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -10.1571)
+
+[node name="playerAvatar7" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -9.15712)
+
+[node name="debug effectbox" parent="." instance=ExtResource("26_uei57")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
+time = 1.0

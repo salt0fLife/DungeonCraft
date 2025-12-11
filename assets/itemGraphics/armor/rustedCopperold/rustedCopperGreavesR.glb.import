@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cwshei37y1p5t"
-path="res://.godot/imported/rustedCopperChestplate.glb-50999b631cb60df55760f8b6bc7a25da.scn"
+uid="uid://dxquxudpt232o"
+path="res://.godot/imported/rustedCopperGreavesR.glb-3ff4e2c0ebaf11c7ae0d0a8375adacca.scn"
 
 [deps]
 
-source_file="res://assets/itemGraphics/armor/rustedCopper/rustedCopperChestplate.glb"
-dest_files=["res://.godot/imported/rustedCopperChestplate.glb-50999b631cb60df55760f8b6bc7a25da.scn"]
+source_file="res://assets/itemGraphics/armor/rustedCopperold/rustedCopperGreavesR.glb"
+dest_files=["res://.godot/imported/rustedCopperGreavesR.glb-3ff4e2c0ebaf11c7ae0d0a8375adacca.scn"]
 
 [params]
 

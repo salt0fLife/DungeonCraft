@@ -74,7 +74,9 @@ const base_attributes = {
 }
 var accessories_paths = {
 }
-var status_effects = []
+var status_effects = {
+	
+}
 
 func update_accessories():
 	update_stats_from_accessories()
@@ -442,7 +444,7 @@ func _physics_process(delta):
 			velocity.y = lerp(velocity.y, input_vertical.x * attributes["flying_speed"]*attributes["speed_multiplier"], delta*8.0)
 		if direction:
 			body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
-			avatar.head_angle.y = body.rotation.y
+			avatar.head_angle.y = -body.rotation.y
 			if sprinting:
 				velocity.x = lerp(velocity.x, direction.x * attributes["flying_speed"]*2.2*attributes["speed_multiplier"], delta*8.0)
 				velocity.z = lerp(velocity.z, direction.z * attributes["flying_speed"]*2.2*attributes["speed_multiplier"], delta*8.0)
@@ -481,6 +483,7 @@ func _physics_process(delta):
 			avatar.walk_angle = 0.0
 		avatar.animation_state = idle_anim_key
 		avatar.resist_dir = Vector2(0.0,0.0)
+		avatar.head_angle.y = -body.rotation.y
 		dust_particles.emitting = false
 		if !airborn and !jumped_last_frame:
 			if velocity.length() > attributes["speed"]*3.0:
@@ -752,13 +755,29 @@ var h_m_slim = [
 ]
 
 func load_skin_hands(slim, img):
-	var mat = hands_meshes[0].get_active_material(0).duplicate()
+	var mat = load("res://assets/avatar/playerSkin.tres").duplicate()
 	mat.albedo_texture = img
-	for m in hands_meshes:
-		m.set_surface_override_material(0, mat)
-		m.visible = !slim
-	for i in h_m_slim:
-		hands_meshes[i].visible = slim
+	var tran_mat = mat.duplicate()
+	tran_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	var key = "normal"
+	if slim: key = "slim"
+	var profile_paths = Global.avatar_profiles[key]
+	var arm_1_R = load(profile_paths[8]).instantiate()
+	var arm_2_R = load(profile_paths[9]).instantiate()
+	arm_1_R.set_surface_override_material(0,mat)
+	arm_1_R.get_child(0,true).set_surface_override_material(0,tran_mat)
+	arm_2_R.set_surface_override_material(0,mat)
+	arm_2_R.get_child(0,true).set_surface_override_material(0,tran_mat)
+	handR.get_child(0).add_child(arm_1_R)
+	elbowR.get_child(0).add_child(arm_2_R)
+	arm_1_R.position = Vector3.ZERO
+	arm_2_R.position = Vector3.ZERO
+	
+	#for m in hands_meshes:
+		#m.set_surface_override_material(0, mat)
+		#m.visible = !slim
+	#for i in h_m_slim:
+		#hands_meshes[i].visible = slim
 
 
 @rpc("any_peer","reliable")
@@ -769,6 +788,7 @@ func request_cosmetics() -> void:
 		update_attribute_graphics.rpc(attributes["size"])
 		sync_hand_anim.rpc(current_animation)
 		set_ghost.rpc(ghost)
+		update_status_effect_graphics.rpc(status_effects)
 
 @rpc("any_peer","reliable")
 func sync_hand_anim(key):
@@ -827,6 +847,14 @@ func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, coun
 		die(attacker, key, weapon_name, knockback, primary_damage_type)
 	update_health_graphics()
 
+func add_status_effect(id,time):
+	if status_effects.has(id):
+		status_effects[id] += time
+	else:
+		status_effects[id] = time
+	update_status_effect_graphics(status_effects)
+	update_status_effect_graphics.rpc(status_effects)
+
 const fall_damage_messages = [
 	" fell to their death",
 	" broke their ankles",
@@ -882,6 +910,9 @@ const key_nicknames = {
 signal died
 @onready var corpse = preload("res://entities/ragdolls/player_corpse.tscn")
 func die(attacker = "", key = "", weapon_name = "", add_vel = Vector3.ZERO, damage_id = 0):
+	clear_status_effects = true
+	update_status_effect_graphics({})
+	update_status_effect_graphics.rpc({})
 	print(attacker)
 	print(last_attacker)
 	Global.emit_signal("player_death")
@@ -904,12 +935,18 @@ func die(attacker = "", key = "", weapon_name = "", add_vel = Vector3.ZERO, dama
 					Global.print_chat((display_name + perish_messages.pick_random()) + " while fighting " + last_attacker, "red")
 			else:
 				Global.print_chat((display_name + perish_messages.pick_random()) + " while fighting " + last_attacker, "red")
+			pass
 		_:
-			if attacker == "":
+			if !key_nicknames.has(key):
+				if last_attacker != "":
+					Global.print_chat(display_name + " died to " + key + " " + weapon_name + " while fighting " + last_attacker)
+				else:
+					Global.print_chat(display_name + " died to " + key + " " + weapon_name)
+				pass
+			elif attacker == "":
 				if last_attacker == "":
 					#natrual
 					Global.print_chat(display_name + " got their " + key_nicknames[key].pick_random() + damage_types_verbs[damage_id].pick_random(), "red")
-					pass
 				else:
 					Global.print_chat(display_name + " got their " + key_nicknames[key].pick_random() + damage_types_verbs[damage_id].pick_random() + " while fighting " + last_attacker, "red")
 					#natrual while fighting
@@ -923,8 +960,9 @@ func die(attacker = "", key = "", weapon_name = "", add_vel = Vector3.ZERO, dama
 		await  get_tree().process_frame
 		emit_signal("died")
 		return
-	create_ragdoll(add_vel, position, graphics.rotation.y, velocity,Inventory.accessories)
 	create_ragdoll.rpc(add_vel, position, graphics.rotation.y, velocity,Inventory.accessories)
+	create_ragdoll(add_vel, position, graphics.rotation.y, velocity,Inventory.accessories)
+	await get_tree().process_frame
 	set_ghost(true)
 	set_ghost.rpc(true)
 	velocity = Vector3.ZERO
@@ -948,11 +986,15 @@ func set_ghost(val):
 	if val:
 		avatar.set_eye_param("blend_mode", 1)
 		avatar.set_mouth_param("blend_mode", 1)
-		$playerAvatar/cameraHandler/hands/handR/rightArm2N.get_active_material(0).set("blend_mode", 1)
+		#$playerAvatar/cameraHandler/hands/handR/rightArm2N.get_active_material(0).set("blend_mode", 1)
+		handR.get_child(0).get_child(0).get_active_material(0).set("blend_mode", 1)
+		handR.get_child(0).get_child(0).get_child(0,true).get_active_material(0).set("blend_mode", 1)
 	else:
 		avatar.set_eye_param("blend_mode", 0)
 		avatar.set_mouth_param("blend_mode", 0)
-		$playerAvatar/cameraHandler/hands/handR/rightArm2N.get_active_material(0).set("blend_mode", 0)
+		#$playerAvatar/cameraHandler/hands/handR/rightArm2N.get_active_material(0).set("blend_mode", 0)
+		handR.get_child(0).get_child(0).get_active_material(0).set("blend_mode", 0)
+		handR.get_child(0).get_child(0).get_child(0,true).get_active_material(0).set("blend_mode", 0)
 	set_invulnerable(val)
 	ghost = val
 	if !is_multiplayer_authority():
@@ -983,8 +1025,8 @@ func create_ragdoll(add_vel,pos,rot,vel,acc):
 	c.position = pos
 	c.accessories = acc
 	get_parent().add_child(c)
-	var mat = avatar.meshes[1].get_active_material(0).duplicate()
-	mat.set("blend_mode", 0)
+	var mat = avatar.base_skin_mat.duplicate()#meshes[1].get_active_material(0).duplicate()
+	#mat.set("blend_mode", 0)
 	c.load_skin(mat,avatar.is_slim)
 	c.activate("", vel+add_vel, Vector3(0.0,5.0,0.0))
 
@@ -1038,7 +1080,27 @@ func use_projectile_weapon():
 	var proj_key = held_item_data[3][0]
 	var anim_key = held_item_data[3][1]
 	play_arm_anim(anim_key)
-	Global.emit_signal("spawn_projectile", proj_key, look_reference.global_position, get_look_dir(), display_name)
+	#Global.emit_signal("spawn_projectile", proj_key, look_reference.global_position, get_look_dir(), display_name)
+	spawn_projectile_test(proj_key)
+	pass
+
+func spawn_projectile_test(key):
+	var proj = Lookup.Projectiles[key].instantiate()
+	proj.dir = get_look_dir()
+	proj.owned_by = display_name
+	$projectile_handler.add_child(proj, true)
+	proj.position = look_reference.global_position
+	proj.velocity = proj.dir*proj.speed
+	proj.connect("hit",_on_projectile_hit)
+
+func _on_projectile_hit(id):
+	if id == "head":
+		
+		pass
+	else:
+		
+		
+		pass
 	pass
 
 func _on_right_mouse():
@@ -1122,6 +1184,7 @@ func play_footstep():
 
 ##arm animations
 @onready var handR = $playerAvatar/cameraHandler/hands/handR
+@onready var elbowR = $playerAvatar/cameraHandler/hands/handR/elbow
 
 func play_arm_anim(key):
 	current_animation = key
@@ -1237,6 +1300,29 @@ func _process(delta):
 				$UI/tooltip.visible = true
 				$UI/tooltip.text = hit.tool_tip
 				$UI/tooltip.modulate = hit.tool_tip_color
+	if !clear_status_effects:
+		update_status_effect_ui()
+		for k in status_effects.keys():
+			match k:
+				Lookup.statusEffectType.burning:
+					status_effects[k] -= delta
+					damage([[Lookup.damageType.fire,delta]], "status_effect", "burning")
+					if status_effects[k] < 0.0:
+						status_effects.erase(k)
+						update_status_effect_graphics(status_effects)
+						update_status_effect_graphics.rpc(status_effects)
+	else:
+		for k in status_effects.keys():
+			status_effects.erase(k)
+		clear_status_effects = false
+var clear_status_effects = true
+
+func update_status_effect_ui():
+	var text = ""
+	for k in status_effects.keys():
+		text += Lookup.status_effect_names[k] + " : " + str(round(status_effects[k])) + "\n"
+	$UI/status_effects/RichTextLabel.text = text
+	pass
 
 func deal_look_damage(dam := [[Lookup.damageType.generic, 1]], dist := 2.0) -> void:
 	var weapon_name = "hands"
@@ -1250,9 +1336,11 @@ func deal_look_damage(dam := [[Lookup.damageType.generic, 1]], dist := 2.0) -> v
 		if hit.is_in_group("hurtbox"):
 			hit.take_damage.rpc(dam,poi,display_name,weapon_name, dir*attributes["strength"]*2.0, true)
 
+
 ##ui and stuffs
 func update_health_graphics():
-	$UI/health.text = str(health) + " / " + str(attributes["max_health"]) + " HP"
+	var rounded_health = round(health * 4.0)*0.25 #rounds to nearest .25
+	$UI/health.text = str(rounded_health) + " / " + str(attributes["max_health"]) + " HP"
 	var dif = health/attributes["max_health"]
 	var col = Color("GREEN")
 	if dif < 0.75:
@@ -1268,15 +1356,7 @@ func update_health_graphics():
 	pass
 
 ##status effects
-func set_status_effect_graphics(id: int, val: bool):
-	match id:
-		Lookup.statusEffectType.burning:
-			
-			pass
-		Lookup.statusEffectType.bleeding:
-			
-			pass
-		Lookup.statusEffectType.bleeding:
-			
-			pass
-	pass
+@rpc("any_peer","reliable")
+func update_status_effect_graphics(se):
+	avatar.set_burning(se.has(Lookup.statusEffectType.burning), Lookup.fire_colors[0])
+

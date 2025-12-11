@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bpw7ek4dv2q2w"
-path.s3tc="res://.godot/imported/rustedCopperPauldronR_rusted copper chestplate.png-3df13559c2d74dba8fa8ef2ef30363e5.s3tc.ctex"
+uid="uid://bn5fry33c42ic"
+path.s3tc="res://.godot/imported/rustedCopperGreavesL_rusted copper greaves.png-82d918d0acc620d04cb63c560d804137.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ generator_parameters={}
 
 [deps]
 
-source_file="res://assets/itemGraphics/armor/rustedCopper/rustedCopperPauldronR_rusted copper chestplate.png"
-dest_files=["res://.godot/imported/rustedCopperPauldronR_rusted copper chestplate.png-3df13559c2d74dba8fa8ef2ef30363e5.s3tc.ctex"]
+source_file="res://assets/itemGraphics/armor/rustedCopperold/rustedCopperGreavesL_rusted copper greaves.png"
+dest_files=["res://.godot/imported/rustedCopperGreavesL_rusted copper greaves.png-82d918d0acc620d04cb63c560d804137.s3tc.ctex"]
 
 [params]
 

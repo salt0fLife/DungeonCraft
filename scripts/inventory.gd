@@ -47,11 +47,11 @@ var hotbar = [
 	"short_bow", #2
 	"magic_bow", #3
 	"rusted_copper_leggings", #4
-	"copper_chestplate", #5
-	"copper_helmet", #6
-	"rusted_copper_helmet", #7
-	"rusted_iron_helmet", #8
-	"iron_helmet" #9
+	"rusted_copper_chestplate", #5
+	"rusted_copper_helmet", #6
+	"rusted_copper_glove_r", #7
+	"rusted_copper_greaves", #8
+	"rusted_copper_glove_l" #9
 ]
 
 var held_item = 0 # 0 - 9 for hotbar

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ddk32irlor7cs"
-path="res://.godot/imported/rustedCopperHelmet_rusted copper helmet.png-a9e8194964fa5a0e2f6a4a269d3ea36a.ctex"
+uid="uid://dl666ckbqsber"
+path="res://.godot/imported/rusted copper armor_rusted copper plate.png-7286516de5de0e209e38d6f6dab0e509.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,8 +11,8 @@ generator_parameters={}
 
 [deps]
 
-source_file="res://assets/itemGraphics/armor/rustedCopper/rustedCopperHelmet_rusted copper helmet.png"
-dest_files=["res://.godot/imported/rustedCopperHelmet_rusted copper helmet.png-a9e8194964fa5a0e2f6a4a269d3ea36a.ctex"]
+source_file="res://assets/glb/armor/rusted copper armor_rusted copper plate.png"
+dest_files=["res://.godot/imported/rusted copper armor_rusted copper plate.png-7286516de5de0e209e38d6f6dab0e509.ctex"]
 
 [params]
 
