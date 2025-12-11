@@ -1047,3 +1047,18 @@ func set_burning(val : bool,col := Color.ORANGE_RED) -> void:
 	$"../fire".get_active_material(0).set("shader_parameter/fire_col", col)
 	$"../fire_light".visible = val
 	$"../fire_light".light_color = col
+
+func set_poisoned(val) -> void:
+	base_skin_mat.set("shader_parameter/poisoned", val)
+	$"../poison particles".emitting = val
+	pass
+
+func set_cursed(val) -> void:
+	base_skin_mat.set("shader_parameter/cursed", val)
+	pass
+
+func set_blessed(val: bool) -> void:
+	base_skin_mat.set("shader_parameter/blessed", val)
+	$"../holyParticles".emitting = val
+	$"../aura".visible = val
+	pass

@@ -465,7 +465,7 @@ func _physics_process(delta):
 		body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
 		avatar.head_angle.y = body.rotation.y
 		if !airborn and !jumped_last_frame:
-			if sprinting and !crouching:
+			if sprinting and !crouching and !status_effects.has(Lookup.statusEffectType.cursed):
 				velocity.x = lerp(velocity.x, direction.x * attributes["speed"]*2.2*attributes["speed_multiplier"], delta*8.0)
 				velocity.z = lerp(velocity.z, direction.z * attributes["speed"]*2.2*attributes["speed_multiplier"], delta*8.0)
 			elif crouching:
@@ -1130,7 +1130,6 @@ func punch_special():
 	
 	pass
 
-
 @onready var look_reference = $playerAvatar/cameraHandler/lookReference
 func get_look_dir():
 	return (look_reference.global_position - cameraHandler.global_position).normalized()
@@ -1306,7 +1305,35 @@ func _process(delta):
 			match k:
 				Lookup.statusEffectType.burning:
 					status_effects[k] -= delta
-					damage([[Lookup.damageType.fire,delta]], "status_effect", "burning")
+					damage([[Lookup.damageType.fire,delta]], "status_effect", "", "burning")
+					if status_effects[k] < 0.0:
+						status_effects.erase(k)
+						update_status_effect_graphics(status_effects)
+						update_status_effect_graphics.rpc(status_effects)
+				Lookup.statusEffectType.blighted:
+					status_effects[k] -= delta
+					damage([[Lookup.damageType.blight,delta*2.5]], "status_effect", "", "blighted")
+					if status_effects[k] < 0.0:
+						status_effects.erase(k)
+						update_status_effect_graphics(status_effects)
+						update_status_effect_graphics.rpc(status_effects)
+				Lookup.statusEffectType.poisoned:
+					status_effects[k] -= delta
+					damage([[Lookup.damageType.toxic,delta*1.75]], "status_effect", "", "poisoned")
+					if status_effects[k] < 0.0:
+						status_effects.erase(k)
+						update_status_effect_graphics(status_effects)
+						update_status_effect_graphics.rpc(status_effects)
+				Lookup.statusEffectType.cursed:
+					status_effects[k] -= delta
+					damage([[Lookup.damageType.magic,delta*1.0]], "status_effect", "", "cursed")
+					if status_effects[k] < 0.0:
+						status_effects.erase(k)
+						update_status_effect_graphics(status_effects)
+						update_status_effect_graphics.rpc(status_effects)
+				Lookup.statusEffectType.blessed:
+					status_effects[k] -= delta
+					#healing function here
 					if status_effects[k] < 0.0:
 						status_effects.erase(k)
 						update_status_effect_graphics(status_effects)
@@ -1358,5 +1385,18 @@ func update_health_graphics():
 ##status effects
 @rpc("any_peer","reliable")
 func update_status_effect_graphics(se):
+	#handles burning
 	avatar.set_burning(se.has(Lookup.statusEffectType.burning), Lookup.fire_colors[0])
+	#handles blighted
+	if se.has(Lookup.statusEffectType.blighted):
+		if se.has(Lookup.statusEffectType.burning):
+			avatar.set_burning(se.has(Lookup.statusEffectType.blighted), Lookup.fire_colors[2])
+		else:
+			avatar.set_burning(se.has(Lookup.statusEffectType.blighted), Lookup.fire_colors[1])
+	#poisoned
+	avatar.set_poisoned(se.has(Lookup.statusEffectType.poisoned))
+	#cursed
+	avatar.set_cursed(se.has(Lookup.statusEffectType.cursed))
+	#blessed
+	avatar.set_blessed(se.has(Lookup.statusEffectType.blessed))
 

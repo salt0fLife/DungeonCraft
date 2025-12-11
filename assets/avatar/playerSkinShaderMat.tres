@@ -1,4 +1,4 @@
-[gd_resource type="ShaderMaterial" load_steps=5 format=3 uid="uid://cs5uq77gi4wbq"]
+[gd_resource type="ShaderMaterial" load_steps=9 format=3 uid="uid://cs5uq77gi4wbq"]
 
 [ext_resource type="Texture2D" uid="uid://b6cpqftytnnam" path="res://assets/playerSkins/dapper128Secondary.png" id="1_3f7et"]
 
@@ -26,11 +26,18 @@ uniform bool do_transparency = false;
 uniform bool burning = false;
 uniform sampler2D fire_tex : repeat_enable, filter_nearest;
 uniform vec3 fire_col : source_color;
+uniform bool poisoned = false;
+uniform bool cursed = false;
+uniform bool blessed = false;
+uniform sampler2D cursed_tex : repeat_enable, filter_nearest;
+uniform vec3 cursed_col : source_color;
+uniform sampler2D blessed_tex : repeat_enable, filter_linear;
+uniform vec3 blessed_col : source_color;
 
 void vertex() {
 	UV=UV*uv1_scale.xy+uv1_offset.xy;
 	VERTEX.x += sin(TIME*PI*0.5+VERTEX.y*4.0) * ghostly * 0.005;
-	if (burning){
+	if (burning || cursed){
 		VERTEX.x += sin(TIME*10.0+VERTEX.y+VERTEX.z+sin(TIME*15.0))*0.002;
 		//VERTEX.z += sin(TIME*11.0+VERTEX.y+VERTEX.x+sin(TIME*15.0))*0.005;
 		VERTEX.y += sin(TIME*9.0+VERTEX.z+VERTEX.x+sin(TIME*15.0))*0.002;
@@ -61,8 +68,43 @@ void fragment() {
 		ALBEDO = mix(ALBEDO, fire_col,fire.r);
 		EMISSION = fire.rgb*fire_col;
 	}
+	if (poisoned) {
+		ALBEDO = mix(ALBEDO, vec3(0.5,1.0,0.5),0.05);
+	}
+	if (cursed) {
+		vec4 curse = texture(cursed_tex,base_uv*vec2(3.0,3.0)+vec2(TIME*0.075,TIME*0.005))*texture(cursed_tex,base_uv*vec2(3.0,3.0)+vec2(TIME*0.005,-TIME*0.05));
+		EMISSION += curse.rgb*cursed_col;
+	}
+	if (blessed) {
+		vec4 bless = texture(blessed_tex,base_uv*vec2(1.0,1.0)-vec2(TIME*0.001, TIME*0.002))*texture(cursed_tex,base_uv*vec2(6.0,6.0)+vec2(TIME*0.01,TIME*0.05));
+		//ALBEDO = bless.rgb;
+		EMISSION += bless.rgb*blessed_col*0.02;
+		if (bless.r > 0.75){
+			EMISSION += mix(blessed_col, blessed_col*vec3(0.5,0.0,0.2),texture(blessed_tex,base_uv).r)*4.0;
+		}
+	}
 }
 "
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_a57bj"]
+noise_type = 5
+frequency = 1.0
+fractal_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8vq3x"]
+noise = SubResource("FastNoiseLite_a57bj")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ld084"]
+noise_type = 2
+frequency = 0.093
+fractal_type = 3
+cellular_distance_function = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_xiwry"]
+width = 128
+height = 128
+seamless = true
+noise = SubResource("FastNoiseLite_ld084")
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_h68nv"]
 
@@ -89,5 +131,12 @@ shader_parameter/ghostly = 0.0
 shader_parameter/do_transparency = true
 shader_parameter/burning = false
 shader_parameter/fire_col = Color(0.882353, 0.2, 0, 1)
+shader_parameter/poisoned = false
+shader_parameter/cursed = false
+shader_parameter/blessed = false
+shader_parameter/cursed_col = Color(0.14902, 0.00392157, 0.0509804, 1)
+shader_parameter/blessed_col = Color(0.678431, 0.568627, 0.0784314, 1)
 shader_parameter/texture_albedo = ExtResource("1_3f7et")
 shader_parameter/fire_tex = SubResource("NoiseTexture2D_xik6f")
+shader_parameter/cursed_tex = SubResource("NoiseTexture2D_xiwry")
+shader_parameter/blessed_tex = SubResource("NoiseTexture2D_8vq3x")

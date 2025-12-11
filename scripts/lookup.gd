@@ -79,6 +79,8 @@ enum damageType {
 	explosion,
 	magic,
 	lightning,
+	holy,
+	blight
 }
 
 const damageType_color_lookup = [
@@ -91,7 +93,9 @@ const damageType_color_lookup = [
 	"green",
 	"red",
 	"purple",
-	"aqua"
+	"aqua",
+	"yellow",
+	"web_purple"
 ]
 
 const items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_key(if applicable)]
@@ -194,15 +198,18 @@ enum statusEffectType {
 	burning,
 	poisoned,
 	cursed,
+	blighted,
+	blessed,
 	bleeding,
 	frozen,
-	lofty
+	lofty,
 }
 
 const status_effect_names = [
 	"burning",
 	"poisoned",
 	"cursed",
+	"blighted",
 	"bleeding",
 	"frozen",
 	"lofty"

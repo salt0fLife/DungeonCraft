@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://dyheecbeltw3w"]
+[gd_scene load_steps=58 format=3 uid="uid://dyheecbeltw3w"]
 
 [ext_resource type="Script" path="res://scripts/avatarGraphics.gd" id="1_xe47e"]
 [ext_resource type="PackedScene" uid="uid://vu6npk7m024o" path="res://assets/avatar/avatarProfiles/normal/left_leg_1_norm.tscn" id="3_0xbrj"]
@@ -57,7 +57,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_e1mb0")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rf577"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ik0e2"]
 resource_name = "eyeBrows"
 transparency = 2
 alpha_scissor_threshold = 0.5
@@ -341,12 +341,156 @@ material = SubResource("ShaderMaterial_e33ld")
 size = Vector2(1, 2)
 orientation = 2
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_qdl8n"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ba4ca"]
 render_priority = 0
 shader = SubResource("Shader_82q5v")
 shader_parameter/fire_col = Color(0.796078, 0.247059, 0, 1)
 shader_parameter/fire_noise = SubResource("NoiseTexture2D_0xgdf")
 shader_parameter/gradient_tex = SubResource("GradientTexture2D_gpt44")
+
+[sub_resource type="Gradient" id="Gradient_bxo1o"]
+colors = PackedColorArray(1, 1, 1, 1, 0.71748, 0.923041, 0.739958, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_lphje"]
+gradient = SubResource("Gradient_bxo1o")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ll5cl"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.45098, 0.745098, 0.54902, 1)
+albedo_texture = SubResource("GradientTexture2D_lphje")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_pb3ys"]
+material = SubResource("StandardMaterial3D_ll5cl")
+size = Vector2(0.1, 0.1)
+
+[sub_resource type="Curve" id="Curve_c44gf"]
+_data = [Vector2(0, 0), 0.0, 4.77783, 0, 0, Vector2(0.48, 1), 0.0829359, 0.0829359, 0, 0, Vector2(1, 0), -3.77747, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_go8sq"]
+min_value = -1.0
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_uv0yr"]
+colors = PackedColorArray(1, 1, 1, 1, 0.901615, 0.755793, 0.11668, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_jek0q"]
+gradient = SubResource("Gradient_uv0yr")
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ndo3h"]
+albedo_texture = SubResource("GradientTexture2D_jek0q")
+emission_enabled = true
+emission = Color(0.631373, 0.513726, 0, 1)
+emission_energy_multiplier = 3.0
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_1xmce"]
+material = SubResource("StandardMaterial3D_ndo3h")
+size = Vector2(0.02, 0.02)
+
+[sub_resource type="Curve" id="Curve_i6bvo"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.215, 0.868132), 0.0, 0.0, 0, 0, Vector2(0.665, 0.978022), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Shader" id="Shader_a8y0c"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.2.1.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx,shadows_disabled;
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,filter_linear_mipmap,repeat_enable;
+uniform float proximity_fade_distance;
+uniform float point_size : hint_range(0,128);
+uniform float roughness : hint_range(0,1);
+uniform sampler2D texture_metallic : hint_default_white,filter_linear_mipmap,repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r,filter_linear_mipmap,repeat_enable;
+uniform float specular;
+uniform float metallic;
+uniform sampler2D depth_texture : hint_depth_texture, repeat_disable, filter_nearest;uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+
+void vertex() {
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(vec4(normalize(cross(vec3(0.0, 1.0, 0.0), INV_VIEW_MATRIX[2].xyz)), 0.0), vec4(0.0, 1.0, 0.0, 0.0), vec4(normalize(cross(INV_VIEW_MATRIX[0].xyz, vec3(0.0, 1.0, 0.0))), 0.0), MODEL_MATRIX[3]);
+	MODELVIEW_NORMAL_MATRIX = mat3(MODELVIEW_MATRIX);
+}
+
+
+
+
+
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	EMISSION = albedo.rgb * albedo_tex.rgb;
+	ALBEDO = vec3(0.0,0.0,0.0);
+	float metallic_tex = dot(texture(texture_metallic,base_uv),metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
+	float roughness_tex = dot(texture(texture_roughness,base_uv),roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+	SPECULAR = specular;
+	ALPHA *= albedo.a * albedo_tex.a;
+	float depth_tex = textureLod(depth_texture,SCREEN_UV,0.0).r;
+	vec4 world_pos = INV_PROJECTION_MATRIX * vec4(SCREEN_UV*2.0-1.0,depth_tex,1.0);
+	world_pos.xyz/=world_pos.w;
+	ALPHA*=clamp(1.0-smoothstep(world_pos.z+proximity_fade_distance,world_pos.z,VERTEX.z),0.0,1.0);
+}
+"
+
+[sub_resource type="Gradient" id="Gradient_7wqjc"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.466216, 0.77027)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.275988, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_wjy1o"]
+gradient = SubResource("Gradient_7wqjc")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.9, 0.1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6imbl"]
+render_priority = 0
+shader = SubResource("Shader_a8y0c")
+shader_parameter/albedo = Color(0.72549, 0.729412, 0.333333, 1)
+shader_parameter/proximity_fade_distance = 1.0
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/texture_albedo = SubResource("GradientTexture2D_wjy1o")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_hxlsj"]
+material = SubResource("ShaderMaterial_6imbl")
+size = Vector2(1.5, 2.25)
+orientation = 2
 
 [node name="playerAvatar" type="Node3D"]
 
@@ -363,7 +507,7 @@ stride_mult = 1.2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.869417, 0)
 
 [node name="chestBase" type="Node3D" parent="genericAvatar/root"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, 0.00257375, -0.00867368, 0.00167011)
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, 0.00192546, -0.0246079, 0.00167011)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase"]
 transform = Transform3D(1, 2.22045e-16, 0, -4.44089e-16, 1, 0, 0, -7.45058e-09, 1, 0, 0, 0)
@@ -372,7 +516,7 @@ transform = Transform3D(1, 2.22045e-16, 0, -4.44089e-16, 1, 0, 0, -7.45058e-09, 
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="hip_L" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.995002, -0.00783091, 0.0995256, 0, 0.996911, 0.0784402, -0.0998332, -0.0780479, 0.991936, 0.075, -0.282, -0.001)
+transform = Transform3D(0.995002, -0.0125777, 0.0990377, 0, 0.992024, 0.125988, -0.0998332, -0.125357, 0.987073, 0.075, -0.282, -0.001)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/hip_L"]
 transform = Transform3D(1, 4.65661e-10, 7.45058e-09, -4.65661e-10, 1, 1.11759e-08, 1.49012e-08, 1.11759e-08, 1, 0, 0, 0)
@@ -381,7 +525,7 @@ transform = Transform3D(1, 4.65661e-10, 7.45058e-09, -4.65661e-10, 1, 1.11759e-0
 transform = Transform3D(1, 2.32831e-09, 0, 2.32831e-10, 0.999371, 0.0354538, -7.45058e-09, -0.0354534, 0.999371, -0.00167371, -0.0117996, -0.000610452)
 
 [node name="knee_L" type="Node3D" parent="genericAvatar/root/chestBase/hip_L"]
-transform = Transform3D(1, 0, 0, 0, 0.996718, -0.0809323, 0, 0.0809323, 0.996718, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.991712, -0.128467, 0, 0.128467, 0.991712, 0, -0.274171, 0)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/hip_L/knee_L"]
 transform = Transform3D(1, 0, 0, -4.65661e-10, 1, 0, -7.45058e-09, 0, 1, 0, 0, 0)
@@ -390,7 +534,7 @@ transform = Transform3D(1, 0, 0, -4.65661e-10, 1, 0, -7.45058e-09, 0, 1, 0, 0, 0
 transform = Transform3D(0.999239, 0.0389944, 0, -0.0389944, 0.999239, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="hip_R" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.995003, 0.00783093, -0.0995258, 0, 0.996913, 0.0784404, 0.0998333, -0.0780481, 0.991938, -0.075, -0.282, -0.001)
+transform = Transform3D(0.995003, 0.0125777, -0.0990379, 0, 0.992026, 0.125988, 0.0998333, -0.125358, 0.987075, -0.075, -0.282, -0.001)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/hip_R"]
 transform = Transform3D(1, -9.31323e-10, 0, 9.31323e-10, 1, -7.45058e-09, 0, 7.45058e-09, 1, 0, 0, 0)
@@ -399,7 +543,7 @@ transform = Transform3D(1, -9.31323e-10, 0, 9.31323e-10, 1, -7.45058e-09, 0, 7.4
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="knee_R" type="Node3D" parent="genericAvatar/root/chestBase/hip_R"]
-transform = Transform3D(1, 0, 0, 0, 0.996717, -0.0809322, 0, 0.0809322, 0.996717, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.991711, -0.128467, 0, 0.128467, 0.991711, 0, -0.274171, 0)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/hip_R/knee_R"]
 transform = Transform3D(1, 0, 0, -4.65661e-10, 1, 0, -7.45058e-09, 0, 1, 0, 0, 0)
@@ -421,14 +565,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0619893, 0.196939, 0.163494
 visible = false
 mesh = SubResource("ArrayMesh_tre6c")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("StandardMaterial3D_rf577")
+surface_material_override/0 = SubResource("StandardMaterial3D_ik0e2")
 
 [node name="eyeBrows_R" type="MeshInstance3D" parent="genericAvatar/root/chestBase/neck"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0619893, 0.196939, 0.1646)
 visible = false
 mesh = SubResource("ArrayMesh_t454n")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("StandardMaterial3D_rf577")
+surface_material_override/0 = SubResource("StandardMaterial3D_ik0e2")
 
 [node name="eyes" type="MeshInstance3D" parent="genericAvatar/root/chestBase/neck"]
 mesh = SubResource("ArrayMesh_utghw")
@@ -473,7 +617,7 @@ font = ExtResource("3_cyvtf")
 outline_size = 6
 
 [node name="shoulder_L" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.999955, -0.00853229, -0.00428655, 0.00856612, 0.999931, 0.00793412, 0.00421857, -0.00797047, 0.999959, 0.14978, 0.241, -0.0014265)
+transform = Transform3D(0.99857, -0.0532664, 0.00460911, 0.0529866, 0.997452, 0.0477515, -0.00714093, -0.0474389, 0.998848, 0.14978, 0.241, -0.0014265)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/shoulder_L"]
 transform = Transform3D(1, -3.56522e-09, 4.65661e-10, 7.42148e-10, 1, 4.65661e-09, 0, 0, 1, 0, 0, 0)
@@ -482,7 +626,7 @@ transform = Transform3D(1, -3.56522e-09, 4.65661e-10, 7.42148e-10, 1, 4.65661e-0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="elbowL" type="Node3D" parent="genericAvatar/root/chestBase/shoulder_L"]
-transform = Transform3D(1, 0, 0, 0, 0.999152, 0.0411858, 0, -0.0411858, 0.999152, 0.0786937, -0.240458, -0.002611)
+transform = Transform3D(1, 0, 0, 0, 0.999493, 0.0318583, 0, -0.0318583, 0.999493, 0.0786937, -0.240458, -0.002611)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/shoulder_L/elbowL"]
 transform = Transform3D(1, -1.41881e-09, -5.82077e-11, 1.80444e-09, 1, -7.45058e-09, 5.82077e-11, 0, 1, 0, 0, 0)
@@ -491,7 +635,7 @@ transform = Transform3D(1, -1.41881e-09, -5.82077e-11, 1.80444e-09, 1, -7.45058e
 transform = Transform3D(0.994646, 0.103344, 0, -0.103344, 0.994646, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="shoulder_R" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.999956, 0.00853229, 0.00428656, -0.00856613, 0.999931, 0.00793413, -0.00421857, -0.00797047, 0.99996, -0.15, 0.241, -0.001)
+transform = Transform3D(0.998571, 0.0532664, -0.00460911, -0.0529866, 0.997452, 0.0477515, 0.00714094, -0.0474389, 0.998849, -0.15, 0.241, -0.001)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/shoulder_R"]
 transform = Transform3D(1, 1.3606e-09, -4.65661e-10, -8.51287e-10, 1, 1.86265e-09, 2.32831e-10, 0, 1, 0, 0, 0)
@@ -500,7 +644,7 @@ transform = Transform3D(1, 1.3606e-09, -4.65661e-10, -8.51287e-10, 1, 1.86265e-0
 transform = Transform3D(1, 2.40834e-09, 4.65661e-10, -1.27329e-09, 1, 0, -6.98492e-10, 0, 1, 0, 0, 0)
 
 [node name="elbowR" type="Node3D" parent="genericAvatar/root/chestBase/shoulder_R"]
-transform = Transform3D(1, 0, 0, 0, 0.999152, 0.0411858, 0, -0.0411858, 0.999152, -0.0786937, -0.240458, -0.00261103)
+transform = Transform3D(1, 0, 0, 0, 0.999493, 0.0318583, 0, -0.0318583, 0.999493, -0.0786937, -0.240458, -0.00261103)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/shoulder_R/elbowR"]
 transform = Transform3D(1, 1.23691e-09, 0, -2.18279e-10, 1, 0, 9.31323e-10, 0, 1, 0, 0, 0)
@@ -509,19 +653,19 @@ transform = Transform3D(1, 1.23691e-09, 0, -2.18279e-10, 1, 0, 9.31323e-10, 0, 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="tailBase" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.877659, -0.393906, 0.273035, 0, 0.569678, 0.821867, -0.479279, -0.721323, 0.499983, 0, 0, -0.088)
+transform = Transform3D(0.881967, -0.387838, 0.267789, 0, 0.568187, 0.822898, -0.471304, -0.725774, 0.501123, 0, 0, -0.088)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/tailBase"]
 transform = Transform3D(1, 1.49012e-08, -7.45058e-09, 0, 1, 2.98023e-08, -7.45058e-09, 2.98023e-08, 1, 0, 0, 0)
 
 [node name="tailMiddle" type="Node3D" parent="genericAvatar/root/chestBase/tailBase"]
-transform = Transform3D(0.984687, -0.0317683, -0.171406, 0, 0.983255, -0.182235, 0.174325, 0.179445, 0.968199, 0, 0, 0)
+transform = Transform3D(0.976069, -0.039628, -0.213814, 0, 0.983254, -0.182235, 0.217455, 0.177875, 0.959725, 0, 0, 0)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/tailBase/tailMiddle"]
 transform = Transform3D(1, -1.49012e-08, -2.98023e-08, -2.98023e-08, 1, 2.98023e-08, 0, 2.98023e-08, 1, 0, 0, 0)
 
 [node name="tailLast" type="Node3D" parent="genericAvatar/root/chestBase/tailBase/tailMiddle"]
-transform = Transform3D(0.991205, -0.0375904, -0.126903, 0, 0.958819, -0.284016, 0.132354, 0.281517, 0.950385, 0, 0, 0)
+transform = Transform3D(0.986245, -0.0469487, -0.158496, 0, 0.958819, -0.284016, 0.165304, 0.280108, 0.945629, 0, 0, 0)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/tailBase/tailMiddle/tailLast"]
 
@@ -529,10 +673,47 @@ transform = Transform3D(0.991205, -0.0375904, -0.126903, 0, 0.958819, -0.284016,
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1, 0)
 visible = false
 mesh = SubResource("PlaneMesh_uwoon")
-surface_material_override/0 = SubResource("ShaderMaterial_qdl8n")
+surface_material_override/0 = SubResource("ShaderMaterial_ba4ca")
 
 [node name="fire_light" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.891093, 0)
 visible = false
 light_color = Color(0.886275, 0.32549, 0, 1)
 light_energy = 0.5
+
+[node name="poison particles" type="CPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.914838, 0)
+emitting = false
+mesh = SubResource("QuadMesh_pb3ys")
+emission_shape = 3
+emission_box_extents = Vector3(0.25, 0.75, 0.25)
+direction = Vector3(0, 1, 0)
+gravity = Vector3(0, 0.1, 0)
+initial_velocity_max = 0.25
+scale_amount_curve = SubResource("Curve_c44gf")
+color = Color(0.282353, 0.45098, 0.32549, 1)
+hue_variation_min = -0.24
+hue_variation_max = 0.11
+hue_variation_curve = SubResource("Curve_go8sq")
+
+[node name="holyParticles" type="CPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.89117, 0)
+emitting = false
+amount = 32
+lifetime = 3.0
+mesh = SubResource("QuadMesh_1xmce")
+emission_shape = 3
+emission_box_extents = Vector3(0.5, 1, 0.5)
+direction = Vector3(0, 1, 0)
+gravity = Vector3(0, 0.05, 0)
+initial_velocity_min = 0.1
+initial_velocity_max = 0.2
+angular_velocity_min = -180.0
+angular_velocity_max = 180.0
+scale_amount_min = 0.5
+scale_amount_curve = SubResource("Curve_i6bvo")
+
+[node name="aura" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.756546, 0)
+visible = false
+mesh = SubResource("PlaneMesh_hxlsj")
