@@ -19,4 +19,10 @@ func _ready():
 	$playerAvatar6.get_child(0).set_ghost(true)
 	$playerAvatar7.get_child(0).load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5])
 	$playerAvatar7.get_child(0).set_burning(true,Lookup.fire_colors[4])
+	$playerAvatar8.get_child(0).load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5])
+	$playerAvatar8.get_child(0).set_poisoned(true)
+	$playerAvatar9.get_child(0).load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5])
+	$playerAvatar9.get_child(0).set_cursed(true)
+	$playerAvatar10.get_child(0).load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5])
+	$playerAvatar10.get_child(0).set_blessed(true)
 

@@ -523,11 +523,26 @@ func _physics_process(delta):
 	avatar.walk_speed = true_speed #lerp(avatar.walk_speed, true_speed, delta*4.0)
 	avatar.walk_tilt = lerp(avatar.walk_tilt, 0.15, delta*8.0)
 	bobbing(delta, true_speed, input_dir)
+	avoid_close_entities(delta)
 	vel_last_frame = velocity
 	if not snap_up_to_stairs_check(delta):
 		move_and_slide()
 		snap_down_to_stairs_check()
 	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting)
+
+var avoid_radius = 1.0
+var avoid_strength = 2.0
+func avoid_close_entities(delta):
+	for e in get_tree().get_nodes_in_group("entity"):
+		var dif = e.global_position - global_position
+		var dis = dif.length()
+		if dis < avoid_radius:
+			var dir = dif.normalized()
+			var add_v = dir * delta * avoid_strength * (avoid_radius-dis)
+			velocity.x += add_v.x
+			velocity.z += add_v.z
+			pass
+	pass
 
 @rpc("any_peer","unreliable")
 func heavy_impact():
@@ -755,10 +770,12 @@ var h_m_slim = [
 ]
 
 func load_skin_hands(slim, img):
-	var mat = load("res://assets/avatar/playerSkin.tres").duplicate()
-	mat.albedo_texture = img
-	var tran_mat = mat.duplicate()
-	tran_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	#var mat = load("res://assets/avatar/playerSkin.tres").duplicate()
+	#mat.albedo_texture = img
+	#var tran_mat = mat.duplicate()
+	#tran_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	var mat = avatar.base_skin_mat
+	var tran_mat = avatar.tran_skin_mat
 	var key = "normal"
 	if slim: key = "slim"
 	var profile_paths = Global.avatar_profiles[key]
@@ -911,13 +928,10 @@ signal died
 @onready var corpse = preload("res://entities/ragdolls/player_corpse.tscn")
 func die(attacker = "", key = "", weapon_name = "", add_vel = Vector3.ZERO, damage_id = 0):
 	clear_status_effects = true
-	update_status_effect_graphics({})
-	update_status_effect_graphics.rpc({})
 	print(attacker)
 	print(last_attacker)
 	Global.emit_signal("player_death")
 	health = attributes["max_health"]
-	update_health_graphics()
 	match key: #died to natrual causes
 		"fall_damage" : 
 			if attacker == "":
@@ -960,9 +974,12 @@ func die(attacker = "", key = "", weapon_name = "", add_vel = Vector3.ZERO, dama
 		await  get_tree().process_frame
 		emit_signal("died")
 		return
+	update_health_graphics()
 	create_ragdoll.rpc(add_vel, position, graphics.rotation.y, velocity,Inventory.accessories)
-	create_ragdoll(add_vel, position, graphics.rotation.y, velocity,Inventory.accessories)
-	await get_tree().process_frame
+	await create_ragdoll(add_vel, position, graphics.rotation.y, velocity,Inventory.accessories)
+	#await get_tree().process_frame
+	update_status_effect_graphics({})
+	update_status_effect_graphics.rpc({})
 	set_ghost(true)
 	set_ghost.rpc(true)
 	velocity = Vector3.ZERO
@@ -999,6 +1016,7 @@ func set_ghost(val):
 	ghost = val
 	if !is_multiplayer_authority():
 		$playerAvatar/genericAvatar/root/chestBase/neck/nameTag.visible = !val
+		return
 	update_health_graphics()
 
 func set_invulnerable(val):
@@ -1029,6 +1047,7 @@ func create_ragdoll(add_vel,pos,rot,vel,acc):
 	#mat.set("blend_mode", 0)
 	c.load_skin(mat,avatar.is_slim)
 	c.activate("", vel+add_vel, Vector3(0.0,5.0,0.0))
+	return true
 
 
 @onready var hurtboxes = [
@@ -1334,12 +1353,15 @@ func _process(delta):
 				Lookup.statusEffectType.blessed:
 					status_effects[k] -= delta
 					#healing function here
+					damage([[Lookup.damageType.magic,-delta*1.0]], "status_effect", "", "blessed")
 					if status_effects[k] < 0.0:
 						status_effects.erase(k)
 						update_status_effect_graphics(status_effects)
 						update_status_effect_graphics.rpc(status_effects)
 	else:
+		print("clearing status effects")
 		for k in status_effects.keys():
+			print(k)
 			status_effects.erase(k)
 		clear_status_effects = false
 var clear_status_effects = true
@@ -1366,6 +1388,8 @@ func deal_look_damage(dam := [[Lookup.damageType.generic, 1]], dist := 2.0) -> v
 
 ##ui and stuffs
 func update_health_graphics():
+	var percent = remap(health,0.0,attributes["max_health"],0.0,1.0)
+	Global.set_post("shader_parameter/heart_pounding",1.0-percent)
 	var rounded_health = round(health * 4.0)*0.25 #rounds to nearest .25
 	$UI/health.text = str(rounded_health) + " / " + str(attributes["max_health"]) + " HP"
 	var dif = health/attributes["max_health"]
@@ -1386,17 +1410,28 @@ func update_health_graphics():
 @rpc("any_peer","reliable")
 func update_status_effect_graphics(se):
 	#handles burning
-	avatar.set_burning(se.has(Lookup.statusEffectType.burning), Lookup.fire_colors[0])
+	var burning = se.has(Lookup.statusEffectType.burning)
+	var fire_col = Lookup.fire_colors[0]
+	avatar.set_burning(burning,Lookup.fire_colors[0])
 	#handles blighted
 	if se.has(Lookup.statusEffectType.blighted):
-		if se.has(Lookup.statusEffectType.burning):
+		if burning:
 			avatar.set_burning(se.has(Lookup.statusEffectType.blighted), Lookup.fire_colors[2])
+			fire_col = Lookup.fire_colors[2]
+			burning = true
 		else:
-			avatar.set_burning(se.has(Lookup.statusEffectType.blighted), Lookup.fire_colors[1])
+			avatar.set_burning(se.has(Lookup.statusEffectType.blighted), Lookup.fire_colors[4])
+			fire_col = Lookup.fire_colors[4]
+			burning = true
 	#poisoned
 	avatar.set_poisoned(se.has(Lookup.statusEffectType.poisoned))
 	#cursed
 	avatar.set_cursed(se.has(Lookup.statusEffectType.cursed))
 	#blessed
 	avatar.set_blessed(se.has(Lookup.statusEffectType.blessed))
+	if is_multiplayer_authority():
+		Global.set_post("shader_parameter/fire_color",fire_col)
+		Global.set_post("shader_parameter/burning",burning)
+		#Inventory.active_status_effects = se.keys()
+		#Inventory.emit_signal("update_status_effect_graphics")
 

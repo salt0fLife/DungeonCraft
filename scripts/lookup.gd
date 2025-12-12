@@ -210,6 +210,7 @@ const status_effect_names = [
 	"poisoned",
 	"cursed",
 	"blighted",
+	"blessed",
 	"bleeding",
 	"frozen",
 	"lofty"
@@ -222,3 +223,7 @@ enum interact_return_code {
 }
 
 const fire_colors = [Color.ORANGE_RED, Color.AQUA, Color.DARK_RED,Color.SPRING_GREEN,Color.WEB_PURPLE]
+
+const creatures = {
+	"young_spider" : "res://entities/youngSpider.tscn",
+}

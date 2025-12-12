@@ -74,8 +74,13 @@ func _ready():
 	$"../fire".set_surface_override_material(0,fire_mat)
 	#save_pose_transforms()
 	#apply_pose(arm_test)
+	eye_mat = $root/chestBase/neck/eyes.get_active_material(0).duplicate()
+	$root/chestBase/neck/eyes.set_surface_override_material(0,eye_mat)
+	mouth_mat = $root/chestBase/neck/mouth.get_active_material(0).duplicate()
+	$root/chestBase/neck/mouth.set_surface_override_material(0,mouth_mat)
 	pass # Replace with function body.
-
+var eye_mat = null
+var mouth_mat = null
 @export var save_pose = false
 @export var pose_name = "pose001"
 @export var folder_name = "poseTesting"
@@ -1001,6 +1006,7 @@ func spectrum_to_mouth(spectrum, delta = 1.0):
 	set_mouth_param("shader_parameter/mouth_size", Vector2(wide, 0.04))
 	set_mouth_param("shader_parameter/mouthPos", pos)
 	set_mouth_param("shader_parameter/teeth", teeth)
+	bone_paths[5].rotation.x += sin(PI*open)*0.05
 	#var prev_hz = 0
 	#for i in range(1,VU_COUNT+1):   
 		#var hz = i * FREQ_MAX / VU_COUNT;

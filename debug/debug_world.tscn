@@ -299,6 +299,7 @@ transform = Transform3D(0.757332, 0, 1.14764, 0, 1.375, 0, -1.14764, 0, 0.757332
 
 [node name="portal_1" parent="." instance=ExtResource("12_kfbny")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -2)
+world_path = "dungeon_world"
 
 [node name="playerCorpse" parent="." instance=ExtResource("13_lys41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -5)
@@ -306,11 +307,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -5)
 [node name="accessories_debugger" parent="." instance=ExtResource("15_ytdhl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5627, 0, -3.93952)
 value = "devil_wings"
-
-[node name="accessories_debugger2" parent="." instance=ExtResource("15_ytdhl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5627, 0, -3.93952)
-accessory_to_edit = "chestplate"
-value = "iron_chestpiece"
 
 [node name="accessories_debugger3" parent="." instance=ExtResource("15_ytdhl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5627, 0, -3.93952)
@@ -397,6 +393,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -10.1571)
 
 [node name="playerAvatar7" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -9.15712)
+
+[node name="playerAvatar8" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -11.1571)
+
+[node name="playerAvatar9" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -12.1571)
+
+[node name="playerAvatar10" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -13.1571)
 
 [node name="debug effectbox" parent="." instance=ExtResource("26_uei57")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)

@@ -2,6 +2,8 @@ extends Node
 signal update_accessories
 signal update_held_item
 signal update_hotbar
+signal update_status_effect_graphics
+var active_status_effects = []
 
 var accessories = {
 	#armor and clothes

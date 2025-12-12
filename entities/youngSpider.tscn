@@ -1,39 +1,24 @@
-[gd_scene load_steps=7 format=3 uid="uid://quhfkfrhxtql"]
+[gd_scene load_steps=4 format=3 uid="uid://quhfkfrhxtql"]
 
 [ext_resource type="Script" path="res://scripts/youngSpider.gd" id="1_xkeqg"]
+[ext_resource type="PackedScene" uid="uid://clurblonoqlcj" path="res://assets/entityAvatars/young_spider_avatar.tscn" id="2_5qk0d"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_fakim"]
 radius = 0.25
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tufvh"]
-albedo_color = Color(0, 0.541176, 0.576471, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_6i43f"]
-material = SubResource("StandardMaterial3D_tufvh")
-size = Vector3(1, 0.25, 0.5)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kusay"]
-albedo_color = Color(0.560784, 0, 0.027451, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_y72rc"]
-material = SubResource("StandardMaterial3D_kusay")
-size = Vector3(1, 0.25, 0.5)
-
-[node name="youngSpider" type="CharacterBody3D"]
+[node name="youngSpider" type="CharacterBody3D" groups=["entity"]]
+collision_layer = 2
 script = ExtResource("1_xkeqg")
+speed = 6.0
+acceleration = 1.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 shape = SubResource("SphereShape3D_fakim")
 
+[node name="vision" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+
 [node name="graphics" type="Node3D" parent="."]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="graphics"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.259, 0.25)
-mesh = SubResource("BoxMesh_6i43f")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="graphics"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.259, -0.25)
-mesh = SubResource("BoxMesh_y72rc")
-skeleton = NodePath("../..")
+[node name="youngSpiderAvatar" parent="graphics" instance=ExtResource("2_5qk0d")]

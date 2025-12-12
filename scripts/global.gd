@@ -154,6 +154,11 @@ const avatar_profiles = {
 	"res://assets/avatar/avatarProfiles/nice/right_arm_2_slim_001.tscn",
 	]
 	
-	
-	
 }
+
+func instance_creature(key: String,location : Vector3,modifiers = {}):
+	emit_signal("spawnCreature",key,location,modifiers)
+	pass
+
+func set_post(key,val):
+	emit_signal("set_post_param",key,val)

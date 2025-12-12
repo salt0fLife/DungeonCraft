@@ -24,6 +24,9 @@ signal remove_shrapnel
 func _on_host_died():
 	emit_signal("remove_shrapnel")
 
+@rpc("any_peer","reliable")
 func apply_status_effect(effect_id:int,time:float):
+	if !is_multiplayer_authority():
+		return
 	get_node(health_handler).add_status_effect(effect_id,time)
 	pass

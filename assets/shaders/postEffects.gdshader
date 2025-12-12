@@ -11,6 +11,14 @@ uniform sampler2D blue_ramp;
 uniform float grading_power;
 uniform sampler2D lightness_map;
 uniform float lightness_map_power;
+uniform float heart_pounding = 0.0;
+uniform sampler2D vingette_tex : filter_linear;
+uniform vec3 blood_col : source_color;
+uniform sampler2D vision_veins :filter_linear;
+uniform vec3 fire_color : source_color;
+uniform sampler2D fire_noise : filter_linear, repeat_enable;
+uniform sampler2D screen_gradient : filter_linear;
+uniform bool burning = false;
 
 vec2 spiral_uv(vec2 uv, vec2 center, float angle) {
 	uv -= center;
@@ -52,6 +60,34 @@ void fragment() {
 	float luminance = (COLOR.r + COLOR.g + COLOR.b) * 0.33333333333;
 	vec3 lum_grad_col = vec3(1.0) * mix(vec3(0.0), texture(lightness_map, vec2(luminance,0.0)).rgb, lightness_map_power);
 	COLOR.rgb += lum_grad_col;
+	float h_p = heart_pounding*0.5*heart_pounding*1.25 + sin(TIME*6.1+sin(TIME*12.0))*0.025;
+	vec4 vingette = texture(vingette_tex,UV);
+	vec4 veins = texture(vision_veins,UV);
+	if (veins.r*vingette.r*h_p > 0.1){
+		//COLOR.rgb = mix(COLOR.rgb,blood_col,h_p);
+		COLOR.rgb = mix(COLOR.rgb,blood_col,vingette.r*h_p*2.0);
+	}
+	if (heart_pounding > 0.5) {
+		COLOR.rgb = mix(COLOR.rgb,COLOR.rgb+blood_col,(heart_pounding-0.5)*veins.r*0.2);
+	}
+	vec3 fire = texture(screen_gradient,UV).rgb*(texture(fire_noise,UV*vec2(2.0,2.0)+vec2(TIME*0.5,TIME*1.2))*texture(fire_noise,UV*vec2(2.0,2.0)+vec2(-TIME*0.5,TIME*1.5))).rgb;
+	if (burning) {
+		if (fire.r > 0.15){
+			COLOR.rgb = mix(fire_color,vec3(1.0,1.0,1.0),fire.r);
+		}
+		if (fire.r > 0.1){
+			COLOR.rgb += fire_color;
+		}
+	}
+	
+	
+	//COLOR.rgb = mix(COLOR.rgb, blood_col,(vingette.r+sin(TIME*10.0+sin(TIME*20.0))*0.1)*heart_pounding*0.5);
+	//
+	//if ((vingette.r+sin(TIME*10.0+sin(TIME*20.0))*0.01+texture(vision_veins, UV).r*0.25)*heart_pounding > 0.2) {
+		////COLOR = texture(ScreenTexture,UV+vec2(vingette.r*heart_pounding*0.001*sin(TIME*4.0),vingette.r*heart_pounding*0.001*sin(TIME*4.0)));
+		//COLOR.rgb = mix(COLOR.rgb,blood_col,vingette.r*heart_pounding);
+		////COLOR = texture(ScreenTexture,UV+vec2(vingette.r*heart_pounding,vingette.r*heart_pounding));
+	//}
 }
 
 //void light() {

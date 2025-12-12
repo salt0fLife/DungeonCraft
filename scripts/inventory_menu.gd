@@ -20,6 +20,7 @@ func _ready():
 	update_hotbar_graphics()
 	Inventory.connect("update_held_item", _on_hotbar_slot_changed)
 	Inventory.connect("update_hotbar", update_hotbar_graphics)
+	Inventory.connect("update_status_effect_graphics",_on_update_status_effect_graphics)
 	Global.connect("update_skin", load_skin)
 	for i in range(0,$hotbar/slots/itemIcons.get_children().size()):
 		var n = $hotbar/slots/itemIcons.get_child(i)
@@ -225,3 +226,25 @@ func load_skin():
 	var t = [Global.ears, Global.tail, Global.snout, Global.slim, Global.eyeColor, Global.mouthData]
 	var skin_img = Global.data_to_image(Global.skin)
 	avatar.load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5])
+
+
+
+
+func _on_update_status_effect_graphics():
+	var se = Inventory.active_status_effects
+	#handles burning
+	avatar.set_burning(se.has(Lookup.statusEffectType.burning), Lookup.fire_colors[0])
+	#handles blighted
+	if se.has(Lookup.statusEffectType.blighted):
+		if se.has(Lookup.statusEffectType.burning):
+			avatar.set_burning(se.has(Lookup.statusEffectType.blighted), Lookup.fire_colors[2])
+		else:
+			avatar.set_burning(se.has(Lookup.statusEffectType.blighted), Lookup.fire_colors[1])
+	#poisoned
+	avatar.set_poisoned(se.has(Lookup.statusEffectType.poisoned))
+	#cursed
+	avatar.set_cursed(se.has(Lookup.statusEffectType.cursed))
+	#blessed
+	avatar.set_blessed(se.has(Lookup.statusEffectType.blessed))
+
+
