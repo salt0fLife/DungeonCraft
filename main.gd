@@ -419,7 +419,7 @@ func _on_spawn_creature(key, location, attribute_modifiers = {}, require_host = 
 	c.position = location
 	for a in attribute_modifiers.keys(): #adds modifiers
 		c.attributes[a] = attribute_modifiers[a]
-	creatureSync.add_child(c)
+	creatureSync.add_child(c,true)
 
 @onready var worldSync = $worldSync
 func _on_change_world(key, require_host = false):

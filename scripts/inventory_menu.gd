@@ -174,15 +174,15 @@ func close():
 	"shoeR" : $accessories/gearR/TabContainer/clothes2/shoeR,
 	"shoeL" : $accessories/gearR/TabContainer/clothes2/shoeL,
 	"greaves" : $accessories/gearL/TabContainer/clothes/greaves,
-	##jewelry
-	#"necklace1" : "",
-	#"necklace2" : "",
-	#"necklace3" : "",
-	#"necklace4" : "",
-	#"crown" : "",
-	#"braceletR" : "",
-	#"braceletL" : "",
-	#"belt" : "",
+	#jewelry
+	"necklace1" : $accessories/gearL/TabContainer/jewelry/necklace1,
+	"necklace2" : $accessories/gearL/TabContainer/jewelry/necklace2,
+	"necklace3" : $accessories/gearL/TabContainer/jewelry/necklace3,
+	"necklace4" : $accessories/gearL/TabContainer/jewelry/necklace4,
+	"crown" : $accessories/gearL/TabContainer/jewelry/crown,
+	"braceletR" : $accessories/gearL/TabContainer/jewelry/braceletR,
+	"braceletL" : $accessories/gearL/TabContainer/jewelry/braceletL,
+	"belt" : $accessories/gearL/TabContainer/jewelry/belt,
 	##rings
 	#"ringFR" : "",
 	#"ringSR" : "",
@@ -208,7 +208,16 @@ func load_accessories(a = Inventory.accessories):
 			accessories_paths[k] = []
 			for g in Lookup.items[val][3][0]:
 				var s = load(g[0]).instantiate()
-				avatar.bone_paths[g[1]].add_child(s)
+				var bi = g[1]
+				if k == "shoeR" and bi == 2:
+					bi = 4
+				elif k == "shoeL" and bi == 4:
+					bi = 2 #swaps the feet for shoes
+				elif (k == "gloveR" or k == "braceletR") and bi == 7:
+					bi = 9
+				elif (k == "gloveL" or k == "braceletL") and bi == 9:
+					bi = 7 #swaps hands for bracelets and gloves
+				avatar.bone_paths[bi].add_child(s)
 				accessories_paths[k] += [s]
 			
 			if accessory_buttons.has(k):

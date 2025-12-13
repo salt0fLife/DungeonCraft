@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://dntnunlwfyesu"]
+[gd_scene load_steps=45 format=3 uid="uid://dntnunlwfyesu"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_5fl5y"]
 [ext_resource type="Script" path="res://debug/debug_world.gd" id="1_87rlt"]
@@ -22,7 +22,6 @@
 [ext_resource type="AudioStream" uid="uid://b3ss5ji72fuf8" path="res://assets/sounds/music/morningFogBaseline.mp3" id="20_cn7hf"]
 [ext_resource type="AudioStream" uid="uid://us4531tbg0sh" path="res://assets/sounds/music/triplets.mp3" id="21_5nv8w"]
 [ext_resource type="PackedScene" uid="uid://cb6ovvv8dnrb1" path="res://world/levels/level_3_test.tscn" id="21_ooxf7"]
-[ext_resource type="PackedScene" uid="uid://c4u7j7ayr1kum" path="res://assets/environmentPieces/ambience/rain.tscn" id="23_yrjkj"]
 [ext_resource type="PackedScene" uid="uid://dtdp0xkmjwtre" path="res://entities/punching_bag.tscn" id="25_2gtog"]
 [ext_resource type="Script" path="res://debug/avatar_state_tester.gd" id="25_un0qr"]
 [ext_resource type="PackedScene" uid="uid://dokv4awf7hm7b" path="res://debug/debug_effectbox.tscn" id="26_uei57"]
@@ -363,8 +362,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.6113, 2.31994, 10.7518)
 stream = ExtResource("21_5nv8w")
 
 [node name="level_3_test" parent="." instance=ExtResource("21_ooxf7")]
-
-[node name="environmentEffects" parent="." instance=ExtResource("23_yrjkj")]
 
 [node name="punchingBag" parent="." instance=ExtResource("25_2gtog")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.64017, 0, -8.12931)

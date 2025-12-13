@@ -149,7 +149,7 @@ func bite():
 	bite_timer = bite_cooldown
 	for b in bite_area.get_overlapping_bodies():
 		if b.has_method("take_damage") and !b.is_in_group("entity_spider"):
-			b.take_damage([[bite_strength,Lookup.damageType.stab]], bite_area.global_position, "young spider", "fangs")
+			b.take_damage.rpc([[bite_strength,Lookup.damageType.stab]], bite_area.global_position, "young spider", "fangs")
 
 @export var decision_timer = randf_range(0.0,1.0)
 @export var decision_speed = 0.1

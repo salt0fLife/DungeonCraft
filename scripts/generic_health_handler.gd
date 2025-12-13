@@ -4,6 +4,7 @@ extends Node3D
 signal died
 var hitmarker = preload("res://assets/effects/hitmarker.tscn")
 
+@rpc("any_peer","reliable")
 func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, count_attacker = false):
 	var hh = get_node(entity_base)
 	var a = hh.attributes

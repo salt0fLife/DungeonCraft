@@ -1,5 +1,5 @@
 extends Node3D
-var spider_count = 5
+var spider_count = 20
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

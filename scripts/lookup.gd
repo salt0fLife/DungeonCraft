@@ -106,8 +106,8 @@ const items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonu
 	"devil_wings" : ["devil wings", "res://accessories/cape/wings.tscn", itemType.accessories_cape, [[["res://accessories/cape/wings.tscn", 0]], {"can_fly":true,"flying_speed":+2.0,"jump_velocity":+3.0, "speed" : +0.25}], ""],
 	"debug_cape" : ["devil wings", "res://accessories/cape/debug_cape.tscn", itemType.accessories_cape, [[["res://accessories/cape/debug_cape.tscn", 0]], {"can_fly":true,"flying_speed":+1.0, "speed" : +0.25}], ""],
 	"speed_boots" : ["speed boots", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 2],["res://accessories/boots/leather_boot_graphics.tscn", 4]], {"speed" : +2.0, "speed_multiplier" : +0.5, "defense_footL" : +0.1, "defense_footR" : +0.1}], ""],
-	"debug_speed_boot_L" : ["speed boots 2", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 2]], {"speed" : +0.25, "speed_multiplier" : +0.5, "defense_footL" : +0.1}], "","debug_speed_boots"],
-	"debug_speed_boot_R" : ["speed boots 2", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 4]], {"speed" : +0.25, "speed_multiplier" : +0.5, "defense_footR" : +0.1}], "","debug_speed_boots"],
+	"debug_speed_boot_L" : ["left speedy boot", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 2]], {"speed" : +0.25, "speed_multiplier" : +0.5, "defense_footL" : +0.1}], "","debug_speed_boots"],
+	"debug_speed_boot_R" : ["right speedy boot", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 4]], {"speed" : +0.25, "speed_multiplier" : +0.5, "defense_footR" : +0.1}], "","debug_speed_boots"],
 	
 	##armor
 	"copper_helmet" : ["copper helmet", "res://assets/itemGraphics/armor/copper/copperHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/copper/copperHelmet.glb", 5]], {"defense_head" : +0.2, "speed": -0.1}], "res://assets/textures/items/copper helmet tn.png"],
@@ -187,7 +187,13 @@ const items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonu
 	##weapons
 	"iron_sword" : ["iron sword", "res://assets/itemGraphics/iron_sword.tscn", itemType.weapons_sword, [[[damageType.slash, 5.0]],3.0,[[damageType.stab, 2.5]]], "res://assets/textures/items/ironSword.png"],
 	"short_bow" : ["short bow", "res://assets/itemGraphics/oak_bow.tscn", itemType.weapons_projectile, ["arrow", "punch"], ""],
-	"magic_bow" : ["spark wand", "res://assets/itemGraphics/spark_wand.tscn", itemType.weapons_projectile, ["spark_bolt", "punch"], "res://assets/textures/items/sparkWand.png"]
+	"magic_bow" : ["spark wand", "res://assets/itemGraphics/spark_wand.tscn", itemType.weapons_projectile, ["spark_bolt", "punch"], "res://assets/textures/items/sparkWand.png"],
+	
+	
+	#jewelry
+	"mana_gen_necklace" : ["arcane necklace", "res://assets/itemGraphics/spark_wand.tscn", itemType.accessories_necklace, [[], {"mana_regen_speed" : +2.5, "max_health": -0.2}], ""], # no texture yet
+	"pendant_of_titans" : ["titan pendant", "res://assets/itemGraphics/spark_wand.tscn", itemType.accessories_necklace, [[], {"size" : +0.2, "max_health": +10.0}], ""], # no texture yet
+
 }
 
 const set_bonus = { #[[item1,item2,item3],{attribute modifiers}]

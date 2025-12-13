@@ -24,6 +24,7 @@ var attributes = {
 	"speed_multiplier" : 1.0,
 	"flying_speed" : 3.0,
 	"max_health" : 10.0,
+	"max_mana" : 10.0,
 	"jump_velocity" : 6.0,
 	"can_fly" : false,
 	"air_acceleration": 1.0,
@@ -44,6 +45,8 @@ const base_attributes = {
 	"speed_multiplier" : 1.0,
 	"flying_speed" : 5.0,
 	"max_health" : 10.0,
+	"max_mana" : 10.0,
+	"mana_regen_speed" : 1.0,
 	"jump_velocity" : 6.0,
 	"can_fly" : false,
 	"air_acceleration": 1.0,
@@ -182,7 +185,21 @@ func update_accessories_graphics(a = Inventory.accessories):
 			accessories_paths[k] = []
 			for g in Lookup.items[val][3][0]:
 				var s = load(g[0]).instantiate()
-				avatar.bone_paths[g[1]].add_child(s)
+				var bi = g[1]
+				if k == "shoeR" and bi == 2:
+					bi = 4
+				elif k == "shoeL" and bi == 4:
+					bi = 2 #swaps the feet for shoes
+				elif (k == "gloveR" or k == "braceletR") and bi == 7:
+					bi = 9
+				elif (k == "gloveL" or k == "braceletL") and bi == 9:
+					bi = 7 #swaps hands for bracelets and gloves
+				if bi == 9:
+					var s2 = s.duplicate()
+					elbowR.add_child(s2)
+					accessories_paths[k] += [s2]
+					#elbowR.add_child(s.duplicate())
+				avatar.bone_paths[bi].add_child(s)
 				accessories_paths[k] += [s]
 			#var s = load(Lookup.items[val][3][0]).instantiate()
 			#AG_handler.add_child(s)
@@ -202,8 +219,10 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * 1.5
 #var speed_multipler = 1.0
 
 var health = 0.0
+var mana = 0.0
 func _ready():
 	health = attributes["max_health"]
+	mana = attributes["max_mana"]
 	#voip.settup_audio(get_multiplayer_authority())
 	var emat = avatar.eyes.get_active_material(0).duplicate()
 	avatar.eyes.set_surface_override_material(0, emat)
@@ -957,9 +976,9 @@ func die(attacker = "", key = "", weapon_name = "", add_vel = Vector3.ZERO, dama
 		_:
 			if !key_nicknames.has(key):
 				if last_attacker != "":
-					Global.print_chat(display_name + " died to " + key + " " + weapon_name + " while fighting " + last_attacker)
+					Global.print_chat(display_name + " died to " + key + " " + weapon_name + " while fighting " + last_attacker, "red")
 				else:
-					Global.print_chat(display_name + " died to " + key + " " + weapon_name)
+					Global.print_chat(display_name + " died to " + key + " " + weapon_name, "red")
 				pass
 			elif attacker == "":
 				if last_attacker == "":
@@ -1100,6 +1119,10 @@ func use_sword():
 		play_arm_anim("slash_1")
 
 func use_projectile_weapon():
+	if mana - 2.0 < 0.0:
+		return
+	else:
+		mana -= 2.0
 	var proj_key = held_item_data[3][0]
 	var anim_key = held_item_data[3][1]
 	play_arm_anim(anim_key)
@@ -1368,7 +1391,16 @@ func _process(delta):
 			print(k)
 			status_effects.erase(k)
 		clear_status_effects = false
+	if mana < attributes["max_mana"]:
+		mana += delta * attributes["mana_regen_speed"]
+		if mana > attributes["max_mana"]:
+			mana = attributes["max_mana"]
+		update_mana_graphics()
 var clear_status_effects = true
+
+func update_mana_graphics():
+	$UI/mana.text = str(round(mana)) + " / " + str(attributes["max_mana"])
+	pass
 
 func update_status_effect_ui():
 	var text = ""

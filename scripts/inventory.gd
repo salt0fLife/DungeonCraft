@@ -48,10 +48,10 @@ var hotbar = [
 	"", #1
 	"short_bow", #2
 	"magic_bow", #3
-	"rusted_copper_leggings", #4
+	"mana_gen_necklace", #4
 	"rusted_copper_chestplate", #5
 	"rusted_copper_helmet", #6
-	"rusted_copper_glove_r", #7
+	"pendant_of_titans", #7
 	"rusted_copper_greaves", #8
 	"rusted_copper_glove_l" #9
 ]
