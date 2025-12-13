@@ -70,6 +70,9 @@ const base_attributes = {
 	"toxic_defense" : 1.0,
 	"explosion_defense" : 1.0,
 	"magic_defense" : 1.0,
+	"lightning_defense" : 1.0,
+	"holy_defense" : 1.0,
+	"blight_defense" : 1.0
 	#
 }
 var accessories_paths = {
@@ -861,7 +864,8 @@ func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, coun
 	velocity += knockback
 	if health <= 0:
 		var key = id
-		die(attacker, key, weapon_name, knockback, primary_damage_type)
+		call_deferred("die",attacker, key, weapon_name, knockback, primary_damage_type)
+		#die(attacker, key, weapon_name, knockback, primary_damage_type)
 	update_health_graphics()
 
 func add_status_effect(id,time):

@@ -1,10 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://quhfkfrhxtql"]
+[gd_scene load_steps=8 format=3 uid="uid://quhfkfrhxtql"]
 
 [ext_resource type="Script" path="res://scripts/youngSpider.gd" id="1_xkeqg"]
 [ext_resource type="PackedScene" uid="uid://clurblonoqlcj" path="res://assets/entityAvatars/young_spider_avatar.tscn" id="2_5qk0d"]
+[ext_resource type="PackedScene" uid="uid://ctjywblutag5l" path="res://assets/entityComponents/hurtbox.tscn" id="3_hgytl"]
+[ext_resource type="PackedScene" uid="uid://bdfkp2cafdvmv" path="res://assets/entityComponents/generic_health_handler.tscn" id="4_p5lt5"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_fakim"]
 radius = 0.25
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_okujn"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sg02r"]
+size = Vector3(0.788284, 0.497559, 0.956207)
 
 [node name="youngSpider" type="CharacterBody3D" groups=["entity"]]
 collision_layer = 2
@@ -22,3 +29,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 [node name="graphics" type="Node3D" parent="."]
 
 [node name="youngSpiderAvatar" parent="graphics" instance=ExtResource("2_5qk0d")]
+
+[node name="bite_area" type="Area3D" parent="graphics"]
+collision_layer = 0
+collision_mask = 72
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="graphics/bite_area"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.457653, -0.554167)
+shape = SubResource("SphereShape3D_okujn")
+
+[node name="hurtbox" parent="graphics" groups=["entity_spider"] instance=ExtResource("3_hgytl")]
+health_handler = NodePath("../../generic_health_handler")
+id = "body"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="graphics/hurtbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0120926, 0.473468, 0.0118561)
+shape = SubResource("BoxShape3D_sg02r")
+
+[node name="generic_health_handler" parent="." instance=ExtResource("4_p5lt5")]

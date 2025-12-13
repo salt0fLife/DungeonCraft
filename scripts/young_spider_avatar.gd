@@ -103,3 +103,53 @@ func reset():
 		else:
 			bone_paths[i+5].rotation.y = PI
 	pass
+
+@onready var meshes = [
+	$root/body/torso/MeshInstance3D,
+	$root/body/torso/leg_base/leg/knee/MeshInstance3D2,
+	$root/body/abdomen/MeshInstance3D,
+	$root/body/head/MeshInstance3D,
+	$root/body/head/MeshInstance3D2
+	
+	
+]
+
+var skin_path = "res://assets/materials/generic_entity_mat.tres"
+var mat = null
+var fire_mat = null
+func _ready():
+	mat = load(skin_path).duplicate()
+	for n in meshes:
+		n.set_surface_override_material(0,mat)
+	fire_mat = $fire.get_active_material(0).duplicate()
+	$fire.set_surface_override_material(0,fire_mat)
+
+func set_ghost(val: bool) -> void:
+	if !val:
+		mat.set("shader_parameter/ghostly", 0.0)
+	else:
+		mat.set("shader_parameter/ghostly", 1.0)
+	pass
+
+func set_burning(val : bool,col := Color.ORANGE_RED) -> void:
+	mat.set("shader_parameter/burning", val)
+	mat.set("shader_parameter/fire_col", col)
+	$fire.visible = val
+	fire_mat.set("shader_parameter/fire_col", col)
+	$fire_light.visible = val
+	$fire_light.light_color = col
+
+func set_poisoned(val) -> void:
+	mat.set("shader_parameter/poisoned", val)
+	$"poison particles".emitting = val
+	pass
+
+func set_cursed(val) -> void:
+	mat.set("shader_parameter/cursed", val)
+	pass
+
+func set_blessed(val: bool) -> void:
+	mat.set("shader_parameter/blessed", val)
+	$holyParticles.emitting = val
+	$aura.visible = val
+

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bdfkp2cafdvmv"]
+
+[ext_resource type="Script" path="res://scripts/generic_health_handler.gd" id="1_qbd14"]
+
+[node name="generic_health_handler" type="Node3D"]
+script = ExtResource("1_qbd14")
+entity_base = NodePath("..")
+entity_avatar = NodePath("../graphics/youngSpiderAvatar")

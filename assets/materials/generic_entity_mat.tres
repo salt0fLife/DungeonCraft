@@ -1,0 +1,63 @@
+[gd_resource type="ShaderMaterial" load_steps=9 format=3 uid="uid://d1kqliafc1xq6"]
+
+[ext_resource type="Shader" path="res://assets/shaders/generic_entity_mat.gdshader" id="1_6aurx"]
+[ext_resource type="Texture2D" uid="uid://cjul3xme2xqhh" path="res://assets/textures/entitySkins/TilingTest.png" id="2_x040r"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_a57bj"]
+noise_type = 5
+frequency = 1.0
+fractal_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_p0qf4"]
+noise = SubResource("FastNoiseLite_a57bj")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ld084"]
+noise_type = 2
+frequency = 0.093
+fractal_type = 3
+cellular_distance_function = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_wwip2"]
+width = 128
+height = 128
+seamless = true
+noise = SubResource("FastNoiseLite_ld084")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_h68nv"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8heuj"]
+width = 128
+height = 128
+seamless = true
+noise = SubResource("FastNoiseLite_h68nv")
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_6aurx")
+shader_parameter/albedo = Color(0.670588, 0.517647, 0.643137, 1)
+shader_parameter/col1 = Color(1, 1, 1, 1)
+shader_parameter/col2 = Color(0.509804, 0.00392157, 0.952941, 1)
+shader_parameter/col3 = Color(0, 0.47451, 0.364706, 1)
+shader_parameter/col4 = Color(0.470588, 0.188235, 0, 1)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/ghostly = 0.0
+shader_parameter/do_transparency = false
+shader_parameter/burning = false
+shader_parameter/fire_col = Color(1, 0.298039, 0.0941176, 1)
+shader_parameter/poisoned = false
+shader_parameter/cursed = false
+shader_parameter/blessed = false
+shader_parameter/cursed_col = Color(0.14902, 0.00392157, 0.0509804, 1)
+shader_parameter/blessed_col = Color(0.831373, 0.509804, 0, 1)
+shader_parameter/texture_albedo = ExtResource("2_x040r")
+shader_parameter/fire_tex = SubResource("NoiseTexture2D_8heuj")
+shader_parameter/cursed_tex = SubResource("NoiseTexture2D_wwip2")
+shader_parameter/blessed_tex = SubResource("NoiseTexture2D_p0qf4")

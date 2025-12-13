@@ -13,12 +13,12 @@ func take_damage(val, pos, owned_by, weapon_name, knockback = Vector3.ZERO, reme
 	var amount = val#*damage_mult
 	get_node(health_handler).damage(amount, id, owned_by, weapon_name, knockback, remember)
 	#h.val = amount
-	for a in val:
-		var h = hitmarker.instantiate()
-		h.val = a[1]
-		h.type = a[0]
-		add_child(h)
-		h.global_position = pos
+	#for a in val:
+		#var h = hitmarker.instantiate()
+		#h.val = a[1]
+		#h.type = a[0]
+		#add_child(h)
+		#h.global_position = pos
 
 signal remove_shrapnel
 func _on_host_died():
