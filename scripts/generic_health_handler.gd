@@ -47,6 +47,7 @@ func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, coun
 				total += d[1] / a["true_defense"]
 		if a["health"] - total < 0.25:
 			hh.die(attacker,weapon_name)
+			hh.velocity += knockback * Vector3(100.0,100.0,100.0)
 		else:
 			hh.set_health(a["health"]-total)
 

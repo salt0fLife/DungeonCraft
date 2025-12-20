@@ -1,0 +1,57 @@
+[gd_scene load_steps=18 format=3 uid="uid://dprwofrfrs51q"]
+
+[ext_resource type="PackedScene" uid="uid://t5trjvdl4cqj" path="res://assets/itemGraphics/armor/iron/iron_helmet.tscn" id="1_3wscu"]
+[ext_resource type="PackedScene" uid="uid://c172ef1tjumxi" path="res://assets/itemGraphics/armor/iron/iron_chestplate_l_1.tscn" id="2_um17s"]
+[ext_resource type="PackedScene" uid="uid://dld25xpyed08x" path="res://assets/itemGraphics/armor/iron/iron_chestplate_r_1.tscn" id="3_hndxb"]
+[ext_resource type="PackedScene" uid="uid://ctgetvu8yyar" path="res://assets/itemGraphics/armor/iron/iron_chestplate.tscn" id="4_vqwf5"]
+[ext_resource type="PackedScene" uid="uid://b606gw300q137" path="res://assets/itemGraphics/armor/iron/iron_chestplate_l_2.tscn" id="5_af73o"]
+[ext_resource type="PackedScene" uid="uid://dvfavdrl64f74" path="res://assets/itemGraphics/armor/iron/iron_chestplate_r_2.tscn" id="6_gjlr1"]
+[ext_resource type="PackedScene" uid="uid://btaftkha0h2ki" path="res://assets/itemGraphics/armor/iron/iron_greave_l.tscn" id="7_8ikll"]
+[ext_resource type="PackedScene" uid="uid://uohlvnirhsmv" path="res://assets/itemGraphics/armor/iron/iron_greave_r.tscn" id="8_im32m"]
+[ext_resource type="PackedScene" uid="uid://c5g48ghwsg0bm" path="res://assets/itemGraphics/armor/iron/iron_leggings_l.tscn" id="9_ne528"]
+[ext_resource type="PackedScene" uid="uid://ereww0lhq3c8" path="res://assets/itemGraphics/armor/iron/iron_leggings_r.tscn" id="10_67l3q"]
+[ext_resource type="PackedScene" uid="uid://5ar3k2h66ble" path="res://assets/itemGraphics/armor/iron/iron_leggings.tscn" id="11_gmsbk"]
+[ext_resource type="PackedScene" uid="uid://cosss85mggbxp" path="res://assets/itemGraphics/armor/iron/iron_leggings_l_2.tscn" id="12_yup2m"]
+[ext_resource type="PackedScene" uid="uid://mblau4m572e8" path="res://assets/itemGraphics/armor/iron/iron_leggings_r_2.tscn" id="13_kqcro"]
+[ext_resource type="PackedScene" uid="uid://b5me76do6yhxg" path="res://assets/itemGraphics/armor/iron/iron_boot_l.tscn" id="14_xuqig"]
+[ext_resource type="PackedScene" uid="uid://uc5atatetly5" path="res://assets/itemGraphics/armor/iron/iron_boot_r.tscn" id="15_5c35g"]
+[ext_resource type="PackedScene" uid="uid://qttlbudyrw8l" path="res://assets/itemGraphics/armor/iron/iron_glove_r.tscn" id="16_v4vuv"]
+[ext_resource type="PackedScene" uid="uid://dpnkxmydrym0o" path="res://assets/itemGraphics/armor/iron/iron_glove_l.tscn" id="17_fobld"]
+
+[node name="iron armor decomp" type="Node3D"]
+
+[node name="ironArmor" type="Node3D" parent="."]
+
+[node name="iron helmet" parent="ironArmor" instance=ExtResource("1_3wscu")]
+
+[node name="iron chestplate L 1" parent="ironArmor" instance=ExtResource("2_um17s")]
+
+[node name="iron chestplate R 1" parent="ironArmor" instance=ExtResource("3_hndxb")]
+
+[node name="iron chestplate" parent="ironArmor" instance=ExtResource("4_vqwf5")]
+
+[node name="iron chestplate L 2" parent="ironArmor" instance=ExtResource("5_af73o")]
+
+[node name="iron chestplate R 2" parent="ironArmor" instance=ExtResource("6_gjlr1")]
+
+[node name="iron greave L" parent="ironArmor" instance=ExtResource("7_8ikll")]
+
+[node name="iron greave R" parent="ironArmor" instance=ExtResource("8_im32m")]
+
+[node name="iron leggings L" parent="ironArmor" instance=ExtResource("9_ne528")]
+
+[node name="iron leggings R" parent="ironArmor" instance=ExtResource("10_67l3q")]
+
+[node name="iron leggings" parent="ironArmor" instance=ExtResource("11_gmsbk")]
+
+[node name="iron leggings L2" parent="ironArmor" instance=ExtResource("12_yup2m")]
+
+[node name="iron leggings R2" parent="ironArmor" instance=ExtResource("13_kqcro")]
+
+[node name="iron boot L" parent="ironArmor" instance=ExtResource("14_xuqig")]
+
+[node name="iron boot R" parent="ironArmor" instance=ExtResource("15_5c35g")]
+
+[node name="iron glove R" parent="ironArmor" instance=ExtResource("16_v4vuv")]
+
+[node name="iron glove L" parent="ironArmor" instance=ExtResource("17_fobld")]

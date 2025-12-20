@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://dntnunlwfyesu"]
+[gd_scene load_steps=46 format=3 uid="uid://dntnunlwfyesu"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_5fl5y"]
 [ext_resource type="Script" path="res://debug/debug_world.gd" id="1_87rlt"]
@@ -25,6 +25,7 @@
 [ext_resource type="PackedScene" uid="uid://dtdp0xkmjwtre" path="res://entities/punching_bag.tscn" id="25_2gtog"]
 [ext_resource type="Script" path="res://debug/avatar_state_tester.gd" id="25_un0qr"]
 [ext_resource type="PackedScene" uid="uid://dokv4awf7hm7b" path="res://debug/debug_effectbox.tscn" id="26_uei57"]
+[ext_resource type="PackedScene" uid="uid://c4u7j7ayr1kum" path="res://assets/environmentPieces/ambience/rain.tscn" id="26_vu1q6"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ks42u"]
 
@@ -422,3 +423,5 @@ time = 10.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -10)
 effect_to_apply = 4
 time = 1.0
+
+[node name="rain" parent="." instance=ExtResource("26_vu1q6")]

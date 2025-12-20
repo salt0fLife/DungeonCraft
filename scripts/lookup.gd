@@ -112,7 +112,6 @@ const items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonu
 	##armor
 	"copper_helmet" : ["copper helmet", "res://assets/itemGraphics/armor/copper/copperHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/copper/copperHelmet.glb", 5]], {"defense_head" : +0.2, "speed": -0.1}], "res://assets/textures/items/copper helmet tn.png"],
 	"rusted_iron_helmet" : ["rusted iron helmet", "res://assets/itemGraphics/armor/rustedIron/rustedIronHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/rustedIron/rustedIronHelmet.glb", 5]], {"defense_head" : +0.2, "speed": -0.15}], "res://assets/textures/items/rusted iron helmet tn.png"],
-	"iron_helmet" : ["iron helmet", "res://assets/itemGraphics/armor/iron/ironHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/iron/ironHelmet.glb", 5]], {"defense_head" : +0.4, "speed": -0.15}], "res://assets/textures/items/iron helmet tn.png"],
 	"copper_chestplate" : ["copper chestplate", "res://assets/itemGraphics/armor/copper/CopperChestplate.glb", itemType.accessories_chestplate, [[["res://assets/itemGraphics/armor/copper/CopperChestplate.glb", 0],["res://assets/itemGraphics/armor/copper/CopperPauldronL.glb", 6],["res://assets/itemGraphics/armor/copper/CopperPauldronR.glb", 8]], {"defense_body" : +0.2,"defense_arms" : +0.2, "speed": -0.2}], "res://assets/textures/items/copper chestplate tn.png"],
 	
 	#rusted copper
@@ -181,6 +180,27 @@ const items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonu
 		""], # no texture yet
 	
 	
+	##iron armor
+	#helmet
+	"iron_helmet" : ["iron helmet", 
+	"res://assets/itemGraphics/armor/iron/iron_helmet.tscn", 
+	itemType.accessories_hat, [[
+		["res://assets/itemGraphics/armor/iron/iron_helmet.tscn", 5]], 
+		{"defense_head" : +0.3, "speed": -0.1}], 
+		""], # no texture yet
+	#chestplate
+	"iron_chestplate" : ["iron chestplate", 
+	"res://assets/itemGraphics/armor/iron/iron_chestplate.tscn", 
+	itemType.accessories_chestplate, [[
+		["res://assets/itemGraphics/armor/iron/iron_chestplate.tscn", 0],
+		["res://assets/itemGraphics/armor/iron/iron_chestplate_r_1.tscn", 8],
+		["res://assets/itemGraphics/armor/iron/iron_chestplate_l_1.tscn", 6],
+		["res://assets/itemGraphics/armor/iron/iron_chestplate_r_2.tscn", 9],
+		["res://assets/itemGraphics/armor/iron/iron_chestplate_l_2.tscn", 7]], 
+		{"defense_legs" : +0.3, "speed": -0.25}], 
+		""], # no texture yet
+	
+	
 	##racial accessories
 	"debug_tail" : ["debug tail", "res://accessories/racial/tail_debug.tscn", itemType.racial_changes, [[["res://accessories/racial/tail_debug.tscn", 0]], {"size" = -0.25}], ""],
 	
@@ -193,11 +213,14 @@ const items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonu
 	#jewelry
 	"mana_gen_necklace" : ["arcane necklace", "res://assets/itemGraphics/spark_wand.tscn", itemType.accessories_necklace, [[], {"mana_regen_speed" : +2.5, "max_health": -0.2}], ""], # no texture yet
 	"pendant_of_titans" : ["titan pendant", "res://assets/itemGraphics/spark_wand.tscn", itemType.accessories_necklace, [[], {"size" : +0.2, "max_health": +10.0}], ""], # no texture yet
-
+	"ring_of_dragons" : ["ring of dragons", "res://assets/itemGraphics/iron_sword.tscn", itemType.accessories_ring, [[], {"max_health": +5.0, "speed_multiplier" : 0.5}], ""], # no texture yet]
+	"grace_pendant" : ["grace pendant", "res://assets/itemGraphics/jewelry/necklaces/grace_pendant.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/grace_pendant.tscn", 0]], {"mana_regen": +2.0, "max_mana" : + 20.0, "blight_defense" : 3.0}], ""],
+	"ruby_amulet" : ["ruby amulet", "res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", 0]], {"health_regen": +2.0, "max_health" : + 20.0, "true_defense" : 0.05}], ""],
 }
 
-const set_bonus = { #[[item1,item2,item3],{attribute modifiers}]
-	"debug_speed_boots" : [{"shoeL" : "debug_speed_boot_L", "shoeR" : "debug_speed_boot_R"}, {"speed" : +1.5, "speed_multiplier" : +1.0}]
+const set_bonus = { #[[item1,item2,item3],{attribute modifiers}, [[model_path,bone_id]]]
+	"debug_speed_boots" : [{"shoeL" : "debug_speed_boot_L", "shoeR" : "debug_speed_boot_R"}, {"speed" : +1.5, "speed_multiplier" : +1.0}, []],
+	"ring_of_dragons" : [{"ringVowR" : "ring_of_dragons"}, {"can_fly" : true, "size" : 1.0}, []]
 }
 
 enum statusEffectType {

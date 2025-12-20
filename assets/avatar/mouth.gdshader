@@ -65,11 +65,11 @@ void fragment() {
 		col = col_outline;
 	}
 	//fangs
-	if (uv.y - teeth - cos((uv.x-pos.x-mouth_size.x+0.15)*PI*32.0)*fangs-fangs+ owo*2.0 < pos.y - mouth_size.y - 0.025 && uv.x > pos.x + mouth_size.x - 0.05 && uv.x < pos.x + mouth_size.x && uv.y - cos((uv.x-pos.x)*PI*0.5*smile_width_mult)*smile+smile + cos((uv.x-pos.x)*PI*1.5*smile_width_mult)*owo+owo > pos.y - mouth_size.y){
+	if (uv.y - teeth*mouth_size.y - cos((uv.x-pos.x-mouth_size.x+0.15)*PI*32.0)*fangs-fangs+ owo*2.0 < pos.y - mouth_size.y - 0.025 && uv.x > pos.x + mouth_size.x - 0.05 && uv.x < pos.x + mouth_size.x && uv.y - cos((uv.x-pos.x)*PI*0.5*smile_width_mult)*smile+smile + cos((uv.x-pos.x)*PI*1.5*smile_width_mult)*owo+owo > pos.y - mouth_size.y){
 		col = col_teeth;
 		trans = 1.0;
 	}
-	if (uv.y - teeth - cos((uv.x-pos.x+mouth_size.x+0.035)*PI*32.0)*fangs-fangs+ owo*2.0 < pos.y - mouth_size.y - 0.025 && uv.x < pos.x - mouth_size.x + 0.05 && uv.x > pos.x - mouth_size.x && uv.y - cos((uv.x-pos.x)*PI*0.5*smile_width_mult)*smile+smile + cos((uv.x-pos.x)*PI*1.5*smile_width_mult)*owo+owo > pos.y - mouth_size.y){
+	if (uv.y - teeth*mouth_size.y - cos((uv.x-pos.x+mouth_size.x+0.035)*PI*32.0)*fangs-fangs+ owo*2.0 < pos.y - mouth_size.y - 0.025 && uv.x < pos.x - mouth_size.x + 0.05 && uv.x > pos.x - mouth_size.x && uv.y - cos((uv.x-pos.x)*PI*0.5*smile_width_mult)*smile+smile + cos((uv.x-pos.x)*PI*1.5*smile_width_mult)*owo+owo > pos.y - mouth_size.y){
 		col = col_teeth;
 		trans = 1.0;
 	}

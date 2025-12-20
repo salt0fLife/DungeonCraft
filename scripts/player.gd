@@ -22,15 +22,17 @@ var idle_anim_key = "idle"
 var attributes = {
 	"speed" : 3.0,
 	"speed_multiplier" : 1.0,
-	"flying_speed" : 3.0,
+	"flying_speed" : 5.0,
 	"max_health" : 10.0,
 	"max_mana" : 10.0,
+	"mana_regen_speed" : 1.0,
 	"jump_velocity" : 6.0,
 	"can_fly" : false,
 	"air_acceleration": 1.0,
 	"strength" : 1.0,
 	"size" : 1.0,
-	#defense
+	##defenses
+	#localized_generic_defense
 	"defense_head" : 1.0,
 	"defense_torso" : 1.0,
 	"defense_arms" : 1.0,
@@ -39,6 +41,21 @@ var attributes = {
 	"defense_legs" : 1.0,
 	"defense_footR" : 1.0,
 	"defense_footL" : 1.0,
+	#real_defense
+	"true_defense" : 1.0, #only changed through race and subclass, effects all damage
+	"generic_defense" : 1.0,
+	"stab_defense" : 1.0,
+	"slash_defense" : 1.0,
+	"blunt_defense" : 1.0,
+	"fire_defense" : 1.0,
+	"ice_defense" : 1.0,
+	"toxic_defense" : 1.0,
+	"explosion_defense" : 1.0,
+	"magic_defense" : 1.0,
+	"lightning_defense" : 1.0,
+	"holy_defense" : 1.0,
+	"blight_defense" : 1.0
+	#
 }
 const base_attributes = {
 	"speed" : 3.0,
@@ -552,8 +569,8 @@ func _physics_process(delta):
 		snap_down_to_stairs_check()
 	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting)
 
-var avoid_radius = 1.0
-var avoid_strength = 2.0
+var avoid_radius = 0.3
+var avoid_strength = 20.0
 func avoid_close_entities(delta):
 	for e in get_tree().get_nodes_in_group("entity"):
 		var dif = e.global_position - global_position
@@ -561,8 +578,8 @@ func avoid_close_entities(delta):
 		if dis < avoid_radius:
 			var dir = dif.normalized()
 			var add_v = dir * delta * avoid_strength * (avoid_radius-dis)
-			velocity.x += add_v.x
-			velocity.z += add_v.z
+			velocity.x += -add_v.x
+			velocity.z += -add_v.z
 			pass
 	pass
 
@@ -867,17 +884,44 @@ func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, coun
 	var last_primary_damage = 0.0
 	for i in data:
 		# i = [damage_type, amount]
-		var a = i[1]
-		amount += a
-		if a > last_primary_damage:
-			last_primary_damage = a
+		var d = i
+		var total = 0.0
+		var a = attributes
+		match d[0]:# d = [damage_type, amount]
+			Lookup.damageType.generic: #applies defense stuff
+				total += d[1] / (a["generic_defense"]*a["true_defense"])
+			Lookup.damageType.stab:
+				total += d[1] / (a["stab_defense"]*a["true_defense"])
+			Lookup.damageType.slash:
+				total += d[1] / (a["slash_defense"]*a["true_defense"])
+			Lookup.damageType.blunt:
+				total += d[1] / (a["blunt_defense"]*a["true_defense"])
+			Lookup.damageType.fire:
+				total += d[1] / (a["fire_defense"]*a["true_defense"])
+			Lookup.damageType.ice:
+				total += d[1] / (a["ice_defense"]*a["true_defense"])
+			Lookup.damageType.toxic:
+				total += d[1] / (a["toxic_defense"]*a["true_defense"])
+			Lookup.damageType.explosion:
+				total += d[1] / (a["explosion_defense"]*a["true_defense"])
+			Lookup.damageType.magic:
+				total += d[1] / (a["magic_defense"]*a["true_defense"])
+			Lookup.damageType.lightning:
+				total += d[1] / (a["lightning_defense"]*a["true_defense"])
+			Lookup.damageType.holy:
+				total += d[1] / (a["holy_defense"]*a["true_defense"])
+			Lookup.damageType.blight:
+				total += d[1] / (a["blight_defense"]*a["true_defense"])
+			_:
+				printerr("unknown_damage_id of : " + str(d[0]))
+				total += d[1] / a["true_defense"]
+		if total > last_primary_damage:
+			last_primary_damage = total
 			primary_damage_type = i[0]
-		#need to make defense do something at least
+		amount += total #adds current damage type to total amount
+	if limb_key_to_defense.has(id):
+		amount = amount / attributes[limb_key_to_defense[id]] #applies local defense to whole damage value based on key
 	health -= amount
-	#var b = load("res://assets/effects/blood_mist.tscn").instantiate()
-	#b.position = position + Vector3(0.0,1.0,0.0)
-	#b.velocity = knockback
-	#get_parent().add_child(b)
 	if !is_multiplayer_authority():
 		return
 	velocity += knockback
@@ -1105,18 +1149,23 @@ func _on_left_mouse():
 	pass
 
 func punch():
+	deal_look_damage()
 	play_arm_anim("punch")
 	pass
 
 func use_sword():
 	if Input.is_action_pressed("rm"):
 		play_arm_anim("stab_1")
+		deal_look_damage(held_item_data[3][2],held_item_data[3][1])
 	elif current_animation == "slash_1":
+		deal_look_damage(held_item_data[3][0],held_item_data[3][1])
 		play_arm_anim("slash_2")
 	elif current_animation == "slash_2":
 		play_arm_anim("stab_1")
+		deal_look_damage(held_item_data[3][2],held_item_data[3][1])
 	else:
 		play_arm_anim("slash_1")
+		deal_look_damage(held_item_data[3][0],held_item_data[3][1])
 
 func use_projectile_weapon():
 	if mana - 2.0 < 0.0:
@@ -1265,7 +1314,6 @@ func _process(delta):
 			handR.rotation.y = 2.96706 + (sin(anim_time*PI-PI*0.2)+0.75)*0.5
 			handR.position = Vector3(0.391,-0.429,0.005)
 			if anim_time < 0.5 and anim_event == 0:
-				deal_look_damage()
 				anim_event = 1
 			if anim_time < 0.0:
 				current_animation = ""
@@ -1289,30 +1337,30 @@ func _process(delta):
 		"slash_1":
 			#fp_item_handler.rotation.x = -PI*0.25 + (1.0 - anim_time)*PI*0.25 - PI*0.5
 			fp_item_handler.rotation.x = -PI*0.5 - (1.0 - anim_time)*PI*0.5
-			anim_time -= delta*3.0
+			anim_time -= delta*3.0*2.0
 			handR.position = lerp(Vector3(0.37,-0.415,-0.095), Vector3(-0.272,-0.538,-0.048), (1.0 - anim_time))
 			handR.rotation_degrees = Global.vec3_rot_lerp(Vector3(17.1,-101,-112), Vector3(26.6,-17.6,-70.6), (1.0 - anim_time))
-			if anim_time < 0.5 and anim_event == 0:
-				deal_look_damage(held_item_data[3][0],held_item_data[3][1])
-				anim_event = 1
+			#if anim_time < 0.5 and anim_event == 0:
+				#deal_look_damage(held_item_data[3][0],held_item_data[3][1])
+				#anim_event = 1
 			if anim_time < 0.1 and Input.is_action_pressed("lm"):
 				_on_left_mouse()
 			if anim_time < 0.0:
 				current_animation = ""
 		"slash_2":
 			fp_item_handler.rotation.x = -PI*0.5 - (1.0 - anim_time)*PI*0.5
-			anim_time -= delta*3.0
+			anim_time -= delta*3.0*2.0
 			handR.position = lerp(Vector3(0.171,-0.193,-0.048), Vector3(0.257,-0.193,-0.048), (1.0 - anim_time))
 			handR.rotation_degrees = Global.vec3_rot_lerp(Vector3(35.8,128.6,92.7), Vector3(15.3,46.5,71.8), (1.0 - anim_time))
-			if anim_time < 0.5 and anim_event == 0:
-				deal_look_damage(held_item_data[3][0],held_item_data[3][1])
-				anim_event = 1
+			#if anim_time < 0.5 and anim_event == 0:
+				#deal_look_damage(held_item_data[3][0],held_item_data[3][1])
+				#anim_event = 1
 			if anim_time < 0.1 and Input.is_action_pressed("lm"):
 				_on_left_mouse()
 			if anim_time < 0.0:
 				current_animation = ""
 		"stab_1":
-			anim_time -= delta * 2.0
+			anim_time -= delta * 2.0*2.0
 			var val = (1.0 - anim_time)
 			if anim_time > 0.5:
 				handR.position = lerp(handR.position, Vector3(0.26,-0.193,0.326), val*2.0)
@@ -1321,17 +1369,17 @@ func _process(delta):
 			else:
 				handR.position = lerp(Vector3(0.26,-0.193,0.326), Vector3(0.224,-0.19,-0.101),(val*2.0)-1.0)
 				handR.rotation_degrees = Global.vec3_rot_lerp(Vector3(16.6,49.6,84.8), Vector3(16.0,94.5,98.0),(val*2.0)-1.0)
-				if anim_time < 0.25 and anim_event == 0:
-					#stabs deal three hits of halfed damage total 1.5 damage
-					#stabs should not deal knockback
-					deal_look_damage(held_item_data[3][2],held_item_data[3][1])
-					anim_event = 1
-				elif anim_time < 0.2 and anim_event == 1:
-					deal_look_damage(held_item_data[3][2],held_item_data[3][1])
-					anim_event = 2
-				elif anim_time < 0.15 and anim_event == 2:
-					deal_look_damage(held_item_data[3][2],held_item_data[3][1])
-					anim_event = 3
+				#if anim_time < 0.25 and anim_event == 0:
+					##stabs deal three hits of halfed damage total 1.5 damage
+					##stabs should not deal knockback
+					#deal_look_damage(held_item_data[3][2],held_item_data[3][1])
+					#anim_event = 1
+				#elif anim_time < 0.2 and anim_event == 1:
+					#deal_look_damage(held_item_data[3][2],held_item_data[3][1])
+					#anim_event = 2
+				#elif anim_time < 0.15 and anim_event == 2:
+					#deal_look_damage(held_item_data[3][2],held_item_data[3][1])
+					#anim_event = 3
 			if anim_time < 0.0:
 				current_animation = ""
 			pass
@@ -1471,3 +1519,19 @@ func update_status_effect_graphics(se):
 		#Inventory.active_status_effects = se.keys()
 		#Inventory.emit_signal("update_status_effect_graphics")
 
+const limb_key_to_defense = {
+	"footL" : "defense_footL",
+	"legL" : "defense_legs",
+	"footR" : "defense_footR",
+	"legR" : "defense_legs",
+	"head" : "defense_head",
+	"handL" : "defense_handL",
+	"armL" : "defense_arms",
+	"handR" : "defense_handR",
+	"armR" : "defense_arms",
+	"torso" : "defense_torso",
+	}
+
+@rpc("reliable")
+func request_ghost() -> bool:
+	return ghost

@@ -2,7 +2,7 @@
 
 [sub_resource type="AudioEffectPitchShift" id="AudioEffectPitchShift_68nn1"]
 resource_name = "PitchShift"
-pitch_scale = 1.25
+pitch_scale = 0.9
 
 [sub_resource type="AudioEffectChorus" id="AudioEffectChorus_wuqru"]
 resource_name = "Chorus"

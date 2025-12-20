@@ -337,9 +337,12 @@ func handle_arm_anims(delta):
 			draw_weapon(delta)
 	pass
 
+@onready var arm_anim_handler = $"../armAnimationPlayer"
 func play_arm_anim(key : String) -> void:
 	arm_anim_time = 1.0
 	arm_override_anim = key
+	if arm_anim_handler.has_animation(key):
+		arm_anim_handler.play(key)
 
 func draw_weapon(delta):
 	arm_anim_time -= delta * arm_anim_speed * 3.0
@@ -976,7 +979,7 @@ func spectrum_to_mouth(spectrum, delta = 1.0):
 	var wide = 0.1
 	var smile = 0.0
 	var teeth = 0.1
-	var pos = Vector2.ZERO
+	var pos = eye_pos*0.25
 	open = lerp(open, 0.45, a)
 	open = lerp(open, 0.25, u)
 	open = lerp(open, 0.24, o)
@@ -989,6 +992,7 @@ func spectrum_to_mouth(spectrum, delta = 1.0):
 	smile = lerp(smile, -0.045, u)
 	smile = lerp(smile, 0.06, a)
 	smile = lerp(smile, 0.08, high)
+	pos *= open
 	pos.y = lerp(pos.y, -0.25, high)
 	pos.y = lerp(pos.y, -0.25, i)
 	pos.y = lerp(pos.y, 0.215 - open*0.5, u)
@@ -1003,10 +1007,17 @@ func spectrum_to_mouth(spectrum, delta = 1.0):
 	
 	set_mouth_param("shader_parameter/open", open)
 	set_mouth_param("shader_parameter/smile", smile)
-	set_mouth_param("shader_parameter/mouth_size", Vector2(wide, 0.04))
+	set_mouth_param("shader_parameter/mouth_size", Vector2(wide, 0.02))#Vector2(wide, 0.04))
 	set_mouth_param("shader_parameter/mouthPos", pos)
 	set_mouth_param("shader_parameter/teeth", teeth)
 	bone_paths[5].rotation.x += sin(PI*open)*0.05
+	
+	var total_vol = clamp((60 + linear_to_db(spectrum.get_magnitude_for_frequency_range(0,5000).length()))/60,0.0,1.0)
+	
+	scale.y = lerp(scale.y, 1.0 - total_vol*0.025, delta*10.0)
+	scale.x = lerp(scale.x, 1.0 + total_vol*0.025, delta*10.0)
+	scale.z = lerp(scale.z, 1.0 + total_vol*0.025, delta*10.0)
+	
 	#var prev_hz = 0
 	#for i in range(1,VU_COUNT+1):   
 		#var hz = i * FREQ_MAX / VU_COUNT;

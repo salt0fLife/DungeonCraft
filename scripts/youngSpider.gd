@@ -11,7 +11,7 @@ var bite_strength = 1.0
 var size = 1.0
 
 var attributes = {
-	"speed" : 6.0,
+	"speed" : 24.0,
 	"acceleration" : 1.0,
 	"max_health" : 10.0,
 	"health" : 10.0,
@@ -119,8 +119,6 @@ var bite_timer = 0.0
 func move_track(delta):
 	var dif = target.global_position - global_position
 	var dir = Vector3(dif.x,0.0,dif.z).normalized()
-	velocity.x = lerp(velocity.x,attributes["speed"] * dir.x, attributes["acceleration"]*delta)
-	velocity.z = lerp(velocity.z,attributes["speed"] * dir.z, attributes["acceleration"]*delta)
 	var dis = dif.length()
 	if bite_timer > 0.0:
 		bite_timer -= delta
@@ -129,12 +127,16 @@ func move_track(delta):
 	if dis < distance_till_bite:
 		if bite_timer == 0.0:
 			bite()
-	elif dis < distance_till_jump and is_on_floor():
-		if lunge_timer < 0.0:
-			lunge(dir)
-		else:
-			lunge_timer -= delta
-	pass
+		velocity.x = lerp(velocity.x,0.0,attributes["acceleration"]*delta)
+		velocity.z = lerp(velocity.z,0.0,attributes["acceleration"]*delta)
+	else:#only moves closer if not in bite range
+		velocity.x = lerp(velocity.x,attributes["speed"] * dir.x, attributes["acceleration"]*delta)
+		velocity.z = lerp(velocity.z,attributes["speed"] * dir.z, attributes["acceleration"]*delta)
+		if dis < distance_till_jump and is_on_floor():
+			if lunge_timer < 0.0:
+				lunge(dir)
+			else:
+				lunge_timer -= delta
 
 func lunge(dir):
 	lunge_timer = lunge_cooldown
@@ -150,6 +152,7 @@ func bite():
 	for b in bite_area.get_overlapping_bodies():
 		if b.has_method("take_damage") and !b.is_in_group("entity_spider"):
 			b.take_damage.rpc([[bite_strength,Lookup.damageType.stab]], bite_area.global_position, "young spider", "fangs")
+			break #only bite one person
 
 @export var decision_timer = randf_range(0.0,1.0)
 @export var decision_speed = 0.1

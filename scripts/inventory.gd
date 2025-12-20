@@ -45,13 +45,13 @@ var accessories = {
 
 var hotbar = [
 	"iron_sword", #0
-	"", #1
-	"short_bow", #2
+	"grace_pendant", #1
+	"iron_helmet", #2
 	"magic_bow", #3
 	"mana_gen_necklace", #4
-	"rusted_copper_chestplate", #5
+	"iron_chestplate", #5
 	"rusted_copper_helmet", #6
-	"pendant_of_titans", #7
+	"ruby_amulet", #7
 	"rusted_copper_greaves", #8
 	"rusted_copper_glove_l" #9
 ]

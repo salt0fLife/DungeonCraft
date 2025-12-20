@@ -156,8 +156,10 @@ func send_data(data : PackedFloat32Array):
 	pass
 
 func set_ghostly(val):
-	AudioServer.set_bus_effect_enabled(index, 0, val)
-	AudioServer.set_bus_effect_enabled(index, 1, val)
+	#AudioServer.set_bus_effect_enabled(index, 0, val)
+	#AudioServer.set_bus_effect_enabled(index, 1, val)
+	AudioServer.set_bus_effect_enabled(2, 0, val) #changes recording bus
+	AudioServer.set_bus_effect_enabled(2, 1, val) #changes recording bus
 
 
 

@@ -32,6 +32,7 @@ func _ready():
 	multiplayer.connect("server_disconnected", _on_lost_connection)
 	load_skin_info()
 	worldSync.connect("spawned",emit_world_loaded)
+	Global.connect("player_death",_on_player_death)
 
 signal world_loaded
 func emit_world_loaded():
@@ -508,3 +509,19 @@ func destroy_item(index):
 
 func _on_item_destruction(node):
 	destroy_item.rpc(node.get_index())
+
+func get_living_players() -> Array:
+	var list = []
+	for pk in playerSync.players.keys():
+		var n = playerSync.players[pk]
+		if !n.rpc_id(pk, "request_ghost"):
+			list += [n]
+	return list
+
+@rpc("reliable")
+func _on_player_death():
+	if hosting:
+		print(get_living_players())
+	else:
+		rpc_id(0,"_on_player_death")
+	pass

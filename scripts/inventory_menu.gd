@@ -183,15 +183,15 @@ func close():
 	"braceletR" : $accessories/gearL/TabContainer/jewelry/braceletR,
 	"braceletL" : $accessories/gearL/TabContainer/jewelry/braceletL,
 	"belt" : $accessories/gearL/TabContainer/jewelry/belt,
-	##rings
-	#"ringFR" : "",
-	#"ringSR" : "",
-	#"ringVowR" : "",
-	#"ringPR" : "",
-	#"ringFL" : "",
-	#"ringSL" : "",
-	#"ringVowL" : "",
-	#"ringPL" : "",
+	#rings
+	"ringFR" : $accessories/gearR/TabContainer/rings/ringFR,
+	"ringSR" : $accessories/gearR/TabContainer/rings/ringSR,
+	"ringVowR" : $accessories/gearR/TabContainer/rings/ringVowR,
+	"ringPR" : $accessories/gearR/TabContainer/rings/ringPR,
+	"ringFL" : $accessories/gearR/TabContainer/rings/ringFL,
+	"ringSL" : $accessories/gearR/TabContainer/rings/ringSL,
+	"ringVowL" : $accessories/gearR/TabContainer/rings/ringPL,
+	"ringPL" : $accessories/gearR/TabContainer/rings/ringVowL,
 }
 
 var accessories_paths = {}
@@ -229,7 +229,6 @@ func load_accessories(a = Inventory.accessories):
 			#tn.hide()
 			tn.texture_normal = null
 			#adding graphics to menu
-			
 
 func load_skin():
 	var t = [Global.ears, Global.tail, Global.snout, Global.slim, Global.eyeColor, Global.mouthData]
