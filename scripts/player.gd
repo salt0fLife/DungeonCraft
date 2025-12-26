@@ -113,8 +113,8 @@ func update_stats_from_accessories():
 	var applied_bonuses = []
 	for i in Inventory.accessories.keys():
 		var val = Inventory.accessories[i]
-		if val != "":
-			var data = Lookup.items[val]
+		if val[0] != "":
+			var data = Lookup.items[val[0]]
 			for k in data[3][1].keys():
 				if attributes.has(k):
 					if typeof(data[3][1][k]) == TYPE_BOOL:
@@ -129,7 +129,7 @@ func update_stats_from_accessories():
 					var sb_data = Lookup.set_bonus[sb_key]
 					var can_apply = true
 					for c in sb_data[0].keys(): #checks to see if you have all important items
-						if !Inventory.accessories[c] == sb_data[0][c]:
+						if !Inventory.accessories[c][0] == sb_data[0][c]: #TGIC
 							can_apply = false
 					if can_apply:
 						print("YOU EQUIPPED A FULL SET! now you get" + str(sb_data[1]))
@@ -141,6 +141,41 @@ func update_stats_from_accessories():
 									attributes[sbk] += sb_data[1][sbk]
 	update_health_graphics()
 	pass
+
+
+#func update_stats_from_accessories():
+	#set_stats_to_default()
+	#var applied_bonuses = []
+	#for i in Inventory.accessories.keys():
+		#var val = Inventory.accessories[i]
+		#if val != "":
+			#var data = Lookup.items[val]
+			#for k in data[3][1].keys():
+				#if attributes.has(k):
+					#if typeof(data[3][1][k]) == TYPE_BOOL:
+						#attributes[k] = data[3][1][k]
+					#else:
+						#attributes[k] += data[3][1][k]
+			##set bonus
+			#if data.size() == 6: #checks for set_bonus key
+				#var sb_key = data[5]
+				#if !applied_bonuses.has(sb_key):
+					#applied_bonuses += [sb_key]
+					#var sb_data = Lookup.set_bonus[sb_key]
+					#var can_apply = true
+					#for c in sb_data[0].keys(): #checks to see if you have all important items
+						#if !Inventory.accessories[c] == sb_data[0][c]:
+							#can_apply = false
+					#if can_apply:
+						#print("YOU EQUIPPED A FULL SET! now you get" + str(sb_data[1]))
+						#for sbk in sb_data[1].keys():
+							#if attributes.has(sbk):
+								#if typeof(sb_data[1][sbk]) == TYPE_BOOL:
+									#attributes[sbk] = sb_data[1][sbk]
+								#else:
+									#attributes[sbk] += sb_data[1][sbk]
+	#update_health_graphics()
+	#pass
 
 var held_item_data = []
 var held_item_custom_data = {}
@@ -207,9 +242,9 @@ func update_accessories_graphics(a = Inventory.accessories):
 				for p in accessories_paths[k]:
 					p.queue_free()
 				accessories_paths[k] = null
-		if val != "":
+		if val[0] != "":
 			accessories_paths[k] = []
-			for g in Lookup.items[val][3][0]:
+			for g in Lookup.items[val[0]][3][0]:
 				var s = load(g[0]).instantiate()
 				var bi = g[1]
 				if k == "shoeR" and bi == 2:

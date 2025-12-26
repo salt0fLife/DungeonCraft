@@ -6,14 +6,14 @@ var moving_indicator = false
 var desired_pos = 0.0
 var moving_time = 0.0
 var hide_want = true
-var held_item = ""
+var held_item = Inventory.empty_item
 
 func update_held_item_graphics():
-	if held_item == "":
+	if held_item[0] == "":
 		$held_item.hide()
 	else:
 		$held_item.show()
-		$held_item.texture = Inventory.get_item_texture(held_item)
+		$held_item.texture = Inventory.get_item_texture(held_item[0])
 
 func _ready():
 	#_on_hotbar_slot_changed()
@@ -35,7 +35,7 @@ func _ready():
 	pass
 
 func preview_equipment_key(k: String):
-	var key = Inventory.accessories[k]
+	var key = Inventory.accessories[k][0]
 	if key == "":
 		return
 	$itemPreview.visible = true
@@ -43,7 +43,7 @@ func preview_equipment_key(k: String):
 	pass
 
 func preview_hotbar_indx(i: int):
-	var key = Inventory.hotbar[i]
+	var key = Inventory.hotbar[i][0]
 	if key == "":
 		return
 	$itemPreview.visible = true
@@ -71,11 +71,11 @@ func update_hotbar_graphics():
 	for i in Inventory.hotbar.size():
 		var k = Inventory.hotbar[i]
 		var node = $hotbar/slots/itemIcons.get_child(i)
-		if k == "":
+		if k[0] == "":
 			#node.hide()
 			node.texture_normal = null
 		else:
-			node.texture_normal = Inventory.get_item_texture(k)
+			node.texture_normal = Inventory.get_item_texture(k[0])
 			node.visible = true
 	pass
 
@@ -90,8 +90,8 @@ func _on_hotbar_pressed(index):
 
 func _on_equipment_pressed(key):
 	print(key)
-	if held_item != "":
-		if !Inventory.can_item_go_in_accessory(held_item, key):
+	if held_item[0] != "":
+		if !Inventory.can_item_go_in_accessory(held_item[0], key):
 			return # makes sure you cant put equipment in wrong slots
 	var temp = held_item
 	held_item = Inventory.accessories[key]
@@ -217,9 +217,9 @@ func load_accessories(a = Inventory.accessories):
 				for p in accessories_paths[k]:
 					p.queue_free()
 				accessories_paths[k] = null
-		if val != "":
+		if val[0] != "":
 			accessories_paths[k] = []
-			for g in Lookup.items[val][3][0]:
+			for g in Lookup.items[val[0]][3][0]:
 				var s = load(g[0]).instantiate()
 				var bi = g[1]
 				if k == "shoeR" and bi == 2:
@@ -236,7 +236,7 @@ func load_accessories(a = Inventory.accessories):
 			if accessory_buttons.has(k):
 				var tn = accessory_buttons[k]
 				#tn.show()
-				tn.texture_normal = Inventory.get_item_texture(val)
+				tn.texture_normal = Inventory.get_item_texture(val[0])
 		elif accessory_buttons.has(k):
 			var tn = accessory_buttons[k]
 			#tn.hide()

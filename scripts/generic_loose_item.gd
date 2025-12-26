@@ -9,12 +9,12 @@ var tool_tip_color = Color.WHITE
 
 
 func _ready():
-	if !Lookup.items.has(item_key):
-		printerr("invalid item key of value " + item_key + ". freeing from queue")
+	if !Lookup.items.has(item_key[0]):
+		printerr("invalid item key of value " + item_key[0] + ". freeing from queue")
 		queue_free()
 		return
 	#just checking if the key is valid
-	var item = Lookup.items[item_key]
+	var item = Lookup.items[item_key[0]]
 	display_name = item[0]
 	var model = load(item[1]).instantiate()
 	model.process_mode = PROCESS_MODE_DISABLED
@@ -45,7 +45,7 @@ func _physics_process(delta):
 
 func interact():
 	print("interacted with item display name of " + display_name)
-	print("item key of " + item_key)
+	print("item key of " + item_key[0])
 	print("type of " + str(type))
 	print("tooltip of " + str(tool_tip))
 	print("nice :3")

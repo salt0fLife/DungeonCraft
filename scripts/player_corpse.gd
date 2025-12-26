@@ -167,9 +167,9 @@ func _ready():
 func update_accessories_graphics():
 	for i in accessories.keys():
 		var k = accessories[i]
-		if k != "":
+		if k[0] != "": #TGIC
 			accessories_paths[k] = []
-			for g in Lookup.items[k][3][0]:
+			for g in Lookup.items[k[0]][3][0]:
 				var s = load(g[0]).instantiate()
 				s.process_mode = PROCESS_MODE_DISABLED
 				accessory_bones[g[1]].add_child(s)
