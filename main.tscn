@@ -264,6 +264,17 @@ offset_right = 681.0
 offset_bottom = 247.0
 text = "launch skin editor"
 
+[node name="postEffects" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_gbjt2")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("PlaceholderTexture2D_1goxy")
+script = ExtResource("6_knuf1")
+
 [node name="playerSync" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath(".")
 script = ExtResource("3_4tkpv")
@@ -276,17 +287,6 @@ visible = false
 offset_right = 1920.0
 offset_bottom = 1017.0
 texture = ExtResource("6_ybl52")
-
-[node name="postEffects" type="TextureRect" parent="."]
-material = SubResource("ShaderMaterial_gbjt2")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = SubResource("PlaceholderTexture2D_1goxy")
-script = ExtResource("6_knuf1")
 
 [node name="pauseMenu" type="Control" parent="."]
 visible = false

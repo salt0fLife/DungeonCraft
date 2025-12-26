@@ -53,6 +53,19 @@ func preview_hotbar_indx(i: int):
 func preview_hide():
 	$itemPreview.visible = false
 
+#func update_hotbar_graphics_old():
+	##update item graphics :3
+	#for i in Inventory.hotbar.size():
+		#var k = Inventory.hotbar[i]
+		#var node = $hotbar/slots/itemIcons.get_child(i)
+		#if k == "":
+			##node.hide()
+			#node.texture_normal = null
+		#else:
+			#node.texture_normal = Inventory.get_item_texture(k)
+			#node.visible = true
+	#pass
+
 func update_hotbar_graphics():
 	#update item graphics :3
 	for i in Inventory.hotbar.size():

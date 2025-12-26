@@ -143,17 +143,26 @@ func update_stats_from_accessories():
 	pass
 
 var held_item_data = []
+var held_item_custom_data = {}
+var held_item_count = 0
 func update_held_item():
 	held_item_data = Inventory.get_held_item_data()
 	if held_item_data != []:
+		var held_item = Inventory.get_held_item()
+		held_item_custom_data = held_item[3]
+		held_item_count = held_item[1]
 		var mp = held_item_data[1]
 		update_held_item_graphics(mp)
 		update_held_item_graphics.rpc(mp)
 		update_anims_from_item_type(held_item_data[2])
 	else:
+		held_item_custom_data = {}
+		held_item_count = 0
 		update_held_item_graphics("")
 		update_held_item_graphics.rpc("")
 		update_anims_from_item_type(-1)
+	print(held_item_custom_data)
+	print(held_item_count)
 	pass
 
 func update_anims_from_item_type(type):
@@ -1156,16 +1165,20 @@ func punch():
 func use_sword():
 	if Input.is_action_pressed("rm"):
 		play_arm_anim("stab_1")
-		deal_look_damage(held_item_data[3][2],held_item_data[3][1])
+		#deal_look_damage(held_item_data[3][2],held_item_data[3][1])
+		deal_sword_sweep(held_item_data[3][2], held_item_data[3][0],1.0)
 	elif current_animation == "slash_1":
-		deal_look_damage(held_item_data[3][0],held_item_data[3][1])
+		#deal_look_damage(held_item_data[3][0],held_item_data[3][1])
+		deal_sword_sweep(held_item_data[3][0], held_item_data[3][0],1.0)
 		play_arm_anim("slash_2")
 	elif current_animation == "slash_2":
 		play_arm_anim("stab_1")
-		deal_look_damage(held_item_data[3][2],held_item_data[3][1])
+		#deal_look_damage(held_item_data[3][2],held_item_data[3][1])
+		deal_sword_sweep(held_item_data[3][2], held_item_data[3][0],1.0)
 	else:
 		play_arm_anim("slash_1")
-		deal_look_damage(held_item_data[3][0],held_item_data[3][1])
+		#deal_look_damage(held_item_data[3][0],held_item_data[3][1])
+		deal_sword_sweep(held_item_data[3][0], held_item_data[3][0],1.0)
 
 func use_projectile_weapon():
 	if mana - 2.0 < 0.0:
@@ -1469,6 +1482,23 @@ func deal_look_damage(dam := [[Lookup.damageType.generic, 1]], dist := 2.0) -> v
 		if hit.is_in_group("hurtbox"):
 			hit.take_damage.rpc(dam,poi,display_name,weapon_name, dir*attributes["strength"]*2.0, true)
 
+@onready var near_hitbox = $playerAvatar/cameraHandler/hitboxes/near_hitbox
+func deal_sword_sweep(dam, weapon_name, knockback_mult = 1.0):
+	var col_count = near_hitbox.get_collision_count()
+	var dir = get_look_dir()
+	print(str(col_count))
+	print(weapon_name)
+	print(dam)
+	for i in range(0,col_count):
+		var hit = near_hitbox.get_collider(i)
+		if hit.is_in_group("hurtbox"):
+			var poi = near_hitbox.get_collision_point(i)
+			hit.take_damage.rpc(dam,poi,display_name,weapon_name, dir*knockback_mult, true)
+			print("hurtbox found " + str(hit))
+		else:
+			print("hit wall ending swing")
+			break #cannot hit through walls
+	pass
 
 ##ui and stuffs
 func update_health_graphics():
