@@ -8,6 +8,28 @@ extends Node
 	#"iron gauntlets" : ["res://accessories/gloves/iron_gauntlets.tscn", {"speed" : - 0.01}],
 	#"leather boots" : ["res://accessories/boots/leather_boots.tscn", {"speed" : +0.25}]
 #}
+#func _ready():
+	###load itemData
+	#var folder = DirAccess.open("res://assets/itemData/")
+	#for file in folder.get_files():
+		#var f = FileAccess.open("res://assets/itemData/"+file,FileAccess.READ)
+		#var data = f.get_var(false)#JSON.parse_string(f.get_var(false))
+		#print(data)
+		#f.close()
+		#var key = file.left(file.length() - 5)
+		#print(file)
+		#items[file] = data
+	###save itemData
+	#for item in items.keys():
+		#var f = FileAccess.open("res://assets/itemData/"+item+".json",FileAccess.WRITE)
+		#var data = items[item]#JSON.stringify(items[item])
+		#f.store_var(data)
+		#print(data)
+		#f.close()
+		##var key = file.left(file.length() - 4)
+		#pass
+	#pass
+
 
 @onready var Projectiles = {
 	"arrow" : preload("res://entities/projectiles/arrow.tscn"),
@@ -98,7 +120,7 @@ const damageType_color_lookup = [
 	"web_purple"
 ]
 
-const items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_key(if applicable)]
+var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_key(if applicable)]
 	##crafting
 	"simple_rock" : ["rock", "res://assets/itemGraphics/rock_graphics.tscn", itemType.crafting_throwable, [10.0], ""],
 	
@@ -187,7 +209,7 @@ const items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonu
 	itemType.accessories_hat, [[
 		["res://assets/itemGraphics/armor/iron/iron_helmet.tscn", 5]], 
 		{"defense_head" : +0.3, "speed": -0.1}], 
-		""], # no texture yet
+		"res://assets/textures/items/iron helmet tn.png"], # no texture yet
 	#chestplate
 	"iron_chestplate" : ["iron chestplate", 
 	"res://assets/itemGraphics/armor/iron/iron_chestplate.tscn", 

@@ -98,7 +98,6 @@ const base_attributes = {
 var accessories_paths = {
 }
 var status_effects = {
-	
 }
 
 func update_accessories():
@@ -187,8 +186,18 @@ func update_held_item():
 		held_item_custom_data = held_item[3]
 		held_item_count = held_item[1]
 		var mp = held_item_data[1]
-		update_held_item_graphics(mp)
-		update_held_item_graphics.rpc(mp)
+		if held_item_custom_data.keys().has("custom_model_path"):
+			print("loaded with custom model path")
+			mp = held_item_custom_data["custom_model_path"]
+		if held_item_custom_data.keys().has("enchantments"):
+			var col = Color.BLUE_VIOLET
+			if held_item_custom_data.keys().has("enchantment_color"):
+				col = held_item_custom_data["enchantment_color"]
+			update_held_item_graphics(mp,true,col)
+			update_held_item_graphics.rpc(mp,true,col)
+		else:
+			update_held_item_graphics(mp)
+			update_held_item_graphics.rpc(mp)
 		update_anims_from_item_type(held_item_data[2])
 	else:
 		held_item_custom_data = {}
@@ -218,7 +227,7 @@ func update_anims_from_item_type(type):
 @onready var tp_item_handler = $playerAvatar/genericAvatar/root/chestBase/shoulder_R/elbowR/tp_item_handler
 
 @rpc("any_peer","reliable")
-func update_held_item_graphics(model_path):
+func update_held_item_graphics(model_path, enchanted = false, enchanted_col = Color.BLUE_VIOLET):
 	for f in fp_item_handler.get_children():
 		f.queue_free()
 	for t in tp_item_handler.get_children():
@@ -230,13 +239,24 @@ func update_held_item_graphics(model_path):
 	if mf.has_method("enable_item_mode"):
 		mf.enable_item_mode()
 		mt.enable_item_mode()
+	if enchanted and mf is MeshInstance3D:
+		var mat = mf.get_active_material(0).duplicate()
+		mat.set("shader_parameter/enchanted_col", enchanted_col)
+		mf.set_surface_override_material(0,mat)
+		mt.set_surface_override_material(0,mat)
 	fp_item_handler.add_child(mf)
 	tp_item_handler.add_child(mt)
 
 @rpc("any_peer", "reliable")
 func update_accessories_graphics(a = Inventory.accessories):
 	for k in a.keys():
+		var enchant_col = Color.BLACK
 		var val = a[k]
+		if val[3].keys().has("enchantments"):
+			var col = Color.BLUE_VIOLET
+			if val[3].keys().has("enchantment_color"):
+				col = val[3]["enchantment_color"]
+			enchant_col = col
 		if accessories_paths.has(k):
 			if accessories_paths[k] != null:
 				for p in accessories_paths[k]:
@@ -262,6 +282,10 @@ func update_accessories_graphics(a = Inventory.accessories):
 					#elbowR.add_child(s.duplicate())
 				avatar.bone_paths[bi].add_child(s)
 				accessories_paths[k] += [s]
+				if s is MeshInstance3D: #does not apply to non mesh items
+					var m = s.get_active_material(0).duplicate()
+					m.set("shader_parameter/enchanted_col",enchant_col)
+					s.set_surface_override_material(0,m)
 			#var s = load(Lookup.items[val][3][0]).instantiate()
 			#AG_handler.add_child(s)
 			#accessories_paths[k] = s
@@ -1285,6 +1309,9 @@ func get_look_dir():
 func attempt_to_interact(primary_interact = true):
 	if look.is_colliding():
 		var hit = look.get_collider()
+		if hit == null:
+			printerr("something was deleted before could interact check your code fucker :/")
+			return
 		if hit.is_in_group("interact"):
 			var ret = hit.interact()
 			print(ret)

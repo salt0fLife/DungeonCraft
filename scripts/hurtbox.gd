@@ -1,4 +1,6 @@
-extends CharacterBody3D
+@icon("res://assets/textures/icons/hurtbox.svg")
+class_name hurtbox extends CharacterBody3D
+
 @export var health_handler:NodePath
 @export var id = ""
 @export var damage_mult := 1.0

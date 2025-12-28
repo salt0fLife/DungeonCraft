@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://b7s8ume16tah0"]
+[gd_scene load_steps=30 format=3 uid="uid://b7s8ume16tah0"]
 
 [ext_resource type="Script" path="res://scripts/inventory_menu.gd" id="1_4xxg4"]
 [ext_resource type="Texture2D" uid="uid://bkjpum8rx7i4g" path="res://assets/textures/gui/emptyHotbar.png" id="2_jil2a"]
@@ -12,15 +12,18 @@
 [ext_resource type="Shader" path="res://assets/avatar/mouth.gdshader" id="6_7bipc"]
 [ext_resource type="Texture2D" uid="uid://dyh661ujm3ahi" path="res://assets/glb/playerAvatar002_eyeBrows2.png" id="6_h0cdh"]
 [ext_resource type="PackedScene" uid="uid://bnf5uy3kr73aa" path="res://assets/gui/item_info_display.tscn" id="7_ud8gy"]
+[ext_resource type="Material" uid="uid://cocidkejhkivy" path="res://assets/materials/item_slot_mat.tres" id="8_7t1x8"]
 [ext_resource type="Texture2D" uid="uid://d2usricranfki" path="res://assets/textures/gui/jewelrySlots.png" id="8_i8loy"]
 [ext_resource type="Texture2D" uid="uid://bapyqoy5lwaew" path="res://assets/textures/items/missingItemTexture.png" id="9_po7jc"]
 [ext_resource type="Texture2D" uid="uid://nquswdjhvs1b" path="res://assets/textures/items/ironSword.png" id="10_wf05a"]
 [ext_resource type="Texture2D" uid="uid://hod3fngnjeep" path="res://assets/textures/gui/ringSlots.png" id="12_530iq"]
+[ext_resource type="Texture2D" uid="uid://dq5ejxv0w5cjg" path="res://assets/textures/icons/goldMinnow.png" id="17_41re3"]
+[ext_resource type="Texture2D" uid="uid://dd010ww1g5jl8" path="res://assets/textures/items/iron helmet tn.png" id="17_igmda"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_d5ftn"]
 blend_mode = 3
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_240hh"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r7m6i"]
 resource_name = "eyeBrows"
 transparency = 2
 alpha_scissor_threshold = 0.5
@@ -29,7 +32,7 @@ albedo_color = Color(0, 0, 0, 1)
 albedo_texture = ExtResource("6_h0cdh")
 texture_filter = 2
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ihsin"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ov650"]
 resource_name = "eyes"
 render_priority = 0
 shader = ExtResource("5_vi34m")
@@ -54,7 +57,7 @@ shader_parameter/eyelashCol = Color(0, 0, 0, 1)
 shader_parameter/eyelashTaper = 0.205
 shader_parameter/transparency = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4f6pg"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sjl4y"]
 render_priority = 0
 shader = ExtResource("6_7bipc")
 shader_parameter/uv1_scale = Vector3(1, 1, 1)
@@ -125,21 +128,12 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.2)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_cody6"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cdupy"]
 render_priority = 0
 shader = SubResource("Shader_82q5v")
 shader_parameter/fire_col = Color(0.796078, 0.247059, 0, 1)
 shader_parameter/fire_noise = SubResource("NoiseTexture2D_0xgdf")
 shader_parameter/gradient_tex = SubResource("GradientTexture2D_gpt44")
-
-[sub_resource type="Gradient" id="Gradient_ruwo5"]
-offsets = PackedFloat32Array(0.9, 1)
-colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_j0oxw"]
-gradient = SubResource("Gradient_ruwo5")
-fill = 2
-fill_from = Vector2(0.5, 0.5)
 
 [node name="inventory_menu" type="Control"]
 layout_mode = 3
@@ -221,40 +215,40 @@ fov = 30.0
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, -0.774223, 0)
 
 [node name="chestBase" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, 0.000264323, -0.0164442, 0.000153183)
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, 0.00488309, -0.0133009, 0.000153183)
 
 [node name="hip_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="1"]
-transform = Transform3D(0.995002, -0.0101487, 0.099316, 0, 0.994813, 0.101656, -0.0998332, -0.101148, 0.989847, 0.075, -0.282, -0.001)
+transform = Transform3D(0.995002, -0.00921171, 0.0994072, 0, 0.995727, 0.0922711, -0.0998332, -0.0918098, 0.990757, 0.075, -0.282, -0.001)
 
 [node name="knee_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/hip_L" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.994561, -0.104143, 0, 0.104143, 0.994561, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.995499, -0.0947603, 0, 0.0947603, 0.995499, 0, -0.274171, 0)
 
 [node name="hip_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="2"]
-transform = Transform3D(0.995003, 0.0101487, -0.0993161, 0, 0.994815, 0.101656, 0.0998333, -0.101148, 0.989848, -0.075, -0.282, -0.001)
+transform = Transform3D(0.995003, 0.00921172, -0.0994074, 0, 0.995729, 0.0922712, 0.0998333, -0.09181, 0.990758, -0.075, -0.282, -0.001)
 
 [node name="knee_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/hip_R" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.994559, -0.104143, 0, 0.104143, 0.994559, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.995497, -0.0947601, 0, 0.0947601, 0.995497, 0, -0.274171, 0)
 
 [node name="eyeBrows_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
-surface_material_override/0 = SubResource("StandardMaterial3D_240hh")
+surface_material_override/0 = SubResource("StandardMaterial3D_r7m6i")
 
 [node name="eyeBrows_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="2"]
-surface_material_override/0 = SubResource("StandardMaterial3D_240hh")
+surface_material_override/0 = SubResource("StandardMaterial3D_r7m6i")
 
 [node name="eyes" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="3"]
-surface_material_override/0 = SubResource("ShaderMaterial_ihsin")
+surface_material_override/0 = SubResource("ShaderMaterial_ov650")
 
 [node name="mouth" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="7"]
-surface_material_override/0 = SubResource("ShaderMaterial_4f6pg")
+surface_material_override/0 = SubResource("ShaderMaterial_sjl4y")
 
 [node name="nameTag" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="9"]
 visible = false
 
 [node name="shoulder_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="4"]
-transform = Transform3D(0.999975, -0.00489827, -0.00499111, 0.00503305, 0.99961, 0.027357, 0.00485518, -0.0273814, 0.999612, 0.14978, 0.241, -0.0014265)
+transform = Transform3D(0.999695, -0.024602, -0.00107469, 0.0246183, 0.999504, 0.0195011, 0.000594394, -0.0195216, 0.999808, 0.14978, 0.241, -0.0014265)
 
 [node name="elbowL" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.999793, 0.0202222, 0, -0.0202222, 0.999793, 0.0786937, -0.240458, -0.002611)
+transform = Transform3D(1, 0, 0, 0, 0.995364, 0.0961537, 0, -0.0961537, 0.995364, 0.0786937, -0.240458, -0.002611)
 
 [node name="shoulder_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="5"]
 transform = Transform3D(0.998648, 0.0517955, -0.00435617, -0.0517567, 0.998619, 0.0086188, 0.00479659, -0.00838166, 0.999953, -0.15, 0.241, -0.001)
@@ -262,20 +256,17 @@ transform = Transform3D(0.998648, 0.0517955, -0.00435617, -0.0517567, 0.998619, 
 [node name="elbowR" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/shoulder_R" index="1"]
 transform = Transform3D(1, 0, 0, 0, 0.761537, 0.648118, 0, -0.648118, 0.761537, -0.0786937, -0.240458, -0.00261103)
 
-[node name="tp_item_handler" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/shoulder_R/elbowR" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.173651, -0.984807, 0, 0.984807, 0.173651, 0, -0.21, 0.075)
-
 [node name="tailBase" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="6"]
-transform = Transform3D(0.928491, -0.310162, 0.204202, 0, 0.549894, 0.835233, -0.371347, -0.775508, 0.510574, 0, 0, -0.088)
+transform = Transform3D(0.987279, 0.141437, -0.0725965, 0, 0.45664, 0.889651, 0.15898, -0.878336, 0.450832, 0, 0, -0.088)
 
 [node name="tailMiddle" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/tailBase" index="1"]
-transform = Transform3D(0.998405, 0.010287, 0.055503, 0, 0.983255, -0.182236, -0.0564483, 0.181946, 0.981684, 0, 0, 0)
+transform = Transform3D(0.948346, 0.057812, 0.311924, 0, 0.983255, -0.182235, -0.317237, 0.172823, 0.932463, 0, 0, 0)
 
 [node name="tailLast" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/tailBase/tailMiddle" index="1"]
-transform = Transform3D(0.999086, 0.0121483, 0.0410121, 0, 0.95882, -0.284012, -0.0427737, 0.283753, 0.95794, 0, 0, 0)
+transform = Transform3D(0.970246, 0.0687669, 0.232155, 0, 0.95882, -0.284012, -0.242126, 0.275562, 0.930288, 0, 0, 0)
 
 [node name="fire" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar" index="1"]
-surface_material_override/0 = SubResource("ShaderMaterial_cody6")
+surface_material_override/0 = SubResource("ShaderMaterial_cdupy")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="accessories/preview_window/SubViewport/SubViewport"]
 
@@ -313,6 +304,7 @@ expand_mode = 4
 stretch_mode = 5
 
 [node name="hat" type="TextureButton" parent="accessories/gearL/TabContainer/clothes"]
+material = ExtResource("8_7t1x8")
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.326
@@ -323,6 +315,7 @@ offset_left = -0.0600052
 offset_top = -0.184
 offset_right = -0.110016
 offset_bottom = -0.140007
+texture_normal = ExtResource("17_igmda")
 stretch_mode = 0
 
 [node name="chestplate" type="TextureButton" parent="accessories/gearL/TabContainer/clothes"]
@@ -826,60 +819,71 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="0" type="TextureButton" parent="hotbar/slots/itemIcons"]
+material = ExtResource("8_7t1x8")
 layout_mode = 2
 offset_right = 64.0
 offset_bottom = 64.0
-texture_normal = SubResource("GradientTexture2D_j0oxw")
+texture_normal = ExtResource("17_41re3")
 
 [node name="1" type="TextureButton" parent="hotbar/slots/itemIcons"]
+material = ExtResource("8_7t1x8")
 layout_mode = 2
 offset_left = 64.0
 offset_right = 128.0
 offset_bottom = 64.0
+texture_normal = ExtResource("17_igmda")
 
 [node name="2" type="TextureButton" parent="hotbar/slots/itemIcons"]
+material = ExtResource("8_7t1x8")
 layout_mode = 2
 offset_left = 128.0
 offset_right = 192.0
 offset_bottom = 64.0
 
 [node name="3" type="TextureButton" parent="hotbar/slots/itemIcons"]
+material = ExtResource("8_7t1x8")
 layout_mode = 2
 offset_left = 192.0
 offset_right = 256.0
 offset_bottom = 64.0
 
 [node name="4" type="TextureButton" parent="hotbar/slots/itemIcons"]
+material = ExtResource("8_7t1x8")
 layout_mode = 2
 offset_left = 256.0
 offset_right = 320.0
 offset_bottom = 64.0
 
 [node name="5" type="TextureButton" parent="hotbar/slots/itemIcons"]
+material = ExtResource("8_7t1x8")
 layout_mode = 2
 offset_left = 320.0
 offset_right = 384.0
 offset_bottom = 64.0
 
 [node name="6" type="TextureButton" parent="hotbar/slots/itemIcons"]
+material = ExtResource("8_7t1x8")
 layout_mode = 2
 offset_left = 384.0
 offset_right = 448.0
 offset_bottom = 64.0
 
 [node name="7" type="TextureButton" parent="hotbar/slots/itemIcons"]
+material = ExtResource("8_7t1x8")
 layout_mode = 2
 offset_left = 448.0
 offset_right = 512.0
 offset_bottom = 64.0
 
 [node name="8" type="TextureButton" parent="hotbar/slots/itemIcons"]
+material = ExtResource("8_7t1x8")
 layout_mode = 2
 offset_left = 512.0
 offset_right = 576.0
 offset_bottom = 64.0
 
 [node name="9" type="TextureButton" parent="hotbar/slots/itemIcons"]
+material = ExtResource("8_7t1x8")
 layout_mode = 2
 offset_left = 576.0
 offset_right = 640.0
@@ -897,6 +901,7 @@ visible = false
 layout_mode = 1
 
 [node name="held_item" type="TextureRect" parent="."]
+material = ExtResource("8_7t1x8")
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0

@@ -84,16 +84,16 @@ var accessories = {
 
 
 var hotbar = [
-	["iron_sword",1,Lookup.itemType.weapons_sword,{}], #0
+	["iron_sword",1,Lookup.itemType.weapons_sword,{"enchantment_color": Color.GREEN, "enchantments" : [2,0,2,1], "custom_texture_path" : "res://assets/textures/icons/silverMinnow.png"}], #0
 	["grace_pendant",3,Lookup.itemType.accessories_necklace,{}], #1
-	["iron_helmet",2,Lookup.itemType.accessories_hat,{}], #2
-	["magic_bow",1,Lookup.itemType.weapons_projectile,{}], #3
+	["iron_helmet",2,Lookup.itemType.accessories_hat,{"enchantments" : [0]}], #2
+	["magic_bow",1,Lookup.itemType.weapons_projectile,{"enchantments" : [3,2,1]}], #3
 	["mana_gen_necklace",1,Lookup.itemType.accessories_necklace,{}], #4
-	["iron_chestplate",1,Lookup.itemType.accessories_chestplate,{}], #5
-	["rusted_copper_helmet",1,Lookup.itemType.accessories_hat,{}], #6
+	["iron_chestplate",1,Lookup.itemType.accessories_chestplate,{"enchantments" : [0],"enchantment_color": Color.ROYAL_BLUE}], #5
+	["rusted_copper_helmet",1,Lookup.itemType.accessories_hat,{"enchantments": [0]}], #6
 	["ruby_amulet",1,Lookup.itemType.accessories_necklace,{}], #7
 	["rusted_copper_greaves",1,Lookup.itemType.accessories_greaves,{}], #8
-	["rusted_copper_glove_l",1,Lookup.itemType.accessories_gloves,{}] #9
+	["",0,-1,{}] #9
 ]
 
 var held_item = 0 # 0 - 9 for hotbar

@@ -63,7 +63,7 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_l7c67"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_f3gaq"]
 resource_name = "necklacePresets_Cube_040"
 _surfaces = [{
 "aabb": AABB(-0.0179302, -0.236496, 0.106875, 0.0358603, 0.0863848, 0.00698007),
@@ -90,5 +90,5 @@ mesh = SubResource("ArrayMesh_4xglt")
 skeleton = NodePath("")
 
 [node name="Cube_003" type="MeshInstance3D" parent="necklacePresets"]
-mesh = SubResource("ArrayMesh_l7c67")
+mesh = SubResource("ArrayMesh_f3gaq")
 skeleton = NodePath("")

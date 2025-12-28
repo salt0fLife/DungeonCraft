@@ -13,8 +13,22 @@ func update_held_item_graphics():
 		$held_item.hide()
 	else:
 		$held_item.show()
-		$held_item.texture = Inventory.get_item_texture(held_item[0])
+		if held_item[3].keys().has("custom_texture_path"):
+			$held_item.texture = load(held_item[3]["custom_texture_path"])
+		else:
+			$held_item.texture = Inventory.get_item_texture(held_item[0])
+		if held_item[3].keys().has("enchantments"):
+			if held_item[3]["enchantments"].size() > 0:
+				var col = Color.BLUE_VIOLET
+				if held_item[3].keys().has("enchantment_color"):
+					col = held_item[3]["enchantment_color"]
+				$held_item.material.set("shader_parameter/enchanted_col", col)
+			else:
+				$held_item.material.set("shader_parameter/enchanted_col", Color.BLACK)
+		else:
+			$held_item.material.set("shader_parameter/enchanted_col", Color.BLACK)
 
+var mat = load("res://assets/materials/item_slot_mat.tres")
 func _ready():
 	#_on_hotbar_slot_changed()
 	update_hotbar_graphics()
@@ -27,11 +41,15 @@ func _ready():
 		n.connect("mouse_entered", preview_hotbar_indx.bind(i))
 		n.connect("mouse_exited", preview_hide)
 		n.connect("button_down", _on_hotbar_pressed.bind(i))
+		n.material = mat.duplicate(true)
 	for k in accessory_buttons.keys():
 		var b = accessory_buttons[k]
 		b.connect("mouse_entered", preview_equipment_key.bind(k))
 		b.connect("mouse_exited", preview_hide)
 		b.connect("button_down", _on_equipment_pressed.bind(k))
+		b.material = mat.duplicate(true)
+	$held_item.material = mat.duplicate(true)
+	$held_item.material.set("shader_parameter/transparent_background",true)
 	pass
 
 func preview_equipment_key(k: String):
@@ -75,8 +93,21 @@ func update_hotbar_graphics():
 			#node.hide()
 			node.texture_normal = null
 		else:
-			node.texture_normal = Inventory.get_item_texture(k[0])
 			node.visible = true
+			if k[3].keys().has("custom_texture_path"):
+				node.texture_normal = load(k[3]["custom_texture_path"])
+			else:
+				node.texture_normal = Inventory.get_item_texture(k[0])
+			if k[3].keys().has("enchantments"):
+				if k[3]["enchantments"].size() > 0:
+					var col = Color.BLUE_VIOLET
+					if k[3].keys().has("enchantment_color"):
+						col = k[3]["enchantment_color"]
+					node.material.set("shader_parameter/enchanted_col", col)
+				else:
+					node.material.set("shader_parameter/enchanted_col", Color.BLACK)
+			else:
+				node.material.set("shader_parameter/enchanted_col", Color.BLACK)
 	pass
 
 func _on_hotbar_pressed(index):
@@ -211,7 +242,15 @@ var accessories_paths = {}
 @onready var avatar = $accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar
 func load_accessories(a = Inventory.accessories):
 	for k in a.keys():
+		var enchant_col = Color.BLACK
 		var val = a[k]
+		if val[3].keys().has("enchantments"):
+			if val[3]["enchantments"].size() > 0:
+				var col = Color.BLUE_VIOLET
+				if val[3].keys().has("enchantment_color"):
+					col = val[3]["enchantment_color"]
+				enchant_col = col
+		#gets enchant_col
 		if accessories_paths.has(k):
 			if accessories_paths[k] != null:
 				for p in accessories_paths[k]:
@@ -232,11 +271,17 @@ func load_accessories(a = Inventory.accessories):
 					bi = 7 #swaps hands for bracelets and gloves
 				avatar.bone_paths[bi].add_child(s)
 				accessories_paths[k] += [s]
+				if s is MeshInstance3D:
+					var m = s.get_active_material(0).duplicate()
+					m.set("shader_parameter/enchanted_col",enchant_col)
+					s.set_surface_override_material(0,m)
+			
 			
 			if accessory_buttons.has(k):
 				var tn = accessory_buttons[k]
 				#tn.show()
 				tn.texture_normal = Inventory.get_item_texture(val[0])
+				tn.material.set("shader_parameter/enchanted_col", enchant_col)
 		elif accessory_buttons.has(k):
 			var tn = accessory_buttons[k]
 			#tn.hide()
