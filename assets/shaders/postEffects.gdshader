@@ -28,8 +28,12 @@ uniform float line_faloff: hint_range(0.0, 1.0) = 0.25;
 uniform float mask_size: hint_range(0.0, 1.0) = 0.1;
 uniform float mask_edge: hint_range(0.0, 1.0) = 0.5;
 uniform float animation_speed: hint_range(1.0, 20.0) = 0.5;
-
 uniform bool piss = false;
+uniform float shock: hint_range(0.0,1.0) = 0.0;
+uniform vec3 shock_col: source_color;
+uniform float cinematic: hint_range(0.0,1.0) = 0.0;
+uniform vec3 cinematic_col: source_color;
+uniform float damaged: hint_range(0.0,1.0) = 0.0;
 
 float inv_lerp(float from, float to, float value){
   return (value - from) / (to - from);
@@ -77,7 +81,7 @@ void vertex() {
 }
 
 void fragment() {
-	vec2 uv = wavy_uv(UV);
+	vec2 uv = wavy_uv(SCREEN_UV);
 	COLOR = texture(ScreenTexture, spiral_uv(uv, vec2(0.5), spiral));
 	vec3 col_flash = mix(flash_color - 0.2, flash_color, texture(noise_1, spiral_uv(uv, vec2(0.5), 0.5) + vec2(TIME*0.25)).r);
 	COLOR = vec4(mix(COLOR.rgb, flash_color, flash), 1.0);
@@ -90,7 +94,7 @@ void fragment() {
 	float luminance = (COLOR.r + COLOR.g + COLOR.b) * 0.33333333333;
 	vec3 lum_grad_col = vec3(1.0) * mix(vec3(0.0), texture(lightness_map, vec2(luminance,0.0)).rgb, lightness_map_power);
 	COLOR.rgb += lum_grad_col;
-	float h_p = heart_pounding*0.5*heart_pounding*1.25 + sin(TIME*6.1+sin(TIME*12.0))*0.025;
+	float h_p = heart_pounding*0.5*heart_pounding*1.25 + sin(TIME*6.1+sin(TIME*12.0))*0.025 + damaged;
 	vec4 vingette = texture(vingette_tex,UV);
 	vec4 veins = texture(vision_veins,UV);
 	if (veins.r*vingette.r*h_p > 0.1){
@@ -110,23 +114,38 @@ void fragment() {
 		}
 	}
 	
+	
 	//speed lines
-	vec2 polar_uv = polar_coordinates(rotate_uv(SCREEN_UV, vec2(0.5), floor(fract(TIME) * animation_speed*action_lines) ) , vec2(0.5), 0.01, line_count);
+	vec2 polar_uv = polar_coordinates(rotate_uv(UV, vec2(0.5), floor(fract(TIME) * animation_speed*action_lines) ) , vec2(0.5), 0.01, line_count);
 	vec3 lines = texture(action_lines_noise, polar_uv).rgb;
 	
-	float mask_value = length(SCREEN_UV - vec2(0.5));
+	float mask_value = length(UV - vec2(0.5));
 	float mask = inv_lerp(mask_size, mask_edge, mask_value);
 	float result = 1.0 - (mask * line_density*action_lines);
 	
 	result = smoothstep(result, result + line_faloff, lines.r);
 	
 	COLOR.rgb = mix(COLOR.rgb, vec3(line_color.rgb), min(line_color.a, result));
+	float brightness = (COLOR.r+COLOR.b)*0.33333;
+	float vingette_simple = (sin(UV.y*PI+PI)+1.0)*0.5 + (sin(UV.x*PI+PI)+1.0)*0.5;
+	
+	
+	COLOR.rgb = mix(COLOR.rgb,blood_col,(damaged*0.5 + vingette_simple*0.5)*damaged);
+	COLOR.rgb = mix(COLOR.rgb, brightness+blood_col,damaged);
+	
+	//COLOR.rgb = mix(COLOR.rgb,COLOR.rgb = mix(COLOR.rgb,blood_col,vingette.r*h_p*2.0),damaged);
+	
 	
 	if (piss) {
 		//COLOR.b *= 0.75;
-		float brightness = (COLOR.r+COLOR.b)*0.33333;
+		//float brightness = (COLOR.r+COLOR.b)*0.33333;
 		COLOR.rgb = mix(COLOR.rgb,vec3(COLOR.r,COLOR.g,COLOR.b * brightness),0.5);
 	}
+	
+	//shock
+	COLOR.rgb = mix(COLOR.rgb,brightness*shock_col*2.0 + COLOR.rgb*0.5 + vingette_simple,shock);
+	COLOR.rgb = mix(COLOR.rgb,vec3(COLOR.r,COLOR.g,COLOR.b * brightness),cinematic*0.5);
+	COLOR.rgb = mix(COLOR.rgb,brightness*cinematic_col*2.0 + COLOR.rgb*0.5 - vingette_simple,cinematic);
 	
 	
 	//COLOR.a = min(line_color.a, result);

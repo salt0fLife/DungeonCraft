@@ -1,6 +1,6 @@
 extends CharacterBody3D
 
-@export var MouseSensitivity = 2.5
+@onready var MouseSensitivity = Settings.user_settings["look_sensitivity"]
 @onready var cameraHandler = $playerAvatar/cameraHandler
 @onready var graphics = $playerAvatar
 @onready var avatar = $playerAvatar/genericAvatar
@@ -417,15 +417,10 @@ func _input(event):
 		blink_funny()
 		blink_funny.rpc()
 	if Input.is_action_just_pressed("third_person"):
-		if desired_perspective == 0:
-			desired_perspective = 1
-			set_perspective(desired_perspective)
-		elif desired_perspective == 0:
-			desired_perspective = 2
-			set_perspective(desired_perspective)
-		else:
+		desired_perspective += 1
+		if desired_perspective > 5:
 			desired_perspective = 0
-			set_perspective(desired_perspective)
+		set_perspective(desired_perspective)
 		#if camera.position.z == 0.0:
 			#camera.position.z = 2.0
 			#avatar.set_visibility_layer(1, true)
@@ -494,10 +489,13 @@ func _input(event):
 	if Input.is_action_just_pressed("respawn"):
 		respawn()
 
+
 func set_flying(val):
 	flying = val
+	if !Settings.user_settings["auto_flying_perspective"]:
+		return
 	if val:
-		set_perspective(1)
+		set_perspective(Settings.user_settings["desired_flying_perspective"])
 	else:
 		set_perspective(desired_perspective)
 
@@ -676,7 +674,9 @@ func _physics_process(delta):
 	if vel_length > speed_cap:
 		velocity = speed_cap * velocity.normalized() #keeps you from going into orbit :3
 	speed_appeal = lerp(speed_appeal,velocity.length()/speed_cap,delta*8.0)#Vector2(velocity.x,velocity.z).length()/speed_cap
-	camera.fov = lerp(90.0,110.0,speed_appeal)
+	var desired_fov = Settings.user_settings["desired_fov"]
+	var speed_fov_effect = Settings.user_settings["speed_fov_effect"]
+	camera.fov = lerp(desired_fov,desired_fov+speed_fov_effect,speed_appeal)
 	Global.set_post("shader_parameter/action_lines",speed_appeal)
 	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting)
 
@@ -701,6 +701,7 @@ func avoid_close_entities(delta):
 func heavy_impact():
 	dust_particles.emitting = true
 	Global.create_camera_impact(position, 0.002)
+	$genericAudio/anklesBreak.play()
 	pass
 
 func update_velocity_gliding(delta):
@@ -867,11 +868,11 @@ func bobbing(delta, mult, dir):
 		time += delta * 0.25 * (1.0 + (mult-3.0)*0.125)
 	else:
 		time += delta * (1.0 + (mult-3.0)*0.125)
-	bobHandler.position.x = sin(time*16-PI*0.5)*0.002*mult*4.0
-	bobHandler.position.y = sin(time*16)*0.006*mult*4.0
-	bobHandler.rotation.x = sin(time*16+PI*0.5)*0.001*mult*4.0
-	hands.position.x = sin(time*16.0-PI*0.25)*0.002*mult*4.0
-	hands.position.y = sin(time*16.0+PI*0.25)*0.006*mult*4.0
+	bobHandler.position.x = sin(time*16-PI*0.5)*0.002*mult*4.0 * 0.75
+	bobHandler.position.y = sin(time*16)*0.006*mult*4.0 * 0.75
+	bobHandler.rotation.x = sin(time*16+PI*0.5)*0.001*mult*4.0 
+	hands.position.x = sin(time*16.0-PI*0.25)*0.002*mult*4.0 * 0.25
+	hands.position.y = sin(time*16.0+PI*0.25)*0.006*mult*4.0 * 0.25
 	cameraTiltAdd = lerp(cameraTiltAdd, -dir.x * 0.03 * mult, delta*4.0)
 	bobHandler.rotation.z = sin(time*8-PI*0.5)*0.005*mult + cameraTiltAdd
 
@@ -892,6 +893,33 @@ func set_perspective(val):
 			camera.position = Vector3.ZERO
 			camera.desired_rot.y = PI
 			t.tween_property(camera,"position",Vector3(0.0,0.0,-2.0),0.1)
+			avatar.set_visibility_layer(1, true)
+			avatar.visible = true
+			hands.visible = false
+			AG_handler.visible = true
+			tp_item_handler.visible = true
+		3: #over shoulder right
+			camera.desired_rot.y = 0.1
+			var t = get_tree().create_tween()
+			t.tween_property(camera,"position",Vector3(0.75,0.0,0.6),0.1)
+			avatar.set_visibility_layer(1, true)
+			avatar.visible = true
+			hands.visible = false
+			AG_handler.visible = true
+			tp_item_handler.visible = true
+		4: #over shoulder left
+			camera.desired_rot.y = 0.1
+			var t = get_tree().create_tween()
+			t.tween_property(camera,"position",Vector3(-0.75,0.0,0.6),0.1)
+			avatar.set_visibility_layer(1, true)
+			avatar.visible = true
+			hands.visible = false
+			AG_handler.visible = true
+			tp_item_handler.visible = true
+		5: #third person far
+			camera.desired_rot.y = 0.0
+			var t = get_tree().create_tween()
+			t.tween_property(camera,"position",Vector3(0.0,0.5,4.0),0.1)
 			avatar.set_visibility_layer(1, true)
 			avatar.visible = true
 			hands.visible = false
@@ -1140,7 +1168,19 @@ func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, coun
 		var key = id
 		call_deferred("die",attacker, key, weapon_name, knockback, primary_damage_type)
 		#die(attacker, key, weapon_name, knockback, primary_damage_type)
+	else:
+		var t = get_tree().create_tween()
+		var visual_pow = clamp((amount/attributes["max_health"])*2.0,0.2,1.0)
+		#visual_pow = 0.3
+		t.tween_method(set_damaged, Vector2(0.0,visual_pow), Vector2(1.0,visual_pow), 0.25)
+		t.connect("finished",set_damaged.bind(Vector2(0.0,0.0)))
+		pass
 	update_health_graphics()
+
+func set_damaged(val):
+	print("set_damaged " + str((sin(val.x*PI)+1.0)*0.5*val.y))
+	Global.set_post("shader_parameter/damaged", (sin(val.x*PI)+1.0)*0.5*val.y)
+	pass
 
 func add_status_effect(id,time):
 	if status_effects.has(id):

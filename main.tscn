@@ -116,6 +116,11 @@ shader_parameter/mask_size = 0.1
 shader_parameter/mask_edge = 0.5
 shader_parameter/animation_speed = 20.0
 shader_parameter/piss = false
+shader_parameter/shock = 0.0
+shader_parameter/shock_col = Color(0.772549, 0.658824, 0.717647, 1)
+shader_parameter/cinematic = 0.15
+shader_parameter/cinematic_col = Color(0.764706, 0.615686, 0.956863, 1)
+shader_parameter/damaged = 0.0
 shader_parameter/noise_1 = SubResource("NoiseTexture2D_h3kr7")
 shader_parameter/red_ramp = SubResource("GradientTexture1D_xyupm")
 shader_parameter/green_ramp = SubResource("GradientTexture1D_ptsje")
@@ -140,6 +145,23 @@ script = ExtResource("1_s7ggu")
 
 [node name="steam" type="Node" parent="."]
 script = ExtResource("2_35c3e")
+
+[node name="postEffectTest" type="TextureRect" parent="."]
+visible = false
+offset_right = 1920.0
+offset_bottom = 1017.0
+texture = ExtResource("6_ybl52")
+
+[node name="postEffects" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_gbjt2")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("PlaceholderTexture2D_1goxy")
+script = ExtResource("6_knuf1")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -280,29 +302,12 @@ offset_right = 681.0
 offset_bottom = 247.0
 text = "launch skin editor"
 
-[node name="postEffects" type="TextureRect" parent="."]
-material = SubResource("ShaderMaterial_gbjt2")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = SubResource("PlaceholderTexture2D_1goxy")
-script = ExtResource("6_knuf1")
-
 [node name="playerSync" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath(".")
 script = ExtResource("3_4tkpv")
 playerScene = ExtResource("4_rgl0b")
 
 [node name="playerHandler" type="Node3D" parent="."]
-
-[node name="postEffectTest" type="TextureRect" parent="."]
-visible = false
-offset_right = 1920.0
-offset_bottom = 1017.0
-texture = ExtResource("6_ybl52")
 
 [node name="pauseMenu" type="Control" parent="."]
 visible = false
