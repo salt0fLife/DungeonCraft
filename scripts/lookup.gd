@@ -125,8 +125,9 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 	"simple_rock" : ["rock", "res://assets/itemGraphics/rock_graphics.tscn", itemType.crafting_throwable, [10.0], ""],
 	
 	##accessories
-	"debug_wings" : ["devil wings", "res://accessories/cape/wings.tscn", itemType.accessories_cape, [[["res://accessories/cape/wings.tscn", 0]], {"can_fly":true,"flying_can_hover" : true, "flying_speed":+2.0,"jump_velocity":+3.0, "speed" : +0.25}], ""],
-	"devil_wings" : ["devil wings", "res://accessories/cape/devil_wings.tscn", itemType.accessories_cape, [[["res://accessories/cape/devil_wings.tscn", 0]], {"can_fly":true,"flying_speed":+0.0,"jump_velocity":+3.0, "speed" : +0.25}], ""],
+	"debug_wings" : ["admin wings", "res://accessories/cape/wings.tscn", itemType.accessories_cape, [[["res://accessories/cape/wings.tscn", 0]], {"can_fly":true,"flying_can_hover" : true, "flying_speed":+2.0,"jump_velocity":+3.0, "speed" : +0.25}], ""],
+	"devil_wings" : ["devil wings", "res://accessories/cape/devil_wings.tscn", itemType.accessories_cape, [[["res://accessories/cape/devil_wings.tscn", 0]], {"can_fly":true,"flying_can_glide":true, "flying_speed":+2.0,"jump_velocity":+2.0, "speed" : +0.25}], ""],
+	"fairy_wings" : ["fairy wings", "res://accessories/cape/fairy_wings.tscn", itemType.accessories_cape, [[["res://accessories/cape/fairy_wings.tscn", 0]], {"can_fly":true,"flying_can_hover":true, "flying_speed":+1.0}], ""],
 	"debug_cape" : ["devil wings", "res://accessories/cape/debug_cape.tscn", itemType.accessories_cape, [[["res://accessories/cape/debug_cape.tscn", 0]], {"can_fly":true,"flying_speed":+1.0, "speed" : +0.25}], ""],
 	"speed_boots" : ["speed boots", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 2],["res://accessories/boots/leather_boot_graphics.tscn", 4]], {"speed" : +2.0, "speed_multiplier" : +0.5, "defense_footL" : +0.1, "defense_footR" : +0.1}], ""],
 	"debug_speed_boot_L" : ["left speedy boot", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 2]], {"speed" : +0.25, "speed_multiplier" : +0.5, "defense_footL" : +0.1}], "","debug_speed_boots"],

@@ -417,24 +417,33 @@ func _input(event):
 		blink_funny()
 		blink_funny.rpc()
 	if Input.is_action_just_pressed("third_person"):
-		if camera.position.z == 0.0:
-			camera.position.z = 2.0
-			avatar.set_visibility_layer(1, true)
-			avatar.visible = true
-			hands.visible = false
-			AG_handler.visible = true
-			tp_item_handler.visible = true
-		elif camera.position.z == 2.0:
-			camera.position.z = -2.0
-			camera.desired_rot.y = PI
+		if desired_perspective == 0:
+			desired_perspective = 1
+			set_perspective(desired_perspective)
+		elif desired_perspective == 0:
+			desired_perspective = 2
+			set_perspective(desired_perspective)
 		else:
-			camera.desired_rot.y = 0.0
-			avatar.set_visibility_layer(1, false)
-			hands.visible = true
-			avatar.visible = false
-			AG_handler.visible = false
-			tp_item_handler.visible = false
-			camera.position.z = 0.0
+			desired_perspective = 0
+			set_perspective(desired_perspective)
+		#if camera.position.z == 0.0:
+			#camera.position.z = 2.0
+			#avatar.set_visibility_layer(1, true)
+			#avatar.visible = true
+			#hands.visible = false
+			#AG_handler.visible = true
+			#tp_item_handler.visible = true
+		#elif camera.position.z == 2.0:
+			#camera.position.z = -2.0
+			#camera.desired_rot.y = PI
+		#else:
+			#camera.desired_rot.y = 0.0
+			#avatar.set_visibility_layer(1, false)
+			#hands.visible = true
+			#avatar.visible = false
+			#AG_handler.visible = false
+			#tp_item_handler.visible = false
+			#camera.position.z = 0.0
 	if Input.is_action_just_pressed("sprint") and Input.is_action_pressed("up"):
 		sprinting = true
 	if Input.is_action_just_pressed("up") and Input.is_action_pressed("sprint"):
@@ -453,12 +462,12 @@ func _input(event):
 		else:
 			if flying:
 				if jump_buffer > 0.0:
-					flying = false
+					set_flying(false)
 				else:
-					#jump_buffer = 0.5
-					pass #does not feel good
+					jump_buffer = 0.5
+					pass #does not feel good but need for double tap :( maybe fix later
 			elif attributes["can_fly"] and ! winded:
-				flying = true
+				set_flying(true)
 			else:
 				jump_buffer = 0.1
 	if event is InputEventMouseMotion and is_multiplayer_authority():
@@ -484,6 +493,13 @@ func _input(event):
 		die(display_name, "perish", "",Vector3(0.0,1.0,0.0))
 	if Input.is_action_just_pressed("respawn"):
 		respawn()
+
+func set_flying(val):
+	flying = val
+	if val:
+		set_perspective(1)
+	else:
+		set_perspective(desired_perspective)
 
 @onready var look_reference_check = $playerAvatar/cameraHandler/look_reference_check
 func get_non_clipped_look_reference() -> Vector3:
@@ -529,13 +545,13 @@ func _physics_process(delta):
 			velocity.y -= gravity * delta
 			avatar.falling = lerp(avatar.falling, 1.0, delta*4.0)
 		elif !attributes["can_fly"] or winded:
-			flying = false
+			set_flying(false)
 		if jump_buffer != 0.0:
 			jump_buffer -= delta
 			if jump_buffer < 0.0:
 				jump_buffer = 0.0
 	else:
-		flying = false
+		set_flying(false)
 		if jump_buffer > 0.0:
 			jump()
 		avatar.animation_speed = 1.0*attributes["speed_multiplier"]
@@ -767,13 +783,13 @@ func update_velocity_flying(delta):
 	avatar.animation_state = "fly"
 	if attributes["flying_can_hover"]:
 		var input_vertical = Input.get_vector("crouch", "jump", "up", "down")
-		var input_flat = Input.get_vector("left", "right", "down", "up")
+		var input_flat = Input.get_vector("left", "right", "up", "down")
 		var f_s = attributes["flying_speed"]
-		var desired_vel = f_s * Vector3(-input_flat.x,input_vertical.x,-input_flat.y)*graphics.transform.basis
+		var desired_vel = f_s * (graphics.transform.basis * Vector3(input_flat.x, input_vertical.x, input_flat.y)).normalized()
 		velocity += (desired_vel - velocity) * delta * f_s
 		stamina -= delta * 0.5
 		body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
-		avatar.head_angle.y = body.rotation.y
+		avatar.head_angle.y = -body.rotation.y
 		return
 	
 	var input_vertical = Input.get_vector("crouch", "jump", "down", "up")
@@ -836,7 +852,7 @@ func update_velocity_flying(delta):
 	
 	
 	body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
-	avatar.head_angle.y = body.rotation.y
+	avatar.head_angle.y = -body.rotation.y
 
 func dir_to_angle(dir):
 	if dir.y == 0.0 and dir.x == 0.0:
@@ -858,6 +874,38 @@ func bobbing(delta, mult, dir):
 	hands.position.y = sin(time*16.0+PI*0.25)*0.006*mult*4.0
 	cameraTiltAdd = lerp(cameraTiltAdd, -dir.x * 0.03 * mult, delta*4.0)
 	bobHandler.rotation.z = sin(time*8-PI*0.5)*0.005*mult + cameraTiltAdd
+
+var desired_perspective = 0
+func set_perspective(val):
+	match val:
+		1: #third person
+			camera.desired_rot.y = 0.0
+			var t = get_tree().create_tween()
+			t.tween_property(camera,"position",Vector3(0.0,0.0,2.0),0.1)
+			avatar.set_visibility_layer(1, true)
+			avatar.visible = true
+			hands.visible = false
+			AG_handler.visible = true
+			tp_item_handler.visible = true
+		2: #front
+			var t = get_tree().create_tween()
+			camera.position = Vector3.ZERO
+			camera.desired_rot.y = PI
+			t.tween_property(camera,"position",Vector3(0.0,0.0,-2.0),0.1)
+			avatar.set_visibility_layer(1, true)
+			avatar.visible = true
+			hands.visible = false
+			AG_handler.visible = true
+			tp_item_handler.visible = true
+		_: #normal
+			var t = get_tree().create_tween()
+			camera.desired_rot.y = 0.0
+			t.tween_property(camera,"position",Vector3(0.0,0.0,0.0),0.1)
+			avatar.set_visibility_layer(1, false)
+			avatar.visible = false
+			hands.visible = true
+			AG_handler.visible = false
+			tp_item_handler.visible = false
 
 var maxSpeed = attributes["speed"]
 var acceleration = maxSpeed * 10.0
@@ -1616,7 +1664,7 @@ func _process(delta):
 		update_mana_graphics()
 	if stamina < attributes["max_stamina"]:
 		if stamina < 0.0:
-			flying = false
+			set_flying(false)
 			winded = true
 			stamina = 0.0
 		stamina += delta * attributes["stamina_regen_speed"]

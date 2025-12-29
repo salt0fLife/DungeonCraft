@@ -14,7 +14,6 @@ var time = 0.0
 @export var generic_flapping_speed = 1.0
 var item_mode = false
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	if !avatar.has_method("load_skin"):
@@ -25,6 +24,8 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 @export var open_pos = Vector3.ZERO
 @export var close_pos = Vector3.ZERO
+@export var closed_rot = Vector3.ZERO
+@export var open_rot = Vector3.ZERO
 @onready var left_wing = $shoulder_left/wingLeft
 @onready var right_wing = $shoulder_right/wingRight
 func _process(delta):
@@ -63,7 +64,7 @@ func animation(delta):
 		con_rot.z -= (1.0-con_open)*0.5
 		con_open = 1.0
 	time += delta * animation_speed *flapping_speed
-	shoulderL.rotation = Vector3.ZERO
+	shoulderL.rotation = lerp(closed_rot,open_rot,flapping)
 	shoulderL.rotation.z += sin(generic_flapping_speed*time*PI*3.0)*flapping*0.75*(1.0-gliding)+0.02*PI*flapping
 	shoulderL.rotation.z += sin(generic_flapping_speed*time*10.0*PI)*gliding*0.01
 	shoulderL.rotation.x += sin(generic_flapping_speed*time*12.0*PI)*gliding*0.01
@@ -71,7 +72,7 @@ func animation(delta):
 	shoulderL.rotation.x += sin(generic_flapping_speed*time*PI*3.0-PI*0.5)*flapping*0.25*(1.0-gliding)
 	shoulderL.rotation.y += PI*(1.0-flapping)*0.25*(1.0-gliding)
 	
-	shoulderR.rotation = Vector3(0.0,PI,0.0)
+	shoulderR.rotation = lerp(-closed_rot* Vector3(1.0,1.0,-1.0) + Vector3(0.0,PI,0.0),-open_rot* Vector3(1.0,1.0,-1.0) + Vector3(0.0,PI,0.0),flapping)#-closed_rot* Vector3(1.0,1.0,-1.0) + Vector3(0.0,PI,0.0)
 	shoulderR.rotation.z += sin(generic_flapping_speed*time*PI*3.0)*flapping*0.75*(1.0-gliding)+0.02*PI*flapping
 	shoulderR.rotation.z += sin(generic_flapping_speed*time*10.0*PI)*gliding*0.01
 	shoulderR.rotation.x += sin(generic_flapping_speed*time*12.0*PI)*gliding*0.01
@@ -81,10 +82,6 @@ func animation(delta):
 	
 	con_open = (sin(generic_flapping_speed*time*PI*3.0-PI*0.5)+1.0)*0.5*flapping+0.1*flapping+gliding
 	
-	shoulderL.rotation.y += sin(time*0.5)*0.1
-	shoulderR.rotation.y -= sin(time*0.45)*0.1
-	shoulderL.rotation.x += sin(time*0.28)*0.1
-	shoulderR.rotation.x -= sin(time*0.3)*0.1
 	
 	set_from_open(con_open)
 	pass
@@ -99,6 +96,7 @@ func set_from_open(val = open):
 	right_wing.position.y = remap(float(int(val*3.0)*0.333),1.0,0.0,open_pos.y,close_pos.y)
 	right_wing.position.z = remap(float(int(val)),1.0,0.0,open_pos.z,close_pos.z)
 	right_wing.frame = (3-int(val*3.0))
+	
 	pass
 
 

@@ -316,6 +316,10 @@ value = "debug_wings"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5627, 0, -3.93952)
 value = "debug_cape"
 
+[node name="accessories_debugger10" parent="." instance=ExtResource("15_ytdhl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5627, 0, -5.93952)
+value = "fairy_wings"
+
 [node name="accessories_debugger4" parent="." instance=ExtResource("15_ytdhl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8593, 0, -3.93952)
 accessory_to_edit = "shoeR"
