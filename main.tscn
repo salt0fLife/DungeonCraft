@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://cm7d5y2llo0ky"]
+[gd_scene load_steps=38 format=3 uid="uid://cm7d5y2llo0ky"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_s7ggu"]
 [ext_resource type="Script" path="res://scripts/steam.gd" id="2_35c3e"]
@@ -11,6 +11,12 @@
 [ext_resource type="Script" path="res://scripts/chat_display.gd" id="8_8non7"]
 [ext_resource type="Theme" uid="uid://bxsqmdqtm4i4k" path="res://assets/themes/genericTheme.tres" id="9_486y8"]
 [ext_resource type="PackedScene" uid="uid://b7s8ume16tah0" path="res://assets/gui/inventory_menu.tscn" id="11_ws5gg"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_pium0"]
+frequency = 0.2226
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ghxi3"]
+noise = SubResource("FastNoiseLite_pium0")
 
 [sub_resource type="Gradient" id="Gradient_awrvk"]
 offsets = PackedFloat32Array(0, 0.33, 0.66, 1)
@@ -101,6 +107,15 @@ shader_parameter/heart_pounding = 0.0
 shader_parameter/blood_col = Color(0.298039, 0, 0.027451, 1)
 shader_parameter/fire_color = Color(0.968627, 0.356863, 0, 1)
 shader_parameter/burning = false
+shader_parameter/action_lines = 0.0
+shader_parameter/line_color = Color(0.898039, 0.913725, 0.878431, 0.235294)
+shader_parameter/line_count = 1.5
+shader_parameter/line_density = 0.43
+shader_parameter/line_faloff = 0.25
+shader_parameter/mask_size = 0.1
+shader_parameter/mask_edge = 0.5
+shader_parameter/animation_speed = 20.0
+shader_parameter/piss = false
 shader_parameter/noise_1 = SubResource("NoiseTexture2D_h3kr7")
 shader_parameter/red_ramp = SubResource("GradientTexture1D_xyupm")
 shader_parameter/green_ramp = SubResource("GradientTexture1D_ptsje")
@@ -110,6 +125,7 @@ shader_parameter/vingette_tex = SubResource("GradientTexture2D_tejam")
 shader_parameter/vision_veins = SubResource("NoiseTexture2D_8utt2")
 shader_parameter/fire_noise = SubResource("NoiseTexture2D_pmi4q")
 shader_parameter/screen_gradient = SubResource("GradientTexture2D_3ve4w")
+shader_parameter/action_lines_noise = SubResource("NoiseTexture2D_ghxi3")
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_1goxy"]
 
@@ -392,7 +408,7 @@ layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("9_486y8")
 bbcode_enabled = true
-text = "yayayayay"
+text = "Early access 012"
 scroll_following = true
 metadata/_edit_use_anchors_ = true
 

@@ -46,6 +46,10 @@ void fragment() {
 	if (uv.x > eyePos.x - pupilSize.x*0.5*eyeScale && uv.x < eyePos.x + pupilSize.x*0.5*eyeScale && uv.y > eyePos.y - pupilSize.y*0.5*eyeScale && uv.y < eyePos.y + pupilSize.y * 0.5*eyeScale){
 		color = pupilColor;
 	}
+	//gradient shadow
+	color = (UV.y*2.0-eyeLids.x+2.0)*0.95*color;
+	
+	
 	//highlight
 	vec2 hlp = vec2(highlightPos.x + eyePos.x*highlightTrackIntensity, highlightPos.y + eyePos.y*highlightTrackIntensity);
 	if (uv.x > hlp.x - highlightSize.x && uv.x < hlp.x + highlightSize.x && uv.y > hlp.y - highlightSize.y && uv.y < hlp.y + highlightSize.y){

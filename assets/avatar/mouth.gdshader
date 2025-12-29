@@ -39,16 +39,29 @@ void fragment() {
 		trans = 1.0;
 		col = col_internal;
 	}
+	//internal gradient
+	col = (UV.y*2.0-mouthPos.y*0.5)*col;
+	col = (1.5-sin(((UV.x-0.5-mouthPos.x)/mouth_size.x)*PI*0.2+PI*0.5))*col;
+	
 	//tongue col
 	if (uv.y-0.6-mouthPos.y*0.5 - open*0.05> cos((uv.x-mouthPos.x*0.5)*PI*2.0)*0.1) {
 		col = col_tongue;
+		//tongue gradient
+		//col += (abs(-UV.y*2.0)-mouthPos.y*0.5)*col;
+		col += (sin(((UV.x-0.5-mouthPos.x)/mouth_size.x)*PI*0.75+PI*0.5))*col*0.25;
 	}
+	
+	
 	//teeth
 	if (uv.y - teeth+owo*3.0 - cos(uv.x*PI*70.0)*pointy_teeth-pointy_teeth < pos.y - mouth_size.y){
 		col = col_teeth;
+		col = (sin(((UV.x-0.5-mouthPos.x)/mouth_size.x)*PI*0.5+PI*0.5))*col*0.5;
+		col += (sin(((UV.x-0.5-mouthPos.x)/mouth_size.x)*PI*0.6+PI*0.5))*col*0.5;
 	} //top
 	if (uv.y + teeth-mouth_size.y - open + owo*2.0 + cos(uv.x*PI*64.0)*pointy_teeth+pointy_teeth > pos.y + mouth_size.y){
 		col = col_teeth; 
+		col = (sin(((UV.x-0.5-mouthPos.x)/mouth_size.x)*PI*0.5+PI*0.5))*col*0.5;
+		col += (sin(((UV.x-0.5-mouthPos.x)/mouth_size.x)*PI*0.6+PI*0.5))*col*0.5;
 	} //bottom
 	
 	// mouth outline
@@ -65,13 +78,24 @@ void fragment() {
 		col = col_outline;
 	}
 	//fangs
-	if (uv.y - teeth*mouth_size.y - cos((uv.x-pos.x-mouth_size.x+0.15)*PI*32.0)*fangs-fangs+ owo*2.0 < pos.y - mouth_size.y - 0.025 && uv.x > pos.x + mouth_size.x - 0.05 && uv.x < pos.x + mouth_size.x && uv.y - cos((uv.x-pos.x)*PI*0.5*smile_width_mult)*smile+smile + cos((uv.x-pos.x)*PI*1.5*smile_width_mult)*owo+owo > pos.y - mouth_size.y){
+	if (uv.y - teeth*mouth_size.y - cos((uv.x-pos.x-mouth_size.x+0.15)*PI*32.0)*fangs-fangs+ owo*2.0 + cos((uv.x-pos.x)*PI*0.5*smile_width_mult)*smile+smile < pos.y - mouth_size.y - 0.025 && uv.x > pos.x + mouth_size.x - 0.05 && uv.x < pos.x + mouth_size.x && uv.y - cos((uv.x-pos.x)*PI*0.5*smile_width_mult)*smile+smile + cos((uv.x-pos.x)*PI*1.5*smile_width_mult)*owo+owo > pos.y - mouth_size.y){
 		col = col_teeth;
 		trans = 1.0;
+		col = (((UV.y-0.5)*4.0-mouthPos.y*0.5+cos((uv.x-pos.x)*PI*2.0*smile_width_mult)*smile+smile*2.0+(open*2.0-1.0))+1.0)*1.0*col;
+		//col = (sin(((UV.x-0.5-mouthPos.x)/mouth_size.x)*PI*0.5+PI*0.5))*col*0.5;
+		//col += (sin(((UV.x-0.5-mouthPos.x)/mouth_size.x)*PI*0.6+PI*0.5))*col*0.5;
+		//col = (sin(((UV.x-0.5-mouthPos.x)/mouth_size.x)*PI*0.5+PI*0.5))*col*0.5 * (((UV.y-0.5)*4.0-mouthPos.y*0.5+(open*2.0-1.0))+1.0)*2.0;
+		//col += (sin(((UV.x-0.5-mouthPos.x)/mouth_size.x)*PI*0.6+PI*0.5))*col*0.5 *  (((UV.y-0.5)*4.0-mouthPos.y*0.5+(open*2.0-1.0))+1.0)*30.0;
+		//col += (((UV.y-0.5)*4.0-mouthPos.y*0.5+(open*2.0-1.0))+1.0)*col;
 	}
-	if (uv.y - teeth*mouth_size.y - cos((uv.x-pos.x+mouth_size.x+0.035)*PI*32.0)*fangs-fangs+ owo*2.0 < pos.y - mouth_size.y - 0.025 && uv.x < pos.x - mouth_size.x + 0.05 && uv.x > pos.x - mouth_size.x && uv.y - cos((uv.x-pos.x)*PI*0.5*smile_width_mult)*smile+smile + cos((uv.x-pos.x)*PI*1.5*smile_width_mult)*owo+owo > pos.y - mouth_size.y){
+	if (uv.y - teeth*mouth_size.y - cos((uv.x-pos.x+mouth_size.x+0.035)*PI*32.0)*fangs-fangs+ owo*2.0 + cos((uv.x-pos.x)*PI*0.5*smile_width_mult)*smile+smile < pos.y - mouth_size.y - 0.025 && uv.x < pos.x - mouth_size.x + 0.05 && uv.x > pos.x - mouth_size.x && uv.y - cos((uv.x-pos.x)*PI*0.5*smile_width_mult)*smile+smile + cos((uv.x-pos.x)*PI*1.5*smile_width_mult)*owo+owo > pos.y - mouth_size.y){
 		col = col_teeth;
 		trans = 1.0;
+		col = (((UV.y-0.5)*4.0-mouthPos.y*0.5+cos((uv.x-pos.x)*PI*2.0*smile_width_mult)*smile+smile*2.0+(open*2.0-1.0))+1.0)*1.0*col;
+		//col = (sin(((UV.x-0.5-mouthPos.x)/mouth_size.x)*PI*0.5+PI*0.5))*col*0.5;
+		//col += (sin(((UV.x-0.5-mouthPos.x)/mouth_size.x)*PI*0.6+PI*0.5))*col*0.5;
+		//col = (sin(((UV.x-0.5-mouthPos.x)/mouth_size.x)*PI*0.5+PI*0.5))*col*0.5 * (((UV.y-0.5)*4.0-mouthPos.y*0.5+(open*2.0-1.0))+1.0)*2.0;
+		//col += (sin(((UV.x-0.5-mouthPos.x)/mouth_size.x)*PI*0.6+PI*0.5))*col*0.5 *  (((UV.y-0.5)*4.0-mouthPos.y*0.5+(open*2.0-1.0))+1.0)*30.0;
 	}
 	//mouth top
 	if (uv.y - cos((uv.x-pos.x)*PI*0.5*smile_width_mult)*smile+smile + cos((uv.x-pos.x)*PI*1.5*smile_width_mult)*owo+owo > pos.y - mouth_size.y && uv.y - cos((uv.x-pos.x)*PI*0.5*smile_width_mult)*smile+smile + cos((uv.x-pos.x)*PI*1.5*smile_width_mult)*owo+owo < pos.y + mouth_size.y && uv.x > pos.x - mouth_size.x && uv.x < pos.x + mouth_size.x){
@@ -84,4 +108,9 @@ void fragment() {
 		trans = 0.0;
 		}
 	ALPHA = trans;
+	//ALBEDO = vec3(0.0,0.0,0.0);
+	//ALBEDO.g = (((UV.y-0.5)*4.0-mouthPos.y*0.5+(open*2.0-1.0))+1.0);
+	//ALBEDO.r = ((UV.y-0.25)*0.5-mouthPos.y*0.5);
+	//ALBEDO += (1.0-sin(((UV.x-0.5-mouthPos.x)/mouth_size.x)*PI*0.2+PI*0.5))*ALBEDO;
+	//ALPHA = 1.0;
 }

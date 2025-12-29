@@ -1,0 +1,101 @@
+[gd_scene load_steps=6 format=3 uid="uid://o5j2wxxookwh"]
+
+[ext_resource type="Script" path="res://scripts/sprite_wings.gd" id="1_uuad4"]
+[ext_resource type="Texture2D" uid="uid://d04xp0ffltkrb" path="res://assets/textures/accessories/devil_wings/devil_wings_sprite.png" id="2_h7qxf"]
+[ext_resource type="Texture2D" uid="uid://dabcvohkto3qv" path="res://assets/textures/effects/enchantedTesxture.png" id="3_kno1h"]
+
+[sub_resource type="Shader" id="Shader_0jvd8"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.2.1.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix,depth_prepass_alpha,cull_disabled,diffuse_burley,specular_schlick_ggx;
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,filter_nearest_mipmap,repeat_enable;
+uniform float point_size : hint_range(0,128);
+uniform float roughness : hint_range(0,1);
+uniform vec4 metallic_texture_channel;
+uniform float specular;
+uniform float metallic;
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+uniform sampler2D enchanted_tex : repeat_enable;
+uniform vec3 enchanted_col : source_color;
+
+void vertex() {
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+}
+
+
+
+
+
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	//float metallic_tex = dot(texture(texture_metallic,base_uv),metallic_texture_channel);
+	METALLIC = metallic;
+	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
+	//float roughness_tex = dot(texture(texture_roughness,base_uv),roughness_texture_channel);
+	ROUGHNESS = roughness;
+	SPECULAR = specular;
+	float gradient = sin(UV.x*PI)*(UV.y*2.5);
+	//COLOR.rgb *= gradient;
+	float ench = pow((texture(enchanted_tex,UV*0.25+vec2(TIME*0.005,TIME*0.0025)+vec2(0.5,0.5)).r+texture(enchanted_tex,UV*0.25+vec2(TIME*0.003,TIME*0.005)).r+texture(enchanted_tex,UV*0.25+vec2(TIME*-0.002,TIME*0.001)).r)*0.3,3.0);
+	ALBEDO.rgb += (enchanted_col*ench+ench*0.1)*ALBEDO.rgb*8.0*(enchanted_col*ench+ench*0.1);
+	EMISSION.rgb += (enchanted_col*ench+ench*0.1)*ALBEDO.rgb*8.0*(enchanted_col*ench+ench*0.1);
+	ALPHA = albedo_tex.a;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kg2be"]
+resource_name = "ironArmor"
+render_priority = 0
+shader = SubResource("Shader_0jvd8")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.0
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/enchanted_col = Color(0, 0, 0, 1)
+shader_parameter/texture_albedo = ExtResource("2_h7qxf")
+shader_parameter/enchanted_tex = ExtResource("3_kno1h")
+
+[node name="devil_wings" type="Node3D"]
+transform = Transform3D(0.999802, 0, 0, 0, 0.999085, 0.0374865, 0, -0.0374833, 0.99917, 0, 0, 0)
+script = ExtResource("1_uuad4")
+open = 0.0
+open_pos = Vector3(0.755, 0.075, 0)
+close_pos = Vector3(0.235, -0.035, 0)
+
+[node name="shoulder_left" type="Node3D" parent="."]
+transform = Transform3D(0.764509, -0.0119389, 0.644502, 0, 0.999828, 0.0185209, -0.644613, -0.0141594, 0.764376, 0.0697117, 0.165738, -0.111152)
+
+[node name="wingLeft" type="Sprite3D" parent="shoulder_left"]
+transform = Transform3D(1.41421, 1.41422, 0, -1.41421, 1.41422, 0, 0, 0, 1.99999, 0.235, -0.035, 0)
+material_override = SubResource("ShaderMaterial_kg2be")
+texture_filter = 0
+texture = ExtResource("2_h7qxf")
+hframes = 2
+vframes = 2
+frame = 3
+
+[node name="shoulder_right" type="Node3D" parent="."]
+transform = Transform3D(-0.745785, -0.0402074, 0.66497, -1.86265e-09, 0.998176, 0.0603545, -0.666185, 0.0450116, -0.744424, -0.07, 0.166, -0.111)
+
+[node name="wingRight" type="Sprite3D" parent="shoulder_right"]
+transform = Transform3D(1.41421, 1.41422, 0, -1.41421, 1.41422, 0, 0, 0, 1.99999, 0.235, -0.035, 0)
+material_override = SubResource("ShaderMaterial_kg2be")
+texture_filter = 0
+texture = ExtResource("2_h7qxf")
+hframes = 2
+vframes = 2
+frame = 3

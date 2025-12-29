@@ -23,9 +23,14 @@ var attributes = {
 	"speed" : 3.0,
 	"speed_multiplier" : 1.0,
 	"flying_speed" : 5.0,
+	"flying_control" : 1.0,
+	"flying_can_glide" : false,
+	"flying_can_hover" : false,
 	"max_health" : 10.0,
 	"max_mana" : 10.0,
+	"max_stamina" : 10.0,
 	"mana_regen_speed" : 1.0,
+	"stamina_regen_speed": 1.0,
 	"jump_velocity" : 6.0,
 	"can_fly" : false,
 	"air_acceleration": 1.0,
@@ -61,9 +66,14 @@ const base_attributes = {
 	"speed" : 3.0,
 	"speed_multiplier" : 1.0,
 	"flying_speed" : 5.0,
+	"flying_control" : 1.0,
+	"flying_can_glide" : false,
+	"flying_can_hover" : false,
 	"max_health" : 10.0,
 	"max_mana" : 10.0,
+	"max_stamina" : 10.0,
 	"mana_regen_speed" : 1.0,
+	"stamina_regen_speed": 1.0,
 	"jump_velocity" : 6.0,
 	"can_fly" : false,
 	"air_acceleration": 1.0,
@@ -244,6 +254,9 @@ func update_held_item_graphics(model_path, enchanted = false, enchanted_col = Co
 		mat.set("shader_parameter/enchanted_col", enchanted_col)
 		mf.set_surface_override_material(0,mat)
 		mt.set_surface_override_material(0,mat)
+	elif mf.has_method("set_enchanted_col"):
+		mf.set_enchanted_col(enchanted_col)
+		mt.set_enchanted_col(enchanted_col)
 	fp_item_handler.add_child(mf)
 	tp_item_handler.add_child(mt)
 
@@ -286,6 +299,8 @@ func update_accessories_graphics(a = Inventory.accessories):
 					var m = s.get_active_material(0).duplicate()
 					m.set("shader_parameter/enchanted_col",enchant_col)
 					s.set_surface_override_material(0,m)
+				elif s.has_method("set_enchanted_col"):
+					s.set_enchanted_col(enchant_col)
 			#var s = load(Lookup.items[val][3][0]).instantiate()
 			#AG_handler.add_child(s)
 			#accessories_paths[k] = s
@@ -305,9 +320,12 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * 1.5
 
 var health = 0.0
 var mana = 0.0
+var stamina = 0.0
+var winded = false
 func _ready():
 	health = attributes["max_health"]
 	mana = attributes["max_mana"]
+	stamina = attributes["max_stamina"]
 	#voip.settup_audio(get_multiplayer_authority())
 	var emat = avatar.eyes.get_active_material(0).duplicate()
 	avatar.eyes.set_surface_override_material(0, emat)
@@ -437,8 +455,9 @@ func _input(event):
 				if jump_buffer > 0.0:
 					flying = false
 				else:
-					jump_buffer = 0.5
-			elif attributes["can_fly"]:
+					#jump_buffer = 0.5
+					pass #does not feel good
+			elif attributes["can_fly"] and ! winded:
 				flying = true
 			else:
 				jump_buffer = 0.1
@@ -509,7 +528,7 @@ func _physics_process(delta):
 		if !flying and !ghost:
 			velocity.y -= gravity * delta
 			avatar.falling = lerp(avatar.falling, 1.0, delta*4.0)
-		elif !attributes["can_fly"]:
+		elif !attributes["can_fly"] or winded:
 			flying = false
 		if jump_buffer != 0.0:
 			jump_buffer -= delta
@@ -606,6 +625,8 @@ func _physics_process(delta):
 				velocity.z = lerp(velocity.z, 0.0, 16.0*delta)
 	
 	var true_speed = sqrt(pow(velocity.x,2) + pow(velocity.z,2))/(base_attributes["speed"]*attributes["speed_multiplier"])
+	if flying:
+		true_speed = sqrt(pow(velocity.x,2) + pow(velocity.z,2))/(base_attributes["flying_speed"])
 	#if direction:
 		#true_speed = 1.0
 		#if sprinting:
@@ -635,7 +656,16 @@ func _physics_process(delta):
 	if not snap_up_to_stairs_check(delta):
 		move_and_slide()
 		snap_down_to_stairs_check()
+	var vel_length = velocity.length()
+	if vel_length > speed_cap:
+		velocity = speed_cap * velocity.normalized() #keeps you from going into orbit :3
+	speed_appeal = lerp(speed_appeal,velocity.length()/speed_cap,delta*8.0)#Vector2(velocity.x,velocity.z).length()/speed_cap
+	camera.fov = lerp(90.0,110.0,speed_appeal)
+	Global.set_post("shader_parameter/action_lines",speed_appeal)
 	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting)
+
+var speed_appeal = 0.0
+var speed_cap = 50.0
 
 var avoid_radius = 0.3
 var avoid_strength = 20.0
@@ -660,8 +690,8 @@ func heavy_impact():
 func update_velocity_gliding(delta):
 	var yawcos = cos(graphics.rotation.y);
 	var yawsin = sin(graphics.rotation.y);
-	var pitchcos = cos(cameraHandler.rotation.x);
-	var pitchsin = sin(cameraHandler.rotation.x);
+	var pitchcos = cos(-cameraHandler.rotation.x);
+	var pitchsin = sin(-cameraHandler.rotation.x);
 	
 	var lookX = yawsin * -pitchcos;
 	var lookY = -pitchsin;
@@ -672,26 +702,30 @@ func update_velocity_gliding(delta):
 	var sqrpitchcos = pitchcos * pitchcos;
 	
 	velocity.y += (-0.08 + sqrpitchcos * 0.06);
-	velocity.y -= gravity * delta
+	#velocity.y -= gravity * delta
 	if (velocity.y < 0 && hlook > 0):
-		var yacc = velocity.y * -0.1 * sqrpitchcos;
+		var yacc = velocity.y * -0.1 * sqrpitchcos * delta * 60.0;
 		velocity.y += yacc;
-		velocity.x += lookX * yacc / hlook ;
-		velocity.z += lookZ * yacc / hlook ;
+		velocity.x += ((lookX * yacc) / hlook) * 0.5;
+		velocity.z += ((lookZ * yacc) / hlook) * 0.5;
 	
 	if (-cameraHandler.rotation.x < 0):
-		var yacc = hvel * -pitchsin * 0.04;
-		velocity.y += yacc * 3.5 ;
-		velocity.x -= lookX * yacc / hlook ;
-		velocity.z -= lookZ * yacc / hlook ;
+		var yacc = hvel * -pitchsin * 0.1 * delta * 60.0;
+		velocity.y += yacc;
+		velocity.x -= ((lookX * yacc) / hlook) * 0.75;
+		velocity.z -= ((lookZ * yacc) / hlook) * 0.75;
 	
-	if (hlook > 0):
-		velocity.x += (lookX / hlook * hvel - velocity.x) * 0.1 ;
+	if (hlook > 0): #turning
+		velocity.x += (lookX / hlook * hvel - velocity.x) * 0.1 ; #turning speed
 		velocity.z += (lookZ / hlook * hvel - velocity.z) * 0.1 ;
-		
-	velocity.x *= 0.99 ;
-	velocity.y *= 0.98 ;
-	velocity.z *= 0.99 ;
+	
+	
+	#velocity.x *= 0.99 ;
+	#velocity.y *= 0.98 ;
+	#velocity.z *= 0.99 ; bro why did I type this, it caused me so much trouble for NOOO reason ;-;
+	velocity.x -= velocity.x * delta*0.1 #friction
+	velocity.z -= velocity.z * delta*0.1
+	velocity.y -= velocity.y * delta * 0.1
 
 ##flying old
 		#velocity -= velocity*delta*attributes["flying_speed"]*0.5
@@ -721,6 +755,7 @@ func update_velocity_gliding(delta):
 		#pass
 
 func update_velocity_flying(delta):
+	stamina -= attributes["stamina_regen_speed"]*delta #keeps from regening while flying
 	if avatar.walk_angle != 0.0:
 		body.rotation.y = avatar.walk_angle
 		avatar.head_angle.y = -avatar.walk_angle
@@ -730,18 +765,76 @@ func update_velocity_flying(delta):
 	if d > 0:
 		damage([[Lookup.damageType.blunt, d]],"fall_damage","", "",Vector3(0.0,last_y_velocity,0.0))
 	avatar.animation_state = "fly"
+	if attributes["flying_can_hover"]:
+		var input_vertical = Input.get_vector("crouch", "jump", "up", "down")
+		var input_flat = Input.get_vector("left", "right", "down", "up")
+		var f_s = attributes["flying_speed"]
+		var desired_vel = f_s * Vector3(-input_flat.x,input_vertical.x,-input_flat.y)*graphics.transform.basis
+		velocity += (desired_vel - velocity) * delta * f_s
+		stamina -= delta * 0.5
+		body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
+		avatar.head_angle.y = body.rotation.y
+		return
+	
 	var input_vertical = Input.get_vector("crouch", "jump", "down", "up")
 	var look_dir = get_look_dir()
-	var combined_dir = (Vector3(0.0,input_vertical.x,0.0)+look_dir)*0.5
+	var combined_dir = (Vector3(0.0,input_vertical.x,0.0)+look_dir*input_vertical.y).normalized()
 	var speed = velocity.length()
-	var f_s = attributes["flying_speed"] * 5.0
+	var f_s = attributes["flying_speed"]*2.5# * 5.0
 	velocity.y -= gravity * delta
-	velocity += combined_dir * f_s * delta
+	#velocity += combined_dir * f_s * delta
+	#velocity.y += combined_dir.y * f_s *delta
+	var friction = f_s*0.05 + speed/f_s * 0.1
+	if velocity.y < 1.0:
+		friction = friction * 0.25
+	if input_vertical.length() < 0.05: #gliding
+		if attributes["flying_can_glide"]:
+			update_velocity_gliding(delta*1.0) #glide
+			stamina -= delta*0.05
+		else:
+			velocity.y -= velocity.y * delta * 0.5
+		#var speed_horizontal = Vector2(velocity.x, velocity.z).length()
+		##velocity.x = lerp(velocity.x,speed_horizontal*look_dir.x,delta)
+		##velocity.z = lerp(velocity.z,speed_horizontal*look_dir.z,delta)
+		##if look_dir.y > 0.0:
+			##velocity.y += (speed*look_dir.y - velocity.y) * delta*clamp((speed/5.0),0.0,1.0)*8.0 #gliding
+			##velocity.x += (speed*look_dir.x - velocity.x) * delta*clamp((speed/5.0),0.0,1.0)*1.0 #gliding
+			##velocity.z += (speed*look_dir.z - velocity.z) * delta*clamp((speed/5.0),0.0,1.0)*1.0 #gliding
+		##else:
+			###velocity.y += look_dir.y * delta * f_s
+			##velocity.y += (speed*look_dir.y - velocity.y) * delta*clamp((speed/5.0),0.0,1.0)*8.0 #gliding
+			##velocity.x += (speed_horizontal*look_dir.x - velocity.x) * delta*clamp((speed/5.0),0.0,1.0)*1.0 #gliding
+			##velocity.z += (speed_horizontal*look_dir.z - velocity.z) * delta*clamp((speed/5.0),0.0,1.0)*1.0 #gliding
+		#
+		#var add_vel_y = (speed*look_dir.y - velocity.y) * delta*clamp((speed/5.0),0.0,5.0)*2.0 #gliding
+		#var add_vel_hor = (speed*look_dir - velocity) * delta*clamp((speed/5.0),0.0,5.0)*2.0 #gliding
+		##if (add_vel_hor.x > 0.0) == (look_dir.x > 0.0): #makes sure they are aiming the same way
+		#if (add_vel_y > 0.0) == (look_dir.y > 0.0): #makes sure they are aiming the same way
+			#velocity.y += add_vel_y#(speed*look_dir.y - velocity.y) * delta*clamp((speed/5.0),0.0,1.0)*1.0 #gliding
+			##velocity.x -= add_vel_y*look_dir.x
+			##velocity.z -= add_vel_y*look_dir.z
+		##if (add_vel_hor.z > 0.0) == (look_dir.z > 0.0): #makes sure they are aiming the same way
+		#velocity.x += add_vel_hor.x#(speed*look_dir.x - velocity.x) * delta*clamp((speed/5.0),0.0,1.0)*1.0 #gliding
+		#velocity.z += add_vel_hor.z#(speed*look_dir.z - velocity.z) * delta*clamp((speed/5.0),0.0,1.0)*1.0 #gliding
+		#if speed > speed_cap:
+			#velocity -= velocity * delta*10.0
+		##velocity.x -= velocity.x * friction * delta*0.01
+		##velocity.z -= velocity.z * friction * delta*0.01
+	elif abs(input_vertical.y) > 0.05: #flying forward
+		velocity += combined_dir * f_s * delta
+		stamina -= delta * 0.5
+		if attributes["flying_can_glide"]:
+			update_velocity_gliding(delta*1.0)
+		velocity.y -= velocity.y * friction * delta
+		velocity.x -= velocity.x * friction * delta
+		velocity.z -= velocity.z * friction * delta
+	else: #flying up
+		velocity += combined_dir * f_s * delta
+		stamina -= delta
+		velocity.x -= velocity.x * friction * delta
+		velocity.z -= velocity.z * friction * delta
 	
-	var friction = speed/f_s
 	
-	
-	velocity -= velocity * friction * delta
 	body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
 	avatar.head_angle.y = body.rotation.y
 
@@ -761,6 +854,8 @@ func bobbing(delta, mult, dir):
 	bobHandler.position.x = sin(time*16-PI*0.5)*0.002*mult*4.0
 	bobHandler.position.y = sin(time*16)*0.006*mult*4.0
 	bobHandler.rotation.x = sin(time*16+PI*0.5)*0.001*mult*4.0
+	hands.position.x = sin(time*16.0-PI*0.25)*0.002*mult*4.0
+	hands.position.y = sin(time*16.0+PI*0.25)*0.006*mult*4.0
 	cameraTiltAdd = lerp(cameraTiltAdd, -dir.x * 0.03 * mult, delta*4.0)
 	bobHandler.rotation.z = sin(time*8-PI*0.5)*0.005*mult + cameraTiltAdd
 
@@ -1519,10 +1614,29 @@ func _process(delta):
 		if mana > attributes["max_mana"]:
 			mana = attributes["max_mana"]
 		update_mana_graphics()
+	if stamina < attributes["max_stamina"]:
+		if stamina < 0.0:
+			flying = false
+			winded = true
+			stamina = 0.0
+		stamina += delta * attributes["stamina_regen_speed"]
+		if stamina > attributes["max_stamina"] * 0.5:
+			winded = false
+		if stamina >= attributes["max_stamina"]:
+			stamina = attributes["max_stamina"]
+		update_stamina_graphics()
 var clear_status_effects = true
 
 func update_mana_graphics():
 	$UI/mana.text = str(round(mana)) + " / " + str(attributes["max_mana"])
+	pass
+
+func update_stamina_graphics():
+	$UI/stamina.text = str(round(stamina)) + " / " + str(attributes["max_stamina"])
+	if winded:
+		$UI/stamina.set("theme_override_colors/font_color",Color.YELLOW)
+	else:
+		$UI/stamina.set("theme_override_colors/font_color",Color.LIME_GREEN)
 	pass
 
 func update_status_effect_ui():

@@ -19,7 +19,37 @@ uniform vec3 fire_color : source_color;
 uniform sampler2D fire_noise : filter_linear, repeat_enable;
 uniform sampler2D screen_gradient : filter_linear;
 uniform bool burning = false;
+uniform float action_lines: hint_range(0.0,1.0,0.01) = 0.0;
+uniform sampler2D action_lines_noise : repeat_enable;
+uniform vec4 line_color: source_color;
+uniform float line_count: hint_range(0.0, 2.0, 0.05) = 0.5;
+uniform float line_density: hint_range(0.0, 1.0) = 0.5;
+uniform float line_faloff: hint_range(0.0, 1.0) = 0.25;
+uniform float mask_size: hint_range(0.0, 1.0) = 0.1;
+uniform float mask_edge: hint_range(0.0, 1.0) = 0.5;
+uniform float animation_speed: hint_range(1.0, 20.0) = 0.5;
 
+uniform bool piss = false;
+
+float inv_lerp(float from, float to, float value){
+  return (value - from) / (to - from);
+}
+vec2 polar_coordinates(vec2 uv, vec2 center, float zoom, float repeat)
+{
+	vec2 dir = uv - center;
+	float radius = length(dir) * 2.0;
+	float angle = atan(dir.y, dir.x) * 1.0/(PI * 2.0);
+	return mod(vec2(radius * zoom, angle * repeat), 1.0);
+}
+vec2 rotate_uv(vec2 uv, vec2 pivot, float rotation) {
+    float cosa = cos(rotation);
+    float sina = sin(rotation);
+    uv -= pivot;
+    return vec2(
+        cosa * uv.x - sina * uv.y,
+        cosa * uv.y + sina * uv.x 
+    ) + pivot;
+}
 vec2 spiral_uv(vec2 uv, vec2 center, float angle) {
 	uv -= center;
 	angle = angle/length(uv);
@@ -80,6 +110,26 @@ void fragment() {
 		}
 	}
 	
+	//speed lines
+	vec2 polar_uv = polar_coordinates(rotate_uv(SCREEN_UV, vec2(0.5), floor(fract(TIME) * animation_speed*action_lines) ) , vec2(0.5), 0.01, line_count);
+	vec3 lines = texture(action_lines_noise, polar_uv).rgb;
+	
+	float mask_value = length(SCREEN_UV - vec2(0.5));
+	float mask = inv_lerp(mask_size, mask_edge, mask_value);
+	float result = 1.0 - (mask * line_density*action_lines);
+	
+	result = smoothstep(result, result + line_faloff, lines.r);
+	
+	COLOR.rgb = mix(COLOR.rgb, vec3(line_color.rgb), min(line_color.a, result));
+	
+	if (piss) {
+		//COLOR.b *= 0.75;
+		float brightness = (COLOR.r+COLOR.b)*0.33333;
+		COLOR.rgb = mix(COLOR.rgb,vec3(COLOR.r,COLOR.g,COLOR.b * brightness),0.5);
+	}
+	
+	
+	//COLOR.a = min(line_color.a, result);
 	
 	//COLOR.rgb = mix(COLOR.rgb, blood_col,(vingette.r+sin(TIME*10.0+sin(TIME*20.0))*0.1)*heart_pounding*0.5);
 	//

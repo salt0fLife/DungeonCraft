@@ -93,7 +93,7 @@ var hotbar = [
 	["rusted_copper_helmet",1,Lookup.itemType.accessories_hat,{"enchantments": [0]}], #6
 	["ruby_amulet",1,Lookup.itemType.accessories_necklace,{}], #7
 	["rusted_copper_greaves",1,Lookup.itemType.accessories_greaves,{}], #8
-	["",0,-1,{}] #9
+	["devil_wings",1,Lookup.itemType.accessories_cape,{"enchantments": [1,2],}] #9
 ]
 
 var held_item = 0 # 0 - 9 for hotbar

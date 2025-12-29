@@ -1,7 +1,4 @@
-[gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://rvnyg4odubma"]
-
-[ext_resource type="Texture2D" uid="uid://dabcvohkto3qv" path="res://assets/textures/effects/enchantedTesxture.png" id="1_bymt2"]
-[ext_resource type="Texture2D" uid="uid://carfa7y42mvkr" path="res://assets/glb/armor/ironArmor_metal2.png" id="2_vutfb"]
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://rvnyg4odubma"]
 
 [sub_resource type="Shader" id="Shader_0jvd8"]
 code = "// NOTE: Shader automatically converted from Godot Engine 4.2.1.stable's StandardMaterial3D.
@@ -47,7 +44,8 @@ void fragment() {
 	//COLOR.rgb *= gradient;
 	float ench = pow((texture(enchanted_tex,UV*0.25+vec2(TIME*0.005,TIME*0.0025)+vec2(0.5,0.5)).r+texture(enchanted_tex,UV*0.25+vec2(TIME*0.003,TIME*0.005)).r+texture(enchanted_tex,UV*0.25+vec2(TIME*-0.002,TIME*0.001)).r)*0.3,3.0);
 	ALBEDO.rgb += (enchanted_col*ench+ench*0.1)*ALBEDO.rgb*8.0*(enchanted_col*ench+ench*0.1);
-	EMISSION.rgb += (enchanted_col*ench+ench*0.1)*ALBEDO.rgb*8.0*(enchanted_col*ench+ench*0.1);
+	//EMISSION.rgb += (enchanted_col*ench+ench*0.1)*ALBEDO.rgb*8.0*(enchanted_col*ench+ench*0.1);
+	ALPHA = ALBEDO.a;
 }
 "
 
@@ -55,16 +53,3 @@ void fragment() {
 resource_name = "ironArmor"
 render_priority = 0
 shader = SubResource("Shader_0jvd8")
-shader_parameter/albedo = Color(1, 1, 1, 1)
-shader_parameter/point_size = 1.0
-shader_parameter/roughness = 0.340909
-shader_parameter/metallic_texture_channel = null
-shader_parameter/specular = 0.5
-shader_parameter/metallic = 1.0
-shader_parameter/uv1_scale = Vector3(1, 1, 1)
-shader_parameter/uv1_offset = Vector3(0, 0, 0)
-shader_parameter/uv2_scale = Vector3(1, 1, 1)
-shader_parameter/uv2_offset = Vector3(0, 0, 0)
-shader_parameter/enchanted_col = Color(0, 0, 0, 1)
-shader_parameter/texture_albedo = ExtResource("2_vutfb")
-shader_parameter/enchanted_tex = ExtResource("1_bymt2")

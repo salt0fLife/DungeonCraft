@@ -35,7 +35,7 @@ func settup_audio(id):
 	input = $input
 	if is_multiplayer_authority():
 		input.stream = AudioStreamMicrophone.new()
-		input.play()
+		#input.play()
 		index = AudioServer.get_bus_index("Record")
 		effect = AudioServer.get_bus_effect(index, 2)
 		#reverb_effect = AudioServer.get_bus_effect(AudioServer.get_bus_index("Reverb"), 0)
@@ -66,13 +66,21 @@ func settup_audio(id):
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if is_multiplayer_authority():
-		process_mic()
-		refresh_timer -= delta
-		if refresh_timer < 0.0:
-			$input.stop()
-			refresh_timer = time_to_refresh
-			await get_tree().process_frame
-			$input.play()
+		if enabled:
+			if !$input.playing:
+				$input.play()
+				get_node(indicatorPath).show()
+			process_mic()
+			refresh_timer -= delta
+			if refresh_timer < 0.0:
+				$input.stop()
+				refresh_timer = time_to_refresh
+				await get_tree().process_frame
+				$input.play()
+		else:
+			if $input.playing:
+				$input.stop()
+				get_node(indicatorPath).hide()
 	else:
 		var target_pos = get_viewport().get_camera_3d().global_position - o_ray.global_position
 		o_ray.global_position = global_position

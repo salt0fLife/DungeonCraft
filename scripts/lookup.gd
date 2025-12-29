@@ -125,7 +125,8 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 	"simple_rock" : ["rock", "res://assets/itemGraphics/rock_graphics.tscn", itemType.crafting_throwable, [10.0], ""],
 	
 	##accessories
-	"devil_wings" : ["devil wings", "res://accessories/cape/wings.tscn", itemType.accessories_cape, [[["res://accessories/cape/wings.tscn", 0]], {"can_fly":true,"flying_speed":+2.0,"jump_velocity":+3.0, "speed" : +0.25}], ""],
+	"debug_wings" : ["devil wings", "res://accessories/cape/wings.tscn", itemType.accessories_cape, [[["res://accessories/cape/wings.tscn", 0]], {"can_fly":true,"flying_can_hover" : true, "flying_speed":+2.0,"jump_velocity":+3.0, "speed" : +0.25}], ""],
+	"devil_wings" : ["devil wings", "res://accessories/cape/devil_wings.tscn", itemType.accessories_cape, [[["res://accessories/cape/devil_wings.tscn", 0]], {"can_fly":true,"flying_speed":+0.0,"jump_velocity":+3.0, "speed" : +0.25}], ""],
 	"debug_cape" : ["devil wings", "res://accessories/cape/debug_cape.tscn", itemType.accessories_cape, [[["res://accessories/cape/debug_cape.tscn", 0]], {"can_fly":true,"flying_speed":+1.0, "speed" : +0.25}], ""],
 	"speed_boots" : ["speed boots", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 2],["res://accessories/boots/leather_boot_graphics.tscn", 4]], {"speed" : +2.0, "speed_multiplier" : +0.5, "defense_footL" : +0.1, "defense_footR" : +0.1}], ""],
 	"debug_speed_boot_L" : ["left speedy boot", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 2]], {"speed" : +0.25, "speed_multiplier" : +0.5, "defense_footL" : +0.1}], "","debug_speed_boots"],
@@ -202,16 +203,16 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 		""], # no texture yet
 	
 	
-	##iron armor
+	##debug armor
 	#helmet
-	"iron_helmet" : ["iron helmet", 
+	"debug_helmet" : ["iron helmet", 
 	"res://assets/itemGraphics/armor/iron/iron_helmet.tscn", 
 	itemType.accessories_hat, [[
 		["res://assets/itemGraphics/armor/iron/iron_helmet.tscn", 5]], 
 		{"defense_head" : +0.3, "speed": -0.1}], 
 		"res://assets/textures/items/iron helmet tn.png"], # no texture yet
 	#chestplate
-	"iron_chestplate" : ["iron chestplate", 
+	"debug_chestplate" : ["iron chestplate", 
 	"res://assets/itemGraphics/armor/iron/iron_chestplate.tscn", 
 	itemType.accessories_chestplate, [[
 		["res://assets/itemGraphics/armor/iron/iron_chestplate.tscn", 0],
@@ -221,6 +222,30 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 		["res://assets/itemGraphics/armor/iron/iron_chestplate_l_2.tscn", 7]], 
 		{"defense_legs" : +0.3, "speed": -0.25}], 
 		""], # no texture yet
+	
+	##iron armor
+	#helmet
+	"iron_helmet" : ["iron helmet", 
+	"res://assets/itemGraphics/armor/textured_iron/textured_iron_helmet.tscn", 
+	itemType.accessories_hat, [[
+		["res://assets/itemGraphics/armor/textured_iron/textured_iron_helmet.tscn", 5]], 
+		{"defense_head" : +0.3, "speed": -0.1}], 
+		"res://assets/textures/items/iron helmet tn.png"], # no texture yet
+	#chestplate
+	"iron_chestplate" : ["iron chestplate", 
+	"res://assets/itemGraphics/armor/iron/iron_chestplate.tscn", 
+	itemType.accessories_chestplate, [[
+		["res://assets/itemGraphics/armor/textured_iron/textured_iron_chestplate.tscn", 0],
+		["res://assets/itemGraphics/armor/textured_iron/textured_iron_chestplate_r_1.tscn", 8],
+		["res://assets/itemGraphics/armor/textured_iron/textured_iron_chestplate_l_1.tscn", 6],
+		["res://assets/itemGraphics/armor/textured_iron/textured_iron_chestplate_r_2.tscn", 9],
+		["res://assets/itemGraphics/armor/textured_iron/textured_iron_chestplate_l_2.tscn", 7]], 
+		{"defense_chest" : +0.3, "speed": -0.25}], 
+		""], # no texture yet
+	
+	
+	
+	
 	
 	
 	##racial accessories
