@@ -1,0 +1,126 @@
+[gd_scene load_steps=8 format=3 uid="uid://dx2yeurd63hbg"]
+
+[ext_resource type="PackedScene" uid="uid://xslogmgoui5t" path="res://debug/imports/skeletonKingTestScene.glb" id="1_cskt7"]
+[ext_resource type="Shader" path="res://assets/avatar/eyes.gdshader" id="2_bk3b6"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6gs5e"]
+render_priority = 0
+shader = ExtResource("2_bk3b6")
+shader_parameter/uv1_scale = null
+shader_parameter/uv1_offset = null
+shader_parameter/eyeSize = Vector2(0.87, 0.7)
+shader_parameter/pupilSize = Vector2(0.455, 0.145)
+shader_parameter/eyePos = Vector2(0.21, 0.225)
+shader_parameter/whitesColor = Color(1, 1, 1, 1)
+shader_parameter/eyeColor = Color(0.356863, 0.482353, 0.729412, 1)
+shader_parameter/eyeColor2 = null
+shader_parameter/pupilColor = null
+shader_parameter/ec2os = null
+shader_parameter/eyeLids = Vector2(0.5, 0.5)
+shader_parameter/eyeScale = 1.0
+shader_parameter/eyeTaper = 0.0
+shader_parameter/highlightSize = Vector2(0.295, 0.575)
+shader_parameter/highlightPos = Vector2(0.405, 0.415)
+shader_parameter/highlightTrackIntensity = 0.75
+shader_parameter/eyelashes = Vector2(0.285, 0.395)
+shader_parameter/eyelashCol = null
+shader_parameter/eyelashTaper = null
+shader_parameter/transparency = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_335w1"]
+resource_name = "eyes"
+render_priority = 0
+shader = ExtResource("2_bk3b6")
+shader_parameter/uv1_scale = Vector3(2, 2, 1)
+shader_parameter/uv1_offset = Vector3(-1, -1, 0)
+shader_parameter/eyeSize = Vector2(1, 1)
+shader_parameter/pupilSize = Vector2(0.48, 0.595)
+shader_parameter/eyePos = Vector2(0, 0)
+shader_parameter/whitesColor = Color(0.917647, 0.917647, 0.917647, 1)
+shader_parameter/eyeColor = Color(0.564706, 0.341176, 0.219608, 1)
+shader_parameter/eyeColor2 = Color(0.345098, 0.219608, 0.164706, 1)
+shader_parameter/pupilColor = Color(0, 0, 0, 1)
+shader_parameter/ec2os = 0.14
+shader_parameter/eyeLids = Vector2(1.05, 0.32)
+shader_parameter/eyeScale = 1.035
+shader_parameter/eyeTaper = 0.1
+shader_parameter/highlightSize = Vector2(0.195, 0.11)
+shader_parameter/highlightPos = Vector2(0.53, -0.3)
+shader_parameter/highlightTrackIntensity = 0.75
+shader_parameter/eyelashes = Vector2(0.345, 0.24)
+shader_parameter/eyelashCol = Color(0, 0, 0, 1)
+shader_parameter/eyelashTaper = 0.205
+shader_parameter/transparency = 0.0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_iytdu"]
+_surfaces = [{
+"aabb": AABB(-0.0986319, 0.105928, 0.163494, 0.197264, 0.0732954, 9.99868e-06),
+"format": 34896613377,
+"index_count": 12,
+"index_data": PackedByteArray(0, 0, 3, 0, 2, 0, 0, 0, 1, 0, 3, 0, 4, 0, 7, 0, 5, 0, 4, 0, 6, 0, 7, 0),
+"name": "eyes",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray(228, 160, 246, 255, 0, 0, 0, 0, 255, 255, 246, 255, 0, 0, 0, 0, 228, 160, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 26, 95, 246, 255, 0, 0, 0, 0, 0, 0, 246, 255, 0, 0, 0, 0, 26, 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_7om8r"]
+resource_name = "playerAvatar002_Plane_001"
+_surfaces = [{
+"aabb": AABB(-0.0986319, 0.105928, 0.163494, 0.197264, 0.0732954, 9.99868e-06),
+"attribute_data": PackedByteArray(65, 0, 65, 0, 189, 255, 65, 0, 65, 0, 189, 255, 189, 255, 189, 255, 189, 255, 65, 0, 65, 0, 65, 0, 189, 255, 189, 255, 65, 0, 189, 255),
+"format": 34896613399,
+"index_count": 12,
+"index_data": PackedByteArray(0, 0, 3, 0, 2, 0, 0, 0, 1, 0, 3, 0, 4, 0, 7, 0, 5, 0, 4, 0, 6, 0, 7, 0),
+"material": SubResource("ShaderMaterial_335w1"),
+"name": "eyes",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray(228, 160, 246, 255, 0, 0, 255, 127, 255, 255, 246, 255, 0, 0, 255, 127, 228, 160, 0, 0, 0, 0, 255, 127, 255, 255, 0, 0, 0, 0, 255, 127, 26, 95, 246, 255, 0, 0, 255, 127, 0, 0, 246, 255, 0, 0, 255, 127, 26, 95, 0, 0, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 255, 127, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255)
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_iytdu")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uy3ix"]
+resource_name = "eyes"
+render_priority = 0
+shader = ExtResource("2_bk3b6")
+shader_parameter/uv1_scale = Vector3(2, 2, 1)
+shader_parameter/uv1_offset = Vector3(-1, -1, 0)
+shader_parameter/eyeSize = Vector2(1, 1)
+shader_parameter/pupilSize = Vector2(0.085, 0.35)
+shader_parameter/eyePos = Vector2(0.015, 0.485)
+shader_parameter/whitesColor = Color(0.517647, 0.556863, 0.384314, 1)
+shader_parameter/eyeColor = Color(0.709804, 0.184314, 0.172549, 1)
+shader_parameter/eyeColor2 = Color(1, 0.52549, 0.647059, 1)
+shader_parameter/pupilColor = Color(1, 0, 0, 1)
+shader_parameter/ec2os = 0.13
+shader_parameter/eyeLids = Vector2(1.015, 0.5)
+shader_parameter/eyeScale = 0.695
+shader_parameter/eyeTaper = 0.235
+shader_parameter/highlightSize = Vector2(0.11, 0.025)
+shader_parameter/highlightPos = Vector2(-0.525, 0.29)
+shader_parameter/highlightTrackIntensity = 0.75
+shader_parameter/eyelashes = Vector2(0.3, 0.24)
+shader_parameter/eyelashCol = Color(0, 0.388235, 0.0705882, 1)
+shader_parameter/eyelashTaper = 0.205
+shader_parameter/transparency = 0.0
+
+[node name="Node3D" type="Node3D"]
+
+[node name="skeletonKingTestScene" parent="." instance=ExtResource("1_cskt7")]
+
+[node name="eyes_001" parent="skeletonKingTestScene" index="23"]
+visible = false
+surface_material_override/0 = SubResource("ShaderMaterial_6gs5e")
+
+[node name="eyes" type="MeshInstance3D" parent="skeletonKingTestScene"]
+transform = Transform3D(1.93, 0, 0, 0, 1.8931, -0.375599, 0, 0.375599, 1.8931, 0, 3.32038, 0.461935)
+mesh = SubResource("ArrayMesh_7om8r")
+skeleton = NodePath("")
+surface_material_override/0 = SubResource("ShaderMaterial_uy3ix")
+
+[editable path="skeletonKingTestScene"]

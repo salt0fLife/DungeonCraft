@@ -50,6 +50,7 @@ const slim_i = [
 	
 ]
 
+
 func _process(delta):
 	if activated:
 		life_time -= delta
@@ -130,11 +131,17 @@ func activate(key = "", force = Vector3.ZERO, extraForce = Vector3.ZERO):
 	pass
 
 func load_skin(skin_mat,slim):
+	var tran = skin_mat.duplicate()
 	for m in meshes:
 		m.visible = !slim
 		m.set_surface_override_material(0,skin_mat)
 	for i in slim_i:
 		meshes[i].visible = slim
+	for o in range(0,meshes.size()):
+		if o+1%2 == 0.0:
+			#takes every other
+			meshes[o].hide()#.set_surface_override_material(0,tran)
+			#until I get transparency sorted out
 
 
 @onready var accessory_bones = [
@@ -160,9 +167,9 @@ func _ready():
 func update_accessories_graphics():
 	for i in accessories.keys():
 		var k = accessories[i]
-		if k != "":
+		if k[0] != "": #TGIC
 			accessories_paths[k] = []
-			for g in Lookup.items[k][3][0]:
+			for g in Lookup.items[k[0]][3][0]:
 				var s = load(g[0]).instantiate()
 				s.process_mode = PROCESS_MODE_DISABLED
 				accessory_bones[g[1]].add_child(s)

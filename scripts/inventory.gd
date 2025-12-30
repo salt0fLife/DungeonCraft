@@ -2,56 +2,98 @@ extends Node
 signal update_accessories
 signal update_held_item
 signal update_hotbar
+signal update_status_effect_graphics
+var active_status_effects = []
+var empty_item = ["",0,-1,{}]
+
+#var accessories = {
+	##armor and clothes
+	#"cape" : "",
+	#"shirt" : "",
+	#"chestplate" : "",
+	#"hat" : "",
+	#"pants" : "",
+	#"leggings" : "",
+	#"gloveR" : "",
+	#"gloveL" : "",
+	#"shoeR" : "",
+	#"shoeL" : "",
+	#"greaves" : "",
+	##jewelry
+	#"necklace1" : "",
+	#"necklace2" : "",
+	#"necklace3" : "",
+	#"necklace4" : "",
+	#"crown" : "",
+	#"braceletR" : "",
+	#"braceletL" : "",
+	#"belt" : "",
+	##rings
+	#"ringFR" : "",
+	#"ringSR" : "",
+	#"ringVowR" : "",
+	#"ringPR" : "",
+	#"ringFL" : "",
+	#"ringSL" : "",
+	#"ringVowL" : "",
+	#"ringPL" : "",
+	#
+	#
+	###racial changes
+	#"race" : "",
+	#"sub_race" : "",
+#}
 
 var accessories = {
 	#armor and clothes
-	"cape" : "",
-	"shirt" : "",
-	"chestplate" : "",
-	"hat" : "",
-	"pants" : "",
-	"leggings" : "",
-	"gloveR" : "",
-	"gloveL" : "",
-	"shoeR" : "",
-	"shoeL" : "",
-	"greaves" : "",
+	"cape" : empty_item,
+	"shirt" : empty_item,
+	"chestplate" : empty_item,
+	"hat" : empty_item,
+	"pants" : empty_item,
+	"leggings" : empty_item,
+	"gloveR" : empty_item,
+	"gloveL" : empty_item,
+	"shoeR" : empty_item,
+	"shoeL" : empty_item,
+	"greaves" : empty_item,
 	#jewelry
-	"necklace1" : "",
-	"necklace2" : "",
-	"necklace3" : "",
-	"necklace4" : "",
-	"crown" : "",
-	"braceletR" : "",
-	"braceletL" : "",
-	"belt" : "",
+	"necklace1" : empty_item,
+	"necklace2" : empty_item,
+	"necklace3" : empty_item,
+	"necklace4" : empty_item,
+	"crown" : empty_item,
+	"braceletR" : empty_item,
+	"braceletL" : empty_item,
+	"belt" : empty_item,
 	#rings
-	"ringFR" : "",
-	"ringSR" : "",
-	"ringVowR" : "",
-	"ringPR" : "",
-	"ringFL" : "",
-	"ringSL" : "",
-	"ringVowL" : "",
-	"ringPL" : "",
+	"ringFR" : empty_item,
+	"ringSR" : empty_item,
+	"ringVowR" : empty_item,
+	"ringPR" : empty_item,
+	"ringFL" : empty_item,
+	"ringSL" : empty_item,
+	"ringVowL" : empty_item,
+	"ringPL" : empty_item,
 	
 	
 	##racial changes
-	"race" : "",
-	"sub_race" : "",
+	"race" : empty_item,
+	"sub_race" : empty_item,
 }
 
+
 var hotbar = [
-	"iron_sword", #0
-	"", #1
-	"short_bow", #2
-	"magic_bow", #3
-	"rusted_copper_leggings", #4
-	"copper_chestplate", #5
-	"copper_helmet", #6
-	"rusted_copper_helmet", #7
-	"rusted_iron_helmet", #8
-	"iron_helmet" #9
+	["iron_sword",1,Lookup.itemType.weapons_sword,{"enchantment_color": Color.GREEN, "enchantments" : [2,0,2,1], "custom_texture_path" : "res://assets/textures/icons/silverMinnow.png"}], #0
+	["grace_pendant",3,Lookup.itemType.accessories_necklace,{}], #1
+	["iron_helmet",2,Lookup.itemType.accessories_hat,{"enchantments" : [0]}], #2
+	["magic_bow",1,Lookup.itemType.weapons_projectile,{"enchantments" : [3,2,1]}], #3
+	["mana_gen_necklace",1,Lookup.itemType.accessories_necklace,{}], #4
+	["iron_chestplate",1,Lookup.itemType.accessories_chestplate,{"enchantments" : [0],"enchantment_color": Color.ROYAL_BLUE}], #5
+	["rusted_copper_helmet",1,Lookup.itemType.accessories_hat,{"enchantments": [0]}], #6
+	["ruby_amulet",1,Lookup.itemType.accessories_necklace,{}], #7
+	["rusted_copper_greaves",1,Lookup.itemType.accessories_greaves,{}], #8
+	["devil_wings",1,Lookup.itemType.accessories_cape,{"enchantments": [1,2],}] #9
 ]
 
 var held_item = 0 # 0 - 9 for hotbar
@@ -64,17 +106,20 @@ var items = [
 
 func drop_hotbar_item(index, pos):
 	var val = hotbar[index]
-	hotbar[index] = ""
+	hotbar[index] = empty_item
 	emit_signal("update_hotbar")
 	emit_signal("update_held_item")
 	Global.create_loose_item(val, pos)
 
-func get_held_item_data():
-	var key = hotbar[held_item]
+func get_held_item_data() -> Array:
+	var key = hotbar[held_item][0]
 	if key != "":
-		return Lookup.items[hotbar[held_item]]
+		return Lookup.items[key]
 	else:
 		return []
+
+func get_held_item() -> Array:
+	return hotbar[held_item]
 
 func change_held_item(index):
 	held_item = index
@@ -89,7 +134,7 @@ func pickup_item(id, replace_held) -> bool:
 		emit_signal("update_hotbar")
 		return true #finished replace_held
 	for i in range(0,hotbar.size()):
-		if hotbar[i] == "":
+		if hotbar[i][0] == "":
 			hotbar[i] = id
 			emit_signal("update_held_item")
 			emit_signal("update_hotbar")
@@ -109,30 +154,45 @@ func pickup_item(id, replace_held) -> bool:
 	#items += [[id, count]]
 	#print("items now " + str(items)) 
 
-func equip_accessory(acc_id : String, tag : String):
+#func equip_accessory_old(acc_id : String, tag : String):
+	#if !accessories.has(acc_id):
+		#print("equipped accessory to slot that was not previously declared")
+		#accessories[acc_id] = tag
+		#pass
+	#elif accessories[acc_id] == "":
+		#accessories[acc_id] = tag
+	#else:
+		##slot already has equipped accessory
+		#var existing = accessories[acc_id]
+		#pickup_item(existing,1)
+		#pass
+	#emit_signal("update_accessories")
+	#pass
+
+func equip_accessory(acc_id : String, data : Array):
 	if !accessories.has(acc_id):
 		print("equipped accessory to slot that was not previously declared")
-		accessories[acc_id] = tag
+		accessories[acc_id] = data
 		pass
-	elif accessories[acc_id] == "":
-		accessories[acc_id] = tag
+	elif accessories[acc_id][0] == "":
+		accessories[acc_id] = data
 	else:
 		#slot already has equipped accessory
 		var existing = accessories[acc_id]
 		pickup_item(existing,1)
-		pass
+		accessories[acc_id] = data
 	emit_signal("update_accessories")
 	pass
 
 func drop_all(pos):
 	for k in accessories.keys():
-		if accessories[k] !="":
+		if accessories[k][0] !="": #TGIC
 			Global.create_loose_item(accessories[k], pos+Vector3(randf_range(-0.25, 0.25),randf_range(-0.25, 0.25)+1.25,randf_range(-0.25, 0.25)))
-			accessories[k] = ""
+			accessories[k] = Inventory.empty_item #TGIC
 	for i in range(0,hotbar.size()):
-		if hotbar[i] != "":
+		if hotbar[i][0] != "": #TGIC
 			Global.create_loose_item(hotbar[i], pos+Vector3(randf_range(-0.25, 0.25),randf_range(-0.25, 0.25)+1.25,randf_range(-0.25, 0.25)))
-			hotbar[i] = ""
+			hotbar[i] = Inventory.empty_item #TGIC
 	
 	emit_signal("update_held_item")
 	emit_signal("update_hotbar")
@@ -186,3 +246,5 @@ const accessories_accepted_item_types = {
 	"ringPL" : Lookup.itemType.accessories_ring,
 }
 
+func key_to_item(key : String) -> Array:
+	return [key, 1, Lookup.items[key][2], {}]

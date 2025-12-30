@@ -38,6 +38,7 @@ target_position = Vector3(0, 0, -20)
 
 [node name="test" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_yewc8")
+volume_db = -8.525
 bus = &"Record"
 
 [node name="occlusion_check" type="RayCast3D" parent="."]

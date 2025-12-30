@@ -13,9 +13,9 @@ func _ready():
 	velocity = Vector3(randf_range(-max_vel,max_vel), randf_range(-max_vel,max_vel),randf_range(-max_vel,max_vel))
 	modulate = Lookup.damageType_color_lookup[type]
 	if val > 0:
-		text = "+" + str(val)
+		text = "+" + str(round(val*4.0)*0.25)
 	else:
-		text = "-" + str(val)
+		text = "-" + str(round(val*4.0)*0.25)
 	$Sprite3D.frame = type
 
 func _physics_process(delta):

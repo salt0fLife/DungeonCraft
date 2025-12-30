@@ -1,0 +1,57 @@
+[gd_scene load_steps=18 format=3 uid="uid://bloseqjjhci10"]
+
+[ext_resource type="PackedScene" uid="uid://biefmbtp76ioq" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_boot_l.tscn" id="1_jp1fa"]
+[ext_resource type="PackedScene" uid="uid://dnumhitq8vmae" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_boot_r.tscn" id="2_g3v4c"]
+[ext_resource type="PackedScene" uid="uid://c30vriu3ilrbc" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate.tscn" id="3_rykox"]
+[ext_resource type="PackedScene" uid="uid://vjtevc37pyer" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate_arm_2_l.tscn" id="4_h0mvd"]
+[ext_resource type="PackedScene" uid="uid://b1oejadmeh2p0" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate_arm_2_r.tscn" id="5_bejl5"]
+[ext_resource type="PackedScene" uid="uid://r3vb1od64yav" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate_l.tscn" id="6_a7nno"]
+[ext_resource type="PackedScene" uid="uid://dlkendumdcgpa" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate_r.tscn" id="7_lrxbm"]
+[ext_resource type="PackedScene" uid="uid://gdybonh5mrs4" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_glove_l.tscn" id="8_p1s4j"]
+[ext_resource type="PackedScene" uid="uid://dojljnxxehpps" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_glove_r.tscn" id="9_2h6wo"]
+[ext_resource type="PackedScene" uid="uid://x00mt0nhweud" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_greave_l.tscn" id="10_sh422"]
+[ext_resource type="PackedScene" uid="uid://ddbr5mneow3eb" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_greave_r.tscn" id="11_sm8fk"]
+[ext_resource type="PackedScene" uid="uid://6fm2647lwgpp" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_helmet.tscn" id="12_5ss4q"]
+[ext_resource type="PackedScene" uid="uid://b7dn3ihav2ayl" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings.tscn" id="13_1ix3f"]
+[ext_resource type="PackedScene" uid="uid://d4dy2htnj2a7f" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings_l.tscn" id="14_wnd5m"]
+[ext_resource type="PackedScene" uid="uid://cw5qtdbi6gai4" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings_l_2.tscn" id="15_gqfph"]
+[ext_resource type="PackedScene" uid="uid://dqbmqykj4xxjy" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings_r.tscn" id="16_553gw"]
+[ext_resource type="PackedScene" uid="uid://hp2r0bipxvh0" path="res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings_r_2.tscn" id="17_5t7vu"]
+
+[node name="rusted copper armor decomp" type="Node3D"]
+
+[node name="rusted copper armor" type="Node3D" parent="."]
+
+[node name="rusted copper boot L" parent="rusted copper armor" instance=ExtResource("1_jp1fa")]
+
+[node name="rusted copper boot R" parent="rusted copper armor" instance=ExtResource("2_g3v4c")]
+
+[node name="rusted copper chestplate" parent="rusted copper armor" instance=ExtResource("3_rykox")]
+
+[node name="rusted copper chestplate arm 2 L" parent="rusted copper armor" instance=ExtResource("4_h0mvd")]
+
+[node name="rusted copper chestplate arm 2 R" parent="rusted copper armor" instance=ExtResource("5_bejl5")]
+
+[node name="rusted copper chestplate L" parent="rusted copper armor" instance=ExtResource("6_a7nno")]
+
+[node name="rusted copper chestplate R" parent="rusted copper armor" instance=ExtResource("7_lrxbm")]
+
+[node name="rusted copper glove L" parent="rusted copper armor" instance=ExtResource("8_p1s4j")]
+
+[node name="rusted copper glove R" parent="rusted copper armor" instance=ExtResource("9_2h6wo")]
+
+[node name="rusted copper greave L" parent="rusted copper armor" instance=ExtResource("10_sh422")]
+
+[node name="rusted copper greave R" parent="rusted copper armor" instance=ExtResource("11_sm8fk")]
+
+[node name="rusted copper helmet" parent="rusted copper armor" instance=ExtResource("12_5ss4q")]
+
+[node name="rusted copper leggings" parent="rusted copper armor" instance=ExtResource("13_1ix3f")]
+
+[node name="rusted copper leggings L" parent="rusted copper armor" instance=ExtResource("14_wnd5m")]
+
+[node name="rusted copper leggings L 2" parent="rusted copper armor" instance=ExtResource("15_gqfph")]
+
+[node name="rusted copper leggings R" parent="rusted copper armor" instance=ExtResource("16_553gw")]
+
+[node name="rusted copper leggings R 2" parent="rusted copper armor" instance=ExtResource("17_5t7vu")]

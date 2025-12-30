@@ -8,6 +8,28 @@ extends Node
 	#"iron gauntlets" : ["res://accessories/gloves/iron_gauntlets.tscn", {"speed" : - 0.01}],
 	#"leather boots" : ["res://accessories/boots/leather_boots.tscn", {"speed" : +0.25}]
 #}
+#func _ready():
+	###load itemData
+	#var folder = DirAccess.open("res://assets/itemData/")
+	#for file in folder.get_files():
+		#var f = FileAccess.open("res://assets/itemData/"+file,FileAccess.READ)
+		#var data = f.get_var(false)#JSON.parse_string(f.get_var(false))
+		#print(data)
+		#f.close()
+		#var key = file.left(file.length() - 5)
+		#print(file)
+		#items[file] = data
+	###save itemData
+	#for item in items.keys():
+		#var f = FileAccess.open("res://assets/itemData/"+item+".json",FileAccess.WRITE)
+		#var data = items[item]#JSON.stringify(items[item])
+		#f.store_var(data)
+		#print(data)
+		#f.close()
+		##var key = file.left(file.length() - 4)
+		#pass
+	#pass
+
 
 @onready var Projectiles = {
 	"arrow" : preload("res://entities/projectiles/arrow.tscn"),
@@ -20,7 +42,8 @@ const worlds = {
 	"world2" : ["res://world/world_2.tscn", 0.2],
 	"debug" : ["res://debug/debug_world.tscn", 0.0],
 	"gm_construct" : ["res://world/gm_construct.tscn", 0.4],
-	"skywas_test" : ["res://world/skywars_prot_rainy.tscn", 0.0]
+	"skywas_test" : ["res://world/skywars_prot_rainy.tscn", 0.0],
+	"dungeon_world" : ["res://world/dungeon_world.tscn", 0.0]
 }
 
 enum itemType {
@@ -78,6 +101,8 @@ enum damageType {
 	explosion,
 	magic,
 	lightning,
+	holy,
+	blight
 }
 
 const damageType_color_lookup = [
@@ -90,27 +115,138 @@ const damageType_color_lookup = [
 	"green",
 	"red",
 	"purple",
-	"aqua"
+	"aqua",
+	"yellow",
+	"web_purple"
 ]
 
-const items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_key(if applicable)]
+var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_key(if applicable)]
 	##crafting
 	"simple_rock" : ["rock", "res://assets/itemGraphics/rock_graphics.tscn", itemType.crafting_throwable, [10.0], ""],
 	
 	##accessories
-	"devil_wings" : ["devil wings", "res://accessories/cape/wings.tscn", itemType.accessories_cape, [[["res://accessories/cape/wings.tscn", 0]], {"can_fly":true,"flying_speed":+2.0,"jump_velocity":+3.0, "speed" : +0.25}], ""],
+	"debug_wings" : ["admin wings", "res://accessories/cape/wings.tscn", itemType.accessories_cape, [[["res://accessories/cape/wings.tscn", 0]], {"can_fly":true,"flying_can_hover" : true, "flying_speed":+2.0,"jump_velocity":+3.0, "speed" : +0.25}], ""],
+	"devil_wings" : ["devil wings", "res://accessories/cape/devil_wings.tscn", itemType.accessories_cape, [[["res://accessories/cape/devil_wings.tscn", 0]], {"can_fly":true,"flying_can_glide":true, "flying_speed":+2.0,"jump_velocity":+2.0, "speed" : +0.25}], ""],
+	"fairy_wings" : ["fairy wings", "res://accessories/cape/fairy_wings.tscn", itemType.accessories_cape, [[["res://accessories/cape/fairy_wings.tscn", 0]], {"can_fly":true,"flying_can_hover":true, "flying_speed":+1.0}], ""],
 	"debug_cape" : ["devil wings", "res://accessories/cape/debug_cape.tscn", itemType.accessories_cape, [[["res://accessories/cape/debug_cape.tscn", 0]], {"can_fly":true,"flying_speed":+1.0, "speed" : +0.25}], ""],
 	"speed_boots" : ["speed boots", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 2],["res://accessories/boots/leather_boot_graphics.tscn", 4]], {"speed" : +2.0, "speed_multiplier" : +0.5, "defense_footL" : +0.1, "defense_footR" : +0.1}], ""],
-	"debug_speed_boot_L" : ["speed boots 2", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 2]], {"speed" : +0.25, "speed_multiplier" : +0.5, "defense_footL" : +0.1}], "","debug_speed_boots"],
-	"debug_speed_boot_R" : ["speed boots 2", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 4]], {"speed" : +0.25, "speed_multiplier" : +0.5, "defense_footR" : +0.1}], "","debug_speed_boots"],
+	"debug_speed_boot_L" : ["left speedy boot", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 2]], {"speed" : +0.25, "speed_multiplier" : +0.5, "defense_footL" : +0.1}], "","debug_speed_boots"],
+	"debug_speed_boot_R" : ["right speedy boot", "res://accessories/boots/leather_boot_graphics.tscn", itemType.accessories_shoes, [[["res://accessories/boots/leather_boot_graphics.tscn", 4]], {"speed" : +0.25, "speed_multiplier" : +0.5, "defense_footR" : +0.1}], "","debug_speed_boots"],
 	
 	##armor
-	"rusted_copper_helmet" : ["rusted copper helmet", "res://assets/itemGraphics/armor/rustedCopper/rustedCopperHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/rustedCopper/rustedCopperHelmet.glb", 5]], {"defense_head" : +0.1, "speed": -0.1}], "res://assets/textures/items/rusted copper helmet tn.png"],
 	"copper_helmet" : ["copper helmet", "res://assets/itemGraphics/armor/copper/copperHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/copper/copperHelmet.glb", 5]], {"defense_head" : +0.2, "speed": -0.1}], "res://assets/textures/items/copper helmet tn.png"],
 	"rusted_iron_helmet" : ["rusted iron helmet", "res://assets/itemGraphics/armor/rustedIron/rustedIronHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/rustedIron/rustedIronHelmet.glb", 5]], {"defense_head" : +0.2, "speed": -0.15}], "res://assets/textures/items/rusted iron helmet tn.png"],
-	"iron_helmet" : ["iron helmet", "res://assets/itemGraphics/armor/iron/ironHelmet.glb", itemType.accessories_hat, [[["res://assets/itemGraphics/armor/iron/ironHelmet.glb", 5]], {"defense_head" : +0.4, "speed": -0.15}], "res://assets/textures/items/iron helmet tn.png"],
 	"copper_chestplate" : ["copper chestplate", "res://assets/itemGraphics/armor/copper/CopperChestplate.glb", itemType.accessories_chestplate, [[["res://assets/itemGraphics/armor/copper/CopperChestplate.glb", 0],["res://assets/itemGraphics/armor/copper/CopperPauldronL.glb", 6],["res://assets/itemGraphics/armor/copper/CopperPauldronR.glb", 8]], {"defense_body" : +0.2,"defense_arms" : +0.2, "speed": -0.2}], "res://assets/textures/items/copper chestplate tn.png"],
-	"rusted_copper_leggings" : ["rusted copper leggings", "res://assets/itemGraphics/armor/rustedCopper/rustedCopperGreavesR.glb", itemType.accessories_leggings, [[["res://assets/itemGraphics/armor/rustedCopper/rustedCopperGreavesR.glb", 1],["res://assets/itemGraphics/armor/rustedCopper/rustedCopperGreavesL.glb", 3]], {"defense_legs" : +0.1, "speed": -0.2}], "res://assets/textures/items/rusted copper greaves tn.png"],
+	
+	#rusted copper
+	#helmet
+	"rusted_copper_helmet" : ["rusted copper helmet", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_helmet.tscn", 
+	itemType.accessories_hat, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_helmet.tscn", 5]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
+	#chestplate
+	"rusted_copper_chestplate" : ["rusted copper chestplate", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate.tscn", 
+	itemType.accessories_chestplate, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate.tscn", 0],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate_r.tscn", 8],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate_l.tscn", 6],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate_arm_2_r.tscn", 9],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_chestplate_arm_2_l.tscn", 7]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
+	#leggings
+	"rusted_copper_leggings" : ["rusted copper leggings", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings.tscn", 
+	itemType.accessories_leggings, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings_r.tscn", 1],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings_l.tscn", 3],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings_r_2.tscn", 1],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings_l_2.tscn", 3],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings.tscn", 0]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
+	#greaves
+	"rusted_copper_greaves" : ["rusted copper greaves", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_leggings.tscn", 
+	itemType.accessories_greaves, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_greave_l.tscn", 2],
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_greave_r.tscn", 4]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
+	#boots
+	"rusted_copper_boot_l" : ["rusted copper left boot", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_boot_l.tscn", 
+	itemType.accessories_shoes, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_boot_l.tscn", 2]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
+	"rusted_copper_boot_r" : ["rusted copper right boot", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_boot_r.tscn", 
+	itemType.accessories_shoes, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_boot_r.tscn", 4]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
+	#gloves
+	"rusted_copper_glove_l" : ["rusted copper left glove", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_glove_l.tscn", 
+	itemType.accessories_gloves, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_glove_l.tscn", 7]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
+	"rusted_copper_glove_r" : ["rusted copper right glove", 
+	"res://assets/itemGraphics/armor/rustedCopper/rusted_copper_glove_r.tscn", 
+	itemType.accessories_gloves, [[
+		["res://assets/itemGraphics/armor/rustedCopper/rusted_copper_glove_r.tscn", 9]], 
+		{"defense_legs" : +0.1, "speed": -0.2}], 
+		""], # no texture yet
+	
+	
+	##debug armor
+	#helmet
+	"debug_helmet" : ["iron helmet", 
+	"res://assets/itemGraphics/armor/iron/iron_helmet.tscn", 
+	itemType.accessories_hat, [[
+		["res://assets/itemGraphics/armor/iron/iron_helmet.tscn", 5]], 
+		{"defense_head" : +0.3, "speed": -0.1}], 
+		"res://assets/textures/items/iron helmet tn.png"], # no texture yet
+	#chestplate
+	"debug_chestplate" : ["iron chestplate", 
+	"res://assets/itemGraphics/armor/iron/iron_chestplate.tscn", 
+	itemType.accessories_chestplate, [[
+		["res://assets/itemGraphics/armor/iron/iron_chestplate.tscn", 0],
+		["res://assets/itemGraphics/armor/iron/iron_chestplate_r_1.tscn", 8],
+		["res://assets/itemGraphics/armor/iron/iron_chestplate_l_1.tscn", 6],
+		["res://assets/itemGraphics/armor/iron/iron_chestplate_r_2.tscn", 9],
+		["res://assets/itemGraphics/armor/iron/iron_chestplate_l_2.tscn", 7]], 
+		{"defense_legs" : +0.3, "speed": -0.25}], 
+		""], # no texture yet
+	
+	##iron armor
+	#helmet
+	"iron_helmet" : ["iron helmet", 
+	"res://assets/itemGraphics/armor/textured_iron/textured_iron_helmet.tscn", 
+	itemType.accessories_hat, [[
+		["res://assets/itemGraphics/armor/textured_iron/textured_iron_helmet.tscn", 5]], 
+		{"defense_head" : +0.3, "speed": -0.1}], 
+		"res://assets/textures/items/iron helmet tn.png"], # no texture yet
+	#chestplate
+	"iron_chestplate" : ["iron chestplate", 
+	"res://assets/itemGraphics/armor/iron/iron_chestplate.tscn", 
+	itemType.accessories_chestplate, [[
+		["res://assets/itemGraphics/armor/textured_iron/textured_iron_chestplate.tscn", 0],
+		["res://assets/itemGraphics/armor/textured_iron/textured_iron_chestplate_r_1.tscn", 8],
+		["res://assets/itemGraphics/armor/textured_iron/textured_iron_chestplate_l_1.tscn", 6],
+		["res://assets/itemGraphics/armor/textured_iron/textured_iron_chestplate_r_2.tscn", 9],
+		["res://assets/itemGraphics/armor/textured_iron/textured_iron_chestplate_l_2.tscn", 7]], 
+		{"defense_chest" : +0.3, "speed": -0.25}], 
+		""], # no texture yet
+	
+	
+	
+	
 	
 	
 	##racial accessories
@@ -119,24 +255,52 @@ const items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonu
 	##weapons
 	"iron_sword" : ["iron sword", "res://assets/itemGraphics/iron_sword.tscn", itemType.weapons_sword, [[[damageType.slash, 5.0]],3.0,[[damageType.stab, 2.5]]], "res://assets/textures/items/ironSword.png"],
 	"short_bow" : ["short bow", "res://assets/itemGraphics/oak_bow.tscn", itemType.weapons_projectile, ["arrow", "punch"], ""],
-	"magic_bow" : ["spark wand", "res://assets/itemGraphics/spark_wand.tscn", itemType.weapons_projectile, ["spark_bolt", "punch"], "res://assets/textures/items/sparkWand.png"]
+	"magic_bow" : ["spark wand", "res://assets/itemGraphics/spark_wand.tscn", itemType.weapons_projectile, ["spark_bolt", "punch"], "res://assets/textures/items/sparkWand.png"],
+	
+	
+	#jewelry
+	"mana_gen_necklace" : ["arcane necklace", "res://assets/itemGraphics/spark_wand.tscn", itemType.accessories_necklace, [[], {"mana_regen_speed" : +2.5, "max_health": -0.2}], ""], # no texture yet
+	"pendant_of_titans" : ["titan pendant", "res://assets/itemGraphics/spark_wand.tscn", itemType.accessories_necklace, [[], {"size" : +0.2, "max_health": +10.0}], ""], # no texture yet
+	"ring_of_dragons" : ["ring of dragons", "res://assets/itemGraphics/iron_sword.tscn", itemType.accessories_ring, [[], {"max_health": +5.0, "speed_multiplier" : 0.5}], ""], # no texture yet]
+	"grace_pendant" : ["grace pendant", "res://assets/itemGraphics/jewelry/necklaces/grace_pendant.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/grace_pendant.tscn", 0]], {"mana_regen": +2.0, "max_mana" : + 20.0, "blight_defense" : 3.0}], ""],
+	"ruby_amulet" : ["ruby amulet", "res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", 0]], {"health_regen": +2.0, "max_health" : + 20.0, "true_defense" : 0.05}], ""],
 }
 
-const set_bonus = { #[[item1,item2,item3],{attribute modifiers}]
-	"debug_speed_boots" : [{"shoeL" : "debug_speed_boot_L", "shoeR" : "debug_speed_boot_R"}, {"speed" : +1.5, "speed_multiplier" : +1.0}]
+const set_bonus = { #[[item1,item2,item3],{attribute modifiers}, [[model_path,bone_id]]]
+	"debug_speed_boots" : [{"shoeL" : "debug_speed_boot_L", "shoeR" : "debug_speed_boot_R"}, {"speed" : +1.5, "speed_multiplier" : +1.0}, []],
+	"ring_of_dragons" : [{"ringVowR" : "ring_of_dragons"}, {"can_fly" : true, "size" : 1.0}, []]
 }
 
 enum statusEffectType {
 	burning,
 	poisoned,
 	cursed,
+	blighted,
+	blessed,
 	bleeding,
 	frozen,
-	tripping
+	lofty,
 }
+
+const status_effect_names = [
+	"burning",
+	"poisoned",
+	"cursed",
+	"blighted",
+	"blessed",
+	"bleeding",
+	"frozen",
+	"lofty"
+]
 
 enum interact_return_code {
 	dont_do_anything, #returns null
 	is_item, #returns item_key that should be picked up
 	print, #returns a string that should be printed
+}
+
+const fire_colors = [Color.ORANGE_RED, Color.AQUA, Color.DARK_RED,Color.SPRING_GREEN,Color.WEB_PURPLE]
+
+const creatures = {
+	"young_spider" : "res://entities/youngSpider.tscn",
 }

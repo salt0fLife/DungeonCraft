@@ -8,7 +8,7 @@ extends Node3D
 func open_animation():
 	opening = true
 	$CPUParticles3D.emitting = true
-	$spiral_screen.visible = true
+	#$spiral_screen.visible = true
 	pass
 
 var spiral = 0.0

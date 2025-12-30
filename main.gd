@@ -32,6 +32,7 @@ func _ready():
 	multiplayer.connect("server_disconnected", _on_lost_connection)
 	load_skin_info()
 	worldSync.connect("spawned",emit_world_loaded)
+	Global.connect("player_death",_on_player_death)
 
 signal world_loaded
 func emit_world_loaded():
@@ -330,6 +331,7 @@ var is_paused = false
 @onready var pause_menu = $pauseMenu
 @onready var chat_input = $chat_display/VBoxContainer/TextEdit
 @onready var inventory_menu = $inventory_menu
+@onready var settings_menu = $settingsMenu
 func _input(event):
 	if Input.is_action_just_pressed("pause"):
 		if $Control.visible:
@@ -341,6 +343,7 @@ func _input(event):
 			pause_menu.hide()
 			chat_input.hide()
 			inventory_menu.close()
+			settings_menu.close()
 		else:
 			is_paused = true
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -357,6 +360,7 @@ func _input(event):
 			chat_input.hide()
 			chat_input.release_focus()
 			inventory_menu.close()
+			settings_menu.close()
 			$chat_display._on_text_edit_text_submitted(chat_input.text)
 		else:
 			is_paused = true
@@ -377,12 +381,30 @@ func _input(event):
 			pause_menu.hide()
 			chat_input.hide()
 			inventory_menu.close()
+			settings_menu.close()
 		else:
 			is_paused = true
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			Global.disable_avatar = true
 			inventory_menu.open()
-	
+	if Input.is_action_just_pressed("open_settings"):
+		if is_paused:
+			is_paused = false
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			Global.disable_avatar = false
+			pause_menu.hide()
+			chat_input.hide()
+			inventory_menu.close()
+			settings_menu.close()
+		else:
+			is_paused = true
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			Global.disable_avatar = true
+			settings_menu.show()
+
+
+
+
 func _on_resume_button_down():
 	is_paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -412,13 +434,14 @@ func disconnect_multiplayer() -> void:
 
 ##spawning creatures
 @onready var creatureSync = $creatureSync
-func _on_spawn_creature(creature, location, require_host = true):
+func _on_spawn_creature(key, location, attribute_modifiers = {}, require_host = true):
 	if !hosting and require_host:
 		return
-	print("spawn_creature_called")
-	creatureSync.add_child(creature, true)
-	creature.position = location
-	pass
+	var c = load(Lookup.creatures[key]).instantiate()
+	c.position = location
+	for a in attribute_modifiers.keys(): #adds modifiers
+		c.attributes[a] = attribute_modifiers[a]
+	creatureSync.add_child(c,true)
 
 @onready var worldSync = $worldSync
 func _on_change_world(key, require_host = false):
@@ -507,3 +530,19 @@ func destroy_item(index):
 
 func _on_item_destruction(node):
 	destroy_item.rpc(node.get_index())
+
+func get_living_players() -> Array:
+	var list = []
+	for pk in playerSync.players.keys():
+		var n = playerSync.players[pk]
+		if !n.rpc_id(pk, "request_ghost"):
+			list += [n]
+	return list
+
+@rpc("reliable")
+func _on_player_death():
+	if hosting:
+		print(get_living_players())
+	else:
+		rpc_id(0,"_on_player_death")
+	pass

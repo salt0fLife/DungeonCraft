@@ -1,0 +1,103 @@
+[gd_scene load_steps=7 format=3 uid="uid://d1rdior253ura"]
+
+[ext_resource type="Texture2D" uid="uid://dabcvohkto3qv" path="res://assets/textures/effects/enchantedTesxture.png" id="1_755h0"]
+[ext_resource type="Texture2D" uid="uid://b3lpih2dm3qd7" path="res://assets/glb/armor/texturedIronArmor_ironArmorAlbedoNoisy.png" id="2_45iwp"]
+
+[sub_resource type="Shader" id="Shader_0jvd8"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.2.1.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_disabled,diffuse_burley,specular_schlick_ggx;
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,filter_nearest_mipmap,repeat_enable;
+uniform float point_size : hint_range(0,128);
+uniform float roughness : hint_range(0,1);
+uniform float specular;
+uniform float metallic;
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+uniform sampler2D enchanted_tex : repeat_enable;
+uniform vec3 enchanted_col : source_color;
+
+void vertex() {
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+}
+
+
+
+
+
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	//float metallic_tex = dot(texture(texture_metallic,base_uv),metallic_texture_channel);
+	METALLIC = metallic;
+	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
+	//float roughness_tex = dot(texture(texture_roughness,base_uv),roughness_texture_channel);
+	ROUGHNESS = roughness;
+	SPECULAR = specular;
+	float gradient = sin(UV.x*PI)*(UV.y*2.5);
+	//COLOR.rgb *= gradient;
+	float ench = pow((texture(enchanted_tex,UV*0.25+vec2(TIME*0.005,TIME*0.0025)+vec2(0.5,0.5)).r+texture(enchanted_tex,UV*0.25+vec2(TIME*0.003,TIME*0.005)).r+texture(enchanted_tex,UV*0.25+vec2(TIME*-0.002,TIME*0.001)).r)*0.3,3.0);
+	ALBEDO.rgb += (enchanted_col*ench+ench*0.1)*ALBEDO.rgb*8.0*(enchanted_col*ench+ench*0.1);
+	EMISSION.rgb += (enchanted_col*ench+ench*0.1)*ALBEDO.rgb*8.0*(enchanted_col*ench+ench*0.1);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fxfnh"]
+resource_name = "ironArmor"
+render_priority = 0
+shader = SubResource("Shader_0jvd8")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 0.34
+shader_parameter/specular = 0.0
+shader_parameter/metallic = 1.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/enchanted_col = Color(0, 0, 0, 1)
+shader_parameter/texture_albedo = ExtResource("2_45iwp")
+shader_parameter/enchanted_tex = ExtResource("1_755h0")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_vcmws"]
+_surfaces = [{
+"aabb": AABB(-0.0862679, -0.0748013, -0.102513, 0.169749, 0.0887788, 0.211505),
+"format": 34896613377,
+"index_count": 36,
+"index_data": PackedByteArray(2, 0, 0, 0, 1, 0, 2, 0, 3, 0, 0, 0, 6, 0, 2, 0, 7, 0, 6, 0, 3, 0, 2, 0, 0, 0, 6, 0, 5, 0, 0, 0, 3, 0, 6, 0, 1, 0, 5, 0, 4, 0, 1, 0, 0, 0, 5, 0, 2, 0, 4, 0, 7, 0, 2, 0, 1, 0, 4, 0, 6, 0, 4, 0, 5, 0, 6, 0, 7, 0, 4, 0),
+"name": "ironArmor",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray(251, 255, 157, 48, 251, 255, 0, 0, 251, 255, 157, 48, 0, 0, 0, 0, 68, 11, 0, 0, 0, 0, 0, 0, 68, 11, 0, 0, 251, 255, 0, 0, 182, 244, 255, 255, 0, 0, 0, 0, 182, 244, 255, 255, 251, 255, 0, 0, 0, 0, 97, 207, 251, 255, 0, 0, 0, 0, 97, 207, 0, 0, 0, 0)
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_gchk0"]
+resource_name = "texturedIronArmor_Cube_110"
+_surfaces = [{
+"aabb": AABB(-0.0862679, -0.0748013, -0.102513, 0.169749, 0.0887788, 0.211505),
+"attribute_data": PackedByteArray(255, 117, 255, 77, 255, 229, 255, 235, 255, 77, 255, 87, 255, 141, 255, 25, 255, 229, 255, 219, 255, 77, 255, 71, 255, 141, 255, 13, 255, 241, 255, 219, 255, 75, 255, 121, 255, 117, 255, 65, 255, 241, 255, 235, 255, 75, 255, 105, 255, 135, 255, 25, 255, 71, 255, 71, 255, 229, 255, 149, 255, 123, 255, 77, 255, 71, 255, 87, 255, 229, 255, 133, 255, 123, 255, 65, 255, 241, 255, 133, 255, 69, 255, 105, 255, 135, 255, 13, 255, 241, 255, 149, 255, 69, 255, 121),
+"format": 34896613399,
+"index_count": 36,
+"index_data": PackedByteArray(7, 0, 1, 0, 4, 0, 7, 0, 10, 0, 1, 0, 20, 0, 8, 0, 23, 0, 20, 0, 11, 0, 8, 0, 0, 0, 18, 0, 15, 0, 0, 0, 9, 0, 18, 0, 5, 0, 16, 0, 13, 0, 5, 0, 2, 0, 16, 0, 6, 0, 12, 0, 21, 0, 6, 0, 3, 0, 12, 0, 19, 0, 14, 0, 17, 0, 19, 0, 22, 0, 14, 0),
+"material": SubResource("ShaderMaterial_fxfnh"),
+"name": "ironArmor",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray(251, 255, 157, 48, 251, 255, 55, 196, 251, 255, 157, 48, 251, 255, 3, 253, 251, 255, 157, 48, 251, 255, 240, 210, 251, 255, 157, 48, 0, 0, 255, 255, 251, 255, 157, 48, 0, 0, 3, 253, 251, 255, 157, 48, 0, 0, 240, 210, 68, 11, 0, 0, 0, 0, 255, 255, 68, 11, 0, 0, 0, 0, 3, 253, 68, 11, 0, 0, 0, 0, 240, 210, 68, 11, 0, 0, 251, 255, 55, 196, 68, 11, 0, 0, 251, 255, 3, 253, 68, 11, 0, 0, 251, 255, 240, 210, 182, 244, 255, 255, 0, 0, 255, 255, 182, 244, 255, 255, 0, 0, 240, 210, 182, 244, 255, 255, 0, 0, 3, 253, 182, 244, 255, 255, 251, 255, 55, 196, 182, 244, 255, 255, 251, 255, 240, 210, 182, 244, 255, 255, 251, 255, 3, 253, 0, 0, 97, 207, 251, 255, 55, 196, 0, 0, 97, 207, 251, 255, 3, 253, 0, 0, 97, 207, 251, 255, 240, 210, 0, 0, 97, 207, 0, 0, 255, 255, 0, 0, 97, 207, 0, 0, 3, 253, 0, 0, 97, 207, 0, 0, 240, 210, 255, 255, 255, 255, 58, 131, 157, 65, 169, 173, 212, 86, 80, 195, 80, 67, 58, 131, 157, 65, 169, 173, 212, 86, 80, 195, 80, 67, 58, 131, 157, 65, 85, 82, 42, 169, 255, 255, 255, 255, 58, 131, 157, 65, 85, 82, 42, 169, 80, 195, 80, 67, 169, 173, 212, 86, 196, 124, 97, 190, 255, 255, 255, 255, 169, 173, 212, 86, 196, 124, 97, 190, 255, 255, 255, 255, 196, 124, 97, 190, 85, 82, 42, 169, 80, 195, 80, 67, 196, 124, 97, 190, 85, 82, 42, 169)
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_vcmws")
+
+[node name="textured iron chestplate L 2" type="MeshInstance3D"]
+transform = Transform3D(0.994646, 0.103344, 0, -0.103344, 0.994646, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("ArrayMesh_gchk0")
+skeleton = NodePath("")

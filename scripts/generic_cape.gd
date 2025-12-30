@@ -28,7 +28,8 @@ func _physics_process(delta):
 	$Node3D.rotation.z = cape_vel.x * 15.0 * cos(-global_rotation.y)
 	$Node3D.rotation.z += cape_vel.z * 15.0 * sin(global_rotation.y)
 	
-	$Node3D.rotation.x = clamp($Node3D.rotation.x,-0.04, 2.84)
+	#$Node3D.rotation.x = clamp($Node3D.rotation.x,-0.04, 2.84)
+	$Node3D.rotation.x = clamp($Node3D.rotation.x,-0.04, PI*0.5)
 	$Node3D.rotation.z = clamp($Node3D.rotation.z,-0.38, 0.38)
 	
 	var speed = remap(cape_vel.length(), 0.0, max_speed, 0.0, 2.0)

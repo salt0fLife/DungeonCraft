@@ -1,0 +1,128 @@
+[gd_scene load_steps=8 format=3 uid="uid://drgshmpbkmbmr"]
+
+[ext_resource type="Script" path="res://scripts/sprite_wings.gd" id="1_0mlfc"]
+[ext_resource type="Texture2D" uid="uid://dabcvohkto3qv" path="res://assets/textures/effects/enchantedTesxture.png" id="2_2b3pe"]
+[ext_resource type="Texture2D" uid="uid://ddh5lsr4pl3i0" path="res://assets/textures/accessories/wings/fairy_wings_sprite.png" id="3_shlom"]
+
+[sub_resource type="Shader" id="Shader_0jvd8"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.2.1.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix,depth_prepass_alpha,cull_disabled,diffuse_burley,specular_schlick_ggx;
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,filter_nearest_mipmap,repeat_enable;
+uniform float point_size : hint_range(0,128);
+uniform float roughness : hint_range(0,1);
+uniform vec4 metallic_texture_channel;
+uniform float specular;
+uniform float metallic;
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+uniform sampler2D enchanted_tex : repeat_enable;
+uniform vec3 enchanted_col : source_color;
+
+void vertex() {
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+}
+
+
+
+
+
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	//float metallic_tex = dot(texture(texture_metallic,base_uv),metallic_texture_channel);
+	METALLIC = metallic;
+	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
+	//float roughness_tex = dot(texture(texture_roughness,base_uv),roughness_texture_channel);
+	ROUGHNESS = roughness;
+	SPECULAR = specular;
+	float gradient = sin(UV.x*PI)*(UV.y*2.5);
+	//COLOR.rgb *= gradient;
+	float ench = pow((texture(enchanted_tex,UV*0.25+vec2(TIME*0.005,TIME*0.0025)+vec2(0.5,0.5)).r+texture(enchanted_tex,UV*0.25+vec2(TIME*0.003,TIME*0.005)).r+texture(enchanted_tex,UV*0.25+vec2(TIME*-0.002,TIME*0.001)).r)*0.3,3.0);
+	ALBEDO.rgb += (enchanted_col*ench+ench*0.1)*ALBEDO.rgb*8.0*(enchanted_col*ench+ench*0.1);
+	EMISSION.rgb += (enchanted_col*ench+ench*0.1)*ALBEDO.rgb*8.0*(enchanted_col*ench+ench*0.1);
+	ALPHA = albedo_tex.a;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_etknm"]
+resource_name = "ironArmor"
+render_priority = 0
+shader = SubResource("Shader_0jvd8")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/point_size = 0.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.89
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/enchanted_col = Color(0.615686, 0.552941, 0.443137, 1)
+shader_parameter/texture_albedo = ExtResource("3_shlom")
+shader_parameter/enchanted_tex = ExtResource("2_2b3pe")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ifrj"]
+emission_enabled = true
+emission = Color(0.819608, 0.72549, 0.588235, 1)
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_8qx72"]
+material = SubResource("StandardMaterial3D_4ifrj")
+size = Vector2(0.01, 0.01)
+
+[node name="fairy_wings" type="Node3D"]
+transform = Transform3D(0.999802, 0, 0, 0, 0.999085, 0.0374865, 0, -0.0374833, 0.99917, 0, 0, 0)
+script = ExtResource("1_0mlfc")
+open = 0.0
+generic_flapping_speed = 3.5
+open_pos = Vector3(0.685, 0.075, 0)
+close_pos = Vector3(0.255, -0.035, 0)
+closed_rot = Vector3(0.25, -1.1, -0.53)
+open_rot = Vector3(0, 0.48, 0)
+
+[node name="shoulder_left" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999998, 0.0697117, 0.165738, -0.111152)
+
+[node name="wingLeft" type="Sprite3D" parent="shoulder_left"]
+transform = Transform3D(1.41421, 1.41422, 0, -1.41421, 1.41422, 0, 0, 0, 1.99999, 0.255, -0.035, 0)
+material_override = SubResource("ShaderMaterial_etknm")
+texture_filter = 0
+texture = ExtResource("3_shlom")
+hframes = 2
+vframes = 2
+frame = 3
+
+[node name="shoulder_right" type="Node3D" parent="."]
+transform = Transform3D(-0.999999, 0, 8.74225e-08, 0, 0.999999, 0, -8.74227e-08, 0, -0.999997, -0.07, 0.166, -0.111)
+
+[node name="wingRight" type="Sprite3D" parent="shoulder_right"]
+transform = Transform3D(1.41421, 1.41422, 0, -1.41421, 1.41422, 0, 0, 0, 1.99999, 0.255, -0.035, 0)
+material_override = SubResource("ShaderMaterial_etknm")
+texture_filter = 0
+texture = ExtResource("3_shlom")
+hframes = 2
+vframes = 2
+frame = 3
+
+[node name="CPUParticles3D" type="CPUParticles3D" parent="."]
+transform = Transform3D(0.999999, 0, 0, 0, 0.992824, -0.119582, 0, 0.119582, 0.992822, 0, 0.00882211, -0.132529)
+lifetime = 3.0
+lifetime_randomness = 0.6
+mesh = SubResource("QuadMesh_8qx72")
+emission_shape = 3
+emission_box_extents = Vector3(0.6, 0.47, 0.2)
+direction = Vector3(0, -1, 0)
+gravity = Vector3(0, -0.02, 0)
+initial_velocity_min = 0.01
+initial_velocity_max = 0.02

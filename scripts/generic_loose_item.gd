@@ -1,6 +1,6 @@
 extends Node3D
 
-@export var item_key = "simple_rock"
+@export var item_key = ["",0,-1,{}]
 @export var count = 1
 var display_name = "loading"
 var type = 0
@@ -9,14 +9,26 @@ var tool_tip_color = Color.WHITE
 
 
 func _ready():
-	if !Lookup.items.has(item_key):
-		printerr("invalid item key of value " + item_key + ". freeing from queue")
+	if !Lookup.items.has(item_key[0]):
+		printerr("invalid item key of value " + item_key[0] + ". freeing from queue")
 		queue_free()
 		return
 	#just checking if the key is valid
-	var item = Lookup.items[item_key]
+	var item = Lookup.items[item_key[0]]
 	display_name = item[0]
-	var model = load(item[1]).instantiate()
+	var mp = item[1]
+	if item_key[3].keys().has("custom_model_path"):
+		mp = item_key[3]["custom_model_path"]
+	var model = load(mp).instantiate()
+	if item_key[3].keys().has("enchantments"):
+		var col = Color.BLUE_VIOLET
+		if item_key[3].keys().has("enchantment_color"):
+			col = item_key[3]["enchantment_color"]
+		if model is MeshInstance3D:
+			var mat = model.get_active_material(0).duplicate()
+			mat.set("shader_parameter/enchanted_col",col)
+			model.set_surface_override_material(0,mat)
+		
 	model.process_mode = PROCESS_MODE_DISABLED
 	$graphics.add_child(model)
 	type = item[2]
@@ -45,7 +57,7 @@ func _physics_process(delta):
 
 func interact():
 	print("interacted with item display name of " + display_name)
-	print("item key of " + item_key)
+	print("item key of " + item_key[0])
 	print("type of " + str(type))
 	print("tooltip of " + str(tool_tip))
 	print("nice :3")

@@ -64,20 +64,29 @@ const pos_and_rot_only = [
 @onready var a_pose = load_file("player_poses/", "a_pose.dat")
 @onready var arm_test = load_file("player_poses/", "test.dat")
 #const default_pose = 
-
+var fire_mat = null
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	var ebm = $root/chestBase/neck/eyeBrows_L.get_active_material(0).duplicate()
 	$root/chestBase/neck/eyeBrows_L.set_surface_override_material(0, ebm)
 	$root/chestBase/neck/eyeBrows_R.set_surface_override_material(0, ebm)
+	fire_mat = $"../fire".get_active_material(0).duplicate()
+	$"../fire".set_surface_override_material(0,fire_mat)
 	#save_pose_transforms()
 	#apply_pose(arm_test)
+	eye_mat = $root/chestBase/neck/eyes.get_active_material(0).duplicate()
+	$root/chestBase/neck/eyes.set_surface_override_material(0,eye_mat)
+	mouth_mat = $root/chestBase/neck/mouth.get_active_material(0).duplicate()
+	$root/chestBase/neck/mouth.set_surface_override_material(0,mouth_mat)
 	pass # Replace with function body.
-
+var eye_mat = null
+var mouth_mat = null
 @export var save_pose = false
 @export var pose_name = "pose001"
 @export var folder_name = "poseTesting"
 @export var apply_load_pose = false
+var base_skin_mat = null
+var tran_skin_mat = null
 
 func save_pose_transforms():
 	var pose = {}
@@ -127,6 +136,7 @@ func apply_pose(pose):
 @export var idle_energy = 1.0
 @export var falling = 0.0
 
+
 @export var eye_lids = Vector2(0.5,0.5)
 @export var eye_pos = Vector2(0.0,0.0)
 @export var eye_taper = 0.0
@@ -165,6 +175,7 @@ func _process(delta):
 			apply_pose(pose)
 		apply_load_pose = false
 	pass
+
 
 @export var resist_dir = Vector2.ZERO
 func idle(delta, energy, tilt, crouch, head_angle, fall,res_dir):
@@ -328,9 +339,12 @@ func handle_arm_anims(delta):
 			draw_weapon(delta)
 	pass
 
+@onready var arm_anim_handler = $"../armAnimationPlayer"
 func play_arm_anim(key : String) -> void:
 	arm_anim_time = 1.0
 	arm_override_anim = key
+	if arm_anim_handler.has_animation(key):
+		arm_anim_handler.play(key)
 
 func draw_weapon(delta):
 	arm_anim_time -= delta * arm_anim_speed * 3.0
@@ -690,8 +704,8 @@ func fly(delta, speed = 1.0, crouching = 0.0, head_angle = Vector2(0.0,0.0), ang
 	mult = mult*0.5
 	if mult > 2.3:
 		mult = 2.3
-	bone_paths[0].position.z = sin(time*2.0-PI*0.5)*0.03*mult+0.1
-	bone_paths[0].position.y = sin(time*2.0)*0.1+0.1
+	bone_paths[0].position.z = sin(time*2.0-PI*0.5)*0.03*(1.0 - clamp(mult,0.0,1.0))+0.1
+	bone_paths[0].position.y = sin(time*2.0)*0.1+0.1*(1.0 - clamp(mult,0.0,1.0)) - abs(mult*0.25)
 	bone_paths[0].rotation.x = head_angle.x*0.25 + mult*0.5
 	#head_angle.x -= mult*0.9
 	head_angle.y += angle*0.75
@@ -726,6 +740,11 @@ func fly(delta, speed = 1.0, crouching = 0.0, head_angle = Vector2(0.0,0.0), ang
 	bone_paths[8].position.y = 0.241
 	#Vector3(0.15,0.241,-0.001)
 	
+	bone_paths[0].rotation.x = lerp(bone_paths[0].rotation.x, head_angle.x+PI-0.5,clamp(mult,0.0,4.0)*0.25)
+	bone_paths[0].rotation.z -= head_angle.y*clamp(mult,0.0,4.0)*0.25*2.0
+	bone_paths[0].rotation.x -= abs(head_angle.y*clamp(mult,0.0,4.0)*0.25)*2.0
+	bone_paths[0].rotation.y -= head_angle.y*clamp(mult,0.0,4.0)*0.25*2.0
+	bone_paths[5].rotation.x -= lerp(bone_paths[0].rotation.x, head_angle.x+PI-0.5,clamp(mult,0.0,4.0)*0.25)*0.1
 	##eyes
 	if head_angle.x > 0.0:
 		eye_lids = Vector2(1.05, 0.32)
@@ -849,79 +868,11 @@ func load_file(subFolder : String, fileName : String):
 ## 
 
 @onready var meshes = [
-	$root/chestBase/hip_L/leftLeg1N, #0
-	$root/chestBase/hip_L/leftLeg1NOL, #1
-	$root/chestBase/hip_L/leftLeg1S,
-	$root/chestBase/hip_L/leftLeg1SOL,
-	$root/chestBase/hip_L/knee_L/leftFootN, #4
-	$root/chestBase/hip_L/knee_L/leftFootNOL, #5
-	$root/chestBase/hip_L/knee_L/leftFootS,
-	$root/chestBase/hip_L/knee_L/leftFootSOL,
-	$root/chestBase/hip_R/rightLeg1N, #8
-	$root/chestBase/hip_R/rightLeg1NOL, #9
-	$root/chestBase/hip_R/rightLeg1S,
-	$root/chestBase/hip_R/rightLeg1SOL,
-	$root/chestBase/hip_R/knee_R/rightFootN, #12
-	$root/chestBase/hip_R/knee_R/rightFootNOL, #13
-	$root/chestBase/hip_R/knee_R/rightFootS,
-	$root/chestBase/hip_R/knee_R/rightFootSOL,
-	$root/chestBase/neck/head,
-	#$root/chestBase/neck/headOutside,
-	$root/chestBase/neck/headOutsideP,
-	$root/chestBase/shoulder_L/leftArm1N, #18
-	$root/chestBase/shoulder_L/leftArm1NOL, #19
-	$root/chestBase/shoulder_L/leftArm1S,
-	$root/chestBase/shoulder_L/leftArm1SOL,
-	$root/chestBase/shoulder_L/elbowL/leftArm2N, #22
-	$root/chestBase/shoulder_L/elbowL/leftArm2NOL, #23
-	$root/chestBase/shoulder_L/elbowL/leftArm2S,
-	$root/chestBase/shoulder_L/elbowL/leftArm2SOL,
-	$root/chestBase/shoulder_R/rightArm1N, #26
-	$root/chestBase/shoulder_R/rightArm1NOL, #27
-	$root/chestBase/shoulder_R/rightArm1S,
-	$root/chestBase/shoulder_R/rightArm1SOL,
-	$root/chestBase/shoulder_R/elbowR/rightArm2N, #30
-	$root/chestBase/shoulder_R/elbowR/rightArm2NOL, #31
-	$root/chestBase/shoulder_R/elbowR/rightArm2S,
-	$root/chestBase/shoulder_R/elbowR/rightArm2SOL,
-	$root/chestBase/torsoN, #34
-	$root/chestBase/torsoNOL, #35
-	$root/chestBase/torsoS,
-	$root/chestBase/torsoSOL
 ]
 
-var normal = [
-	0,1,4,5,8,9,12,13,18,19,22,23,26,27,30,31,34,35
-]
-
-var slim = [
-	2,3,6,7,10,11,14,15,20,21,24,25,28,29,32,33,36,37
-	
-]
 
 var is_slim = false
 
-@onready var transparent = [
-	$root/chestBase/hip_L/leftLeg1NOL,
-	$root/chestBase/hip_L/leftLeg1SOL,
-	$root/chestBase/hip_L/knee_L/leftFootNOL,
-	$root/chestBase/hip_L/knee_L/leftFootSOL,
-	$root/chestBase/hip_R/rightLeg1NOL,
-	$root/chestBase/hip_R/rightLeg1SOL,
-	$root/chestBase/hip_R/knee_R/rightFootNOL,
-	$root/chestBase/hip_R/knee_R/rightFootSOL,
-	$root/chestBase/neck/headOutsideP,
-	$root/chestBase/shoulder_L/leftArm1NOL,
-	$root/chestBase/shoulder_L/leftArm1SOL,
-	$root/chestBase/shoulder_L/elbowL/leftArm2NOL,
-	$root/chestBase/shoulder_L/elbowL/leftArm2SOL,
-	$root/chestBase/shoulder_R/rightArm1NOL,
-	$root/chestBase/shoulder_R/rightArm1SOL,
-	$root/chestBase/shoulder_R/elbowR/rightArm2NOL,
-	$root/chestBase/shoulder_R/elbowR/rightArm2SOL,
-	$root/chestBase/torsoNOL,
-	$root/chestBase/torsoSOL
-]
 
 @onready var non_skin_meshes = [
 	$root/chestBase/neck/eyes,
@@ -946,17 +897,20 @@ func set_cosmetic_visibility(ears, tail, snout):
 	#$root/chestBase/torso/neck/head/snout.visible = snout
 	pass
 
+const skin_mat_path = "res://assets/avatar/playerSkinShaderMat.tres"#"res://assets/avatar/playerSkin.tres"#
 func load_skin(img, ears, tail, snout, is_slim_loc, eColors, mData):
 	#img = ImageTexture.create_from_image(Image.load_from_file("res://assets/glb/playerAvatar002_dapper128Secondary.png"))
 	#var meshes = avatar.meshes
 	is_slim = is_slim_loc
-	var mat = load("res://assets/avatar/playerSkin.tres").duplicate()#meshes[0].get_active_material(0).duplicate()
-	mat.albedo_texture = img
+	var mat = load(skin_mat_path).duplicate()#meshes[0].get_active_material(0).duplicate()
+	#mat.set("albedo_texture",img)
+	mat.set("shader_parameter/texture_albedo",img)
 	set_cosmetic_visibility(ears, tail, snout)
-	for m in meshes:
-		m.set_surface_override_material(0, mat)
-	var tran = mat.duplicate()
-	tran.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	var tran = mat#.duplicate()
+	base_skin_mat = mat
+	tran_skin_mat = tran
+	#tran.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	#testing something
 	#$root/chestBase/torso/neck/head/ear1.set_surface_override_material(0, tran)
 	#$root/chestBase/torso/neck/head/ear2.set_surface_override_material(0, tran)
 	#for t in transparent:
@@ -971,6 +925,12 @@ func load_skin(img, ears, tail, snout, is_slim_loc, eColors, mData):
 		#print(ghpi)
 		for og in bone_paths[ghpi].get_child(0).get_children():
 			og.queue_free()
+	meshes = [
+		$root/chestBase/neck/eyes,
+		$root/chestBase/neck/mouth,
+		$root/chestBase/neck/lashes1,
+		$root/chestBase/neck/lashes2
+	]
 	
 	##adding meshes
 	var key = "normal"
@@ -983,6 +943,7 @@ func load_skin(img, ears, tail, snout, is_slim_loc, eColors, mData):
 		g.position = Vector3.ZERO
 		g.set_surface_override_material(0,mat)
 		g.get_child(0,true).set_surface_override_material(0,tran)
+		#meshes += [g,g.get_child(true)] #adds both to meshes
 	
 	
 	set_eye_param("shader_parameter/pupilColor", eColors[0])
@@ -1025,7 +986,7 @@ func spectrum_to_mouth(spectrum, delta = 1.0):
 	var wide = 0.1
 	var smile = 0.0
 	var teeth = 0.1
-	var pos = Vector2.ZERO
+	var pos = eye_pos*0.25
 	open = lerp(open, 0.45, a)
 	open = lerp(open, 0.25, u)
 	open = lerp(open, 0.24, o)
@@ -1038,6 +999,7 @@ func spectrum_to_mouth(spectrum, delta = 1.0):
 	smile = lerp(smile, -0.045, u)
 	smile = lerp(smile, 0.06, a)
 	smile = lerp(smile, 0.08, high)
+	pos *= open
 	pos.y = lerp(pos.y, -0.25, high)
 	pos.y = lerp(pos.y, -0.25, i)
 	pos.y = lerp(pos.y, 0.215 - open*0.5, u)
@@ -1052,9 +1014,17 @@ func spectrum_to_mouth(spectrum, delta = 1.0):
 	
 	set_mouth_param("shader_parameter/open", open)
 	set_mouth_param("shader_parameter/smile", smile)
-	set_mouth_param("shader_parameter/mouth_size", Vector2(wide, 0.04))
+	set_mouth_param("shader_parameter/mouth_size", Vector2(wide, 0.02))#Vector2(wide, 0.04))
 	set_mouth_param("shader_parameter/mouthPos", pos)
 	set_mouth_param("shader_parameter/teeth", teeth)
+	bone_paths[5].rotation.x += sin(PI*open)*0.05
+	
+	var total_vol = clamp((60 + linear_to_db(spectrum.get_magnitude_for_frequency_range(0,5000).length()))/60,0.0,1.0)
+	
+	scale.y = lerp(scale.y, 1.0 - total_vol*0.025, delta*10.0)
+	scale.x = lerp(scale.x, 1.0 + total_vol*0.025, delta*10.0)
+	scale.z = lerp(scale.z, 1.0 + total_vol*0.025, delta*10.0)
+	
 	#var prev_hz = 0
 	#for i in range(1,VU_COUNT+1):   
 		#var hz = i * FREQ_MAX / VU_COUNT;
@@ -1063,21 +1033,60 @@ func spectrum_to_mouth(spectrum, delta = 1.0):
 		#var height = energy * HEIGHT
 		#prev_hz = hz
 
-func set_ghost(val):
+func set_ghost(val: bool) -> void:
 	if !val:
-		meshes[0].get_active_material(0).set("blend_mode", 0)
-		meshes[1].get_active_material(0).set("blend_mode", 0)
-		meshes[0].get_active_material(0).set("proximity_fade_enabled", false)
-		meshes[1].get_active_material(0).set("proximity_fade_enabled", false)
+		#base_skin_mat.set("blend_mode", 0)
+		#base_skin_mat.set("proximity_fade_enabled", false)
+		#tran_skin_mat.set("blend_mode", 0)
+		#tran_skin_mat.set("proximity_fade_enabled", false)
+		base_skin_mat.set("shader_parameter/ghostly", 0.0)
+		#bone_paths[0].get_child(0).get_child(0).get_active_material(0).set("blend_mode", 0)
+		#meshes[0].get_active_material(0).set("blend_mode", 0)
+		#meshes[1].get_active_material(0).set("blend_mode", 0)
+		#meshes[0].get_active_material(0).set("proximity_fade_enabled", false)
+		#meshes[1].get_active_material(0).set("proximity_fade_enabled", false)
 		set_eye_param("shader_parameter/transparency", 0.0)
 		set_mouth_param("shader_parameter/transparency", 0.0)
 		$root/chestBase/neck/eyeBrows_L.get_active_material(0).set("blend_mode", 0)
 	else:
-		meshes[0].get_active_material(0).set("blend_mode", 1)
-		meshes[1].get_active_material(0).set("blend_mode", 1)
+		#base_skin_mat.set("blend_mode", 1)
+		#base_skin_mat.set("proximity_fade_enabled", true)
+		#tran_skin_mat.set("blend_mode", 1)
+		#tran_skin_mat.set("proximity_fade_enabled", true)
+		base_skin_mat.set("shader_parameter/ghostly", 1.0)
+		#meshes[0].get_active_material(0).set("blend_mode", 1)
+		#meshes[1].get_active_material(0).set("blend_mode", 1)
 		set_eye_param("shader_parameter/transparency", 0.75)
 		set_mouth_param("shader_parameter/transparency", 0.75)
-		meshes[0].get_active_material(0).set("proximity_fade_enabled", true)
-		meshes[1].get_active_material(0).set("proximity_fade_enabled", true)
+		#meshes[0].get_active_material(0).set("proximity_fade_enabled", true)
+		#meshes[1].get_active_material(0).set("proximity_fade_enabled", true)
 		$root/chestBase/neck/eyeBrows_L.get_active_material(0).set("blend_mode", 1)
+	pass
+
+
+func set_burning(val : bool,col := Color.ORANGE_RED) -> void:
+	base_skin_mat.set("shader_parameter/burning", val)
+	base_skin_mat.set("shader_parameter/fire_col", col)
+	$"../fire".visible = val
+	$"../fire".get_active_material(0).set("shader_parameter/fire_col", col)
+	$"../fire_light".visible = val
+	$"../fire_light".light_color = col
+
+func set_poisoned(val) -> void:
+	base_skin_mat.set("shader_parameter/poisoned", val)
+	$"../poison particles".emitting = val
+	pass
+
+func set_cursed(val) -> void:
+	base_skin_mat.set("shader_parameter/cursed", val)
+	pass
+
+func set_blessed(val: bool) -> void:
+	base_skin_mat.set("shader_parameter/blessed", val)
+	$"../holyParticles".emitting = val
+	$"../aura".visible = val
+	pass
+
+func set_damaged(val : float) -> void:
+	base_skin_mat.set("shader_parameter/damaged", val)
 	pass

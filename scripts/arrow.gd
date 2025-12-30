@@ -13,6 +13,8 @@ var dead_offset = Vector3.ZERO
 var dead_rotation = Vector3.ZERO
 var graphics_spinning = false
 var soft_death = false
+var remember = true
+signal hit
 
 func _physics_process(delta):
 	if graphics_spinning:
@@ -81,8 +83,9 @@ func _physics_process(delta):
 					#hit dead on
 					if hit.hardness == penetration:
 						#penetrates anyway
-						hit.take_damage.rpc(damage, poi, owned_by, "arrow", velocity)
+						hit.take_damage.rpc(damage, poi, owned_by, "arrow", velocity,remember)
 						die(hit, 30.0)
+						emit_signal("hit",hit.id)
 					else:
 						#snap/spin
 						velocity = speed*norm*(1.0+dot*0.75)*0.5
@@ -99,8 +102,9 @@ func _physics_process(delta):
 				var r = randf_range(0.0, 100.0)
 				if r > 99.0: #cause why not right
 					t = "perfectly normal arrow"
-				hit.take_damage.rpc(damage, poi, owned_by, "arrow", velocity)
+				hit.take_damage.rpc(damage, poi, owned_by, "arrow", velocity,remember)
 				die(hit, 30.0)
+				emit_signal("hit",hit.id)
 		else:
 			die(null)
 			die.rpc(null)

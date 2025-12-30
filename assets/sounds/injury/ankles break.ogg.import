@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://c8o1hsjbl5dfc"
+path="res://.godot/imported/ankles break.ogg-74585fce2c8abe41a749845405fece2b.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/sounds/injury/ankles break.ogg"
+dest_files=["res://.godot/imported/ankles break.ogg-74585fce2c8abe41a749845405fece2b.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
