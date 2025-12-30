@@ -4,7 +4,7 @@ extends CharacterBody3D
 @onready var cameraHandler = $playerAvatar/cameraHandler
 @onready var graphics = $playerAvatar
 @onready var avatar = $playerAvatar/genericAvatar
-@onready var camera = $playerAvatar/cameraHandler/bobbingHandler/Camera3D
+@onready var camera = $playerAvatar/cameraHandler/bobbingHandler/SpringArm3D/Camera3D#$playerAvatar/cameraHandler/bobbingHandler/Camera3D
 @onready var body = $playerAvatar/genericAvatar/root
 @onready var voip = $playerAvatar/cameraHandler/voip
 @onready var AG_handler = $playerAvatar/accesories
@@ -12,6 +12,7 @@ extends CharacterBody3D
 
 var sprinting = false
 var crouching = false
+var desired_crouching = false
 var flying = false
 var ghost = false
 var display_name = ""
@@ -318,11 +319,18 @@ func set_stats_to_default():
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * 1.5
 #var speed_multipler = 1.0
 
+func _update_settings():
+	print("updated player settings")
+	MouseSensitivity = Settings.user_settings["look_sensitivity"]
+
 var health = 0.0
 var mana = 0.0
 var stamina = 0.0
 var winded = false
 func _ready():
+	Settings.connect("updated",_update_settings)
+	shadow_mat = shadow_mat.duplicate()
+	shadow.set_surface_override_material(0,shadow_mat)
 	health = attributes["max_health"]
 	mana = attributes["max_mana"]
 	stamina = attributes["max_stamina"]
@@ -420,7 +428,8 @@ func _input(event):
 		desired_perspective += 1
 		if desired_perspective > 5:
 			desired_perspective = 0
-		set_perspective(desired_perspective)
+		if !forced_perspective:
+			set_perspective(desired_perspective)
 		#if camera.position.z == 0.0:
 			#camera.position.z = 2.0
 			#avatar.set_visibility_layer(1, true)
@@ -448,9 +457,9 @@ func _input(event):
 	if Input.is_action_just_released("up"):
 		sprinting = false
 	if Input.is_action_just_pressed("crouch"):
-		crouching = true
+		desired_crouching = true
 	if Input.is_action_just_released("crouch"):
-		crouching = false
+		desired_crouching = false
 	if Input.is_action_just_pressed("jump"):
 		if is_on_floor() or _snapped_to_stairs_last_frame:
 			jump()
@@ -491,13 +500,17 @@ func _input(event):
 
 
 func set_flying(val):
+	if flying == val:
+		return
 	flying = val
 	if !Settings.user_settings["auto_flying_perspective"]:
 		return
 	if val:
 		set_perspective(Settings.user_settings["desired_flying_perspective"])
+		forced_perspective = true
 	else:
 		set_perspective(desired_perspective)
+		forced_perspective = false
 
 @onready var look_reference_check = $playerAvatar/cameraHandler/look_reference_check
 func get_non_clipped_look_reference() -> Vector3:
@@ -518,6 +531,7 @@ func jump():
 
 @onready var dust_particles = $dust_particles
 @onready var impact_particles = $impact_particles
+@onready var head_bonk = $head_bonk
 var airborn = false
 var last_y_velocity = 0.0
 var jumped_last_frame = false
@@ -525,6 +539,12 @@ var vel_last_frame = Vector3.ZERO
 func _physics_process(delta):
 	if !is_multiplayer_authority():
 		return
+	
+	if head_bonk.is_colliding():
+		crouching = true
+	else:
+		crouching = desired_crouching
+	
 	hands.rotation.x -= (velocity.y / attributes["jump_velocity"])*delta*10.0
 	
 	hands.position = lerp(hands.position, bobHandler.position, delta*64.0)
@@ -572,6 +592,7 @@ func _physics_process(delta):
 	var direction = (graphics.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if Global.disable_avatar:
 		direction = Vector3.ZERO
+	cameraHandler.rotation.z = lerp(cameraHandler.rotation.z,0.0,delta*8.0) #for flying tilt reset
 	if ghost:
 		dust_particles.emitting = false
 		velocity -= velocity*delta*attributes["flying_speed"]*0.5
@@ -654,10 +675,13 @@ func _physics_process(delta):
 			a += PI
 			true_speed = - true_speed
 		avatar.walk_angle = lerp_angle(avatar.walk_angle,a,delta*4)
-	if crouching:
+	if flying:
+		avatar.crouching = lerp(avatar.crouching, 0.25, delta*12.0)
+		cameraHandler.position.y = lerp(cameraHandler.position.y, 0.65, delta*8.0)
+	elif crouching:
 		avatar.crouching = lerp(avatar.crouching, 0.25, delta*12.0)
 		#avatar.crouching = 0.25
-		cameraHandler.position.y = lerp(cameraHandler.position.y, 1.0, delta*8.0)
+		cameraHandler.position.y = lerp(cameraHandler.position.y, 0.9, delta*8.0*2.0)
 	else:
 		avatar.crouching = lerp(avatar.crouching, 0.0, delta*12.0)
 		#avatar.crouching = 0.0
@@ -678,13 +702,36 @@ func _physics_process(delta):
 	var speed_fov_effect = Settings.user_settings["speed_fov_effect"]
 	camera.fov = lerp(desired_fov,desired_fov+speed_fov_effect,speed_appeal)
 	Global.set_post("shader_parameter/action_lines",speed_appeal)
+	$genericAudio/movement_wind.volume_db = remap(speed_appeal,0.0,1.0,-80.0,0.0)
+	update_shadow()
 	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting)
+
+@onready var shadow = $playerAvatar/projected_shadow/shadow
+@onready var shadow_mat = shadow.get_active_material(0)
+@onready var shadow_check = $playerAvatar/projected_shadow/shadow_check
+func update_shadow():
+	if shadow_check.is_colliding():
+		shadow.visible = true
+		var poi = global_position + Vector3(0.0,shadow_check.get_collision_point(0).y-global_position.y,0.0) #only cares about y pos
+		#var norm = shadow_check.get_collision_normal(0)
+		shadow.global_position = poi + Vector3(0.0,0.01,0.0)
+		#shadow.look_at(norm,Vector3.UP,true)
+		var dis = (poi - global_position).length()
+		shadow_mat.set("shader_parameter/power",(1.0 - dis*0.5))
+	else:
+		shadow.visible = false
+		#shadow_mat.set("shader_parameter/power",0.0)
+
+
+func loop_audio(node):
+	node.play()
+	pass
 
 var speed_appeal = 0.0
 var speed_cap = 50.0
 
 var avoid_radius = 0.3
-var avoid_strength = 20.0
+var avoid_strength = 200.0
 func avoid_close_entities(delta):
 	for e in get_tree().get_nodes_in_group("entity"):
 		var dif = e.global_position - global_position
@@ -789,8 +836,16 @@ func update_velocity_flying(delta):
 		var desired_vel = f_s * (graphics.transform.basis * Vector3(input_flat.x, input_vertical.x, input_flat.y)).normalized()
 		velocity += (desired_vel - velocity) * delta * f_s
 		stamina -= delta * 0.5
-		body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
-		avatar.head_angle.y = -body.rotation.y
+		#body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
+		#avatar.head_angle.y = -body.rotation.y
+		if input_flat.length() > 0.05:
+			body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
+			avatar.head_angle.y = -body.rotation.y
+		else:
+			if avatar.walk_angle != 0.0:
+				body.rotation.y = avatar.walk_angle
+				avatar.head_angle.y = -avatar.walk_angle
+				avatar.walk_angle = 0.0
 		return
 	
 	var input_vertical = Input.get_vector("crouch", "jump", "down", "up")
@@ -851,9 +906,12 @@ func update_velocity_flying(delta):
 		velocity.x -= velocity.x * friction * delta
 		velocity.z -= velocity.z * friction * delta
 	
+	#body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
+	#avatar.head_angle.y = -body.rotation.y
 	
 	body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
 	avatar.head_angle.y = -body.rotation.y
+	cameraHandler.rotation.z = -body.rotation.y*speed_appeal*0.4*Settings.user_settings["flying_tilt_power"]
 
 func dir_to_angle(dir):
 	if dir.y == 0.0 and dir.x == 0.0:
@@ -864,25 +922,39 @@ func dir_to_angle(dir):
 var time = 0.0
 var cameraTiltAdd = 0.0
 func bobbing(delta, mult, dir):
+	mult = clamp(mult,0.0,4.0)
 	if airborn:
-		time += delta * 0.25 * (1.0 + (mult-3.0)*0.125)
+		time += delta * 0.25 * (1.0 + (mult-3.0)*0.125) * mult
+		bobHandler.position.x = sin(time*32)*mult*0.0005
+		bobHandler.position.y = sin(time*37)*mult*0.0005
+		bobHandler.rotation.x = sin(time*35)*mult*0.0005
+		hands.position.x = sin(time*32+PI)*mult*0.0005
+		hands.position.y =  sin(time*32+PI)*mult*0.0005
+		bobHandler.rotation.z =  sin(time*32)*mult*0.0005
 	else:
 		time += delta * (1.0 + (mult-3.0)*0.125)
-	bobHandler.position.x = sin(time*16-PI*0.5)*0.002*mult*4.0 * 0.75
-	bobHandler.position.y = sin(time*16)*0.006*mult*4.0 * 0.75
-	bobHandler.rotation.x = sin(time*16+PI*0.5)*0.001*mult*4.0 
-	hands.position.x = sin(time*16.0-PI*0.25)*0.002*mult*4.0 * 0.25
-	hands.position.y = sin(time*16.0+PI*0.25)*0.006*mult*4.0 * 0.25
-	cameraTiltAdd = lerp(cameraTiltAdd, -dir.x * 0.03 * mult, delta*4.0)
-	bobHandler.rotation.z = sin(time*8-PI*0.5)*0.005*mult + cameraTiltAdd
+		bobHandler.position.x = sin(time*16-PI*0.5)*0.002*mult*4.0 * 0.75
+		bobHandler.position.y = sin(time*16)*0.006*mult*4.0 * 0.75
+		bobHandler.rotation.x = sin(time*16+PI*0.5)*0.001*mult*4.0 
+		hands.position.x = sin(time*16.0-PI*0.25)*0.002*mult*4.0 * 0.25
+		hands.position.y = sin(time*16.0+PI*0.25)*0.006*mult*4.0 * 0.25
+		cameraTiltAdd = lerp(cameraTiltAdd, -dir.x * 0.03 * mult, delta*4.0)
+		bobHandler.rotation.z = sin(time*8-PI*0.5)*0.005*mult + cameraTiltAdd
 
+@onready var camera_spring = $playerAvatar/cameraHandler/bobbingHandler/SpringArm3D
 var desired_perspective = 0
+var forced_perspective = false
 func set_perspective(val):
+	print("set perspective " + str(val))
 	match val:
 		1: #third person
 			camera.desired_rot.y = 0.0
+			camera.desired_rot.x = 0.0
+			camera_spring.rotation.y = 0.0
+			camera_spring.rotation_degrees.x = 0.0
 			var t = get_tree().create_tween()
-			t.tween_property(camera,"position",Vector3(0.0,0.0,2.0),0.1)
+			#t.tween_property(camera,"position",Vector3(0.0,0.0,2.0),0.1)
+			t.tween_property(camera_spring,"spring_length",2.0,0.1)
 			avatar.set_visibility_layer(1, true)
 			avatar.visible = true
 			hands.visible = false
@@ -890,45 +962,59 @@ func set_perspective(val):
 			tp_item_handler.visible = true
 		2: #front
 			var t = get_tree().create_tween()
-			camera.position = Vector3.ZERO
+			#camera.position = Vector3.ZERO
+			camera_spring.spring_length = 0.0
 			camera.desired_rot.y = PI
-			t.tween_property(camera,"position",Vector3(0.0,0.0,-2.0),0.1)
+			#t.tween_property(camera,"position",Vector3(0.0,0.0,-2.0),0.1)
+			t.tween_property(camera_spring,"spring_length",-2.0,0.1)
+			camera_spring.rotation.y = 0.0
 			avatar.set_visibility_layer(1, true)
 			avatar.visible = true
 			hands.visible = false
 			AG_handler.visible = true
 			tp_item_handler.visible = true
 		3: #over shoulder right
-			camera.desired_rot.y = 0.1
+			camera.desired_rot.y = 0.1*PI
 			var t = get_tree().create_tween()
-			t.tween_property(camera,"position",Vector3(0.75,0.0,0.6),0.1)
+			#t.tween_property(camera,"position",Vector3(0.75,0.0,0.6),0.1)
+			t.tween_property(camera_spring,"spring_length",1.0,0.1)
+			camera_spring.rotation.y = -PI*0.1
 			avatar.set_visibility_layer(1, true)
 			avatar.visible = true
 			hands.visible = false
 			AG_handler.visible = true
 			tp_item_handler.visible = true
 		4: #over shoulder left
-			camera.desired_rot.y = 0.1
+			camera.desired_rot.y = -0.1*PI
 			var t = get_tree().create_tween()
-			t.tween_property(camera,"position",Vector3(-0.75,0.0,0.6),0.1)
+			#t.tween_property(camera,"position",Vector3(-0.75,0.0,0.6),0.1)
+			t.tween_property(camera_spring,"spring_length",1.0,0.1)
+			camera_spring.rotation.y = PI*0.1
 			avatar.set_visibility_layer(1, true)
 			avatar.visible = true
 			hands.visible = false
 			AG_handler.visible = true
 			tp_item_handler.visible = true
 		5: #third person far
+			camera_spring.rotation.y = 0.0
 			camera.desired_rot.y = 0.0
 			var t = get_tree().create_tween()
-			t.tween_property(camera,"position",Vector3(0.0,0.5,4.0),0.1)
+			#t.tween_property(camera,"position",Vector3(0.0,0.5,4.0),0.1)
+			t.tween_property(camera_spring,"spring_length",4.0,0.1)
 			avatar.set_visibility_layer(1, true)
 			avatar.visible = true
 			hands.visible = false
 			AG_handler.visible = true
 			tp_item_handler.visible = true
 		_: #normal
+			camera_spring.rotation.y = 0.0
 			var t = get_tree().create_tween()
 			camera.desired_rot.y = 0.0
-			t.tween_property(camera,"position",Vector3(0.0,0.0,0.0),0.1)
+			camera.desired_rot.x = 0.0
+			camera_spring.rotation.y = 0.0
+			camera_spring.rotation_degrees.x = 0.0
+			#t.tween_property(camera,"position",Vector3(0.0,0.0,0.0),0.1)
+			t.tween_property(camera_spring,"spring_length",0.0,0.1)
 			avatar.set_visibility_layer(1, false)
 			avatar.visible = false
 			hands.visible = true
@@ -1022,6 +1108,7 @@ func sync_information(pos: Vector3, rot: float, rotB: float, anim_state: String,
 	avatar.walk_tilt = T
 	avatar.resist_dir = res_dir
 	dust_particles.emitting = em_dust
+	update_shadow()
 	pass
 
 @rpc("any_peer", "reliable")
@@ -1113,6 +1200,7 @@ var last_attacker = ""
 var last_attack_forget = 20.0
 var last_attack_forget_timer = 0.0
 
+@onready var hitmarker = preload("res://assets/effects/hitmarker.tscn")
 func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, count_attacker = false):
 	#print(attacker + " hit " + display_name + " with " + str(data) + " damage in the " + id)
 	if count_attacker:# and attacker != "":
@@ -1126,6 +1214,12 @@ func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, coun
 		var d = i
 		var total = 0.0
 		var a = attributes
+		var h = hitmarker.instantiate()
+		h.val = d[1]
+		h.type = d[0]
+		h.position = position
+		h.position.y += 0.65
+		get_parent().add_child(h)
 		match d[0]:# d = [damage_type, amount]
 			Lookup.damageType.generic: #applies defense stuff
 				total += d[1] / (a["generic_defense"]*a["true_defense"])
@@ -1178,8 +1272,16 @@ func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, coun
 	update_health_graphics()
 
 func set_damaged(val):
-	print("set_damaged " + str((sin(val.x*PI)+1.0)*0.5*val.y))
-	Global.set_post("shader_parameter/damaged", (sin(val.x*PI)+1.0)*0.5*val.y)
+	var sined_val = (sin(val.x*PI)+1.0)*0.5*val.y
+	print("set_damaged " + str(sined_val))
+	Global.set_post("shader_parameter/damaged", (sined_val))
+	set_damaged_third_person(sined_val)
+	set_damaged_third_person.rpc(sined_val)
+	pass
+
+@rpc("any_peer")
+func set_damaged_third_person(val):
+	avatar.set_damaged(val)
 	pass
 
 func add_status_effect(id,time):
@@ -1313,6 +1415,7 @@ func phantom_signal(signal_key : String): #sick ass function name
 
 @rpc("any_peer", "reliable")
 func set_ghost(val):
+	print("set_ghost")
 	$ghostParticles.emitting = val
 	voip.set_ghostly(val)
 	avatar.set_ghost(val)
@@ -1332,9 +1435,17 @@ func set_ghost(val):
 		handR.get_child(0).get_child(0).get_child(0,true).get_active_material(0).set("blend_mode", 0)
 	set_invulnerable(val)
 	ghost = val
+	print("set_ghost2")
 	if !is_multiplayer_authority():
 		$playerAvatar/genericAvatar/root/chestBase/neck/nameTag.visible = !val
 		return
+	if val:
+		print("set_ghost_perspective")
+		set_perspective(3)
+		forced_perspective = true
+	else:
+		set_perspective(desired_perspective)
+		forced_perspective = false
 	update_health_graphics()
 
 func set_invulnerable(val):
@@ -1516,6 +1627,7 @@ func process_interact_data(data, normal, hit):
 ##audio handling
 func settup_audio():
 	avatar.connect("step",play_footstep)
+	$genericAudio/movement_wind.connect("finished", loop_audio.bind($genericAudio/movement_wind)) #makes audio play after finished
 	pass
 
 const footstep_sounds = [
@@ -1658,7 +1770,7 @@ func _process(delta):
 				Lookup.statusEffectType.burning:
 					status_effects[k] -= delta
 					damage([[Lookup.damageType.fire,delta]], "status_effect", "", "burning")
-					if status_effects[k] < 0.0:
+					if status_effects[k] < 0.0 or (velocity.length() > speed_cap*0.5):
 						status_effects.erase(k)
 						update_status_effect_graphics(status_effects)
 						update_status_effect_graphics.rpc(status_effects)
@@ -1829,3 +1941,4 @@ const limb_key_to_defense = {
 @rpc("reliable")
 func request_ghost() -> bool:
 	return ghost
+

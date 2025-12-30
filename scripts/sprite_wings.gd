@@ -40,7 +40,7 @@ func _process(delta):
 	flapping = avatar.walk_speed * 0.1# + avatar.falling*0.5
 	animation_speed = 0.9 + (avatar.walk_speed*0.15+0.75)*0.1
 	if avatar.animation_state == "fly":
-		flapping = (1.0 - avatar.crouching*2.0)+((avatar.walk_speed*0.15+0.75)*0.1)
+		flapping = ((avatar.walk_speed*0.15+0.75)*0.1)+1.0#+(1.0 - avatar.crouching*2.0)
 		#gliding = clamp(-player.velocity.y,0.0,4.0)*0.25* clamp((abs(player.velocity.x)+abs(player.velocity.z)),0.0,16.0)*0.0625
 		#gliding = gliding*0.5 + (clamp(((abs(player.velocity.x)+abs(player.velocity.z)-abs(player.velocity.y)*2.0)),0.0,16.0)*0.0625)*0.5
 		gliding = avatar.walk_speed*0.25 * (cos((avatar.head_angle.x))+1.0)*0.5
@@ -104,9 +104,10 @@ func enable_item_mode():
 	item_mode = true
 	pass
 
+@export var default_enchanted_col := Color.BLACK
 func set_enchanted_col(col) -> void:
 	var mat = $shoulder_left/wingLeft.material_override.duplicate()
-	mat.set("shader_parameter/enchanted_col",col)
+	mat.set("shader_parameter/enchanted_col",col+default_enchanted_col)
 	$shoulder_left/wingLeft.material_override = mat
 	$shoulder_right/wingRight.material_override = mat
 	pass

@@ -331,6 +331,7 @@ var is_paused = false
 @onready var pause_menu = $pauseMenu
 @onready var chat_input = $chat_display/VBoxContainer/TextEdit
 @onready var inventory_menu = $inventory_menu
+@onready var settings_menu = $settingsMenu
 func _input(event):
 	if Input.is_action_just_pressed("pause"):
 		if $Control.visible:
@@ -342,6 +343,7 @@ func _input(event):
 			pause_menu.hide()
 			chat_input.hide()
 			inventory_menu.close()
+			settings_menu.close()
 		else:
 			is_paused = true
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -358,6 +360,7 @@ func _input(event):
 			chat_input.hide()
 			chat_input.release_focus()
 			inventory_menu.close()
+			settings_menu.close()
 			$chat_display._on_text_edit_text_submitted(chat_input.text)
 		else:
 			is_paused = true
@@ -378,12 +381,30 @@ func _input(event):
 			pause_menu.hide()
 			chat_input.hide()
 			inventory_menu.close()
+			settings_menu.close()
 		else:
 			is_paused = true
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			Global.disable_avatar = true
 			inventory_menu.open()
-	
+	if Input.is_action_just_pressed("open_settings"):
+		if is_paused:
+			is_paused = false
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			Global.disable_avatar = false
+			pause_menu.hide()
+			chat_input.hide()
+			inventory_menu.close()
+			settings_menu.close()
+		else:
+			is_paused = true
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			Global.disable_avatar = true
+			settings_menu.show()
+
+
+
+
 func _on_resume_button_down():
 	is_paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED

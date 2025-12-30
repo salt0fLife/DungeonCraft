@@ -277,8 +277,6 @@ func load_accessories(a = Inventory.accessories):
 					s.set_surface_override_material(0,m)
 				elif s.has_method("set_enchanted_col"):
 					s.set_enchanted_col(enchant_col)
-			
-			
 			if accessory_buttons.has(k):
 				var tn = accessory_buttons[k]
 				#tn.show()

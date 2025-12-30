@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://cm7d5y2llo0ky"]
+[gd_scene load_steps=39 format=3 uid="uid://cm7d5y2llo0ky"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_s7ggu"]
 [ext_resource type="Script" path="res://scripts/steam.gd" id="2_35c3e"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://scripts/chat_display.gd" id="8_8non7"]
 [ext_resource type="Theme" uid="uid://bxsqmdqtm4i4k" path="res://assets/themes/genericTheme.tres" id="9_486y8"]
 [ext_resource type="PackedScene" uid="uid://b7s8ume16tah0" path="res://assets/gui/inventory_menu.tscn" id="11_ws5gg"]
+[ext_resource type="Script" path="res://scripts/settingsMenu.gd" id="12_m1jv6"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_pium0"]
 frequency = 0.2226
@@ -426,6 +427,107 @@ metadata/_edit_use_anchors_ = true
 
 [node name="inventory_menu" parent="." instance=ExtResource("11_ws5gg")]
 
+[node name="settingsMenu" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("12_m1jv6")
+
+[node name="background" type="ColorRect" parent="settingsMenu"]
+material = SubResource("CanvasItemMaterial_jhn6c")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.141176, 0.266667, 0.301961, 1)
+
+[node name="backdrop" type="ColorRect" parent="settingsMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.130208
+anchor_top = 0.109568
+anchor_right = 0.897569
+anchor_bottom = 0.878086
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.145098, 0.145098, 0.145098, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="settingsMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FOV2" type="Label" parent="settingsMenu/VBoxContainer"]
+layout_mode = 2
+text = "FOV : 90"
+
+[node name="FOV" type="HSlider" parent="settingsMenu/VBoxContainer"]
+layout_mode = 2
+min_value = 60.0
+max_value = 120.0
+value = 90.0
+
+[node name="look_sensitivity2" type="Label" parent="settingsMenu/VBoxContainer"]
+layout_mode = 2
+text = "look sensitivity : 2.5"
+
+[node name="look_sensitivity" type="HSlider" parent="settingsMenu/VBoxContainer"]
+layout_mode = 2
+min_value = 0.01
+max_value = 10.0
+step = 0.01
+value = 2.5
+
+[node name="speed_FOV_effect2" type="Label" parent="settingsMenu/VBoxContainer"]
+layout_mode = 2
+text = "speed FOV effect : 1.0"
+
+[node name="speed_FOV_effect" type="HSlider" parent="settingsMenu/VBoxContainer"]
+layout_mode = 2
+max_value = 2.0
+step = 0.1
+value = 1.0
+
+[node name="flying_tilt_power2" type="Label" parent="settingsMenu/VBoxContainer"]
+layout_mode = 2
+text = "flying camera tilt : 1.0"
+
+[node name="flying_tilt_power" type="HSlider" parent="settingsMenu/VBoxContainer"]
+layout_mode = 2
+max_value = 2.0
+step = 0.1
+value = 1.0
+
+[node name="flying_perspective" type="MenuButton" parent="settingsMenu/VBoxContainer"]
+layout_mode = 2
+text = "flying perspective mode"
+item_count = 4
+popup/item_0/text = "default"
+popup/item_0/checked = true
+popup/item_0/id = 0
+popup/item_1/text = "auto third person"
+popup/item_1/id = 1
+popup/item_2/text = "auto over shoulder"
+popup/item_2/id = 2
+popup/item_3/text = "auto third person far"
+popup/item_3/id = 3
+
 [connection signal="button_down" from="Control/hostLocal" to="." method="_on_host_local_button_down"]
 [connection signal="button_down" from="Control/joinLocal" to="." method="_on_join_local_button_down"]
 [connection signal="button_down" from="Control/refreshList" to="." method="_on_refresh_list_button_down"]
@@ -439,3 +541,7 @@ metadata/_edit_use_anchors_ = true
 [connection signal="button_down" from="Control/skinEditor" to="." method="_on_skin_editor_button_down"]
 [connection signal="button_down" from="pauseMenu/VBoxContainer/Resume" to="." method="_on_resume_button_down"]
 [connection signal="button_down" from="pauseMenu/VBoxContainer/leave" to="." method="_on_leave_button_down"]
+[connection signal="value_changed" from="settingsMenu/VBoxContainer/FOV" to="settingsMenu" method="_on_fov_value_changed"]
+[connection signal="value_changed" from="settingsMenu/VBoxContainer/look_sensitivity" to="settingsMenu" method="_on_look_sensitivity_value_changed"]
+[connection signal="value_changed" from="settingsMenu/VBoxContainer/speed_FOV_effect" to="settingsMenu" method="_on_speed_fov_effect_value_changed"]
+[connection signal="value_changed" from="settingsMenu/VBoxContainer/flying_tilt_power" to="settingsMenu" method="_on_flying_tilt_power_value_changed"]

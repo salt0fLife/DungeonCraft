@@ -136,6 +136,7 @@ func apply_pose(pose):
 @export var idle_energy = 1.0
 @export var falling = 0.0
 
+
 @export var eye_lids = Vector2(0.5,0.5)
 @export var eye_pos = Vector2(0.0,0.0)
 @export var eye_taper = 0.0
@@ -174,6 +175,7 @@ func _process(delta):
 			apply_pose(pose)
 		apply_load_pose = false
 	pass
+
 
 @export var resist_dir = Vector2.ZERO
 func idle(delta, energy, tilt, crouch, head_angle, fall,res_dir):
@@ -702,8 +704,8 @@ func fly(delta, speed = 1.0, crouching = 0.0, head_angle = Vector2(0.0,0.0), ang
 	mult = mult*0.5
 	if mult > 2.3:
 		mult = 2.3
-	bone_paths[0].position.z = sin(time*2.0-PI*0.5)*0.03*mult+0.1
-	bone_paths[0].position.y = sin(time*2.0)*0.1+0.1
+	bone_paths[0].position.z = sin(time*2.0-PI*0.5)*0.03*(1.0 - clamp(mult,0.0,1.0))+0.1
+	bone_paths[0].position.y = sin(time*2.0)*0.1+0.1*(1.0 - clamp(mult,0.0,1.0)) - abs(mult*0.25)
 	bone_paths[0].rotation.x = head_angle.x*0.25 + mult*0.5
 	#head_angle.x -= mult*0.9
 	head_angle.y += angle*0.75
@@ -738,6 +740,11 @@ func fly(delta, speed = 1.0, crouching = 0.0, head_angle = Vector2(0.0,0.0), ang
 	bone_paths[8].position.y = 0.241
 	#Vector3(0.15,0.241,-0.001)
 	
+	bone_paths[0].rotation.x = lerp(bone_paths[0].rotation.x, head_angle.x+PI-0.5,clamp(mult,0.0,4.0)*0.25)
+	bone_paths[0].rotation.z -= head_angle.y*clamp(mult,0.0,4.0)*0.25*2.0
+	bone_paths[0].rotation.x -= abs(head_angle.y*clamp(mult,0.0,4.0)*0.25)*2.0
+	bone_paths[0].rotation.y -= head_angle.y*clamp(mult,0.0,4.0)*0.25*2.0
+	bone_paths[5].rotation.x -= lerp(bone_paths[0].rotation.x, head_angle.x+PI-0.5,clamp(mult,0.0,4.0)*0.25)*0.1
 	##eyes
 	if head_angle.x > 0.0:
 		eye_lids = Vector2(1.05, 0.32)
@@ -1078,4 +1085,8 @@ func set_blessed(val: bool) -> void:
 	base_skin_mat.set("shader_parameter/blessed", val)
 	$"../holyParticles".emitting = val
 	$"../aura".visible = val
+	pass
+
+func set_damaged(val : float) -> void:
+	base_skin_mat.set("shader_parameter/damaged", val)
 	pass

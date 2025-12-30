@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://dntnunlwfyesu"]
+[gd_scene load_steps=50 format=3 uid="uid://dntnunlwfyesu"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_5fl5y"]
 [ext_resource type="Script" path="res://debug/debug_world.gd" id="1_87rlt"]
@@ -24,6 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://cb6ovvv8dnrb1" path="res://world/levels/level_3_test.tscn" id="21_ooxf7"]
 [ext_resource type="PackedScene" uid="uid://dtdp0xkmjwtre" path="res://entities/punching_bag.tscn" id="25_2gtog"]
 [ext_resource type="Script" path="res://debug/avatar_state_tester.gd" id="25_un0qr"]
+[ext_resource type="Shader" path="res://assets/shaders/circleShadow.gdshader" id="26_bv1sq"]
 [ext_resource type="PackedScene" uid="uid://dokv4awf7hm7b" path="res://debug/debug_effectbox.tscn" id="26_uei57"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ks42u"]
@@ -151,7 +152,14 @@ glow_enabled = true
 glow_normalized = true
 glow_bloom = 0.01
 glow_blend_mode = 1
-volumetric_fog_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.576471, 0.705882, 0.705882, 1)
+fog_sun_scatter = 0.11
+fog_density = 0.015
+fog_aerial_perspective = 0.307
+fog_sky_affect = 0.868
+fog_height = 1.5
+fog_height_density = 0.25
 volumetric_fog_density = 0.0353
 volumetric_fog_albedo = Color(0.65098, 0.901961, 0.894118, 1)
 volumetric_fog_anisotropy = 0.04
@@ -178,6 +186,26 @@ material = SubResource("StandardMaterial3D_furs3")
 [sub_resource type="BoxShape3D" id="BoxShape3D_qtu70"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_twib7"]
+
+[sub_resource type="Gradient" id="Gradient_1465e"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_g6yan"]
+gradient = SubResource("Gradient_1465e")
+width = 16
+height = 16
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uhlm0"]
+render_priority = 0
+shader = ExtResource("26_bv1sq")
+shader_parameter/power = 1.0
+shader_parameter/gradient = SubResource("GradientTexture2D_g6yan")
+
+[sub_resource type="QuadMesh" id="QuadMesh_8sebf"]
+material = SubResource("ShaderMaterial_uhlm0")
+size = Vector2(0.75, 0.75)
+orientation = 1
 
 [node name="debugWorld" type="Node3D"]
 script = ExtResource("1_87rlt")
@@ -431,3 +459,7 @@ time = 10.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -10)
 effect_to_apply = 4
 time = 1.0
+
+[node name="shadow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.910317, 1.64374, 0.736822)
+mesh = SubResource("QuadMesh_8sebf")
