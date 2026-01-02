@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://casn8dhfk6wuk"]
+
+[ext_resource type="PackedScene" uid="uid://bvwhuk8odvygv" path="res://assets/itemGraphics/iron_sword.tscn" id="1_wbvee"]
+
+[node name="longsword_standin" type="Node3D"]
+
+[node name="IronSword" parent="." instance=ExtResource("1_wbvee")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1.6, 0, -1, 0, -4.37114e-08, 0, 0.103344, 0)

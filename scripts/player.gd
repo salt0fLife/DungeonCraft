@@ -702,7 +702,7 @@ func _physics_process(delta):
 	var speed_fov_effect = Settings.user_settings["speed_fov_effect"]
 	camera.fov = lerp(desired_fov,desired_fov+speed_fov_effect,speed_appeal)
 	Global.set_post("shader_parameter/action_lines",speed_appeal)
-	$genericAudio/movement_wind.volume_db = remap(speed_appeal,0.0,1.0,-80.0,0.0)
+	$genericAudio/movement_wind.volume_db = remap(speed_appeal,0.0,1.0,-80.0,-15.0)
 	update_shadow()
 	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting)
 
@@ -1502,10 +1502,17 @@ func _on_left_mouse():
 		type = held_item_data[2]
 	
 	match type:
-		Lookup.itemType.weapons_sword:
-			use_sword()
-		Lookup.itemType.weapons_projectile:
-			use_projectile_weapon()
+		Lookup.itemType.weapons_sword: use_sword()
+		Lookup.itemType.weapons_projectile: use_projectile_weapon()
+		Lookup.itemType.weapons_longsword: use_longsword()
+		Lookup.itemType.weapons_mace: use_mace()
+		Lookup.itemType.weapons_fishing_rod: use_fishing_rod()
+		Lookup.itemType.weapons_bow: use_bow()
+		Lookup.itemType.weapons_spear: use_spear()
+		Lookup.itemType.weapons_glaive: use_glaive()
+		Lookup.itemType.weapons_scythe: use_scythe()
+		Lookup.itemType.weapons_wand: use_wand()
+		Lookup.itemType.weapons_spellbook: use_spellbook()
 		_:
 			punch()
 	pass
@@ -1532,6 +1539,33 @@ func use_sword():
 		play_arm_anim("slash_1")
 		#deal_look_damage(held_item_data[3][0],held_item_data[3][1])
 		deal_sword_sweep(held_item_data[3][0], held_item_data[3][0],1.0)
+
+func use_longsword():
+	print("used longsword")
+
+func use_mace():
+	print("used mace")
+
+func use_fishing_rod():
+	print("used fishing rod")
+
+func use_bow():
+	print("used bow")
+
+func use_spear():
+	print("used spear")
+
+func use_glaive():
+	print("used glaive")
+
+func use_scythe():
+	print("used scythe")
+
+func use_wand():
+	print("used wand")
+
+func use_spellbook():
+	print("used spellbook")
 
 func use_projectile_weapon():
 	if mana - 2.0 < 0.0:

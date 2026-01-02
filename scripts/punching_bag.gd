@@ -1,6 +1,158 @@
 extends Node3D
+@export var entity_base : NodePath
+@export var entity_avatar : NodePath
+signal died
+var hitmarker = preload("res://assets/effects/hitmarker.tscn")
 
+var attributes = {
+	##defenses
+	#localized_generic_defense
+	"defense_head" : 1.0,
+	"defense_torso" : 1.0,
+	"defense_arms" : 1.0,
+	"defense_handL" : 1.0,
+	"defense_handR" : 1.0,
+	"defense_legs" : 1.0,
+	"defense_footR" : 1.0,
+	"defense_footL" : 1.0,
+	#real_defense
+	"true_defense" : 1.0, #only changed through race and subclass, effects all damage
+	"generic_defense" : 1.0,
+	"stab_defense" : 1.0,
+	"slash_defense" : 1.0,
+	"blunt_defense" : 1.0,
+	"fire_defense" : 1.0,
+	"ice_defense" : 1.0,
+	"toxic_defense" : 1.0,
+	"explosion_defense" : 1.0,
+	"magic_defense" : 1.0,
+	"lightning_defense" : 1.0,
+	"holy_defense" : 1.0,
+	"blight_defense" : 1.0
+	#
+}
 
-func damage(_amount, _id, _owned_by, _weapon_name, _knockback, _remember):
-	#do nothing because its a punching bag :3
-	pass
+@rpc("any_peer","reliable")
+func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, count_attacker = false):
+	var a = attributes
+	var total = 0.0
+	var primary_dt = 0
+	var dr = 0.0
+	for d in data:
+		var h = hitmarker.instantiate()
+		h.val = d[1]
+		h.type = d[0]
+		get_parent().get_parent().add_child(h)
+		h.global_position = global_position
+		h.position.y += 0.5
+		match d[0]:# d = [damage_type, amount]
+			Lookup.damageType.generic:
+				total += d[1] / (a["generic_defense"]*a["true_defense"])
+			Lookup.damageType.stab:
+				total += d[1] / (a["stab_defense"]*a["true_defense"])
+			Lookup.damageType.slash:
+				total += d[1] / (a["slash_defense"]*a["true_defense"])
+			Lookup.damageType.blunt:
+				total += d[1] / (a["blunt_defense"]*a["true_defense"])
+			Lookup.damageType.fire:
+				total += d[1] / (a["fire_defense"]*a["true_defense"])
+			Lookup.damageType.ice:
+				total += d[1] / (a["ice_defense"]*a["true_defense"])
+			Lookup.damageType.toxic:
+				total += d[1] / (a["toxic_defense"]*a["true_defense"])
+			Lookup.damageType.explosion:
+				total += d[1] / (a["explosion_defense"]*a["true_defense"])
+			Lookup.damageType.magic:
+				total += d[1] / (a["magic_defense"]*a["true_defense"])
+			Lookup.damageType.lightning:
+				total += d[1] / (a["lightning_defense"]*a["true_defense"])
+			Lookup.damageType.holy:
+				total += d[1] / (a["holy_defense"]*a["true_defense"])
+			Lookup.damageType.blight:
+				total += d[1] / (a["blight_defense"]*a["true_defense"])
+			_:
+				printerr("unknown_damage_id of : " + str(d[0]))
+				total += d[1] / a["true_defense"]
+		$"damage indicator".text = str(total)
+
+var status_effects = {}
+
+func add_status_effect(id,time):
+	if status_effects.has(id):
+		status_effects[id] += time
+	else:
+		status_effects[id] = time
+	update_status_effect_graphics(status_effects)
+	update_status_effect_graphics.rpc(status_effects)
+
+@rpc("any_peer","reliable")
+func update_status_effect_graphics(se):
+	var avatar = get_node(entity_avatar)
+	#handles burning
+	var burning = se.has(Lookup.statusEffectType.burning)
+	var fire_col = Lookup.fire_colors[0]
+	avatar.set_burning(burning,Lookup.fire_colors[0])
+	#handles blighted
+	if se.has(Lookup.statusEffectType.blighted):
+		if burning:
+			avatar.set_burning(se.has(Lookup.statusEffectType.blighted), Lookup.fire_colors[2])
+			fire_col = Lookup.fire_colors[2]
+			burning = true
+		else:
+			avatar.set_burning(se.has(Lookup.statusEffectType.blighted), Lookup.fire_colors[4])
+			fire_col = Lookup.fire_colors[4]
+			burning = true
+	#poisoned
+	avatar.set_poisoned(se.has(Lookup.statusEffectType.poisoned))
+	#cursed
+	avatar.set_cursed(se.has(Lookup.statusEffectType.cursed))
+	#blessed
+	avatar.set_blessed(se.has(Lookup.statusEffectType.blessed))
+
+func _process(delta):
+	if !clear_status_effects:
+		for k in status_effects.keys():
+			match k:
+				Lookup.statusEffectType.burning:
+					status_effects[k] -= delta
+					damage([[Lookup.damageType.fire,delta]], "status_effect", "", "burning")
+					if status_effects[k] < 0.0:
+						status_effects.erase(k)
+						update_status_effect_graphics(status_effects)
+						update_status_effect_graphics.rpc(status_effects)
+				Lookup.statusEffectType.blighted:
+					status_effects[k] -= delta
+					damage([[Lookup.damageType.blight,delta*2.5]], "status_effect", "", "blighted")
+					if status_effects[k] < 0.0:
+						status_effects.erase(k)
+						update_status_effect_graphics(status_effects)
+						update_status_effect_graphics.rpc(status_effects)
+				Lookup.statusEffectType.poisoned:
+					status_effects[k] -= delta
+					damage([[Lookup.damageType.toxic,delta*1.75]], "status_effect", "", "poisoned")
+					if status_effects[k] < 0.0:
+						status_effects.erase(k)
+						update_status_effect_graphics(status_effects)
+						update_status_effect_graphics.rpc(status_effects)
+				Lookup.statusEffectType.cursed:
+					status_effects[k] -= delta
+					damage([[Lookup.damageType.magic,delta*1.0]], "status_effect", "", "cursed")
+					if status_effects[k] < 0.0:
+						status_effects.erase(k)
+						update_status_effect_graphics(status_effects)
+						update_status_effect_graphics.rpc(status_effects)
+				Lookup.statusEffectType.blessed:
+					status_effects[k] -= delta
+					#healing function here
+					damage([[Lookup.damageType.magic,-delta*1.0]], "status_effect", "", "blessed")
+					if status_effects[k] < 0.0:
+						status_effects.erase(k)
+						update_status_effect_graphics(status_effects)
+						update_status_effect_graphics.rpc(status_effects)
+	else:
+		print("clearing status effects")
+		for k in status_effects.keys():
+			print(k)
+			status_effects.erase(k)
+		clear_status_effects = false
+var clear_status_effects = true

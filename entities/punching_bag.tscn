@@ -1,7 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://dtdp0xkmjwtre"]
+[gd_scene load_steps=15 format=3 uid="uid://dtdp0xkmjwtre"]
 
 [ext_resource type="Script" path="res://scripts/punching_bag.gd" id="1_lx4nv"]
 [ext_resource type="PackedScene" uid="uid://ctjywblutag5l" path="res://assets/entityComponents/hurtbox.tscn" id="2_d3bc4"]
+[ext_resource type="FontFile" uid="uid://cqn75tgqy02u5" path="res://assets/fonts/PIXELOIDSANS-MLXMM.TTF" id="3_cvoco"]
+[ext_resource type="Texture2D" uid="uid://cn8ula6inhmyc" path="res://assets/textures/hdris/waylandHDRI1.hdr" id="4_1qfwq"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_fwmtd"]
 size = Vector3(0.75, 1.75, 0.75)
@@ -19,6 +21,35 @@ albedo_color = Color(0.898039, 0.792157, 0.603922, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_38t4w"]
 material = SubResource("StandardMaterial3D_m30yq")
 size = Vector3(0.125, 1, 0.125)
+
+[sub_resource type="Gradient" id="Gradient_gcxia"]
+offsets = PackedFloat32Array(0.188679, 0.515723, 1)
+colors = PackedColorArray(0.0120885, 1.4358e-05, 0.0528563, 1, 0.293436, 0.424052, 0.404997, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_uwx3e"]
+gradient = SubResource("Gradient_gcxia")
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_k35kg"]
+panorama = ExtResource("4_1qfwq")
+
+[sub_resource type="Sky" id="Sky_2oa8r"]
+sky_material = SubResource("PanoramaSkyMaterial_k35kg")
+
+[sub_resource type="Environment" id="Environment_dh51a"]
+background_mode = 2
+sky = SubResource("Sky_2oa8r")
+ssao_enabled = true
+glow_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.937255, 0.705882, 0.603922, 1)
+fog_density = 0.0025
+fog_sky_affect = 0.0
+fog_height = -30.0
+fog_height_density = 0.01
+adjustment_enabled = true
+adjustment_brightness = 1.1
+adjustment_contrast = 1.1
+adjustment_color_correction = SubResource("GradientTexture1D_uwx3e")
 
 [node name="punchingBag" type="Node3D"]
 script = ExtResource("1_lx4nv")
@@ -46,3 +77,12 @@ mesh = SubResource("BoxMesh_38t4w")
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
 transform = Transform3D(1.91069e-15, 4.37114e-08, 1, 1, -4.37114e-08, 0, 4.37114e-08, 1, -4.37114e-08, 0, -0.0179958, 0)
 mesh = SubResource("BoxMesh_38t4w")
+
+[node name="damage indicator" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.29986, 0)
+billboard = 1
+no_depth_test = true
+font = ExtResource("3_cvoco")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_dh51a")

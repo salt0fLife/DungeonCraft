@@ -23,7 +23,7 @@
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_d5ftn"]
 blend_mode = 3
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vdt3t"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0i1w3"]
 resource_name = "eyeBrows"
 transparency = 2
 alpha_scissor_threshold = 0.5
@@ -32,7 +32,7 @@ albedo_color = Color(0, 0, 0, 1)
 albedo_texture = ExtResource("6_h0cdh")
 texture_filter = 2
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_18p2l"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b8g8d"]
 resource_name = "eyes"
 render_priority = 0
 shader = ExtResource("5_vi34m")
@@ -57,7 +57,7 @@ shader_parameter/eyelashCol = Color(0, 0, 0, 1)
 shader_parameter/eyelashTaper = 0.205
 shader_parameter/transparency = 0.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_idj2s"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_np1t6"]
 render_priority = 0
 shader = ExtResource("6_7bipc")
 shader_parameter/uv1_scale = Vector3(1, 1, 1)
@@ -128,7 +128,7 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.2)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jbvrj"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8dfyf"]
 render_priority = 0
 shader = SubResource("Shader_82q5v")
 shader_parameter/fire_col = Color(0.796078, 0.247059, 0, 1)
@@ -230,16 +230,16 @@ transform = Transform3D(0.995003, 0.0124051, -0.0990596, 0, 0.992244, 0.124259, 
 transform = Transform3D(1, 0, 0, 0, 0.991934, -0.126739, 0, 0.126739, 0.991934, 0, -0.274171, 0)
 
 [node name="eyeBrows_L" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
-surface_material_override/0 = SubResource("StandardMaterial3D_vdt3t")
+surface_material_override/0 = SubResource("StandardMaterial3D_0i1w3")
 
 [node name="eyeBrows_R" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="2"]
-surface_material_override/0 = SubResource("StandardMaterial3D_vdt3t")
+surface_material_override/0 = SubResource("StandardMaterial3D_0i1w3")
 
 [node name="eyes" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="3"]
-surface_material_override/0 = SubResource("ShaderMaterial_18p2l")
+surface_material_override/0 = SubResource("ShaderMaterial_b8g8d")
 
 [node name="mouth" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="7"]
-surface_material_override/0 = SubResource("ShaderMaterial_idj2s")
+surface_material_override/0 = SubResource("ShaderMaterial_np1t6")
 
 [node name="nameTag" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="9"]
 visible = false
@@ -269,7 +269,7 @@ transform = Transform3D(0.972859, 0.0421689, 0.227522, 0, 0.983255, -0.182235, -
 transform = Transform3D(0.984394, 0.0499815, 0.168736, 0, 0.95882, -0.284012, -0.175984, 0.27958, 0.943854, 0, 0, 0)
 
 [node name="fire" parent="accessories/preview_window/SubViewport/SubViewport/playerAvatar" index="1"]
-surface_material_override/0 = SubResource("ShaderMaterial_jbvrj")
+surface_material_override/0 = SubResource("ShaderMaterial_8dfyf")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="accessories/preview_window/SubViewport/SubViewport"]
 

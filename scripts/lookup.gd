@@ -43,7 +43,8 @@ const worlds = {
 	"debug" : ["res://debug/debug_world.tscn", 0.0],
 	"gm_construct" : ["res://world/gm_construct.tscn", 0.4],
 	"skywas_test" : ["res://world/skywars_prot_rainy.tscn", 0.0],
-	"dungeon_world" : ["res://world/dungeon_world.tscn", 0.0]
+	"dungeon_world" : ["res://world/dungeon_world.tscn", 0.0],
+	"wayland" : ["res://world/wayland_main.tscn",0.0]
 }
 
 enum itemType {
@@ -65,6 +66,15 @@ enum itemType {
 	racial_changes,
 	subclass_changes,
 	weapons_sword, #[damage, range, damage_stab, block_defense]
+	weapons_longsword,
+	weapons_mace,
+	weapons_fishing_rod,
+	weapons_bow,
+	weapons_spear,
+	weapons_glaive,
+	weapons_scythe,
+	weapons_wand,
+	weapons_spellbook,
 	weapons_projectile #[projectile_key, animation_key]
 }
 
@@ -87,6 +97,7 @@ const accessories_types = [
 	itemType.accessories_pants,
 	itemType.accessories_gloves,
 	itemType.accessories_shoes,
+	itemType.accessories_chestplate,
 ]
 
 #damage = [[damageType.generic, amount],[damageType.stab, amount]]
@@ -256,6 +267,15 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 	"iron_sword" : ["iron sword", "res://assets/itemGraphics/iron_sword.tscn", itemType.weapons_sword, [[[damageType.slash, 5.0]],3.0,[[damageType.stab, 2.5]]], "res://assets/textures/items/ironSword.png"],
 	"short_bow" : ["short bow", "res://assets/itemGraphics/oak_bow.tscn", itemType.weapons_projectile, ["arrow", "punch"], ""],
 	"magic_bow" : ["spark wand", "res://assets/itemGraphics/spark_wand.tscn", itemType.weapons_projectile, ["spark_bolt", "punch"], "res://assets/textures/items/sparkWand.png"],
+	"longsword_debug" : ["longsword", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_longsword, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"mace_debug" : ["mace", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_mace, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"fishing_rod_debug" : ["fishing rod", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_fishing_rod, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"bow_debug" : ["bow", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_bow, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"spear_debug" : ["spear", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_spear, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"glaive_debug" : ["glaive", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_glaive, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"scythe_debug" : ["scythe", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_scythe, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"wand_debug" : ["wand", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_wand, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"spellbook_debug" : ["spellbook", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_spellbook, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
 	
 	
 	#jewelry
@@ -264,6 +284,9 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 	"ring_of_dragons" : ["ring of dragons", "res://assets/itemGraphics/iron_sword.tscn", itemType.accessories_ring, [[], {"max_health": +5.0, "speed_multiplier" : 0.5}], ""], # no texture yet]
 	"grace_pendant" : ["grace pendant", "res://assets/itemGraphics/jewelry/necklaces/grace_pendant.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/grace_pendant.tscn", 0]], {"mana_regen": +2.0, "max_mana" : + 20.0, "blight_defense" : 3.0}], ""],
 	"ruby_amulet" : ["ruby amulet", "res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", 0]], {"health_regen": +2.0, "max_health" : + 20.0, "true_defense" : 0.05}], ""],
+	
+	
+	
 }
 
 const set_bonus = { #[[item1,item2,item3],{attribute modifiers}, [[model_path,bone_id]]]

@@ -705,7 +705,7 @@ func fly(delta, speed = 1.0, crouching = 0.0, head_angle = Vector2(0.0,0.0), ang
 	if mult > 2.3:
 		mult = 2.3
 	bone_paths[0].position.z = sin(time*2.0-PI*0.5)*0.03*(1.0 - clamp(mult,0.0,1.0))+0.1
-	bone_paths[0].position.y = sin(time*2.0)*0.1+0.1*(1.0 - clamp(mult,0.0,1.0)) - abs(mult*0.25)
+	bone_paths[0].position.y = lerp(sin(time*2.0)*0.1+0.1*(1.0 - clamp(mult,0.0,1.0)) - abs(mult*0.25),0.0,clamp(mult*0.25,0.0,1.0))
 	bone_paths[0].rotation.x = head_angle.x*0.25 + mult*0.5
 	#head_angle.x -= mult*0.9
 	head_angle.y += angle*0.75
