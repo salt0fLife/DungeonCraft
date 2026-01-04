@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://ywe2wvye7ush"]
+
+[ext_resource type="Script" path="res://scripts/wayland_chunk.gd" id="1_nyh1g"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_5y1w0"]
+size = Vector3(0.25, 500, 0.25)
+
+[node name="chunk" type="Node3D"]
+script = ExtResource("1_nyh1g")
+
+[node name="treeHandler" type="Node3D" parent="."]
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_5y1w0")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 64, 0, 0)
+mesh = SubResource("BoxMesh_5y1w0")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 64, 0, 64)
+mesh = SubResource("BoxMesh_5y1w0")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 64)
+mesh = SubResource("BoxMesh_5y1w0")

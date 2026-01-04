@@ -14,6 +14,7 @@ uniform float height_strength = 1.0;
 uniform sampler2D ground_tex : repeat_enable, filter_nearest_mipmap;
 varying float depth;
 varying float point_height;
+uniform float terrain_scale = 1.0;
 
 float get_height(vec2 uv) {
 	float height = texture(height_map,uv).r+texture(height_map_2,uv).r-1.0;
@@ -46,7 +47,7 @@ void vertex() {
 	float height = get_height(UV);
 	VERTEX.y += height*height_strength;
 	point_height = height;
-	depth = distance(VERTEX*4.0+NODE_POSITION_WORLD,CAMERA_POSITION_WORLD);
+	depth = distance(VERTEX*terrain_scale+NODE_POSITION_WORLD,CAMERA_POSITION_WORLD);
 	//depth = (VERTEX.x*VERTEX.x)+(CAMERA_POSITION_WORLD.x*CAMERA_POSITION_WORLD.x);
 	
 	NORMAL = calc_normal(UV, height_strength*2.0);

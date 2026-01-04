@@ -229,6 +229,14 @@ func update_anims_from_item_type(type):
 			walk_anim_key = "walk_weapon"
 			idle_anim_key = "idle_weapon"
 			play_arm_anim("draw_weapon")
+		Lookup.itemType.weapons_spear:
+			walk_anim_key = "walk_staff"
+			idle_anim_key = "idle_staff"
+			play_arm_anim("draw_staff")
+		Lookup.itemType.weapons_glaive:
+			walk_anim_key = "walk_weapon"
+			idle_anim_key = "idle_staff"
+			play_arm_anim("draw_weapon")
 		_:
 			walk_anim_key = "walk"
 			idle_anim_key = "idle"

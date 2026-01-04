@@ -271,7 +271,7 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 	"mace_debug" : ["mace", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_mace, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
 	"fishing_rod_debug" : ["fishing rod", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_fishing_rod, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
 	"bow_debug" : ["bow", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_bow, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
-	"spear_debug" : ["spear", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_spear, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"spear_debug" : ["spear", "res://assets/itemGraphics/weapons/spear_standin.tscn", itemType.weapons_spear, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
 	"glaive_debug" : ["glaive", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_glaive, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
 	"scythe_debug" : ["scythe", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_scythe, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
 	"wand_debug" : ["wand", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_wand, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
