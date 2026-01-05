@@ -11,6 +11,7 @@ signal player_death
 signal chat
 signal update_skin
 signal create_item
+signal thunder_from_point
 var inside = 0.0
 
 var skin = [64,64,false,0,[]]
@@ -159,6 +160,9 @@ const avatar_profiles = {
 func instance_creature(key: String,location : Vector3,modifiers = {}):
 	emit_signal("spawnCreature",key,location,modifiers)
 	pass
+
+func instance_projectile(key : String, pos : Vector3, dir : Vector3, owned_by : String) -> void:
+	emit_signal("spawn_projectile", key,pos,dir,owned_by)
 
 func set_post(key,val):
 	emit_signal("set_post_param",key,val)

@@ -4,9 +4,17 @@ func _ready():
 	$near.connect("finished", _on_finished)
 	_on_finished()
 
+var lightning_chance_timer = 0.0
+@export var lightning_chance = 1.0
 func _process(delta):
 	transform = Global.camera_transform
 	rotation = Vector3.ZERO
+	
+	lightning_chance_timer += delta * lightning_chance
+	if lightning_chance_timer > 10.0:
+		lightning_chance_strike()
+		lightning_chance_timer = 0.0
+	
 	if $roofCheck.is_colliding():
 		$far.volume_db = lerp($far.volume_db, 0.0, delta*2.0)
 		update_rain_lightweight(delta)
@@ -43,3 +51,9 @@ func update_rain_lightweight(delta):
 			#print(dis)
 			vol = v
 	$near.volume_db = lerp($near.volume_db, vol, delta*4.0)
+
+func lightning_chance_strike():
+	var pos = Vector2(randf_range(-1.0,1.0),randf_range(-1.0,1.0))*800.0
+	Global.instance_projectile("lightning", position+Vector3(pos.x,0.0,pos.y), Vector3.UP,"weather")
+	
+	pass

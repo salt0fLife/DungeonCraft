@@ -33,7 +33,8 @@ extends Node
 
 @onready var Projectiles = {
 	"arrow" : preload("res://entities/projectiles/arrow.tscn"),
-	"spark_bolt" : preload("res://entities/projectiles/spark_bolt.tscn")
+	"spark_bolt" : preload("res://entities/projectiles/spark_bolt.tscn"),
+	"lightning" : preload("res://entities/lightning_bolt.tscn"),
 }
 
 const worlds = {
@@ -284,9 +285,6 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 	"ring_of_dragons" : ["ring of dragons", "res://assets/itemGraphics/iron_sword.tscn", itemType.accessories_ring, [[], {"max_health": +5.0, "speed_multiplier" : 0.5}], ""], # no texture yet]
 	"grace_pendant" : ["grace pendant", "res://assets/itemGraphics/jewelry/necklaces/grace_pendant.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/grace_pendant.tscn", 0]], {"mana_regen": +2.0, "max_mana" : + 20.0, "blight_defense" : 3.0}], ""],
 	"ruby_amulet" : ["ruby amulet", "res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", 0]], {"health_regen": +2.0, "max_health" : + 20.0, "true_defense" : 0.05}], ""],
-	
-	
-	
 }
 
 const set_bonus = { #[[item1,item2,item3],{attribute modifiers}, [[model_path,bone_id]]]
@@ -326,4 +324,10 @@ const fire_colors = [Color.ORANGE_RED, Color.AQUA, Color.DARK_RED,Color.SPRING_G
 
 const creatures = {
 	"young_spider" : "res://entities/youngSpider.tscn",
+	"lightning" : "res://entities/lightning_bolt.tscn",
 }
+
+
+
+
+

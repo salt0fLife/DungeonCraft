@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://dntnunlwfyesu"]
+[gd_scene load_steps=51 format=3 uid="uid://dntnunlwfyesu"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_5fl5y"]
 [ext_resource type="Script" path="res://debug/debug_world.gd" id="1_87rlt"]
@@ -26,6 +26,7 @@
 [ext_resource type="Script" path="res://debug/avatar_state_tester.gd" id="25_un0qr"]
 [ext_resource type="Shader" path="res://assets/shaders/circleShadow.gdshader" id="26_bv1sq"]
 [ext_resource type="PackedScene" uid="uid://dokv4awf7hm7b" path="res://debug/debug_effectbox.tscn" id="26_uei57"]
+[ext_resource type="PackedScene" uid="uid://c4u7j7ayr1kum" path="res://assets/environmentPieces/ambience/rain.tscn" id="27_s7ag3"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ks42u"]
 
@@ -155,11 +156,9 @@ glow_blend_mode = 1
 fog_enabled = true
 fog_light_color = Color(0.576471, 0.705882, 0.705882, 1)
 fog_sun_scatter = 0.11
-fog_density = 0.015
+fog_density = 0.003
 fog_aerial_perspective = 0.307
 fog_sky_affect = 0.868
-fog_height = 1.5
-fog_height_density = 0.25
 volumetric_fog_density = 0.0353
 volumetric_fog_albedo = Color(0.65098, 0.901961, 0.894118, 1)
 volumetric_fog_anisotropy = 0.04
@@ -463,3 +462,5 @@ time = 1.0
 [node name="shadow" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.910317, 1.64374, 0.736822)
 mesh = SubResource("QuadMesh_8sebf")
+
+[node name="rain" parent="." instance=ExtResource("27_s7ag3")]

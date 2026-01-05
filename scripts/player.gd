@@ -1326,7 +1326,10 @@ const damage_types_verbs = [
 	["froze"],
 	["poisoned"],
 	["exploded", "dismembered", "disfigured"],
-	["cursed"]
+	["cursed"],
+	["electrocuted", "shocked", "disintegrate"],
+	["blessed","sanctified","purified"],
+	["defiled","currupted","tainted","corroded"]
 ]
 
 const key_nicknames = {
@@ -1351,6 +1354,10 @@ const key_nicknames = {
 	#toxic,
 	#explosion,
 	#magic,
+	
+	#lightning,
+	#holy,
+	#blight
 
 signal died
 @onready var corpse = preload("res://entities/ragdolls/player_corpse.tscn")
@@ -1574,6 +1581,14 @@ func use_wand():
 
 func use_spellbook():
 	print("used spellbook")
+	summon_lightning()
+
+func summon_lightning():
+	print("summoned lightning")
+	#var l = load("res://entities/lightning_bolt.tscn").instantiate()
+	#Global.instance_creature("lightning",global_position)
+	Global.instance_projectile("lightning", position, Vector3.UP, "god")
+	pass
 
 func use_projectile_weapon():
 	if mana - 2.0 < 0.0:
@@ -1983,4 +1998,6 @@ const limb_key_to_defense = {
 @rpc("reliable")
 func request_ghost() -> bool:
 	return ghost
+
+
 

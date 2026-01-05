@@ -364,11 +364,11 @@ layout_mode = 2
 text = "disconnect"
 
 [node name="creatureSync" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://debug/debug_enemy.tscn", "res://entities/blue_slime.tscn", "res://entities/youngSpider.tscn")
+_spawnable_scenes = PackedStringArray("res://debug/debug_enemy.tscn", "res://entities/blue_slime.tscn", "res://entities/youngSpider.tscn", "res://entities/lightning_bolt.tscn")
 spawn_path = NodePath(".")
 
 [node name="projectileSync" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://entities/projectiles/arrow.tscn", "res://entities/projectiles/spark_bolt.tscn")
+_spawnable_scenes = PackedStringArray("res://entities/projectiles/arrow.tscn", "res://entities/projectiles/spark_bolt.tscn", "res://entities/lightning_bolt.tscn")
 spawn_path = NodePath(".")
 
 [node name="worldSync" type="MultiplayerSpawner" parent="."]
@@ -527,6 +527,8 @@ popup/item_2/text = "auto over shoulder"
 popup/item_2/id = 2
 popup/item_3/text = "auto third person far"
 popup/item_3/id = 3
+
+[node name="thunderHandler" type="Node" parent="."]
 
 [connection signal="button_down" from="Control/hostLocal" to="." method="_on_host_local_button_down"]
 [connection signal="button_down" from="Control/joinLocal" to="." method="_on_join_local_button_down"]

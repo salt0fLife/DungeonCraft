@@ -19,6 +19,7 @@ func _ready():
 	Global.connect("spawnCreature", _on_spawn_creature)
 	Global.connect("change_world", _on_change_world)
 	Global.connect("create_item", _on_create_item)
+	Global.connect("thunder_from_point",_on_thunder_from_point)
 	skin_key = load_file("", "skin_key.dat")
 	print("loaded skin_key " + str(skin_key))
 	if skin_key == null:
@@ -434,13 +435,14 @@ func disconnect_multiplayer() -> void:
 
 ##spawning creatures
 @onready var creatureSync = $creatureSync
-func _on_spawn_creature(key, location, attribute_modifiers = {}, require_host = true):
+func _on_spawn_creature(key, location, attribute_modifiers = null, require_host = true):
 	if !hosting and require_host:
 		return
 	var c = load(Lookup.creatures[key]).instantiate()
 	c.position = location
-	for a in attribute_modifiers.keys(): #adds modifiers
-		c.attributes[a] = attribute_modifiers[a]
+	if attribute_modifiers != null:
+		for a in attribute_modifiers.keys(): #adds modifiers
+			c.attributes[a] = attribute_modifiers[a]
 	creatureSync.add_child(c,true)
 
 @onready var worldSync = $worldSync
@@ -460,6 +462,7 @@ func _on_change_world(key, require_host = false):
 func _on_spawn_projectile(proj, pos, dir, owned_by = ""):
 	if multiplayer.get_unique_id() != 1:
 		spawn_projectile.rpc_id(1, proj, pos, dir, owned_by)
+		print("spawned_host_projectile")
 		#rpc_id(1, "spawn_projectile", proj, pos, dir)
 	else:
 		spawn_projectile(proj, pos, dir, owned_by)
@@ -546,3 +549,22 @@ func _on_player_death():
 	else:
 		rpc_id(0,"_on_player_death")
 	pass
+
+
+func _on_thunder_from_point(point : Vector3) -> void: #I was the lightning before the thunda
+	var player = AudioStreamPlayer.new()
+	player.stream = preload("res://assets/sounds/explosion/lightning_thunder.ogg")
+	$thunderHandler.add_child(player)
+	var camera_pos = get_viewport().get_camera_3d().global_position
+	var dis = (camera_pos - point).length()
+	var delay = dis / 343.0
+	var pitch = (1.0 - clamp(delay*0.2,0.0,0.9))*4.0
+	#var vol = remap(pitch,0.04,4.0,-20.0,0.0)
+	var vol = -30.0*(clamp(delay,0.0,5.0)*0.2) #-30 db sounds pretty good to me
+	var t = get_tree().create_timer(delay)
+	await t.timeout
+	player.pitch_scale = pitch
+	player.volume_db = vol
+	player.play() #THUNDAAAAA
+	await  player.finished
+	player.call_deferred("queue_free")
