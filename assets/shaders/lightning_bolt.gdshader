@@ -41,18 +41,35 @@ float fbm(vec2 uv, int octaves, vec2 uv_2) {
 	return value;
 }
 
-void vertex(){
+void vertex() {
+	vec3 local_up = MODEL_MATRIX[1].xyz;
+	//cross of:
+	//	local_transform.basis.y     and    to_world(view_space.forward)
+	//normalized
+	//(represents right direction)
+	vec4 ax = vec4(normalize(cross(local_up, INV_VIEW_MATRIX[2].xyz)), 0.0);
+	//local_transform.basis.y
+	//(represents up direction)
+	vec4 ay = vec4(local_up.xyz, 0.0);
+	//cross of:
+	//	to_world(view_space.right)    and    local_transform.basis.y
+	//(represents forward direction)
+	vec4 az = vec4(normalize(cross(INV_VIEW_MATRIX[0].xyz, local_up)), 0.0);
+	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(ax, ay, az, MODEL_MATRIX[3]);
+	MODELVIEW_NORMAL_MATRIX = mat3(MODELVIEW_MATRIX);
+}
+//void vertex(){
 	//Modify the vertex normal so it's pointing towards the camera (positive Z)
 	//NORMAL = vec3(0.0, 1.0, 0.0);
 	//unshaded we do not need accurate normals
 	//Modify the model view matrix to make the vertex look at the camera
-	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(
-		vec4(normalize(cross(vec3(0.0, 1.0, 0.0), INV_VIEW_MATRIX[2].xyz)), 0.0), 
-		vec4(0.0, 1.0, 0.0, 0.0), 
-		vec4(normalize(cross(INV_VIEW_MATRIX[0].xyz, vec3(0.0, 1.0, 0.0))), 0.0), 
-		MODEL_MATRIX[3]
-	);
-}
+	//MODELVIEW_MATRIX = VIEW_MATRIX * mat4(
+		//vec4(normalize(cross(vec3(0.0, 1.0, 0.0), INV_VIEW_MATRIX[2].xyz)), 0.0), 
+		//vec4(0.0, 1.0, 0.0, 0.0), 
+		//vec4(normalize(cross(INV_VIEW_MATRIX[0].xyz, vec3(0.0, 1.0, 0.0))), 0.0), 
+		//MODEL_MATRIX[3]
+	//);
+//}
 
 void fragment() {
 	vec2 uv = 2.0*UV - 1.0;

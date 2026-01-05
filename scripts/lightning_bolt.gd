@@ -5,11 +5,20 @@ var dir = Vector3.ZERO
 var owned_by = "god"
 var velocity = Vector3.ZERO
 var speed = 0.0
+var offset_appeal = Vector3.ZERO
 
+func _ready():
+	$MeshInstance3D2.rotation.x = randf_range(-PI*0.1,PI*0.1)
+	$MeshInstance3D2.rotation.z = randf_range(-PI*0.1,PI*0.1)
+	offset_appeal.x = -sin($MeshInstance3D2.rotation.z) * 100.0
+	offset_appeal.z = sin($MeshInstance3D2.rotation.x) * 100.0
+	offset_appeal.y = 100.0
+	#y rot will not do anything due to shader
 
 func _process(delta):
 	time += delta
-	$MeshInstance3D2.position.y = 100.0 - clamp(time*4.0,0.0,1.0)*100.0
+	#$MeshInstance3D2.position.y = 100.0 - clamp(time*4.0,0.0,1.0)*100.0
+	$MeshInstance3D2.position = lerp(offset_appeal,Vector3.ZERO,clamp(time*4.0,0.0,1.0)) #moves to right pos
 	if time > 0.25 and event < 2: #extended touchdown!
 		Global.create_camera_impact(position, 0.1)
 		$OmniLight3D.light_energy = 100 * (1.0 - sin(time*PI*20))*0.5
@@ -33,7 +42,12 @@ func sync(pos):
 func run_damage() -> void:
 	if $attackArea.has_overlapping_bodies():
 		var hits = $attackArea.get_overlapping_bodies()
+		var remember = []
 		for hit in hits:
+			var hh = get_node(hit.health_handler)
+			if remember.has(hh):
+				continue #dont deal damage twice
+			remember += [hh]
 			if hit.has_method("take_damage"):
 				var val = [[Lookup.damageType.lightning,5.0]]
 				hit.take_damage(val, position, owned_by, "lightning")

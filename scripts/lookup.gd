@@ -35,6 +35,7 @@ extends Node
 	"arrow" : preload("res://entities/projectiles/arrow.tscn"),
 	"spark_bolt" : preload("res://entities/projectiles/spark_bolt.tscn"),
 	"lightning" : preload("res://entities/lightning_bolt.tscn"),
+	"lightning_seed" : preload("res://entities/projectiles/lightning_seed.tscn"),
 }
 
 const worlds = {

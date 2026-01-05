@@ -368,7 +368,7 @@ _spawnable_scenes = PackedStringArray("res://debug/debug_enemy.tscn", "res://ent
 spawn_path = NodePath(".")
 
 [node name="projectileSync" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://entities/projectiles/arrow.tscn", "res://entities/projectiles/spark_bolt.tscn", "res://entities/lightning_bolt.tscn")
+_spawnable_scenes = PackedStringArray("res://entities/projectiles/arrow.tscn", "res://entities/projectiles/spark_bolt.tscn", "res://entities/lightning_bolt.tscn", "res://entities/projectiles/lightning_seed.tscn")
 spawn_path = NodePath(".")
 
 [node name="worldSync" type="MultiplayerSpawner" parent="."]

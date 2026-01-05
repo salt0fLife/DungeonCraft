@@ -1578,16 +1578,23 @@ func use_scythe():
 
 func use_wand():
 	print("used wand")
+	Global.instance_projectile("lightning_seed", get_non_clipped_look_reference(), get_look_dir(), display_name)
 
 func use_spellbook():
 	print("used spellbook")
 	summon_lightning()
 
+@onready var distance_look = $playerAvatar/cameraHandler/bobbingHandler/distance_select
 func summon_lightning():
-	print("summoned lightning")
+	#print("summoned lightning")
 	#var l = load("res://entities/lightning_bolt.tscn").instantiate()
 	#Global.instance_creature("lightning",global_position)
-	Global.instance_projectile("lightning", position, Vector3.UP, "god")
+	if distance_look.is_colliding():
+		var poi = distance_look.get_collision_point()
+		Global.instance_projectile("lightning", poi, Vector3.UP, display_name)
+	else:
+		#dont summon lightning if cannot find target :3
+		pass
 	pass
 
 func use_projectile_weapon():

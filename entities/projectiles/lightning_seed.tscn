@@ -1,0 +1,60 @@
+[gd_scene load_steps=8 format=3 uid="uid://d0a26x7yo3fcv"]
+
+[ext_resource type="Script" path="res://scripts/lightning_seed.gd" id="1_o77u1"]
+[ext_resource type="Shader" path="res://assets/shaders/lightning_bolt.gdshader" id="2_yi46b"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_jxp5y"]
+radius = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ejxo1"]
+albedo_color = Color(0.752941, 0.8, 0.882353, 1)
+emission_enabled = true
+emission = Color(0.364706, 0.733333, 0.87451, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_r6oxl"]
+material = SubResource("StandardMaterial3D_ejxo1")
+radius = 0.2
+height = 0.5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jqept"]
+render_priority = 0
+shader = ExtResource("2_yi46b")
+shader_parameter/albedo = Color(0.2, 0.3, 0.8, 1)
+shader_parameter/octave_count = 10
+shader_parameter/amp_start = 0.5
+shader_parameter/amp_coeff = 0.635
+shader_parameter/freq_coeff = 1.69
+shader_parameter/filter = 1.0
+shader_parameter/top_fade = 1.0
+shader_parameter/wobble_speed = 1.0
+shader_parameter/desync_speed = 1.0
+shader_parameter/desync_amount = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_0w0c6"]
+material = SubResource("ShaderMaterial_jqept")
+center_offset = Vector3(0, 0.5, 0)
+
+[node name="lightning_seed" type="CharacterBody3D"]
+collision_layer = 0
+script = ExtResource("1_o77u1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_jxp5y")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_r6oxl")
+
+[node name="electric" type="CPUParticles3D" parent="."]
+amount = 4
+randomness = 1.0
+local_coords = true
+mesh = SubResource("QuadMesh_0w0c6")
+particle_flag_align_y = true
+direction = Vector3(0, 1, 0)
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 0.1
+initial_velocity_max = 0.2
+scale_amount_min = 0.1
+scale_amount_max = 2.0

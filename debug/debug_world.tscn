@@ -208,7 +208,6 @@ orientation = 1
 
 [node name="debugWorld" type="Node3D"]
 script = ExtResource("1_87rlt")
-spider_count = 0
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
