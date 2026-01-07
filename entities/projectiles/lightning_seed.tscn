@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://d0a26x7yo3fcv"]
+[gd_scene load_steps=9 format=3 uid="uid://d0a26x7yo3fcv"]
 
 [ext_resource type="Script" path="res://scripts/lightning_seed.gd" id="1_o77u1"]
 [ext_resource type="Shader" path="res://assets/shaders/lightning_bolt.gdshader" id="2_yi46b"]
+[ext_resource type="PackedScene" uid="uid://dsdi5er0fkohv" path="res://assets/effects/cosmetic_electric_charge.tscn" id="3_e60vx"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_jxp5y"]
 radius = 0.1
@@ -17,7 +18,7 @@ material = SubResource("StandardMaterial3D_ejxo1")
 radius = 0.2
 height = 0.5
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jqept"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p805y"]
 render_priority = 0
 shader = ExtResource("2_yi46b")
 shader_parameter/albedo = Color(0.2, 0.3, 0.8, 1)
@@ -32,7 +33,7 @@ shader_parameter/desync_speed = 1.0
 shader_parameter/desync_amount = 1.0
 
 [sub_resource type="QuadMesh" id="QuadMesh_0w0c6"]
-material = SubResource("ShaderMaterial_jqept")
+material = SubResource("ShaderMaterial_p805y")
 center_offset = Vector3(0, 0.5, 0)
 
 [node name="lightning_seed" type="CharacterBody3D"]
@@ -58,3 +59,22 @@ initial_velocity_min = 0.1
 initial_velocity_max = 0.2
 scale_amount_min = 0.1
 scale_amount_max = 2.0
+
+[node name="cosmetic_electric_charge" parent="." instance=ExtResource("3_e60vx")]
+desired_target_pos = Vector3(0, -3, 0)
+
+[node name="cosmetic_electric_charge4" parent="." instance=ExtResource("3_e60vx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.100333)
+desired_target_pos = Vector3(0, 0, -3)
+
+[node name="cosmetic_electric_charge5" parent="." instance=ExtResource("3_e60vx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.155605)
+desired_target_pos = Vector3(0, 0, 3)
+
+[node name="cosmetic_electric_charge2" parent="." instance=ExtResource("3_e60vx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.109442, 0, 0)
+desired_target_pos = Vector3(3, 0, 0)
+
+[node name="cosmetic_electric_charge3" parent="." instance=ExtResource("3_e60vx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0986025, 0, 0)
+desired_target_pos = Vector3(-3, 0, 0)

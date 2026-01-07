@@ -122,6 +122,7 @@ shader_parameter/shock_col = Color(0.772549, 0.658824, 0.717647, 1)
 shader_parameter/cinematic = 0.15
 shader_parameter/cinematic_col = Color(0.764706, 0.615686, 0.956863, 1)
 shader_parameter/damaged = 0.0
+shader_parameter/color_pop = 0.0
 shader_parameter/noise_1 = SubResource("NoiseTexture2D_h3kr7")
 shader_parameter/red_ramp = SubResource("GradientTexture1D_xyupm")
 shader_parameter/green_ramp = SubResource("GradientTexture1D_ptsje")

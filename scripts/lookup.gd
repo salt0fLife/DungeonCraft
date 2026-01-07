@@ -328,6 +328,49 @@ const creatures = {
 	"lightning" : "res://entities/lightning_bolt.tscn",
 }
 
+const base_player_attributes = {
+	"speed" : 3.0,
+	"speed_multiplier" : 1.0,
+	"flying_speed" : 5.0,
+	"flying_control" : 1.0,
+	"flying_can_glide" : false,
+	"flying_can_hover" : false,
+	"max_health" : 10.0,
+	"max_mana" : 10.0,
+	"max_stamina" : 10.0,
+	"mana_regen_speed" : 1.0,
+	"stamina_regen_speed": 1.0,
+	"jump_velocity" : 6.0,
+	"can_fly" : false,
+	"air_acceleration": 1.0,
+	"strength" : 1.0,
+	"size" : 1.0,
+	##defenses
+	#localized_generic_defense
+	"defense_head" : 1.0,
+	"defense_torso" : 1.0,
+	"defense_arms" : 1.0,
+	"defense_handL" : 1.0,
+	"defense_handR" : 1.0,
+	"defense_legs" : 1.0,
+	"defense_footR" : 1.0,
+	"defense_footL" : 1.0,
+	#real_defense
+	"true_defense" : 1.0, #only changed through race and subclass, effects all damage
+	"generic_defense" : 1.0,
+	"stab_defense" : 1.0,
+	"slash_defense" : 1.0,
+	"blunt_defense" : 1.0,
+	"fire_defense" : 1.0,
+	"ice_defense" : 1.0,
+	"toxic_defense" : 1.0,
+	"explosion_defense" : 1.0,
+	"magic_defense" : 1.0,
+	"lightning_defense" : 1.0,
+	"holy_defense" : 1.0,
+	"blight_defense" : 1.0
+	#
+}
 
 
 

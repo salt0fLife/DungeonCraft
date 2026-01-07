@@ -150,6 +150,7 @@ func update_stats_from_accessories():
 								else:
 									attributes[sbk] += sb_data[1][sbk]
 	update_health_graphics()
+	Global.emit_signal("update_attributes", attributes)
 	pass
 
 
@@ -1578,6 +1579,8 @@ func use_scythe():
 
 func use_wand():
 	print("used wand")
+	mana -= 1.0
+	update_mana_graphics()
 	Global.instance_projectile("lightning_seed", get_non_clipped_look_reference(), get_look_dir(), display_name)
 
 func use_spellbook():
@@ -1893,6 +1896,7 @@ var clear_status_effects = true
 
 func update_mana_graphics():
 	$UI/mana.text = str(round(mana)) + " / " + str(attributes["max_mana"])
+	Global.emit_signal("update_mana_graphics",mana)
 	pass
 
 func update_stamina_graphics():
@@ -1942,6 +1946,7 @@ func deal_sword_sweep(dam, weapon_name, knockback_mult = 1.0):
 
 ##ui and stuffs
 func update_health_graphics():
+	Global.emit_signal("update_health_graphics",health,attributes["max_health"])
 	var percent = remap(health,0.0,attributes["max_health"],0.0,1.0)
 	Global.set_post("shader_parameter/heart_pounding",1.0-percent)
 	var rounded_health = round(health * 4.0)*0.25 #rounds to nearest .25

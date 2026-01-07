@@ -550,10 +550,14 @@ func _on_player_death():
 		rpc_id(0,"_on_player_death")
 	pass
 
+var thunder_sounds = [
+	"res://assets/sounds/explosion/lightning_thunder.ogg",
+	"res://assets/sounds/explosion/explosion.wav",
+]
 
-func _on_thunder_from_point(point : Vector3) -> void: #I was the lightning before the thunda
+func _on_thunder_from_point(point : Vector3, sound_index = 0) -> void: #I was the lightning before the thunda
 	var player = AudioStreamPlayer.new()
-	player.stream = preload("res://assets/sounds/explosion/lightning_thunder.ogg")
+	player.stream = load(thunder_sounds[sound_index])
 	$thunderHandler.add_child(player)
 	var camera_pos = get_viewport().get_camera_3d().global_position
 	var dis = (camera_pos - point).length()

@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://dsdi5er0fkohv"]
+
+[ext_resource type="Script" path="res://scripts/cosmetic_electric_charge.gd" id="1_8kvb3"]
+[ext_resource type="Shader" path="res://assets/shaders/lightning_bolt.gdshader" id="2_eloea"]
+[ext_resource type="Script" path="res://scripts/electricity_line_graphics.gd" id="3_88ckh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aroip"]
+render_priority = 0
+shader = ExtResource("2_eloea")
+shader_parameter/albedo = Color(0.2, 0.3, 0.8, 1)
+shader_parameter/octave_count = 10
+shader_parameter/amp_start = 0.5
+shader_parameter/amp_coeff = 0.635
+shader_parameter/freq_coeff = 1.69
+shader_parameter/filter = 1.0
+shader_parameter/top_fade = 0.0
+shader_parameter/wobble_speed = 1.0
+shader_parameter/desync_speed = 1.0
+shader_parameter/desync_amount = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_sn34o"]
+material = SubResource("ShaderMaterial_aroip")
+size = Vector2(0.5, 1)
+center_offset = Vector3(0, 0.5, 0)
+
+[node name="cosmetic_electric_charge" type="Node3D"]
+script = ExtResource("1_8kvb3")
+desired_target_pos = Vector3(0, 4, 0)
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+target_position = Vector3(0, 2, 0)
+
+[node name="electricity_graphics" type="Node3D" parent="."]
+script = ExtResource("3_88ckh")
+target_pos = Vector3(0, 1, 0)
+
+[node name="electricity_graphics_mesh" type="MeshInstance3D" parent="electricity_graphics"]
+transform = Transform3D(1.155, 0, 0, 0, 1, 0, 0, 0, 1.155, 0, 0, 0)
+top_level = true
+mesh = SubResource("QuadMesh_sn34o")
+skeleton = NodePath("../..")

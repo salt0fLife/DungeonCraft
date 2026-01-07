@@ -34,6 +34,7 @@ uniform vec3 shock_col: source_color;
 uniform float cinematic: hint_range(0.0,1.0) = 0.0;
 uniform vec3 cinematic_col: source_color;
 uniform float damaged: hint_range(0.0,1.0) = 0.0;
+uniform float color_pop: hint_range(0.0, 1.0, 0.1) = 0.0;
 
 float inv_lerp(float from, float to, float value){
   return (value - from) / (to - from);
@@ -146,6 +147,15 @@ void fragment() {
 	COLOR.rgb = mix(COLOR.rgb,brightness*shock_col*2.0 + COLOR.rgb*0.5 + vingette_simple,shock);
 	COLOR.rgb = mix(COLOR.rgb,vec3(COLOR.r,COLOR.g,COLOR.b * brightness),cinematic*0.5);
 	COLOR.rgb = mix(COLOR.rgb,brightness*cinematic_col*2.0 + COLOR.rgb*0.5 - vingette_simple,cinematic);
+	
+	float dif_1 = abs(COLOR.r - COLOR.g);
+	float dif_2 = abs(COLOR.g - COLOR.b);
+	float dif_3 = abs(COLOR.b - COLOR.r);
+	
+	//COLOR.rgb = mix(COLOR.rgb, vec3(1.0,1.0,1.0)*brightness, (dif_1+dif_2+dif_3)*0.33333*color_pop);
+	if (dif_1 < color_pop && dif_2 < (color_pop) && dif_3 < (color_pop)) {
+		COLOR.rgb = mix(COLOR.rgb, vec3(1.0,1.0,1.0)*brightness, 0.3);
+	}
 	
 	
 	//COLOR.a = min(line_color.a, result);

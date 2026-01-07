@@ -12,6 +12,9 @@ signal chat
 signal update_skin
 signal create_item
 signal thunder_from_point
+signal update_health_graphics
+signal update_mana_graphics
+signal update_attributes
 var inside = 0.0
 
 var skin = [64,64,false,0,[]]

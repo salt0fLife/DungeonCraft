@@ -49,7 +49,7 @@ var accessories = {
 	"cape" : key_to_item("devil_wings"),
 	"shirt" : empty_item,
 	"chestplate" : empty_item,
-	"hat" : empty_item,
+	"hat" : key_to_item("iron_helmet"),
 	"pants" : empty_item,
 	"leggings" : empty_item,
 	"gloveR" : empty_item,

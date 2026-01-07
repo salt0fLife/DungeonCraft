@@ -25,11 +25,13 @@ func _process(delta):
 	if time > 0.25 and event < 1: #touchdown!
 		Global.emit_signal("thunder_from_point", position) #emits thunder sound
 		$AudioStreamPlayer3D.play()
+		$electric.emitting = true
 		run_damage()
 		event = 1
 	if time > 0.75:
 		event = 2
 		$OmniLight3D.hide()
+		$electric.emitting = false
 	if time > 1.0:
 		call_deferred("queue_free")
 	if is_multiplayer_authority():

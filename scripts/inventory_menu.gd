@@ -36,6 +36,9 @@ func _ready():
 	Inventory.connect("update_hotbar", update_hotbar_graphics)
 	Inventory.connect("update_status_effect_graphics",_on_update_status_effect_graphics)
 	Global.connect("update_skin", load_skin)
+	Global.connect("update_health_graphics",_update_health_graphics)
+	Global.connect("update_attributes",_update_attributes)
+	Global.connect("update_mana_graphics",_update_mana_graphics)
 	for i in range(0,$hotbar/slots/itemIcons.get_children().size()):
 		var n = $hotbar/slots/itemIcons.get_child(i)
 		n.connect("mouse_entered", preview_hotbar_indx.bind(i))
@@ -130,6 +133,7 @@ func _on_equipment_pressed(key):
 	update_held_item_graphics()
 	load_accessories()
 	preview_equipment_key(key)
+	Inventory.emit_signal("update_accessories")
 
 func show_hotbar():
 	unused_hide_timer = time_till_hide
@@ -147,6 +151,7 @@ func _on_hotbar_slot_changed():
 	moving_indicator = true
 	#$hotbar/slots/below.position.x = x
 	#$hotbar/slots/above.position.x = x
+	Inventory.emit_signal("update_accessories")
 	pass
 
 func _process(delta):
@@ -187,6 +192,7 @@ func hide_accessories():
 	$accessories.hide()
 
 func open():
+	$hotbar.visible = true
 	hide_want = false
 	show_hotbar()
 	show_accessories()
@@ -194,6 +200,7 @@ func open():
 	pass
 
 func close():
+	$hotbar.visible = true
 	hide_want = true
 	hide_accessories()
 	$itemPreview.hide()
@@ -239,7 +246,7 @@ func close():
 }
 
 var accessories_paths = {}
-@onready var avatar = $accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar
+@onready var avatar = $accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar
 func load_accessories(a = Inventory.accessories):
 	for k in a.keys():
 		var enchant_col = Color.BLACK
@@ -293,9 +300,6 @@ func load_skin():
 	var skin_img = Global.data_to_image(Global.skin)
 	avatar.load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5])
 
-
-
-
 func _on_update_status_effect_graphics():
 	var se = Inventory.active_status_effects
 	#handles burning
@@ -312,5 +316,58 @@ func _on_update_status_effect_graphics():
 	avatar.set_cursed(se.has(Lookup.statusEffectType.cursed))
 	#blessed
 	avatar.set_blessed(se.has(Lookup.statusEffectType.blessed))
+
+var max_health = 10.0
+func _update_health_graphics(val : float, max : float) -> void:
+	$hotbar.visible = true
+	$hotbar/health_display.text = str(val) + " / " + str(max) + " HP"
+	$hotbar/health_bar.value = val
+	$hotbar/health_bar.max_value = max
+
+@onready var stats_display = $accessories/gearCenter/TabContainer/stats/RichTextLabel
+@onready var stats_label_handler = $accessories/gearCenter/TabContainer/stats/ScrollContainer/VBoxContainer
+@onready var l_theme = preload("res://assets/themes/genericTheme.tres")
+func _update_attributes(attributes) -> void:
+	
+	for i in stats_label_handler.get_children(false):
+		i.queue_free()
+	
+	for key in attributes.keys():
+		var val = attributes[key]
+		var text = ""
+		var col = Color.DODGER_BLUE
+		var default = Lookup.base_player_attributes[key]
+		match typeof(val):
+			TYPE_FLOAT:
+				if val < default:
+					col = Color.DARK_RED
+				if val == default:
+					col = Color.DIM_GRAY
+					text = key + " : " + str(val)
+				else:
+					text = key + " : " + str(default) + " -> " + str(val)
+			TYPE_BOOL:
+				if val == default:
+					text = key + " : " + str(val)
+					col = Color.DIM_GRAY
+				else:
+					if val:
+						text = key + " : " + str(val)
+						col = Color.SEA_GREEN
+					else:
+						text = key + " : " + str(val)
+						col = Color.INDIAN_RED
+			
+		var l = Label.new()
+		l.text = text
+		l.set("theme",l_theme)
+		l.set("theme_override_colors/font_color",col)
+		stats_label_handler.add_child(l)
+
+@onready var mana_mat = $overlay/mana.material
+func _update_mana_graphics(val):
+	$overlay.visible = true
+	mana_mat.set("shader_parameter/full_percent",val/10.0)
+	pass
 
 
