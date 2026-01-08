@@ -37,7 +37,13 @@ func create_graphics():
 			m.visible = Settings.show_combat_boxes
 			m.set_layer_mask_value(1,false)
 			m.set_layer_mask_value(2,true)
-			pass
+			var l = Label3D.new()
+			l.text = id
+			l.set_layer_mask_value(1,false)
+			l.set_layer_mask_value(2,true)
+			m.add_child(l)
+			l.rotation.z = PI*0.5
+			l.scale = Vector3(0.5,0.5,0.5)
 
 func _update_show_graphics():
 	for i in graphics:

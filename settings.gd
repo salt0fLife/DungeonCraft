@@ -11,4 +11,4 @@ var user_settings = {
 	"flying_tilt_power" : 1.0,
 }
 
-var show_combat_boxes = true
+var show_combat_boxes = false

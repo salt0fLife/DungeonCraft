@@ -324,6 +324,7 @@ func _on_update_status_effect_graphics():
 
 var max_health = 10.0
 func _update_health_graphics(val : float, max : float) -> void:
+	val = float(int(val*10.0))*0.1 #rounds to nearest 0.1
 	$hotbar.visible = true
 	$hotbar/health_display.text = str(val) + " / " + str(max) + " HP"
 	$hotbar/health_bar.value = val
@@ -374,7 +375,8 @@ func _update_attributes(attributes) -> void:
 		if bold:
 			l.set("theme_override_styles/normal",load("res://assets/gui/divider_styleBox.tres"))
 			l.set("theme_override_font_sizes/font_size",50.0)
-		stats_label_handler.add_child(l)
+		if !bold:
+			stats_label_handler.add_child(l)
 
 @onready var mana_mat = $overlay/mana.material
 func _update_mana_graphics(val):

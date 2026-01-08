@@ -42,6 +42,16 @@ func sync(pos):
 	position = pos
 
 func run_damage() -> void:
+	var h = hitbox.new()
+	h.owner_tag = owned_by
+	h.weapon_name = "lightning"
+	h.active_time = 0.25
+	h.size = Vector3(8.0,8.0,8.0)
+	h.damage = [[Lookup.damageType.lightning,5.0]]
+	h.effects = {Lookup.statusEffectType.burning:5.0}
+	add_child(h)
+	add_hh_child(h.size, Vector3.ZERO,h.active_time,h.weapon_name)
+	return #pre hitbox code
 	if $attackArea.has_overlapping_bodies():
 		var hits = $attackArea.get_overlapping_bodies()
 		var remember = []
@@ -54,5 +64,13 @@ func run_damage() -> void:
 				var val = [[Lookup.damageType.lightning,5.0]]
 				hit.take_damage(val, position, owned_by, "lightning")
 				hit.apply_status_effect(Lookup.statusEffectType.burning,5.0)
-	
-	pass
+
+@rpc("any_peer")
+func add_hh_child(size : Vector3, offset : Vector3, life_time : float, weapon_name := "", active := false) -> void:
+	var h = hitbox.new() #for other people to see
+	h.size = size
+	h.active = active
+	h.active_time = life_time
+	h.weapon_name = weapon_name
+	h.position = offset
+	add_child(h)

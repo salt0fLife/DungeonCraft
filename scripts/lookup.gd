@@ -243,7 +243,7 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 	"res://assets/itemGraphics/armor/textured_iron/textured_iron_helmet.tscn", 
 	itemType.accessories_hat, [[
 		["res://assets/itemGraphics/armor/textured_iron/textured_iron_helmet.tscn", 5]], 
-		{"defense_head" : +0.3, "speed": -0.1}], 
+		{"defense_head" : +0.3, "speed": -0.1, "true_defense" : 100.0}], 
 		"res://assets/textures/items/iron helmet tn.png"], # no texture yet
 	#chestplate
 	"iron_chestplate" : ["iron chestplate", 

@@ -1259,12 +1259,12 @@ func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, coun
 		var d = i
 		var total = 0.0
 		var a = attributes
-		var h = hitmarker.instantiate()
-		h.val = d[1]
-		h.type = d[0]
-		h.position = position
-		h.position.y += 0.65
-		get_parent().add_child(h)
+		#var h = hitmarker.instantiate()
+		#h.val = d[1]
+		#h.type = d[0]
+		#h.position = position
+		#h.position.y += 0.65
+		#get_parent().add_child(h)
 		match d[0]:# d = [damage_type, amount]
 			Lookup.damageType.generic: #applies defense stuff
 				total += d[1] / (a["generic_defense"]*a["true_defense"])
@@ -1300,6 +1300,14 @@ func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, coun
 	if limb_key_to_defense.has(id):
 		amount = amount / attributes[limb_key_to_defense[id]] #applies local defense to whole damage value based on key
 	health -= amount
+	
+	var h = hitmarker.instantiate()
+	h.val = amount
+	h.type = primary_damage_type
+	h.position = position
+	h.position.y += 0.65
+	get_parent().add_child(h)
+	
 	if !is_multiplayer_authority():
 		return
 	velocity += knockback
@@ -1318,7 +1326,7 @@ func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, coun
 
 func set_damaged(val):
 	var sined_val = (sin(val.x*PI)+1.0)*0.5*val.y
-	print("set_damaged " + str(sined_val))
+	#print("set_damaged " + str(sined_val))
 	Global.set_post("shader_parameter/damaged", (sined_val))
 	set_damaged_third_person(sined_val)
 	set_damaged_third_person.rpc(sined_val)
@@ -1351,7 +1359,8 @@ const perish_messages = [
 	" died instantly",
 	" perished",
 	" alt+f4",
-	" shuffled off this mortal coil"
+	" shuffled off this mortal coil",
+	
 ]
 
 const damage_types_verbs = [
@@ -1404,43 +1413,46 @@ func die(attacker = "", key = "", weapon_name = "", add_vel = Vector3.ZERO, dama
 	print(last_attacker)
 	Global.emit_signal("player_death")
 	health = attributes["max_health"]
-	match key: #died to natrual causes
-		"fall_damage" : 
-			if attacker == "":
-				if last_attacker == "": #died natrually
-					Global.print_chat((display_name + fall_damage_messages.pick_random()), "red")
-				else:#died to natrual causes while fighting attacker
-					Global.print_chat((display_name + fall_damage_messages.pick_random()) + " while running from " + last_attacker, "red")
-			else:
-				Global.print_chat((display_name + fall_damage_messages.pick_random()) + " while running from " + last_attacker, "red")
-		"perish": 
-			if attacker == "":
-				if last_attacker == "": #died natrually
-					Global.print_chat((display_name + perish_messages.pick_random()), "red")
-				else:#died to natrual causes while fighting attacker
-					Global.print_chat((display_name + perish_messages.pick_random()) + " while fighting " + last_attacker, "red")
-			else:
-				Global.print_chat((display_name + perish_messages.pick_random()) + " while fighting " + last_attacker, "red")
-			pass
-		_:
-			if !key_nicknames.has(key):
-				if last_attacker != "":
-					Global.print_chat(display_name + " died to " + key + " " + weapon_name + " while fighting " + last_attacker, "red")
-				else:
-					Global.print_chat(display_name + " died to " + key + " " + weapon_name, "red")
-				pass
-			elif attacker == "":
-				if last_attacker == "":
-					#natrual
-					Global.print_chat(display_name + " got their " + key_nicknames[key].pick_random() + damage_types_verbs[damage_id].pick_random(), "red")
-				else:
-					Global.print_chat(display_name + " got their " + key_nicknames[key].pick_random() + damage_types_verbs[damage_id].pick_random() + " while fighting " + last_attacker, "red")
-					#natrual while fighting
-					pass
-			else:
-				Global.print_chat(display_name + " was " + damage_types_verbs[damage_id].pick_random() + " in the " + key_nicknames[key].pick_random() + " by " + attacker, "red")
-				#fighting
-				pass
+	if attacker == "":
+		attacker = last_attacker
+	Global.print_chat(get_death_message(attacker,key,weapon_name,damage_id), "red")
+	#match key: #died to natrual causes
+		#"fall_damage" : 
+			#if attacker == "":
+				#if last_attacker == "": #died natrually
+					#Global.print_chat((display_name + fall_damage_messages.pick_random()), "red")
+				#else:#died to natrual causes while fighting attacker
+					#Global.print_chat((display_name + fall_damage_messages.pick_random()) + " while running from " + last_attacker, "red")
+			#else:
+				#Global.print_chat((display_name + fall_damage_messages.pick_random()) + " while running from " + last_attacker, "red")
+		#"perish": 
+			#if attacker == "":
+				#if last_attacker == "": #died natrually
+					#Global.print_chat((display_name + perish_messages.pick_random()), "red")
+				#else:#died to natrual causes while fighting attacker
+					#Global.print_chat((display_name + perish_messages.pick_random()) + " while fighting " + last_attacker, "red")
+			#else:
+				#Global.print_chat((display_name + perish_messages.pick_random()) + " while fighting " + last_attacker, "red")
+			#pass
+		#_:
+			#if !key_nicknames.has(key):
+				#if last_attacker != "":
+					#Global.print_chat(display_name + " died to " + key + " " + weapon_name + " while fighting " + last_attacker, "red")
+				#else:
+					#Global.print_chat(display_name + " died to " + key + " " + weapon_name, "red")
+				#pass
+			#elif attacker == "":
+				#if last_attacker == "":
+					##natrual
+					#Global.print_chat(display_name + " got their " + key_nicknames[key].pick_random() + damage_types_verbs[damage_id].pick_random(), "red")
+				#else:
+					#Global.print_chat(display_name + " got their " + key_nicknames[key].pick_random() + damage_types_verbs[damage_id].pick_random() + " while fighting " + last_attacker, "red")
+					##natrual while fighting
+					#pass
+			#else:
+				#Global.print_chat(display_name + " was " + damage_types_verbs[damage_id].pick_random() + " in the " + key_nicknames[key].pick_random() + " by " + attacker, "red")
+				##fighting
+				#pass
 		#"head" : 
 	if !is_multiplayer_authority():
 		await  get_tree().process_frame
@@ -1460,6 +1472,38 @@ func die(attacker = "", key = "", weapon_name = "", add_vel = Vector3.ZERO, dama
 	phantom_signal.rpc("died")
 	Inventory.drop_all(position)
 	#tp(Vector3.ZERO,0.0)
+
+func get_death_message(attacker = "", key = "", weapon_name = "", damage_id = 0) -> String:
+	var message = ""
+	match key:
+		"fall_damage":
+			message = display_name + fall_damage_messages.pick_random()
+			if attacker != "":
+				message = display_name + " was pushed off cliff by " + attacker
+		"perish":
+			message = display_name + perish_messages.pick_random()
+			if attacker != "":
+				message += " while fighting " + attacker
+		"status_effect":
+			match damage_id:
+				Lookup.damageType.fire:
+					message = display_name + " went up in flames"
+				Lookup.damageType.blight:
+					message = display_name + " wasted away"
+				Lookup.damageType.toxic:
+					message = display_name + " choked on poison"
+				Lookup.damageType.holy:
+					message = display_name + " was purged"
+				Lookup.damageType.magic:
+					message = display_name + " fell to a hex"
+			if attacker != "":
+				message += " while fighting " + attacker
+		_:
+			if attacker == "":
+				message = display_name + " got " + damage_types_verbs[damage_id].pick_random()
+			else:
+				message = display_name + " was " + damage_types_verbs[damage_id].pick_random() + " by " + attacker
+	return message
 
 @rpc("unreliable","call_remote")
 func phantom_signal(signal_key : String): #sick ass function name
@@ -1578,19 +1622,19 @@ func use_sword():
 	if Input.is_action_pressed("rm"):
 		play_arm_anim("stab_1")
 		#deal_look_damage(held_item_data[3][2],held_item_data[3][1])
-		deal_sword_sweep(held_item_data[3][2], held_item_data[3][0],1.0)
+		deal_sword_sweep(held_item_data[3][2], held_item_data[0],1.0)
 	elif current_animation == "slash_1":
 		#deal_look_damage(held_item_data[3][0],held_item_data[3][1])
-		deal_sword_sweep(held_item_data[3][0], held_item_data[3][0],1.0)
+		deal_sword_sweep(held_item_data[3][0], held_item_data[0],1.0)
 		play_arm_anim("slash_2")
 	elif current_animation == "slash_2":
 		play_arm_anim("stab_1")
 		#deal_look_damage(held_item_data[3][2],held_item_data[3][1])
-		deal_sword_sweep(held_item_data[3][2], held_item_data[3][0],1.0)
+		deal_sword_sweep(held_item_data[3][2], held_item_data[0],1.0)
 	else:
 		play_arm_anim("slash_1")
 		#deal_look_damage(held_item_data[3][0],held_item_data[3][1])
-		deal_sword_sweep(held_item_data[3][0], held_item_data[3][0],1.0)
+		deal_sword_sweep(held_item_data[3][0], held_item_data[0],1.0)
 
 func use_longsword():
 	print("used longsword")
@@ -1866,52 +1910,55 @@ func _process(delta):
 				$UI/tooltip.visible = true
 				$UI/tooltip.text = hit.tool_tip
 				$UI/tooltip.modulate = hit.tool_tip_color
-	if !clear_status_effects:
-		update_status_effect_ui()
-		for k in status_effects.keys():
-			match k:
-				Lookup.statusEffectType.burning:
-					status_effects[k] -= delta
-					damage([[Lookup.damageType.fire,delta]], "status_effect", "", "burning")
-					if status_effects[k] < 0.0 or (velocity.length() > speed_cap*0.5):
-						status_effects.erase(k)
-						update_status_effect_graphics(status_effects)
-						update_status_effect_graphics.rpc(status_effects)
-				Lookup.statusEffectType.blighted:
-					status_effects[k] -= delta
-					damage([[Lookup.damageType.blight,delta*2.5]], "status_effect", "", "blighted")
-					if status_effects[k] < 0.0:
-						status_effects.erase(k)
-						update_status_effect_graphics(status_effects)
-						update_status_effect_graphics.rpc(status_effects)
-				Lookup.statusEffectType.poisoned:
-					status_effects[k] -= delta
-					damage([[Lookup.damageType.toxic,delta*1.75]], "status_effect", "", "poisoned")
-					if status_effects[k] < 0.0:
-						status_effects.erase(k)
-						update_status_effect_graphics(status_effects)
-						update_status_effect_graphics.rpc(status_effects)
-				Lookup.statusEffectType.cursed:
-					status_effects[k] -= delta
-					damage([[Lookup.damageType.magic,delta*1.0]], "status_effect", "", "cursed")
-					if status_effects[k] < 0.0:
-						status_effects.erase(k)
-						update_status_effect_graphics(status_effects)
-						update_status_effect_graphics.rpc(status_effects)
-				Lookup.statusEffectType.blessed:
-					status_effects[k] -= delta
-					#healing function here
-					damage([[Lookup.damageType.magic,-delta*1.0]], "status_effect", "", "blessed")
-					if status_effects[k] < 0.0:
-						status_effects.erase(k)
-						update_status_effect_graphics(status_effects)
-						update_status_effect_graphics.rpc(status_effects)
-	else:
-		print("clearing status effects")
-		for k in status_effects.keys():
-			print(k)
-			status_effects.erase(k)
-		clear_status_effects = false
+	status_effect_timer -= delta
+	if status_effect_timer < 0.0:
+		status_effect_timer = 0.25
+		if !clear_status_effects:
+			update_status_effect_ui()
+			for k in status_effects.keys():
+				match k:
+					Lookup.statusEffectType.burning:
+						status_effects[k] -= 0.25
+						damage([[Lookup.damageType.fire,0.25]], "status_effect", "", "burning")
+						if status_effects[k] < 0.0 or (velocity.length() > speed_cap*0.5):
+							status_effects.erase(k)
+							update_status_effect_graphics(status_effects)
+							update_status_effect_graphics.rpc(status_effects)
+					Lookup.statusEffectType.blighted:
+						status_effects[k] -= 0.25
+						damage([[Lookup.damageType.blight,0.25*2.5]], "status_effect", "", "blighted")
+						if status_effects[k] < 0.0:
+							status_effects.erase(k)
+							update_status_effect_graphics(status_effects)
+							update_status_effect_graphics.rpc(status_effects)
+					Lookup.statusEffectType.poisoned:
+						status_effects[k] -= 0.25
+						damage([[Lookup.damageType.toxic,0.25*1.75]], "status_effect", "", "poisoned")
+						if status_effects[k] < 0.0:
+							status_effects.erase(k)
+							update_status_effect_graphics(status_effects)
+							update_status_effect_graphics.rpc(status_effects)
+					Lookup.statusEffectType.cursed:
+						status_effects[k] -= 0.25
+						damage([[Lookup.damageType.magic,0.25*1.0]], "status_effect", "", "cursed")
+						if status_effects[k] < 0.0:
+							status_effects.erase(k)
+							update_status_effect_graphics(status_effects)
+							update_status_effect_graphics.rpc(status_effects)
+					Lookup.statusEffectType.blessed:
+						status_effects[k] -= 0.25
+						#healing function here
+						damage([[Lookup.damageType.magic,-0.25*1.0]], "status_effect", "", "blessed")
+						if status_effects[k] < 0.0:
+							status_effects.erase(k)
+							update_status_effect_graphics(status_effects)
+							update_status_effect_graphics.rpc(status_effects)
+		else:
+			print("clearing status effects")
+			for k in status_effects.keys():
+				print(k)
+				status_effects.erase(k)
+			clear_status_effects = false
 	if mana < attributes["max_mana"]:
 		mana += delta * attributes["mana_regen_speed"]
 		if mana > attributes["max_mana"]:
@@ -1928,7 +1975,8 @@ func _process(delta):
 		if stamina >= attributes["max_stamina"]:
 			stamina = attributes["max_stamina"]
 		update_stamina_graphics()
-var clear_status_effects = true
+var clear_status_effects : bool = true
+var status_effect_timer  : float = 0.25
 
 func update_mana_graphics():
 	$UI/mana.text = str(round(mana)) + " / " + str(attributes["max_mana"])
@@ -1962,8 +2010,22 @@ func deal_look_damage(dam := [[Lookup.damageType.generic, 1]], dist := 2.0) -> v
 		if hit.is_in_group("hurtbox"):
 			hit.take_damage.rpc(dam,poi,display_name,weapon_name, dir*attributes["strength"]*2.0, true)
 
+@onready var hitbox_handler = $playerAvatar/cameraHandler/hitboxes
 @onready var near_hitbox = $playerAvatar/cameraHandler/hitboxes/near_hitbox
 func deal_sword_sweep(dam, weapon_name, knockback_mult = 1.0):
+	var h = hitbox.new()
+	h.active_time = 0.5
+	h.damage = dam
+	h.weapon_name = weapon_name
+	h.knockback = get_look_dir() * knockback_mult
+	h.remember = true
+	h.size = Vector3(2.0,2.0,2.0)
+	h.position.z -= 1.5
+	#h.friendly_node = get_path_to(self)
+	h.no_hit_list += [self]
+	hitbox_handler.add_child(h)
+	add_hh_child.rpc(h.size, Vector3(0.0,0.0,-1.5), h.active_time, weapon_name)
+	return ##pre hitbox code
 	var col_count = near_hitbox.get_collision_count()
 	var dir = get_look_dir()
 	print(str(col_count))
@@ -1979,6 +2041,16 @@ func deal_sword_sweep(dam, weapon_name, knockback_mult = 1.0):
 			print("hit wall ending swing")
 			break #cannot hit through walls
 	pass
+
+@rpc("any_peer")
+func add_hh_child(size : Vector3, offset : Vector3, life_time : float, weapon_name := "", active := false) -> void:
+	var h = hitbox.new() #for other people to see
+	h.size = size
+	h.active = active
+	h.active_time = life_time
+	h.weapon_name = weapon_name
+	h.position = offset
+	hitbox_handler.add_child(h)
 
 ##ui and stuffs
 func update_health_graphics():
