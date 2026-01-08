@@ -63,6 +63,9 @@ func _input(event):
 		get_viewport().debug_draw = Viewport.DEBUG_DRAW_UNSHADED
 	if Input.is_action_just_pressed("debugRenderLighting"):
 		get_viewport().debug_draw = Viewport.DEBUG_DRAW_LIGHTING
+	if Input.is_action_just_pressed("toggle_visible_combat_boxes"):
+		Settings.show_combat_boxes = !Settings.show_combat_boxes
+		Settings.emit_signal("update_combat_boxes")
 
 func vec3_rot_lerp(rot1: Vector3, rot2: Vector3, val: float):
 	var x = lerp_angle(rot2.x, rot1.x, val)

@@ -163,7 +163,12 @@ func _process(delta):
 		avatar.head_angle = Vector2(pos.y*PI*0.5,pos.x*PI*0.5)
 		pass
 	if $itemPreview.visible:
-		$itemPreview.position = get_viewport().get_mouse_position() + Vector2(0.0,-216.0)
+		var mouse_pos = get_viewport().get_mouse_position()
+		$itemPreview.position = mouse_pos# get_viewport().get_mouse_position()# + Vector2(0.0,-216.0)
+		if mouse_pos.y > get_viewport_rect().size.y*0.5:
+			$itemPreview.set_anchor_up(false)
+		else:
+			$itemPreview.set_anchor_up(true)
 	if moving_indicator:
 		if moving_time > 0.0:
 			moving_time -= delta
@@ -337,6 +342,7 @@ func _update_attributes(attributes) -> void:
 		var text = ""
 		var col = Color.DODGER_BLUE
 		var default = Lookup.base_player_attributes[key]
+		var bold = false
 		match typeof(val):
 			TYPE_FLOAT:
 				if val < default:
@@ -357,11 +363,17 @@ func _update_attributes(attributes) -> void:
 					else:
 						text = key + " : " + str(val)
 						col = Color.INDIAN_RED
-			
+			TYPE_STRING:
+				text = key
+				col = Color(default)
+				bold = true
 		var l = Label.new()
 		l.text = text
 		l.set("theme",l_theme)
 		l.set("theme_override_colors/font_color",col)
+		if bold:
+			l.set("theme_override_styles/normal",load("res://assets/gui/divider_styleBox.tres"))
+			l.set("theme_override_font_sizes/font_size",50.0)
 		stats_label_handler.add_child(l)
 
 @onready var mana_mat = $overlay/mana.material

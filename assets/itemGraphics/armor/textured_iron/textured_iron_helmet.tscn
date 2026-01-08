@@ -1,8 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://dgiecf6e2x0hy"]
+[gd_scene load_steps=7 format=3 uid="uid://dgiecf6e2x0hy"]
 
 [ext_resource type="Texture2D" uid="uid://dabcvohkto3qv" path="res://assets/textures/effects/enchantedTesxture.png" id="1_r4sqr"]
 [ext_resource type="Texture2D" uid="uid://b3lpih2dm3qd7" path="res://assets/glb/armor/texturedIronArmor_ironArmorAlbedoNoisy.png" id="2_77era"]
-[ext_resource type="PackedScene" uid="uid://dsdi5er0fkohv" path="res://assets/effects/cosmetic_electric_charge.tscn" id="3_cgavm"]
 
 [sub_resource type="Shader" id="Shader_0jvd8"]
 code = "// NOTE: Shader automatically converted from Godot Engine 4.2.1.stable's StandardMaterial3D.
@@ -103,11 +102,3 @@ shadow_mesh = SubResource("ArrayMesh_ujxs6")
 [node name="textured iron helmet" type="MeshInstance3D"]
 mesh = SubResource("ArrayMesh_pukcy")
 skeleton = NodePath("")
-
-[node name="cosmetic_electric_charge" parent="." instance=ExtResource("3_cgavm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.112018, 0.193641, 0)
-desired_target_pos = Vector3(3, -3, 0)
-
-[node name="cosmetic_electric_charge2" parent="." instance=ExtResource("3_cgavm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.122367, 0.193641, 0)
-desired_target_pos = Vector3(-3, -3, 0)

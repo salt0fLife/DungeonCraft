@@ -288,6 +288,11 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 	"ruby_amulet" : ["ruby amulet", "res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", 0]], {"health_regen": +2.0, "max_health" : + 20.0, "true_defense" : 0.05}], ""],
 }
 
+const items_lore = {
+	"devil_wings" : "sick ass pair of wings"
+	
+}
+
 const set_bonus = { #[[item1,item2,item3],{attribute modifiers}, [[model_path,bone_id]]]
 	"debug_speed_boots" : [{"shoeL" : "debug_speed_boot_L", "shoeR" : "debug_speed_boot_R"}, {"speed" : +1.5, "speed_multiplier" : +1.0}, []],
 	"ring_of_dragons" : [{"ringVowR" : "ring_of_dragons"}, {"can_fly" : true, "size" : 1.0}, []]
@@ -329,24 +334,34 @@ const creatures = {
 }
 
 const base_player_attributes = {
+	##movement
+	#ground
+	"movement ground" : "dark gray",#
 	"speed" : 3.0,
 	"speed_multiplier" : 1.0,
+	"jump_velocity" : 6.0,
+	"air_acceleration": 1.0,
+	#air
+	"movement air" : "gray",#
+	"can_fly" : false,
 	"flying_speed" : 5.0,
 	"flying_control" : 1.0,
 	"flying_can_glide" : false,
 	"flying_can_hover" : false,
+	##bars and such
+	"resiliance" : "light blue", #
 	"max_health" : 10.0,
 	"max_mana" : 10.0,
-	"max_stamina" : 10.0,
 	"mana_regen_speed" : 1.0,
+	"max_stamina" : 10.0,
 	"stamina_regen_speed": 1.0,
-	"jump_velocity" : 6.0,
-	"can_fly" : false,
-	"air_acceleration": 1.0,
+	##physical enhancements
+	"combat strength" : "purple", #
 	"strength" : 1.0,
 	"size" : 1.0,
 	##defenses
 	#localized_generic_defense
+	"localized defenses" : "dark red", #
 	"defense_head" : 1.0,
 	"defense_torso" : 1.0,
 	"defense_arms" : 1.0,
@@ -356,6 +371,7 @@ const base_player_attributes = {
 	"defense_footR" : 1.0,
 	"defense_footL" : 1.0,
 	#real_defense
+	"real defenses" : "red", #
 	"true_defense" : 1.0, #only changed through race and subclass, effects all damage
 	"generic_defense" : 1.0,
 	"stab_defense" : 1.0,

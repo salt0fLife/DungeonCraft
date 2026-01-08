@@ -9,6 +9,40 @@ var hitmarker = preload("res://assets/effects/hitmarker.tscn")
 
 func _ready():
 	get_node(health_handler).connect("died", _on_host_died)
+	
+	create_graphics() #for debugging
+	Settings.connect("update_combat_boxes",_update_show_graphics)
+
+var graphics = []
+
+@onready var dis_mat = preload("res://assets/materials/hurtbox_display_mat.tres")
+func create_graphics():
+	for i in get_children(false):
+		var shape = i.shape
+		if shape is ConcavePolygonShape3D:
+			#print("concave polygon")
+			var pv3 = shape.get_faces()
+			var surface_array = []
+			surface_array.resize(Mesh.ARRAY_MAX)
+			surface_array[Mesh.ARRAY_VERTEX] = pv3
+			var m = MeshInstance3D.new()
+			var mm = ArrayMesh.new()
+			mm.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,surface_array)
+			m.mesh = mm
+			add_child(m)
+			m.transform = i.transform #makes sure they are perfectly lines up
+			graphics += [m]
+			#m.scale += Vector3(0.3,0.3,0.3)
+			m.set_surface_override_material(0,dis_mat)
+			m.visible = Settings.show_combat_boxes
+			m.set_layer_mask_value(1,false)
+			m.set_layer_mask_value(2,true)
+			pass
+
+func _update_show_graphics():
+	for i in graphics:
+		i.visible = Settings.show_combat_boxes
+	pass
 
 @rpc("any_peer", "call_local")
 func take_damage(val, pos, owned_by, weapon_name, knockback = Vector3.ZERO, remember = false):

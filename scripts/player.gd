@@ -21,20 +21,25 @@ var idle_anim_key = "idle"
 
 ## accessories and weapons
 var attributes = {
+	##movement
+	#ground
 	"speed" : 3.0,
 	"speed_multiplier" : 1.0,
+	"jump_velocity" : 6.0,
+	"air_acceleration": 1.0,
+	#air
+	"can_fly" : false,
 	"flying_speed" : 5.0,
 	"flying_control" : 1.0,
 	"flying_can_glide" : false,
 	"flying_can_hover" : false,
+	##bars and such
 	"max_health" : 10.0,
 	"max_mana" : 10.0,
 	"max_stamina" : 10.0,
 	"mana_regen_speed" : 1.0,
 	"stamina_regen_speed": 1.0,
-	"jump_velocity" : 6.0,
-	"can_fly" : false,
-	"air_acceleration": 1.0,
+	##physical enhancements
 	"strength" : 1.0,
 	"size" : 1.0,
 	##defenses
@@ -64,24 +69,34 @@ var attributes = {
 	#
 }
 const base_attributes = {
+	##movement
+	#ground
+	"movement ground" : "break",#
 	"speed" : 3.0,
 	"speed_multiplier" : 1.0,
-	"flying_speed" : 5.0,
-	"flying_control" : 1.0,
+	"jump_velocity" : 6.0,
+	"air_acceleration": 1.0,
+	#air
+	"movement air" : "break",#
+	"can_fly" : false,
 	"flying_can_glide" : false,
 	"flying_can_hover" : false,
+	"flying_speed" : 5.0,
+	"flying_control" : 1.0,
+	##bars and such
+	"resiliance" : "break", #
 	"max_health" : 10.0,
 	"max_mana" : 10.0,
-	"max_stamina" : 10.0,
 	"mana_regen_speed" : 1.0,
+	"max_stamina" : 10.0,
 	"stamina_regen_speed": 1.0,
-	"jump_velocity" : 6.0,
-	"can_fly" : false,
-	"air_acceleration": 1.0,
+	##physical enhancements
+	"combat strength" : "break", #
 	"strength" : 1.0,
 	"size" : 1.0,
 	##defenses
 	#localized_generic_defense
+	"localized defenses" : "break", #
 	"defense_head" : 1.0,
 	"defense_torso" : 1.0,
 	"defense_arms" : 1.0,
@@ -91,6 +106,7 @@ const base_attributes = {
 	"defense_footR" : 1.0,
 	"defense_footL" : 1.0,
 	#real_defense
+	"real defenses" : "break", #
 	"true_defense" : 1.0, #only changed through race and subclass, effects all damage
 	"generic_defense" : 1.0,
 	"stab_defense" : 1.0,
@@ -260,6 +276,7 @@ func update_held_item_graphics(model_path, enchanted = false, enchanted_col = Co
 		mf.enable_item_mode()
 		mt.enable_item_mode()
 	if enchanted and mf is MeshInstance3D:
+		mf.set_layer_mask_value(2,true)
 		var mat = mf.get_active_material(0).duplicate()
 		mat.set("shader_parameter/enchanted_col", enchanted_col)
 		mf.set_surface_override_material(0,mat)
@@ -352,6 +369,8 @@ func _ready():
 	if !is_multiplayer_authority():
 		request_cosmetics.rpc()
 		return
+	get_viewport().connect("size_changed",_on_screen_resized)
+	_on_screen_resized() #make sure verything works fine
 	avatar.visible = false
 	tp_item_handler.hide()
 	settup_team_hurtboxes(true)
@@ -714,6 +733,9 @@ func _physics_process(delta):
 	$genericAudio/movement_wind.volume_db = remap(speed_appeal,0.0,1.0,-80.0,-15.0)
 	update_shadow()
 	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting)
+	$UI/second_pass/SubViewport/second_pass.global_transform = camera.global_transform
+	$UI/second_pass/SubViewport/second_pass.fov = camera.fov
+	
 
 @onready var shadow = $playerAvatar/projected_shadow/shadow
 @onready var shadow_mat = shadow.get_active_material(0)
@@ -1159,6 +1181,17 @@ func load_skin_hands(slim, img):
 	arm_1_R.get_child(0,true).set_surface_override_material(0,tran_mat)
 	arm_2_R.set_surface_override_material(0,mat)
 	arm_2_R.get_child(0,true).set_surface_override_material(0,tran_mat)
+	
+	#arm_1_R.set_layer_mask_value(1,false)
+	arm_1_R.set_layer_mask_value(2,true)
+	#arm_2_R.set_layer_mask_value(1,false)
+	arm_2_R.set_layer_mask_value(2,true)
+	
+	#arm_1_R.get_child(0).set_layer_mask_value(1,false)
+	arm_1_R.get_child(0).set_layer_mask_value(2,true)
+	#arm_2_R.get_child(0).set_layer_mask_value(1,false)
+	arm_2_R.get_child(0).set_layer_mask_value(2,true)
+	
 	handR.get_child(0).add_child(arm_1_R)
 	elbowR.get_child(0).add_child(arm_2_R)
 	arm_1_R.position = Vector3.ZERO
@@ -1170,6 +1203,9 @@ func load_skin_hands(slim, img):
 	#for i in h_m_slim:
 		#hands_meshes[i].visible = slim
 
+func _on_screen_resized():
+	$UI/second_pass/SubViewport.size = DisplayServer.window_get_size()
+	print($UI/second_pass/SubViewport.size)
 
 @rpc("any_peer","reliable")
 func request_cosmetics() -> void:

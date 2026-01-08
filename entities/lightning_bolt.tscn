@@ -58,6 +58,7 @@ mesh = SubResource("QuadMesh_1bbnk")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.90288, 0)
+layers = 3
 light_color = Color(0.705882, 0.909804, 0.964706, 1)
 light_energy = 0.0
 omni_range = 134.435
