@@ -62,7 +62,7 @@ var accessories = {
 	"necklace2" : empty_item,
 	"necklace3" : empty_item,
 	"necklace4" : empty_item,
-	"crown" : empty_item,
+	"crown" : key_to_item("crown_of_god"),
 	"braceletR" : empty_item,
 	"braceletL" : empty_item,
 	"belt" : empty_item,

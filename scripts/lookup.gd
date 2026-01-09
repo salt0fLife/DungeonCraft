@@ -134,6 +134,48 @@ const damageType_color_lookup = [
 ]
 
 var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_key(if applicable)]
+	##debug
+	"crown_of_god" : ["immortal king", "res://debug/blockRenderTestDebug.tscn", itemType.accessories_crown, [[], 
+	{"can_fly":true,
+	"flying_can_hover" : true, 
+	"flying_speed":+99999.0,
+	"jump_velocity":max_attributes["jump_velocity"]*0.25, 
+	"speed" : max_attributes["speed"]*0.5,
+	"speed_multiplier" : max_attributes["speed"]*0.75,
+	"air_acceleration": 99999.0,
+	"flying_control" : 99999.0,
+	"max_health" : 99999.0,
+	"max_mana" : 99999.0,
+	"mana_regen_speed" : 99999.0,
+	"max_stamina" : 99999.0,
+	"stamina_regen_speed": 99999.0,
+	"flying_can_glide" : true,
+	"strength" : 99999.0,
+	#"size" : 99999.0, default is expert, just dont mess with this very much because kinda wacky :/
+	"localized defenses" : "dark red", #
+	"defense_head" : 99999.0,
+	"defense_torso" : 99999.0,
+	"defense_arms" : 99999.0,
+	"defense_handL" : 99999.0,
+	"defense_handR" : 99999.0,
+	"defense_legs" : 99999.0,
+	"defense_footR" : 99999.0,
+	"defense_footL" : 99999.0,
+	"true_defense" : 99999.0, #only changed through race and subclass, effects all damage
+	"generic_defense" : 99999.0,
+	"stab_defense" : 99999.0,
+	"slash_defense" : 99999.0,
+	"blunt_defense" : 99999.0,
+	"fire_defense" : 99999.0,
+	"ice_defense" : 99999.0,
+	"toxic_defense" : 99999.0,
+	"explosion_defense" : 99999.0,
+	"magic_defense" : 99999.0,
+	"lightning_defense" : 99999.0,
+	"holy_defense" : 99999.0,
+	"blight_defense" : 99999.0
+	}], ""],
+	
 	##crafting
 	"simple_rock" : ["rock", "res://assets/itemGraphics/rock_graphics.tscn", itemType.crafting_throwable, [10.0], ""],
 	
@@ -289,8 +331,8 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 }
 
 const items_lore = {
-	"devil_wings" : "sick ass pair of wings"
-	
+	"devil_wings" : "sick ass pair of wings",
+	"crown_of_god" : "no one was ever meant to have this"
 }
 
 const set_bonus = { #[[item1,item2,item3],{attribute modifiers}, [[model_path,bone_id]]]
@@ -334,6 +376,8 @@ const creatures = {
 }
 
 const base_player_attributes = {
+	##vision
+	"dark_vision" : 0.0,
 	##movement
 	#ground
 	"movement ground" : "dark gray",#
@@ -388,6 +432,44 @@ const base_player_attributes = {
 	#
 }
 
+const max_attributes = {
+	##movement
+	#ground
+	"speed" : 10.0,
+	"speed_multiplier" : 3.0,
+	"jump_velocity" : 50.0,
+	"air_acceleration": 50.0,
+	"flying_speed" : 50.0,
+	"flying_control" : 50.0,
+	"max_health" : 500.0,
+	"max_mana" : 500.0,
+	"mana_regen_speed" : 100.0,
+	"max_stamina" : 500.0,
+	"stamina_regen_speed": 100.0,
+	"strength" : 100.0,
+	#"size" : 2.0, default is expert, just dont messa round with this too much because kinda wacky :/
+	"defense_head" : 1000.0,
+	"defense_torso" : 1000.0,
+	"defense_arms" : 1000.0,
+	"defense_handL" : 1000.0,
+	"defense_handR" : 1000.0,
+	"defense_legs" : 1000.0,
+	"defense_footR" : 1000.0,
+	"defense_footL" : 1000.0,
+	"true_defense" : 1000.0, #only changed through race and subclass, effects all damage
+	"generic_defense" : 1000.0,
+	"stab_defense" : 1000.0,
+	"slash_defense" : 1000.0,
+	"blunt_defense" : 1000.0,
+	"fire_defense" : 1000.0,
+	"ice_defense" : 1000.0,
+	"toxic_defense" : 1000.0,
+	"explosion_defense" : 1000.0,
+	"magic_defense" : 1000.0,
+	"lightning_defense" : 1000.0,
+	"holy_defense" : 1000.0,
+	"blight_defense" : 1000.0
+}
 
 
 

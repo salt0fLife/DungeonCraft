@@ -369,6 +369,27 @@ func _update_attributes(attributes) -> void:
 				col = Color(default)
 				bold = true
 		var l = Label.new()
+		if Lookup.max_attributes.has(key):
+			var max_val = Lookup.max_attributes[key]
+			if val == max_val:
+				text += " MAX"
+				col = Color("8a68ad")
+				l.material = load("res://assets/materials/max_stat_mat.tres")
+				#s.set
+			elif val >= max_val*0.75:
+				text += " Legendary"
+				col = Color.GOLDENROD
+				l.material = load("res://assets/materials/legendary_stat_mat.tres")
+			elif val >= max_val*0.5:
+				text += " expert"
+				#col = Color("da000a")
+				col = lerp(col,Color("da000a"),0.75)
+				l.material = load("res://assets/materials/legendary_stat_mat.tres")
+			elif val >= max_val*0.25:
+				text += " rookie"
+				#col = Color("da000a")
+				col = lerp(col, Color.DIM_GRAY,0.5)
+				l.material = load("res://assets/materials/legendary_stat_mat.tres")
 		l.text = text
 		l.set("theme",l_theme)
 		l.set("theme_override_colors/font_color",col)

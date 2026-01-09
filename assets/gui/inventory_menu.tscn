@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://b7s8ume16tah0"]
+[gd_scene load_steps=38 format=3 uid="uid://b7s8ume16tah0"]
 
 [ext_resource type="Script" path="res://scripts/inventory_menu.gd" id="1_4xxg4"]
 [ext_resource type="Texture2D" uid="uid://bkjpum8rx7i4g" path="res://assets/textures/gui/emptyHotbar.png" id="2_jil2a"]
@@ -15,6 +15,8 @@
 [ext_resource type="StyleBox" uid="uid://begj262l72ejf" path="res://assets/gui/divider_styleBox.tres" id="7_wfd57"]
 [ext_resource type="Material" uid="uid://cocidkejhkivy" path="res://assets/materials/item_slot_mat.tres" id="8_7t1x8"]
 [ext_resource type="Texture2D" uid="uid://d2usricranfki" path="res://assets/textures/gui/jewelrySlots.png" id="8_i8loy"]
+[ext_resource type="Material" uid="uid://bh6loue5xdvkn" path="res://assets/materials/max_stat_mat.tres" id="8_vnnuk"]
+[ext_resource type="Material" uid="uid://dke60s2tlqt24" path="res://assets/materials/legendary_stat_mat.tres" id="9_jhs8x"]
 [ext_resource type="Texture2D" uid="uid://bapyqoy5lwaew" path="res://assets/textures/items/missingItemTexture.png" id="9_po7jc"]
 [ext_resource type="Texture2D" uid="uid://nquswdjhvs1b" path="res://assets/textures/items/ironSword.png" id="10_wf05a"]
 [ext_resource type="Texture2D" uid="uid://hod3fngnjeep" path="res://assets/textures/gui/ringSlots.png" id="12_530iq"]
@@ -25,7 +27,7 @@
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_d5ftn"]
 blend_mode = 3
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i3m8b"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fm5nj"]
 resource_name = "eyeBrows"
 transparency = 2
 alpha_scissor_threshold = 0.5
@@ -34,7 +36,7 @@ albedo_color = Color(0, 0, 0, 1)
 albedo_texture = ExtResource("6_h0cdh")
 texture_filter = 2
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_378c8"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ygb4r"]
 resource_name = "eyes"
 render_priority = 0
 shader = ExtResource("5_vi34m")
@@ -62,7 +64,7 @@ shader_parameter/glow_col = null
 shader_parameter/glow_col_2 = null
 shader_parameter/glow_col_3 = null
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5s70c"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rr5fc"]
 render_priority = 0
 shader = ExtResource("6_7bipc")
 shader_parameter/uv1_scale = Vector3(1, 1, 1)
@@ -133,7 +135,7 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.2)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_gcfc7"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eq0ck"]
 render_priority = 0
 shader = SubResource("Shader_82q5v")
 shader_parameter/fire_col = Color(0.796078, 0.247059, 0, 1)
@@ -277,43 +279,43 @@ fov = 30.0
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, -0.774223, 0)
 
 [node name="chestBase" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, 0.00303868, -0.0271525, 0.000153183)
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, -0.000566205, -0.0152497, 0.000153183)
 
 [node name="hip_L" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="1"]
-transform = Transform3D(0.995002, -0.0133334, 0.0989388, 0, 0.991033, 0.133557, -0.0998332, -0.132889, 0.986088, 0.075, -0.282, -0.001)
+transform = Transform3D(0.995002, -0.00979271, 0.0993518, 0, 0.995169, 0.098091, -0.0998332, -0.0976004, 0.990204, 0.075, -0.282, -0.001)
 
 [node name="knee_L" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/hip_L" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.990703, -0.136034, 0, 0.136034, 0.990703, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.994928, -0.100579, 0, 0.100579, 0.994928, 0, -0.274171, 0)
 
 [node name="hip_R" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="2"]
-transform = Transform3D(0.995003, 0.0133334, -0.0989389, 0, 0.991035, 0.133557, 0.0998333, -0.132889, 0.986089, -0.075, -0.282, -0.001)
+transform = Transform3D(0.995003, 0.00979272, -0.0993519, 0, 0.995171, 0.0980911, 0.0998333, -0.0976006, 0.990205, -0.075, -0.282, -0.001)
 
 [node name="knee_R" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/hip_R" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.990701, -0.136034, 0, 0.136034, 0.990701, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.994926, -0.100579, 0, 0.100579, 0.994926, 0, -0.274171, 0)
 
 [node name="neck" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="3"]
 transform = Transform3D(1, 0, 0, 0, 0.999297, 0.0374911, 0, -0.0374912, 0.999295, 0, 0.289384, -0.00323021)
 
 [node name="eyeBrows_L" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
-surface_material_override/0 = SubResource("StandardMaterial3D_i3m8b")
+surface_material_override/0 = SubResource("StandardMaterial3D_fm5nj")
 
 [node name="eyeBrows_R" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="2"]
-surface_material_override/0 = SubResource("StandardMaterial3D_i3m8b")
+surface_material_override/0 = SubResource("StandardMaterial3D_fm5nj")
 
 [node name="eyes" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="3"]
-surface_material_override/0 = SubResource("ShaderMaterial_378c8")
+surface_material_override/0 = SubResource("ShaderMaterial_ygb4r")
 
 [node name="mouth" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="7"]
-surface_material_override/0 = SubResource("ShaderMaterial_5s70c")
+surface_material_override/0 = SubResource("ShaderMaterial_rr5fc")
 
 [node name="nameTag" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/neck" index="9"]
 visible = false
 
 [node name="shoulder_L" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="4"]
-transform = Transform3D(0.998736, -0.0500468, 0.00396486, 0.0497597, 0.997292, 0.0541048, -0.00666191, -0.0538393, 0.998525, 0.14978, 0.241, -0.0014265)
+transform = Transform3D(0.998475, -0.0549318, 0.00496633, 0.0547953, 0.998197, 0.0243719, -0.00629618, -0.0240627, 0.999688, 0.14978, 0.241, -0.0014265)
 
 [node name="elbowL" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.99877, 0.0495271, 0, -0.0495271, 0.99877, 0.0786937, -0.240458, -0.002611)
+transform = Transform3D(1, 0, 0, 0, 0.999776, 0.0210243, 0, -0.0210243, 0.999776, 0.0786937, -0.240458, -0.002611)
 
 [node name="shoulder_R" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="5"]
 transform = Transform3D(0.998648, 0.0517955, -0.00435617, -0.0517567, 0.998619, 0.0086188, 0.00479659, -0.00838166, 0.999953, -0.15, 0.241, -0.001)
@@ -325,16 +327,16 @@ transform = Transform3D(1, 0, 0, 0, 0.761537, 0.648118, 0, -0.648118, 0.761537, 
 transform = Transform3D(1, 0, 0, 0, 0.173651, -0.984807, 0, 0.984807, 0.173651, 0, -0.21, 0.075)
 
 [node name="tailBase" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase" index="6"]
-transform = Transform3D(0.882057, -0.38771, 0.267679, 0, 0.568156, 0.822921, -0.471137, -0.725866, 0.501146, 0, 0, -0.088)
+transform = Transform3D(0.958655, 0.256426, -0.123374, 0, 0.433557, 0.901125, 0.284561, -0.863872, 0.415633, 0, 0, -0.088)
 
 [node name="tailMiddle" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/tailBase" index="1"]
-transform = Transform3D(0.993961, -0.0199955, -0.107885, 0, 0.983255, -0.182236, 0.109723, 0.181136, 0.977314, 0, 0, 0)
+transform = Transform3D(0.946392, 0.0588654, 0.317606, 0, 0.983255, -0.182236, -0.323016, 0.172467, 0.930542, 0, 0, 0)
 
 [node name="tailLast" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar/root/chestBase/tailBase/tailMiddle" index="1"]
-transform = Transform3D(0.996534, -0.0236283, -0.0797686, 0, 0.95882, -0.284012, 0.0831948, 0.283028, 0.955494, 0, 0, 0)
+transform = Transform3D(0.969116, 0.0700397, 0.236452, 0, 0.95882, -0.284012, -0.246608, 0.275241, 0.929205, 0, 0, 0)
 
 [node name="fire" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar" index="1"]
-surface_material_override/0 = SubResource("ShaderMaterial_gcfc7")
+surface_material_override/0 = SubResource("ShaderMaterial_eq0ck")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport"]
 transform = Transform3D(0.866025, 0.353553, -0.353553, 0, 0.707107, 0.707107, 0.5, -0.612372, 0.612372, 0, 0, 0)
@@ -381,17 +383,23 @@ theme_override_font_sizes/font_size = 60
 theme_override_styles/normal = ExtResource("7_wfd57")
 text = "wegijwgjoiwejgoiwjegweg"
 
-[node name="Label2" type="Label" parent="accessories/gearCenter/TabContainer/stats/ScrollContainer/VBoxContainer"]
+[node name="legendary" type="Label" parent="accessories/gearCenter/TabContainer/stats/ScrollContainer/VBoxContainer"]
+material = ExtResource("8_vnnuk")
 layout_mode = 2
-text = "wegijwgjoiwejgoiwjegweg"
+theme_override_colors/font_color = Color(0.541176, 0.407843, 0.678431, 1)
+text = "GODLY"
 
 [node name="Label3" type="Label" parent="accessories/gearCenter/TabContainer/stats/ScrollContainer/VBoxContainer"]
+material = ExtResource("9_jhs8x")
 layout_mode = 2
-text = "wegijwgjoiwejgoiwjegweg"
+theme_override_colors/font_color = Color(0.862745, 0.690196, 0, 1)
+text = "Legendary"
 
 [node name="Label4" type="Label" parent="accessories/gearCenter/TabContainer/stats/ScrollContainer/VBoxContainer"]
+material = ExtResource("9_jhs8x")
 layout_mode = 2
-text = "wegijwgjoiwejgoiwjegweg"
+theme_override_colors/font_color = Color(0.890196, 0, 0.0431373, 1)
+text = "expert"
 
 [node name="Label5" type="Label" parent="accessories/gearCenter/TabContainer/stats/ScrollContainer/VBoxContainer"]
 layout_mode = 2

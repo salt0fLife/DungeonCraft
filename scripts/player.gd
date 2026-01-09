@@ -21,6 +21,8 @@ var idle_anim_key = "idle"
 
 ## accessories and weapons
 var attributes = {
+	##vision
+	"dark_vision" : 0.0,
 	##movement
 	#ground
 	"speed" : 3.0,
@@ -69,6 +71,8 @@ var attributes = {
 	#
 }
 const base_attributes = {
+	##vision
+	"dark_vision" : 0.0,
 	##movement
 	#ground
 	"movement ground" : "break",#
@@ -134,6 +138,7 @@ func update_accessories():
 	update_attribute_graphics()
 	update_attribute_graphics.rpc(attributes["size"])
 
+var last_mh_c_l:float = 1.0 #max health changed level idk man
 func update_stats_from_accessories():
 	set_stats_to_default()
 	var applied_bonuses = []
@@ -165,6 +170,11 @@ func update_stats_from_accessories():
 									attributes[sbk] = sb_data[1][sbk]
 								else:
 									attributes[sbk] += sb_data[1][sbk]
+	for k in attributes.keys(): #applies a cap on some attributes because yes
+		if Lookup.max_attributes.has(k):
+			if attributes[k] > Lookup.max_attributes[k]:
+				attributes[k] = Lookup.max_attributes[k]
+	health = attributes["max_health"]*last_mh_c_l #no infinite health for you :3
 	update_health_graphics()
 	Global.emit_signal("update_attributes", attributes)
 	pass
@@ -275,8 +285,10 @@ func update_held_item_graphics(model_path, enchanted = false, enchanted_col = Co
 	if mf.has_method("enable_item_mode"):
 		mf.enable_item_mode()
 		mt.enable_item_mode()
-	if enchanted and mf is MeshInstance3D:
+	if mf is MeshInstance3D:
+		mf.set_layer_mask_value(1,true)
 		mf.set_layer_mask_value(2,true)
+	if enchanted and mf is MeshInstance3D:
 		var mat = mf.get_active_material(0).duplicate()
 		mat.set("shader_parameter/enchanted_col", enchanted_col)
 		mf.set_surface_override_material(0,mat)
@@ -339,6 +351,7 @@ func update_attribute_graphics(s = attributes["size"]):
 	pass
 
 func set_stats_to_default():
+	last_mh_c_l = health / attributes["max_health"]
 	attributes = base_attributes.duplicate(true)
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -582,7 +595,7 @@ func _physics_process(delta):
 	if position.y < -200.0:
 		position = Vector3.ZERO
 	# Add the gravity.
-	if not is_on_floor():
+	if not is_on_floor() and not _snapped_to_stairs_last_frame:
 		jumped_last_frame = false
 		avatar.animation_speed = lerp(avatar.animation_speed, 0.25*attributes["speed_multiplier"], delta*40.0)
 		last_y_velocity = velocity.y
@@ -1182,14 +1195,14 @@ func load_skin_hands(slim, img):
 	arm_2_R.set_surface_override_material(0,mat)
 	arm_2_R.get_child(0,true).set_surface_override_material(0,tran_mat)
 	
-	#arm_1_R.set_layer_mask_value(1,false)
+	arm_1_R.set_layer_mask_value(1,false)
 	arm_1_R.set_layer_mask_value(2,true)
-	#arm_2_R.set_layer_mask_value(1,false)
+	arm_2_R.set_layer_mask_value(1,false)
 	arm_2_R.set_layer_mask_value(2,true)
 	
-	#arm_1_R.get_child(0).set_layer_mask_value(1,false)
+	arm_1_R.get_child(0).set_layer_mask_value(1,false)
 	arm_1_R.get_child(0).set_layer_mask_value(2,true)
-	#arm_2_R.get_child(0).set_layer_mask_value(1,false)
+	arm_2_R.get_child(0).set_layer_mask_value(1,false)
 	arm_2_R.get_child(0).set_layer_mask_value(2,true)
 	
 	handR.get_child(0).add_child(arm_1_R)

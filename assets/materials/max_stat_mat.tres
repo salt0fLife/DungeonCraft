@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://bh6loue5xdvkn"]
+
+[ext_resource type="Shader" path="res://assets/shaders/item_slot.gdshader" id="1_6two3"]
+[ext_resource type="Texture2D" uid="uid://dabcvohkto3qv" path="res://assets/textures/effects/enchantedTesxture.png" id="2_vo1cu"]
+
+[resource]
+shader = ExtResource("1_6two3")
+shader_parameter/wavy = true
+shader_parameter/enchanted_col = Color(1, 0.411765, 0.611765, 1)
+shader_parameter/transparent_background = true
+shader_parameter/enchanted_tex = ExtResource("2_vo1cu")

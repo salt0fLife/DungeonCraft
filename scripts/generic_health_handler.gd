@@ -86,49 +86,49 @@ func update_status_effect_graphics(se):
 	avatar.set_blessed(se.has(Lookup.statusEffectType.blessed))
 
 func _process(delta):
-	if !clear_status_effects:
-		for k in status_effects.keys():
-			match k:
-				Lookup.statusEffectType.burning:
-					status_effects[k] -= delta
-					damage([[Lookup.damageType.fire,delta]], "status_effect", "", "burning")
-					if status_effects[k] < 0.0:
-						status_effects.erase(k)
-						update_status_effect_graphics(status_effects)
-						update_status_effect_graphics.rpc(status_effects)
-				Lookup.statusEffectType.blighted:
-					status_effects[k] -= delta
-					damage([[Lookup.damageType.blight,delta*2.5]], "status_effect", "", "blighted")
-					if status_effects[k] < 0.0:
-						status_effects.erase(k)
-						update_status_effect_graphics(status_effects)
-						update_status_effect_graphics.rpc(status_effects)
-				Lookup.statusEffectType.poisoned:
-					status_effects[k] -= delta
-					damage([[Lookup.damageType.toxic,delta*1.75]], "status_effect", "", "poisoned")
-					if status_effects[k] < 0.0:
-						status_effects.erase(k)
-						update_status_effect_graphics(status_effects)
-						update_status_effect_graphics.rpc(status_effects)
-				Lookup.statusEffectType.cursed:
-					status_effects[k] -= delta
-					damage([[Lookup.damageType.magic,delta*1.0]], "status_effect", "", "cursed")
-					if status_effects[k] < 0.0:
-						status_effects.erase(k)
-						update_status_effect_graphics(status_effects)
-						update_status_effect_graphics.rpc(status_effects)
-				Lookup.statusEffectType.blessed:
-					status_effects[k] -= delta
-					#healing function here
-					damage([[Lookup.damageType.magic,-delta*1.0]], "status_effect", "", "blessed")
-					if status_effects[k] < 0.0:
-						status_effects.erase(k)
-						update_status_effect_graphics(status_effects)
-						update_status_effect_graphics.rpc(status_effects)
-	else:
-		print("clearing status effects")
-		for k in status_effects.keys():
-			print(k)
-			status_effects.erase(k)
-		clear_status_effects = false
-var clear_status_effects = true
+	status_effect_timer -= delta
+	if status_effect_timer < 0.0:
+		status_effect_timer = 0.25
+		if !clear_status_effects:
+			for k in status_effects.keys():
+				match k:
+					Lookup.statusEffectType.burning:
+						status_effects[k] -= 0.25
+						damage([[Lookup.damageType.fire,0.25]], "status_effect", "", "burning")
+					Lookup.statusEffectType.blighted:
+						status_effects[k] -= 0.25
+						damage([[Lookup.damageType.blight,0.25*2.5]], "status_effect", "", "blighted")
+						if status_effects[k] < 0.0:
+							status_effects.erase(k)
+							update_status_effect_graphics(status_effects)
+							update_status_effect_graphics.rpc(status_effects)
+					Lookup.statusEffectType.poisoned:
+						status_effects[k] -= 0.25
+						damage([[Lookup.damageType.toxic,0.25*1.75]], "status_effect", "", "poisoned")
+						if status_effects[k] < 0.0:
+							status_effects.erase(k)
+							update_status_effect_graphics(status_effects)
+							update_status_effect_graphics.rpc(status_effects)
+					Lookup.statusEffectType.cursed:
+						status_effects[k] -= 0.25
+						damage([[Lookup.damageType.magic,0.25*1.0]], "status_effect", "", "cursed")
+						if status_effects[k] < 0.0:
+							status_effects.erase(k)
+							update_status_effect_graphics(status_effects)
+							update_status_effect_graphics.rpc(status_effects)
+					Lookup.statusEffectType.blessed:
+						status_effects[k] -= 0.25
+						#healing function here
+						damage([[Lookup.damageType.magic,-0.25*1.0]], "status_effect", "", "blessed")
+						if status_effects[k] < 0.0:
+							status_effects.erase(k)
+							update_status_effect_graphics(status_effects)
+							update_status_effect_graphics.rpc(status_effects)
+		else:
+			print("clearing status effects")
+			for k in status_effects.keys():
+				print(k)
+				status_effects.erase(k)
+			clear_status_effects = false
+var clear_status_effects : bool = true
+var status_effect_timer  : float = 0.25
