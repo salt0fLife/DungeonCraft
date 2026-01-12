@@ -156,3 +156,7 @@ layout_mode = 2
 [node name="textureDisplay" type="TextureRect" parent="workingArea/PanelContainer/HFlowContainer"]
 layout_mode = 2
 texture = ExtResource("3_0wn7j")
+
+[node name="Label" type="Label" parent="workingArea/PanelContainer/HFlowContainer"]
+layout_mode = 2
+text = "enchantments"

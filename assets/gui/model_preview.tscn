@@ -1,0 +1,42 @@
+[gd_scene load_steps=8 format=3 uid="uid://c6dyp7gut680a"]
+
+[ext_resource type="Theme" uid="uid://bxsqmdqtm4i4k" path="res://assets/themes/genericTheme.tres" id="1_pic25"]
+[ext_resource type="Script" path="res://scripts/model_preview.gd" id="2_ee2d5"]
+[ext_resource type="Texture2D" uid="uid://bx1bniu2kmbld" path="res://assets/textures/hdris/syferfontein_18d_clear_puresky_4k.exr" id="3_i2ti7"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_vyj3o"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_jir35"]
+panorama = ExtResource("3_i2ti7")
+
+[sub_resource type="Sky" id="Sky_vf5ps"]
+sky_material = SubResource("PanoramaSkyMaterial_jir35")
+
+[sub_resource type="Environment" id="Environment_70x7j"]
+background_mode = 2
+sky = SubResource("Sky_vf5ps")
+ambient_light_sky_contribution = 0.44
+
+[node name="model_preview" type="Window"]
+own_world_3d = true
+positional_shadow_atlas_size = 512
+positional_shadow_atlas_16_bits = false
+title = "item Preview"
+size = Vector2i(255, 255)
+theme = ExtResource("1_pic25")
+script = ExtResource("2_ee2d5")
+
+[node name="itemHandler" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="itemHandler"]
+mesh = SubResource("BoxMesh_vyj3o")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.425856, -0.0381244, 0.903987, -0.317111, 0.929449, 0.188585, -0.8474, -0.366975, 0.383722, 0, 0, 0)
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.5, -0.598562, 0.625878, 7.10543e-15, 0.722702, 0.69116, -0.866025, -0.34558, 0.361351, 0, 1.45496, 0)
+visible = false
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_70x7j")

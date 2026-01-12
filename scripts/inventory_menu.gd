@@ -43,33 +43,39 @@ func _ready():
 		var n = $hotbar/slots/itemIcons.get_child(i)
 		n.connect("mouse_entered", preview_hotbar_indx.bind(i))
 		n.connect("mouse_exited", preview_hide)
-		n.connect("button_down", _on_hotbar_pressed.bind(i))
+		#n.connect("button_down", _on_hotbar_pressed.bind(i))
+		n.connect("gui_input", _on_hotbar_input.bind(i))
 		n.material = mat.duplicate(true)
 	for k in accessory_buttons.keys():
 		var b = accessory_buttons[k]
 		b.connect("mouse_entered", preview_equipment_key.bind(k))
 		b.connect("mouse_exited", preview_hide)
-		b.connect("button_down", _on_equipment_pressed.bind(k))
+		#b.connect("button_down", _on_equipment_pressed.bind(k))
+		b.connect("gui_input", _on_equipment_input.bind(k))
 		b.material = mat.duplicate(true)
 	$held_item.material = mat.duplicate(true)
 	$held_item.material.set("shader_parameter/transparent_background",true)
+	$itemPreview.connect("preview_item_data", _create_preview_window)
 	pass
 
 func preview_equipment_key(k: String):
-	var key = Inventory.accessories[k][0]
+	var item = Inventory.accessories[k]
+	var key = item[0]
 	if key == "":
 		return
 	$itemPreview.visible = true
 	$itemPreview.update_graphics_from_key(key)
+	$itemPreview.add_graphics_from_custom_data(item[3])
 	pass
 
 func preview_hotbar_indx(i: int):
-	var key = Inventory.hotbar[i][0]
+	var item = Inventory.hotbar[i]
+	var key = item[0]
 	if key == "":
 		return
 	$itemPreview.visible = true
 	$itemPreview.update_graphics_from_key(key)
-	pass
+	$itemPreview.add_graphics_from_custom_data(item[3])
 
 func preview_hide():
 	$itemPreview.visible = false
@@ -114,7 +120,8 @@ func update_hotbar_graphics():
 	pass
 
 func _on_hotbar_pressed(index):
-	print(index)
+	$itemMenu.visible = false
+	#print(index)
 	var temp = held_item
 	held_item = Inventory.hotbar[index]
 	Inventory.hotbar[index] = temp
@@ -122,8 +129,22 @@ func _on_hotbar_pressed(index):
 	update_hotbar_graphics()
 	preview_hotbar_indx(index)
 
+func _on_hotbar_input(_event, index):
+	if Input.is_action_just_pressed("lm"):
+		_on_hotbar_pressed(index)
+	elif Input.is_action_just_pressed("rm"):
+		#print("right click hotbar " + str(Inventory.hotbar[index]))
+		dropdown_hotbar_index(index)
+	#if !(event is InputEventMouseButton):
+		#return #only care about mouse button events
+	#if event.button_index == MOUSE_BUTTON_RIGHT:
+		#_on_hotbar_pressed(index)
+	#elif event.button_index == MOUSE_BUTTON_LEFT:
+		#print("hotbar mouse_left " + str(index))
+
 func _on_equipment_pressed(key):
-	print(key)
+	$itemMenu.visible = false
+	#print(key)
 	if held_item[0] != "":
 		if !Inventory.can_item_go_in_accessory(held_item[0], key):
 			return # makes sure you cant put equipment in wrong slots
@@ -134,6 +155,28 @@ func _on_equipment_pressed(key):
 	load_accessories()
 	preview_equipment_key(key)
 	Inventory.emit_signal("update_accessories")
+
+func _on_equipment_input(_event,key):
+	if Input.is_action_just_pressed("lm"):
+		_on_equipment_pressed(key)
+	elif Input.is_action_just_pressed("rm"):
+		dropdown_equipment_key(key)
+
+func dropdown_hotbar_index(index):
+	#print(index)
+	$itemMenu.position = get_viewport().get_mouse_position()
+	#$itemMenu.visible = true
+	$itemMenu.item_location = $itemMenu.locations.HOTBAR
+	$itemMenu.item_index = index
+	$itemMenu.display()
+
+func dropdown_equipment_key(key):
+	#print(key)
+	$itemMenu.position = get_viewport().get_mouse_position()
+	#$itemMenu.visible = true
+	$itemMenu.item_location = $itemMenu.locations.EQUIPMENT
+	$itemMenu.item_key = key
+	$itemMenu.display()
 
 func show_hotbar():
 	unused_hide_timer = time_till_hide
@@ -205,6 +248,7 @@ func open():
 	pass
 
 func close():
+	$itemMenu.visible = false
 	$hotbar.visible = true
 	hide_want = true
 	hide_accessories()
@@ -405,4 +449,9 @@ func _update_mana_graphics(val):
 	mana_mat.set("shader_parameter/full_percent",val/10.0)
 	pass
 
+func _create_preview_window(item_data : Array) -> void:
+	
+	
+	
+	pass
 

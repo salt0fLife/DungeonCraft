@@ -566,7 +566,10 @@ func jump():
 	jump_buffer = 0.0
 	jumped_last_frame = true
 	play_footstep()
-	velocity.y = attributes["jump_velocity"]
+	if sprinting:
+		velocity.y = attributes["jump_velocity"]
+	else:
+		velocity.y = clamp(attributes["jump_velocity"],0.0,base_attributes["jump_velocity"]*2.0)
 	avatar.walk_tilt = 0.0
 	avatar.animation_speed = 4.0
 
@@ -874,6 +877,17 @@ func update_velocity_flying(delta):
 		damage([[Lookup.damageType.blunt, d]],"fall_damage","", "",Vector3(0.0,last_y_velocity,0.0))
 	avatar.animation_state = "fly"
 	if attributes["flying_can_hover"]:
+		if attributes["flying_can_glide"]: #bootleg ability to glide while can hover
+			if Input.is_action_pressed("jump") and Input.is_action_pressed("crouch"):
+				velocity.y -= gravity * delta
+				update_velocity_gliding(delta*1.0) #glide
+				stamina -= delta*0.05
+				body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
+				avatar.head_angle.y = -body.rotation.y
+				cameraHandler.rotation.z = -body.rotation.y*speed_appeal*0.4*Settings.user_settings["flying_tilt_power"]
+				if Input.is_action_pressed("up"):
+					velocity += get_look_dir() * attributes["flying_speed"] * delta
+				return
 		var input_vertical = Input.get_vector("crouch", "jump", "up", "down")
 		var input_flat = Input.get_vector("left", "right", "up", "down")
 		var f_s = attributes["flying_speed"]

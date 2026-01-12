@@ -471,5 +471,49 @@ const max_attributes = {
 	"blight_defense" : 1000.0
 }
 
+enum enchantments {
+	resilience, #improves all defensive attributes by small amounts
+	advanced_resiliance, #better resiliance resiliance
+	desolation, #applies blight and increases damage attributes decreases defensive effects
+	mastery, #improves everything by a little bit
+	advanced_mastery, #better mastery
+	perfect_mastery, #better better mastery
+	weightless, #removes movement debuffs and knockback resistance if applicable #weightlessness?
+	density, #increases movment debuffs and knockback resistance if applicable
+	swiftness, #increases attack speed and all ground movement speed
+}
 
+const enchantment_names = [
+	"resilience", #improves all defensive attributes by small amounts
+	"advanced_resiliance", #better resiliance
+	"desolation", #applies blight and increases damage attributes decreases defensive effects
+	"mastery", #improves everything by a little bit
+	"advanced_mastery", #better mastery
+	"perfect_mastery", #better better mastery
+	"weightless", #removes movement debuffs and knockback resistance if applicable #weightlessness?
+	"density", #increases movment debuffs and knockback resistance if applicable
+	"swiftness",
+]
 
+const enchantment_colors = [
+	Color.ROYAL_BLUE, #improves all defensive attributes by small amounts
+	Color.ROYAL_BLUE, #better resilience
+	Color.INDIGO, #applies blight and increases damage attributes decreases defensive effects
+	Color.CRIMSON, #improves everything by a little bit
+	Color.CRIMSON, #better mastery
+	Color.CRIMSON, #better better mastery
+	Color.AQUAMARINE, #removes movement debuffs and knockback resistance if applicable #weightlessness?
+	Color.MIDNIGHT_BLUE, #increases movment debuffs and knockback resistance if applicable
+	Color.PALE_TURQUOISE,
+]
+
+const good_enchantments =[
+	enchantments.advanced_resiliance,
+	enchantments.advanced_mastery,
+	enchantments.weightless
+]
+
+const godly_enchantments =[
+	enchantments.perfect_mastery,
+	enchantments.swiftness
+]

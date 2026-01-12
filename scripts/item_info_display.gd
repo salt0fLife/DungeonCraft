@@ -10,7 +10,7 @@ func update_graphics_from_key(key):
 		return
 	var data = Lookup.items[key]
 	for n in node_handler.get_children(false):
-		n.queue_free()
+		n.queue_free() #removes last items info
 	$item_name.text = data[0]
 	var dt = TextureRect.new()
 	dt.texture = Inventory.get_item_texture(key)
@@ -111,3 +111,22 @@ func set_anchor_up(val):
 		$workingArea.set_anchors_and_offsets_preset(PRESET_CENTER_TOP ,false)
 		$workingArea/PanelContainer.set_anchors_and_offsets_preset(PRESET_CENTER_TOP ,false)
 		$workingArea.position.y = 8.0
+
+func add_graphics_from_custom_data(data : Dictionary) -> void:
+	if data.keys().has("enchantments"):
+		for ench in data["enchantments"]:
+			var l = Label.new()
+			l.text = Lookup.enchantment_names[ench]#str(ench)
+			l.modulate = Lookup.enchantment_colors[ench]
+			if Lookup.good_enchantments.has(ench):
+				l.material = load("res://assets/materials/legendary_stat_mat.tres")
+			elif Lookup.godly_enchantments.has(ench):
+				l.material = load("res://assets/materials/max_stat_mat.tres")
+			node_handler.add_child(l)
+	if data.keys().has("storage"):
+		#var p = PanelContainer.new()
+		#node_handler.add_child(p)
+		for i in data["storage"]:
+			var t_r = TextureRect.new()
+			t_r.texture = Inventory.get_item_texture(i[0])
+			node_handler.add_child(t_r)
