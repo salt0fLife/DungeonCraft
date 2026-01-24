@@ -538,7 +538,20 @@ func _input(event):
 		die(display_name, "perish", "",Vector3(0.0,1.0,0.0))
 	if Input.is_action_just_pressed("respawn"):
 		respawn()
+	if Input.is_action_just_pressed("debugMisc"):
+		create_after_image(velocity)
+		create_after_image.rpc(velocity)
 
+@rpc("any_peer","unreliable")
+func create_after_image(vel = Vector3.ZERO, pos = position):
+	var af_im = load("res://assets/avatar/player_after_image.tscn").instantiate()
+	var pose = avatar.get_pose()
+	get_parent().add_child(af_im)
+	af_im.position = pos
+	af_im.rotation = rotation
+	af_im.rotation.y = graphics.rotation.y + PI + body.rotation.y
+	af_im.apply_pose(pose)
+	af_im.initial_vel = vel*0.1
 
 func set_flying(val):
 	if flying == val:
@@ -580,10 +593,11 @@ var airborn = false
 var last_y_velocity = 0.0
 var jumped_last_frame = false
 var vel_last_frame = Vector3.ZERO
+var after_image_pos = Vector3.ZERO
+var after_image_this_frame = false
 func _physics_process(delta):
 	if !is_multiplayer_authority():
 		return
-	
 	if head_bonk.is_colliding():
 		crouching = true
 	else:
@@ -734,6 +748,16 @@ func _physics_process(delta):
 	avatar.walk_tilt = lerp(avatar.walk_tilt, 0.15, delta*8.0)
 	bobbing(delta, true_speed, input_dir)
 	avoid_close_entities(delta)
+	#after images
+	if after_image_this_frame:
+			create_after_image(velocity,after_image_pos)
+			create_after_image.rpc(velocity,after_image_pos)
+			after_image_this_frame = false
+	if velocity.length() > speed_cap*0.25:
+		if velocity.length() > vel_last_frame.length()*1.25:# or velocity.dot(vel_last_frame) < 0.75:
+			after_image_this_frame = true
+			after_image_pos = position
+	
 	vel_last_frame = velocity
 	if not snap_up_to_stairs_check(delta):
 		move_and_slide()
@@ -751,7 +775,6 @@ func _physics_process(delta):
 	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting)
 	$UI/second_pass/SubViewport/second_pass.global_transform = camera.global_transform
 	$UI/second_pass/SubViewport/second_pass.fov = camera.fov
-	
 
 @onready var shadow = $playerAvatar/projected_shadow/shadow
 @onready var shadow_mat = shadow.get_active_material(0)

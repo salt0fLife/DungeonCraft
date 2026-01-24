@@ -114,14 +114,21 @@ func set_anchor_up(val):
 
 func add_graphics_from_custom_data(data : Dictionary) -> void:
 	if data.keys().has("enchantments"):
+		var evil_mat = load("res://assets/materials/max_stat_mat.tres").duplicate()
+		evil_mat.set("shader_parameter/shaky",true)
+		evil_mat.set("shader_parameter/enchanted_col", Color.CRIMSON)
+		evil_mat.set("shader_parameter/wavy",false)
 		for ench in data["enchantments"]:
 			var l = Label.new()
+			l.set("theme_override_fonts/font", load("res://assets/fonts/NOTOSANSOLDTURKIC-REGULAR.TTF"))
 			l.text = Lookup.enchantment_names[ench]#str(ench)
 			l.modulate = Lookup.enchantment_colors[ench]
 			if Lookup.good_enchantments.has(ench):
 				l.material = load("res://assets/materials/legendary_stat_mat.tres")
 			elif Lookup.godly_enchantments.has(ench):
 				l.material = load("res://assets/materials/max_stat_mat.tres")
+			elif Lookup.evil_enchantments.has(ench):
+				l.material = evil_mat
 			node_handler.add_child(l)
 	if data.keys().has("storage"):
 		#var p = PanelContainer.new()

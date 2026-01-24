@@ -484,15 +484,18 @@ enum enchantments {
 }
 
 const enchantment_names = [
-	"resilience", #improves all defensive attributes by small amounts
-	"advanced_resiliance", #better resiliance
-	"desolation", #applies blight and increases damage attributes decreases defensive effects
-	"mastery", #improves everything by a little bit
-	"advanced_mastery", #better mastery
-	"perfect_mastery", #better better mastery
-	"weightless", #removes movement debuffs and knockback resistance if applicable #weightlessness?
-	"density", #increases movment debuffs and knockback resistance if applicable
-	"swiftness",
+	"𐰓𐰏𐰇", #"resilience", #improves all defensive attributes by small amounts
+	#"𐰋𐰓𐰜 𐰓𐰏𐰇", #better resiliance
+	"𐰑𐰨𐰃𐰍 𐰓𐰏𐰇", #best resiliance
+	"𐰪𐰃𐰍", #"desolation", bad/evil, #applies blight and increases damage attributes decreases defensive effects
+	"𐰋𐰓𐰜", #big powerful great "mastery", #improves everything by a little bit
+	"𐰑𐰨𐰃𐰍 𐰋𐰓𐰜", #better mastery
+	"𐰋𐰭𐰏𐰇", #eternal, #"perfect_mastery", #better better mastery
+	"𐰚𐰃𐰲𐰏", #small little young, #"weightless", #removes movement debuffs and knockback resistance if applicable #weightlessness?
+	"𐰖𐰆𐰍𐰣", # #"𐰍𐰺",# dense thick tough, density", #increases movment debuffs and knockback resistance if applicable
+	"𐱆𐰕𐰃𐰐", #"swiftness",
+	"𐰃𐰑𐰸", #holy or blessing, adds holy damage or blight defense
+	"𐰑𐰨𐰃𐰍 𐰃𐰑𐰸", #better holy
 ]
 
 const enchantment_colors = [
@@ -505,6 +508,8 @@ const enchantment_colors = [
 	Color.AQUAMARINE, #removes movement debuffs and knockback resistance if applicable #weightlessness?
 	Color.MIDNIGHT_BLUE, #increases movment debuffs and knockback resistance if applicable
 	Color.PALE_TURQUOISE,
+	Color.GOLD,
+	Color.GOLDENROD,
 ]
 
 const good_enchantments =[
@@ -516,4 +521,8 @@ const good_enchantments =[
 const godly_enchantments =[
 	enchantments.perfect_mastery,
 	enchantments.swiftness
+]
+
+const evil_enchantments = [
+	enchantments.desolation
 ]

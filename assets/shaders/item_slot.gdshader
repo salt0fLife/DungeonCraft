@@ -1,13 +1,19 @@
 shader_type canvas_item;
 uniform bool wavy = false;
+uniform bool shaky = false;
 uniform vec3 enchanted_col : source_color;
 uniform sampler2D enchanted_tex : repeat_enable;
 uniform bool transparent_background = false;
 
 void vertex() {
 	if (wavy) {
-		VERTEX.x += sin(TIME*1.25+sin(VERTEX.y))*3.0;
+		VERTEX.x += sin(TIME*1.25+sin(VERTEX.y*0.1))*3.0;
+		VERTEX.y += sin(TIME*1.25*0.5+sin(VERTEX.x*0.2))*1.0;
 		}
+	if (shaky){
+		VERTEX.x += sin(TIME*10.0+VERTEX.y*50.0+sin(TIME*15.0));//*0.2;
+		VERTEX.y += sin(TIME*9.0+VERTEX.x*40.0+sin(TIME*15.0));//*0.2;
+	}
 	// Called for every vertex the material is visible on.
 }
 

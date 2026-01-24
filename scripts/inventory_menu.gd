@@ -207,6 +207,7 @@ func _process(delta):
 		pass
 	if $itemPreview.visible:
 		var mouse_pos = get_viewport().get_mouse_position()
+		#var mouse_pos = $itemPreview.position #so it stays stationary
 		$itemPreview.position = mouse_pos# get_viewport().get_mouse_position()# + Vector2(0.0,-216.0)
 		if mouse_pos.y > get_viewport_rect().size.y*0.5:
 			$itemPreview.set_anchor_up(false)
