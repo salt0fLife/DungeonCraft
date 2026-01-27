@@ -46,7 +46,8 @@ const worlds = {
 	"gm_construct" : ["res://world/gm_construct.tscn", 0.4],
 	"skywas_test" : ["res://world/skywars_prot_rainy.tscn", 0.0],
 	"dungeon_world" : ["res://world/dungeon_world.tscn", 0.0],
-	"wayland" : ["res://world/wayland_main.tscn",0.0]
+	"wayland" : ["res://world/wayland_main.tscn",0.0],
+	"elder_tree_temple" : ["res://world/elder_tree_temple.tscn", 0.0]
 }
 
 enum itemType {

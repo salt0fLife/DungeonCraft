@@ -1,6 +1,7 @@
 extends Node3D
-@export var life_time = 0.5
+@export var life_time = 0.1
 @export var initial_vel = Vector3.ZERO
+@export var starting_fade = 0.0
 
 @onready var bone_paths = [
 	$root/chestBase,
@@ -46,6 +47,9 @@ func _ready():
 	$root/chestBase/shoulder_L/elbowL/gh/leftArm2Norm.set_surface_override_material(0,mat)
 	$root/chestBase/shoulder_R/gh/rightArm1Norm.set_surface_override_material(0,mat)
 	$root/chestBase/shoulder_R/elbowR/gh/rightArm2Norm.set_surface_override_material(0,mat)
+	starting_fade = clamp(starting_fade,0.0,1.0)
+	mat.albedo_color -= mat.albedo_color*starting_fade
+
 
 func _process(delta):
 	position += initial_vel * delta
@@ -53,7 +57,7 @@ func _process(delta):
 	life_time -= delta
 	if life_time < 0.0:
 		call_thread_safe("queue_free")
-	mat.albedo_color -= mat.albedo_color*delta*4.0
+	mat.albedo_color -= mat.albedo_color*delta*10.0
 
 func apply_pose(pose):
 	for i in range(0, bone_names.size()):

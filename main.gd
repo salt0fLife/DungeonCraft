@@ -96,7 +96,7 @@ func host_local():
 	multiplayer.server_relay = true
 	playerSync.boot(true)
 	hide_menu()
-	_on_change_world("debug")
+	_on_change_world("elder_tree_temple")
 
 func join_local(address = ""):
 	Global.is_host = false

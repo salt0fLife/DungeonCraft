@@ -543,9 +543,10 @@ func _input(event):
 		create_after_image.rpc(velocity)
 
 @rpc("any_peer","unreliable")
-func create_after_image(vel = Vector3.ZERO, pos = position):
+func create_after_image(vel = Vector3.ZERO, pos = position, lightness = 0.0):
 	var af_im = load("res://assets/avatar/player_after_image.tscn").instantiate()
 	var pose = avatar.get_pose()
+	af_im.starting_fade = lightness
 	get_parent().add_child(af_im)
 	af_im.position = pos
 	af_im.rotation = rotation
@@ -595,6 +596,7 @@ var jumped_last_frame = false
 var vel_last_frame = Vector3.ZERO
 var after_image_pos = Vector3.ZERO
 var after_image_this_frame = false
+var after_image_buffer = 0
 func _physics_process(delta):
 	if !is_multiplayer_authority():
 		return
@@ -750,12 +752,18 @@ func _physics_process(delta):
 	avoid_close_entities(delta)
 	#after images
 	if after_image_this_frame:
-			create_after_image(velocity,after_image_pos)
-			create_after_image.rpc(velocity,after_image_pos)
-			after_image_this_frame = false
+			var lightness = 1.0 / ((after_image_buffer + 1)*2.0)
+			create_after_image(velocity,after_image_pos,lightness)
+			create_after_image.rpc(velocity,after_image_pos,lightness)
+			after_image_buffer -= 1
+			after_image_pos = position
+			if after_image_buffer < 0:
+				after_image_this_frame = false
+				after_image_buffer = 0
 	if velocity.length() > speed_cap*0.25:
 		if velocity.length() > vel_last_frame.length()*1.25:# or velocity.dot(vel_last_frame) < 0.75:
 			after_image_this_frame = true
+			after_image_buffer = 10
 			after_image_pos = position
 	
 	vel_last_frame = velocity
