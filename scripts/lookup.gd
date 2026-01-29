@@ -47,7 +47,8 @@ const worlds = {
 	"skywas_test" : ["res://world/skywars_prot_rainy.tscn", 0.0],
 	"dungeon_world" : ["res://world/dungeon_world.tscn", 0.0],
 	"wayland" : ["res://world/wayland_main.tscn",0.0],
-	"elder_tree_temple" : ["res://world/elder_tree_temple.tscn", 0.0]
+	"elder_tree_temple" : ["res://world/elder_tree_temple.tscn", 0.0],
+	"test_modular" : ["res://world/test_modular_world.tscn",1.0],
 }
 
 enum itemType {
@@ -367,6 +368,8 @@ enum interact_return_code {
 	dont_do_anything, #returns null
 	is_item, #returns item_key that should be picked up
 	print, #returns a string that should be printed
+	is_doorway, #returns [tp_pos, new_rot] that should be traveled to (rot should be added not set)
+	is_ladder, #returns [xz_pos, height_min_max,facing_rot]
 }
 
 const fire_colors = [Color.ORANGE_RED, Color.AQUA, Color.DARK_RED,Color.SPRING_GREEN,Color.WEB_PURPLE]

@@ -1,0 +1,46 @@
+[gd_scene load_steps=8 format=3 uid="uid://dsva3w0odq2a2"]
+
+[ext_resource type="Script" path="res://scripts/generic_doorway.gd" id="1_a0la1"]
+[ext_resource type="FontFile" uid="uid://g043wv70ps2v" path="res://assets/fonts/PIXELOIDMONO-D94EV.TTF" id="2_jkkhl"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hj8w7"]
+size = Vector3(1, 1.99536, 0.249512)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_wpnr8"]
+size = Vector2(1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lywtl"]
+albedo_color = Color(0.337255, 0.705882, 0.470588, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yqa7m"]
+material = SubResource("StandardMaterial3D_lywtl")
+size = Vector3(1, 2, 0.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_228h7"]
+albedo_color = Color(0.596078, 0.984314, 0.596078, 1)
+
+[node name="doorway" type="StaticBody3D" groups=["interact", "tool_tip"]]
+script = ExtResource("1_a0la1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00476, 0.000732422)
+shape = SubResource("BoxShape3D_hj8w7")
+
+[node name="output_pos" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 1)
+mesh = SubResource("PlaneMesh_wpnr8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("BoxMesh_yqa7m")
+surface_material_override/0 = SubResource("StandardMaterial3D_228h7")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 1.99198, 0.129)
+text = "SB"
+font = ExtResource("2_jkkhl")
+outline_size = 0
+horizontal_alignment = 0

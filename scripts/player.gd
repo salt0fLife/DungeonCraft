@@ -416,7 +416,7 @@ func settup_team_hurtboxes(is_team):
 	pass
 
 func _on_world_load():
-	tp(Vector3.ZERO,Vector3.ZERO)
+	tp(Vector3.ZERO,0.0)
 
 var jump_buffer = 0.0
 func _input(event):
@@ -577,6 +577,7 @@ func get_non_clipped_look_reference() -> Vector3:
 		return look_reference.global_position
 
 func jump():
+	is_climbing_ladder = false
 	jump_buffer = 0.0
 	jumped_last_frame = true
 	play_footstep()
@@ -609,7 +610,9 @@ func _physics_process(delta):
 	
 	hands.position = lerp(hands.position, bobHandler.position, delta*64.0)
 	hands.rotation = Global.vec3_rot_lerp(hands.rotation, bobHandler.rotation, delta*32.0)
-	
+	if is_climbing_ladder:
+		climbing_ladder(delta) #nice
+		return
 	
 	if position.y < -200.0:
 		position = Vector3.ZERO
@@ -783,6 +786,47 @@ func _physics_process(delta):
 	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting)
 	$UI/second_pass/SubViewport/second_pass.global_transform = camera.global_transform
 	$UI/second_pass/SubViewport/second_pass.fov = camera.fov
+
+func climbing_ladder(delta):
+	set_flying(false)
+	velocity = Vector3.ZERO
+	position.x = ladder_pos.x
+	position.z = ladder_pos.y
+	
+	graphics.rotation.y = clamp(graphics.rotation.y,ladder_facing-PI*0.25,ladder_facing+PI*0.25)
+	avatar.animation_speed = 1.0
+	avatar.animation_state = "idle"
+	if Input.is_action_just_pressed("jump"):
+		is_climbing_ladder = false
+		jump()
+		return
+	if Input.is_action_pressed("up"):
+		position.y += delta*4.0
+	elif Input.is_action_pressed("down"):
+		position.y -= delta*4.0
+	if position.y < ladder_height.x:
+		#below ladder
+		is_climbing_ladder = false
+		pass
+	elif position.y > ladder_height.y:
+		#above ladder
+		is_climbing_ladder = false
+		jump()
+		pass
+	var vel_length = velocity.length()
+	if vel_length > speed_cap:
+		velocity = speed_cap * velocity.normalized() #keeps you from going into orbit :3
+	speed_appeal = lerp(speed_appeal,velocity.length()/speed_cap,delta*8.0)#Vector2(velocity.x,velocity.z).length()/speed_cap
+	var desired_fov = Settings.user_settings["desired_fov"]
+	var speed_fov_effect = Settings.user_settings["speed_fov_effect"]
+	camera.fov = lerp(desired_fov,desired_fov+speed_fov_effect,speed_appeal)
+	Global.set_post("shader_parameter/action_lines",speed_appeal)
+	$genericAudio/movement_wind.volume_db = remap(speed_appeal,0.0,1.0,-80.0,-15.0)
+	update_shadow()
+	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting)
+	$UI/second_pass/SubViewport/second_pass.global_transform = camera.global_transform
+	$UI/second_pass/SubViewport/second_pass.fov = camera.fov
+	pass
 
 @onready var shadow = $playerAvatar/projected_shadow/shadow
 @onready var shadow_mat = shadow.get_active_material(0)
@@ -1295,7 +1339,7 @@ func despawn():
 	queue_free()
 
 @rpc("any_peer","reliable")
-func tp(pos : Vector3, rot = graphics.rotation.y):
+func tp(pos : Vector3, rot: float = graphics.rotation.y):
 	global_position = pos
 	graphics.rotation.y = rot
 
@@ -1818,6 +1862,11 @@ func attempt_to_interact(primary_interact = true):
 			return
 	print("invalid interact")
 
+var is_climbing_ladder = false
+var ladder_pos = Vector2.ZERO
+var ladder_height = Vector2.ZERO
+var ladder_facing = 0.0
+
 func process_interact_data(data, normal, hit):
 	match data[0]:
 		Lookup.interact_return_code.is_item: 
@@ -1825,8 +1874,15 @@ func process_interact_data(data, normal, hit):
 				hit.destroy()
 			else:
 				print("cant pick up inventory full")
-
-
+		Lookup.interact_return_code.is_doorway:
+			position = data[1][0]
+			graphics.rotation.y += data[1][1]
+		Lookup.interact_return_code.is_ladder:
+			is_climbing_ladder = true
+			var li = data[1] #[xz_pos, height_min_max,facing_rot]
+			ladder_pos = li[0]
+			ladder_height = li[1]
+			ladder_facing = li[2]
 
 
 ##audio handling

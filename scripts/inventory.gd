@@ -46,10 +46,10 @@ var empty_item = ["",0,-1,{}] #key, stack, type, custom data
 
 var accessories = {
 	#armor and clothes
-	"cape" : key_to_item("devil_wings"),
+	"cape" : empty_item,#key_to_item("devil_wings"),
 	"shirt" : empty_item,
 	"chestplate" : empty_item,
-	"hat" : key_to_item("iron_helmet"),
+	"hat" : empty_item,#key_to_item("iron_helmet"),
 	"pants" : empty_item,
 	"leggings" : empty_item,
 	"gloveR" : empty_item,
@@ -62,7 +62,7 @@ var accessories = {
 	"necklace2" : empty_item,
 	"necklace3" : empty_item,
 	"necklace4" : empty_item,
-	"crown" : key_to_item("crown_of_god"),
+	"crown" : empty_item,#key_to_item("crown_of_god"),
 	"braceletR" : empty_item,
 	"braceletL" : empty_item,
 	"belt" : empty_item,
@@ -85,15 +85,15 @@ var accessories = {
 
 var hotbar = [
 	["iron_sword",1,Lookup.itemType.weapons_sword,{"enchantment_color": Color.GREEN, "enchantments" : [Lookup.enchantments.perfect_mastery,Lookup.enchantments.advanced_resiliance], "custom_texture_path" : "res://assets/textures/icons/silverMinnow.png"}], #0
-	["longsword_debug",3,Lookup.itemType.weapons_longsword,{"storage" : [key_to_item("mace_debug"),key_to_item("mace_debug"),key_to_item("iron_sword"),empty_item, key_to_item("iron_helmet"),empty_item,empty_item]}], #1
-	["mace_debug",2,Lookup.itemType.weapons_mace,{"enchantments" : [0]}], #2
-	["bow_debug",1,Lookup.itemType.weapons_bow,{"enchantments" : [3,2,1]}], #3
+	empty_item,#["longsword_debug",3,Lookup.itemType.weapons_longsword,{"storage" : [key_to_item("mace_debug"),key_to_item("mace_debug"),key_to_item("iron_sword"),empty_item, key_to_item("iron_helmet"),empty_item,empty_item]}], #1
+	empty_item,#["mace_debug",2,Lookup.itemType.weapons_mace,{"enchantments" : [0]}], #2
+	empty_item,#["bow_debug",1,Lookup.itemType.weapons_bow,{"enchantments" : [3,2,1]}], #3
 	["spear_debug",1,Lookup.itemType.weapons_spear,{}], #4
-	["glaive_debug",1,Lookup.itemType.weapons_glaive,{"enchantments" : [0],"enchantment_color": Color.ROYAL_BLUE}], #5
-	["scythe_debug",1,Lookup.itemType.weapons_scythe,{"enchantments": [0]}], #6
-	["wand_debug",1,Lookup.itemType.weapons_wand,{}], #7
+	empty_item,#["glaive_debug",1,Lookup.itemType.weapons_glaive,{"enchantments" : [0],"enchantment_color": Color.ROYAL_BLUE}], #5
+	empty_item,#["scythe_debug",1,Lookup.itemType.weapons_scythe,{"enchantments": [0]}], #6
+	empty_item,#["wand_debug",1,Lookup.itemType.weapons_wand,{}], #7
 	["spellbook_debug",1,Lookup.itemType.weapons_spellbook,{}], #8
-	["fishing_rod_debug",1,Lookup.itemType.weapons_fishing_rod,{"enchantments": [1,2],}] #9
+	empty_item #["fishing_rod_debug",1,Lookup.itemType.weapons_fishing_rod,{"enchantments": [1,2],}] #9
 ]
 
 var held_item = 0 # 0 - 9 for hotbar

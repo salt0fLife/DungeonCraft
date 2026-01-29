@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://dx8w66gakulaq"]
+
+[ext_resource type="PackedScene" uid="uid://dsva3w0odq2a2" path="res://assets/environmentPieces/traversal/generic_doorway.tscn" id="1_n5exh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lywtl"]
+albedo_color = Color(0.337255, 0.705882, 0.470588, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_x3j0c"]
+material = SubResource("StandardMaterial3D_lywtl")
+size = Vector3(1, 2, 0.25)
+
+[node name="sub_room_doorway" type="Node3D"]
+
+[node name="doorway" parent="." instance=ExtResource("1_n5exh")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("BoxMesh_x3j0c")

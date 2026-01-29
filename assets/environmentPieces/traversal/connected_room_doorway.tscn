@@ -1,0 +1,54 @@
+[gd_scene load_steps=7 format=3 uid="uid://u7jt3agx61pd"]
+
+[ext_resource type="PackedScene" uid="uid://dsva3w0odq2a2" path="res://assets/environmentPieces/traversal/generic_doorway.tscn" id="1_dhik4"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2g4n4"]
+albedo_color = Color(0.560784, 0.784314, 0.537255, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rv050"]
+material = SubResource("StandardMaterial3D_2g4n4")
+size = Vector3(1, 2, 0.25)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_el5rs"]
+size = Vector3(0.25, 2, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q8ory"]
+albedo_color = Color(0.266667, 0.588235, 0.384314, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pi431"]
+material = SubResource("StandardMaterial3D_q8ory")
+size = Vector3(0.25, 2, 0.3)
+
+[node name="connected_room_doorway" type="Node3D"]
+
+[node name="doorway" parent="." instance=ExtResource("1_dhik4")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("BoxMesh_rv050")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.625, 1, 0.025)
+shape = SubResource("BoxShape3D_el5rs")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.625, 1, 0.025)
+shape = SubResource("BoxShape3D_el5rs")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 2.125, 0.025)
+shape = SubResource("BoxShape3D_el5rs")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.625, 1, 0.025)
+mesh = SubResource("BoxMesh_pi431")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.625, 1, 0.025)
+mesh = SubResource("BoxMesh_pi431")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 2.125, 0.025)
+mesh = SubResource("BoxMesh_pi431")
