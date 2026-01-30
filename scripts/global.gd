@@ -15,6 +15,7 @@ signal thunder_from_point
 signal update_health_graphics
 signal update_mana_graphics
 signal update_attributes
+signal enter_room #called with an id when moving using doors for hiding unused rooms
 var inside = 0.0
 
 var skin = [64,64,false,0,[]]

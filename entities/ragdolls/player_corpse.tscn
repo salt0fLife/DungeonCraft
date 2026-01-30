@@ -107,6 +107,9 @@ shader_parameter/eyelashes = Vector2(0.345, 0.24)
 shader_parameter/eyelashCol = Color(0, 0, 0, 1)
 shader_parameter/eyelashTaper = 0.205
 shader_parameter/transparency = 0.0
+shader_parameter/glow_col = null
+shader_parameter/glow_col_2 = null
+shader_parameter/glow_col_3 = null
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_tycrd"]
 _surfaces = [{

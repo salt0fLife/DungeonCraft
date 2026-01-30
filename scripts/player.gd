@@ -456,6 +456,9 @@ func _input(event):
 			play_arm_anim("")
 	if Input.is_action_just_pressed("interact"):
 		attempt_to_interact()
+		#interacting = true
+	elif Input.is_action_just_released("interact"):
+		stop_interacting()
 	if Input.is_action_just_pressed("lm"):
 		_on_left_mouse()
 	if Input.is_action_just_pressed("rm"):
@@ -631,6 +634,14 @@ func _physics_process(delta):
 			jump_buffer -= delta
 			if jump_buffer < 0.0:
 				jump_buffer = 0.0
+		#head bonk damage
+		if is_on_wall() or is_on_ceiling():
+			var mult = (vel_last_frame.length()-velocity.length())/9.8
+			var d = int(pow(mult,2.0))
+			if d > 0:
+				damage([[3,d]],"physics_damage","", "",-vel_last_frame*0.1,false)
+				heavy_impact()
+				heavy_impact.rpc()
 	else:
 		set_flying(false)
 		if jump_buffer > 0.0:
@@ -645,9 +656,9 @@ func _physics_process(delta):
 			var d = int(pow(mult,3.0))
 			if d > 0:
 				damage([[3,d]],"fall_damage","", "",Vector3(0.0,last_y_velocity,0.0),false)
-				if d > 3:
-					heavy_impact()
-					heavy_impact.rpc()
+				#if d > 3:
+				heavy_impact()
+				heavy_impact.rpc()
 			#avatar.walk_tilt += abs(last_y_velocity/9.8)*0.25
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
@@ -800,10 +811,15 @@ func climbing_ladder(delta):
 		is_climbing_ladder = false
 		jump()
 		return
+	elif Input.is_action_just_pressed("crouch"):
+		is_climbing_ladder = false
+		velocity.y = -2.0
+		#escape
+		return
 	if Input.is_action_pressed("up"):
-		position.y += delta*4.0
+		position.y += delta*2.0
 	elif Input.is_action_pressed("down"):
-		position.y -= delta*4.0
+		position.y -= delta*2.0
 	if position.y < ladder_height.x:
 		#below ladder
 		is_climbing_ladder = false
@@ -811,7 +827,8 @@ func climbing_ladder(delta):
 	elif position.y > ladder_height.y:
 		#above ladder
 		is_climbing_ladder = false
-		jump()
+		#jump() feel bad
+		velocity.y = 2.0 #feel good
 		pass
 	var vel_length = velocity.length()
 	if vel_length > speed_cap:
@@ -1347,8 +1364,11 @@ var last_attacker = ""
 var last_attack_forget = 20.0
 var last_attack_forget_timer = 0.0
 
+@onready var blood_decal = preload("res://assets/effects/blood_decal.tscn")
 @onready var hitmarker = preload("res://assets/effects/hitmarker.tscn")
 func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, count_attacker = false):
+	if !is_multiplayer_authority():
+		return
 	#print(attacker + " hit " + display_name + " with " + str(data) + " damage in the " + id)
 	if count_attacker:# and attacker != "":
 		last_attack_forget_timer = last_attack_forget
@@ -1410,8 +1430,16 @@ func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, coun
 	h.position.y += 0.65
 	get_parent().add_child(h)
 	
-	if !is_multiplayer_authority():
-		return
+	if is_on_floor() or is_on_wall():
+		var col = get_last_slide_collision()
+		if col != null: #yeah idk man had it happen once so why not
+			var norm = col.get_normal(0)
+			var poi = col.get_position(0)
+			add_blood(norm,poi)
+			add_blood.rpc(norm,poi)
+	
+	add_hitmarker.rpc(amount,primary_damage_type) #now everyone knows :D
+	
 	velocity += knockback
 	if health <= 0:
 		var key = id
@@ -1425,6 +1453,28 @@ func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, coun
 		t.connect("finished",set_damaged.bind(Vector2(0.0,0.0)))
 		pass
 	update_health_graphics()
+
+@rpc("any_peer")
+func add_hitmarker(val,type):
+	var h = hitmarker.instantiate()
+	h.val = val
+	h.type = type
+	h.position = position
+	h.position.y += 0.65
+	get_parent().add_child(h)
+
+@rpc("any_peer")
+func add_blood(norm,poi):
+	var b = blood_decal.instantiate()
+	b.unlimited_life_time = true
+	$blood_handler.add_child(b)
+	b.global_position = poi + norm*0.01
+	var rot_y = atan2(norm.x,norm.z)
+	var rot_x = atan2(sqrt(pow(norm.x,2.0)+pow(norm.z,2.0)),norm.y)
+	b.rotation.y = rot_y
+	b.rotation.x = rot_x
+	if $blood_handler.get_child_count(false) > 256:
+		$blood_handler.get_child(0).queue_free()
 
 func set_damaged(val):
 	var sined_val = (sin(val.x*PI)+1.0)*0.5*val.y
@@ -1454,6 +1504,14 @@ const fall_damage_messages = [
 	" jumped off a bridge",
 	" fell down the stairs",
 	" tripped"
+]
+const physics_damage_messages = [ #should be funny lmao
+	" was thrown violently against a wall",
+	" had all of their bones shattered",
+	" got their head slammed into the wall", #these first three have to be able to have -by player added to them
+	" hit a wall quite forcefully",
+	" broke every single one of their bones",
+	" violently cracked their skull"
 ]
 
 const perish_messages = [
@@ -1582,6 +1640,10 @@ func get_death_message(attacker = "", key = "", weapon_name = "", damage_id = 0)
 			message = display_name + fall_damage_messages.pick_random()
 			if attacker != "":
 				message = display_name + " was pushed off cliff by " + attacker
+		"physics_damage":
+			message = display_name + physics_damage_messages.pick_random()
+			if attacker != "":
+				message = display_name + physics_damage_messages[randi_range(0,2)] + " by " + attacker
 		"perish":
 			message = display_name + perish_messages.pick_random()
 			if attacker != "":
@@ -1856,11 +1918,29 @@ func attempt_to_interact(primary_interact = true):
 			printerr("something was deleted before could interact check your code fucker :/")
 			return
 		if hit.is_in_group("interact"):
+			time_to_interact = hit.interact_time
 			var ret = hit.interact()
-			print(ret)
-			process_interact_data(ret, primary_interact, hit)
+			interacting_timer = time_to_interact
+			interact_data = [ret, primary_interact, hit]
+			
+			interact_initial_pos = position
+			interact_initial_rot = Vector2(graphics.rotation.y,cameraHandler.rotation.x)
+			initial_distance_to_interact = (hit.global_position - position).length()
+			
+			interacting = true
+			print("started_interacting: " + str(ret))
+			#print(ret)
+			#process_interact_data(ret, primary_interact, hit)
 			return
 	print("invalid interact")
+
+var time_to_interact = 0.75
+var interacting = false
+var interacting_timer = 0.0
+var interact_data = null #[ret,primary_interact,hit]
+var interact_initial_rot = Vector2.ZERO
+var interact_initial_pos = Vector3.ZERO
+var initial_distance_to_interact = 0.0
 
 var is_climbing_ladder = false
 var ladder_pos = Vector2.ZERO
@@ -1877,12 +1957,16 @@ func process_interact_data(data, normal, hit):
 		Lookup.interact_return_code.is_doorway:
 			position = data[1][0]
 			graphics.rotation.y += data[1][1]
+			Global.emit_signal("enter_room",data[1][2])
 		Lookup.interact_return_code.is_ladder:
 			is_climbing_ladder = true
 			var li = data[1] #[xz_pos, height_min_max,facing_rot]
 			ladder_pos = li[0]
 			ladder_height = li[1]
 			ladder_facing = li[2]
+			position.y = clamp(position.y,ladder_height.x,ladder_height.y)
+			position.x = ladder_pos.x
+			position.z = ladder_pos.y
 
 
 ##audio handling
@@ -2089,8 +2173,41 @@ func _process(delta):
 		if stamina >= attributes["max_stamina"]:
 			stamina = attributes["max_stamina"]
 		update_stamina_graphics()
+	
+	#interacting
+	if interacting:
+		interacting_timer -= delta
+		update_interacting_graphics()
+		if interacting_timer < 0.0:
+			interacting_timer = 0.0
+			process_interact_data(interact_data[0],interact_data[1],interact_data[2])
+			stop_interacting()
+		elif (interact_initial_pos - position).length() > 0.5:
+			if initial_distance_to_interact > (interact_data[2].global_position - position).length():
+				print("waved movement interact cancel because distance was closer to target")
+				interact_initial_pos = position
+			else: stop_interacting()
+			print("moved to far")
+		elif (interact_initial_rot.x > graphics.rotation.y+PI*0.25) or (interact_initial_rot.x < graphics.rotation.y-PI*0.25):
+			stop_interacting()
+			print("rotated to far horizontal")
+		elif (interact_initial_rot.y > cameraHandler.rotation.x+PI*0.25) or (interact_initial_rot.y < cameraHandler.rotation.x-PI*0.25):
+			stop_interacting()
+			print("rotated to far vertical")
+		#i feel like those parameters are lenient enough
 var clear_status_effects : bool = true
 var status_effect_timer  : float = 0.25
+
+func stop_interacting():
+	interacting = false
+	$UI/crosshairControl/crosshair.hide()
+	print("stopped interacting")
+
+func update_interacting_graphics():
+	$UI/crosshairControl/crosshair.visible = true
+	$UI/crosshairControl/crosshair.frame = int(remap(interacting_timer,0.0,time_to_interact,0.0,4.0))
+	
+	pass
 
 func update_mana_graphics():
 	$UI/mana.text = str(round(mana)) + " / " + str(attributes["max_mana"])

@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dim3yh24xb765"]
+[gd_scene load_steps=9 format=3 uid="uid://dim3yh24xb765"]
 
 [ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="1_mdkvd"]
 [ext_resource type="PackedScene" uid="uid://cnh2mcjrokd7t" path="res://assets/environmentPieces/traversal/climb_area.tscn" id="2_5ixju"]
 [ext_resource type="PackedScene" uid="uid://dsva3w0odq2a2" path="res://assets/environmentPieces/traversal/generic_doorway.tscn" id="3_8yenc"]
 [ext_resource type="PackedScene" uid="uid://7pogl134aryp" path="res://assets/environmentPieces/traversal/stairs_generator.tscn" id="4_6toaq"]
+[ext_resource type="Script" path="res://scripts/roomsHandler.gd" id="5_t3r10"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hewi2"]
 
@@ -30,145 +31,304 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
 
 [node name="ladder" parent="traversal" instance=ExtResource("2_5ixju")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.27902, 0, -7)
+desired_height = 3.0
 
 [node name="ladder2" parent="traversal" instance=ExtResource("2_5ixju")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.26056, 0.189418, -10)
-desired_height = 6.0
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.26056, 0.183636, -10.2274)
 
 [node name="doorway" parent="traversal" instance=ExtResource("3_8yenc")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 7.47698, 0, -10)
 sibling_door_path = NodePath("../doorway2")
+assigned_room_id = 0
 
 [node name="doorway2" parent="traversal" instance=ExtResource("3_8yenc")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 4.53291, 3, -10)
 sibling_door_path = NodePath("../doorway")
+assigned_room_id = 0
 
 [node name="doorway3" parent="traversal" instance=ExtResource("3_8yenc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -14.3902)
 sibling_door_path = NodePath("../doorway4")
 visual_type = 1
+assigned_room_id = 0
 
 [node name="doorway4" parent="traversal" instance=ExtResource("3_8yenc")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, -35.5762)
 sibling_door_path = NodePath("../doorway3")
 visual_type = 1
+assigned_room_id = 1
+
+[node name="doorway9" parent="traversal" instance=ExtResource("3_8yenc")]
+transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, 8, 0, -50.4147)
+sibling_door_path = NodePath("../doorway10")
+assigned_room_id = 1
+
+[node name="doorway10" parent="traversal" instance=ExtResource("3_8yenc")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 8, 12, -32.5802)
+sibling_door_path = NodePath("../doorway9")
+assigned_room_id = 1
 
 [node name="doorway8" parent="traversal" instance=ExtResource("3_8yenc")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.39735, 2, -39.5762)
 sibling_door_path = NodePath("../doorway7")
 visual_type = 1
+assigned_room_id = 1
 
 [node name="doorway5" parent="traversal" instance=ExtResource("3_8yenc")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -5.80595, 6.22017, -12.5284)
 sibling_door_path = NodePath("../doorway6")
 visual_type = 1
+assigned_room_id = 0
 
 [node name="doorway6" parent="traversal" instance=ExtResource("3_8yenc")]
 transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, -18.568, 5.00103, -29.5284)
 sibling_door_path = NodePath("../doorway5")
 visual_type = 1
+assigned_room_id = 2
 
 [node name="doorway7" parent="traversal" instance=ExtResource("3_8yenc")]
 transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, -18.568, 5.00103, -33.5284)
 sibling_door_path = NodePath("../doorway8")
 visual_type = 1
+assigned_room_id = 2
 
-[node name="room1" type="Node3D" parent="."]
+[node name="ladder3" parent="traversal" instance=ExtResource("2_5ixju")]
+transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, 46.3805, 0.0568771, -27.2527)
+desired_height = 26.0
 
-[node name="CSGCombiner3D" type="CSGCombiner3D" parent="room1"]
+[node name="ladder4" parent="traversal" instance=ExtResource("2_5ixju")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.26357, 0, -36.2024)
+desired_height = 2.0
+
+[node name="doorway11" parent="traversal" instance=ExtResource("3_8yenc")]
+transform = Transform3D(1.31135e-07, 0, -1, 0, 1, 0, 1, 0, 1.31135e-07, 13.431, 0, -40.4147)
+sibling_door_path = NodePath("../doorway12")
+visual_type = 1
+assigned_room_id = 1
+
+[node name="doorway12" parent="traversal" instance=ExtResource("3_8yenc")]
+transform = Transform3D(-2.18557e-07, 0, 1, 0, 1, 0, -1, 0, -2.18557e-07, 39.5601, 0, -23.4147)
+sibling_door_path = NodePath("../doorway11")
+visual_type = 1
+assigned_room_id = 3
+
+[node name="doorway13" parent="traversal" instance=ExtResource("3_8yenc")]
+transform = Transform3D(3.0598e-07, 0, -1, 0, 1, 0, 1, 0, 3.0598e-07, 43.4299, 15, -10.4147)
+sibling_door_path = NodePath("../doorway14")
+assigned_room_id = 3
+
+[node name="doorway14" parent="traversal" instance=ExtResource("3_8yenc")]
+transform = Transform3D(-1, 0, -2.62269e-07, 0, 1, 0, 2.62269e-07, 0, -1, 53.4299, 19, -14.6055)
+sibling_door_path = NodePath("../doorway13")
+assigned_room_id = 3
+
+[node name="doorway15" parent="traversal" instance=ExtResource("3_8yenc")]
+transform = Transform3D(-1, 0, -2.62269e-07, 0, 1, 0, 2.62269e-07, 0, -1, 40.4299, 15, -9.57534)
+sibling_door_path = NodePath("../doorway16")
+assigned_room_id = 3
+
+[node name="doorway16" parent="traversal" instance=ExtResource("3_8yenc")]
+transform = Transform3D(1, 0, 3.49692e-07, 0, 1, 0, -3.49692e-07, 0, 1, 40.4299, 26, -31.4688)
+sibling_door_path = NodePath("../doorway15")
+assigned_room_id = 3
+
+[node name="doorway17" parent="traversal" instance=ExtResource("3_8yenc")]
+transform = Transform3D(3.0598e-07, 0, -1, 0, 1, 0, 1, 0, 3.0598e-07, 51.4299, 26, -29.4688)
+sibling_door_path = NodePath("../doorway18")
+assigned_room_id = 3
+
+[node name="doorway18" parent="traversal" instance=ExtResource("3_8yenc")]
+transform = Transform3D(1, 0, 3.49692e-07, 0, 1, 0, -3.49692e-07, 0, 1, 53.4299, 19, -27.449)
+sibling_door_path = NodePath("../doorway17")
+assigned_room_id = 3
+
+[node name="doorway19" parent="traversal" instance=ExtResource("3_8yenc")]
+transform = Transform3D(1, 0, 3.49692e-07, 0, 1, 0, -3.49692e-07, 0, 1, 43.4299, 26, -31.4688)
+sibling_door_path = NodePath("../doorway20")
+assigned_room_id = 3
+
+[node name="doorway20" parent="traversal" instance=ExtResource("3_8yenc")]
+transform = Transform3D(-3.93403e-07, 0, 1, 0, 1, 0, -1, 0, -3.93403e-07, 39.6064, 0, -25.4688)
+sibling_door_path = NodePath("../doorway19")
+assigned_room_id = 3
+
+[node name="doorway21" parent="traversal" instance=ExtResource("3_8yenc")]
+transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, -3.55253, 6.22017, -14.5284)
+sibling_door_path = NodePath("../doorway22")
+visual_type = 1
+assigned_room_id = 0
+
+[node name="doorway22" parent="traversal" instance=ExtResource("3_8yenc")]
+transform = Transform3D(-2.18557e-07, 0, 1, 0, 1, 0, -1, 0, -2.18557e-07, 38.5936, 15, -11.5753)
+sibling_door_path = NodePath("../doorway21")
+visual_type = 1
+assigned_room_id = 3
+
+[node name="roomsHandler" type="Node3D" parent="."]
+script = ExtResource("5_t3r10")
+
+[node name="room" type="Node3D" parent="roomsHandler"]
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="roomsHandler/room"]
 use_collision = true
 
-[node name="CSGBox3D" type="CSGBox3D" parent="room1/CSGCombiner3D"]
+[node name="CSGBox3D" type="CSGBox3D" parent="roomsHandler/room/CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -0.5)
 flip_faces = true
 size = Vector3(7, 4, 8)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="room1/CSGCombiner3D"]
+[node name="CSGBox3D2" type="CSGBox3D" parent="roomsHandler/room/CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -5.5)
 flip_faces = true
 size = Vector3(3, 3, 18)
 
-[node name="CSGBox3D7" type="CSGBox3D" parent="room1/CSGCombiner3D"]
+[node name="CSGBox3D7" type="CSGBox3D" parent="roomsHandler/room/CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.63135, 1.52905, -10)
 flip_faces = true
 size = Vector3(3.7373, 2.68311, 3)
 
-[node name="CSGBox3D8" type="CSGBox3D" parent="room1/CSGCombiner3D"]
+[node name="CSGBox3D8" type="CSGBox3D" parent="roomsHandler/room/CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.67627, 5.39379, -10.2192)
 flip_faces = true
 size = Vector3(1.64746, 5.12012, 1)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="room1/CSGCombiner3D"]
+[node name="CSGBox3D9" type="CSGBox3D" parent="roomsHandler/room/CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.65668, 8.24609, -12.7192)
 flip_faces = true
 size = Vector3(2.39172, 3.99756, 6)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="room1/CSGCombiner3D"]
+[node name="CSGBox3D5" type="CSGBox3D" parent="roomsHandler/room/CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.677, 1.44629, -10)
 flip_faces = true
 size = Vector3(5.646, 2.89258, 3)
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="room1/CSGCombiner3D"]
+[node name="CSGBox3D6" type="CSGBox3D" parent="roomsHandler/room/CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.854, 1.06842, -9.93671)
 flip_faces = true
 size = Vector3(2, 2.13684, 0.99939)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="room1/CSGCombiner3D"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="roomsHandler/room/CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 4.5, -7)
 flip_faces = true
 size = Vector3(8, 3, 3)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="room1/CSGCombiner3D"]
+[node name="CSGBox3D4" type="CSGBox3D" parent="roomsHandler/room/CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 4.5, -8)
 flip_faces = true
 size = Vector3(4, 3, 7)
 
-[node name="SpotLight3D" type="SpotLight3D" parent="room1"]
+[node name="SpotLight3D" type="SpotLight3D" parent="roomsHandler/room"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 3.62113, 0)
-light_energy = 2.0
+light_energy = 7.0
 spot_range = 5.42254
 
-[node name="SpotLight3D2" type="SpotLight3D" parent="room1"]
+[node name="SpotLight3D2" type="SpotLight3D" parent="roomsHandler/room"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5.87866, -7)
-light_energy = 2.0
+light_energy = 5.97
 spot_range = 8.48093
 spot_angle = 33.1019
 
-[node name="room2" type="Node3D" parent="."]
+[node name="room1" type="Node3D" parent="roomsHandler"]
 
-[node name="CSGCombiner3D" type="CSGCombiner3D" parent="room2"]
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="roomsHandler/room1"]
 use_collision = true
 
-[node name="CSGBox3D" type="CSGBox3D" parent="room2/CSGCombiner3D"]
+[node name="CSGBox3D" type="CSGBox3D" parent="roomsHandler/room1/CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 3.5, -39.5)
 flip_faces = true
 size = Vector3(5, 7, 8)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="room2/CSGCombiner3D"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="roomsHandler/room1/CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2, -40)
+flip_faces = true
+size = Vector3(15, 4, 7)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="roomsHandler/room1/CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 10, -40)
+flip_faces = true
+size = Vector3(9, 14, 7)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="roomsHandler/room1/CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 14.5, -38)
+flip_faces = true
+size = Vector3(9, 5, 11)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="roomsHandler/room1/CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 2, -46.5)
+flip_faces = true
+size = Vector3(4, 4, 8)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="roomsHandler/room1/CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 4.5, -39.5)
 flip_faces = true
 size = Vector3(2, 5, 8)
 
-[node name="stairs_generator" parent="room2" instance=ExtResource("4_6toaq")]
+[node name="stairs_generator" parent="roomsHandler/room1" instance=ExtResource("4_6toaq")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -1, 0, -41.609)
 height = 2.0
 
-[node name="SpotLight3D2" type="SpotLight3D" parent="room2"]
+[node name="SpotLight3D2" type="SpotLight3D" parent="roomsHandler/room1"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5.87866, -40)
 light_energy = 2.0
 spot_range = 8.48093
 spot_angle = 33.1019
 
-[node name="room3" type="Node3D" parent="."]
+[node name="room2" type="Node3D" parent="roomsHandler"]
 
-[node name="CSGCombiner3D" type="CSGCombiner3D" parent="room3"]
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="roomsHandler/room2"]
 use_collision = true
 
-[node name="CSGBox3D" type="CSGBox3D" parent="room3/CSGCombiner3D"]
+[node name="CSGBox3D" type="CSGBox3D" parent="roomsHandler/room2/CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 7, -31.5)
 flip_faces = true
 size = Vector3(7, 4, 8)
 
-[node name="ladder" parent="." instance=ExtResource("2_5ixju")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.26357, 0, -36.2024)
-desired_height = 2.0
+[node name="SpotLight3D" type="SpotLight3D" parent="roomsHandler/room2"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -22, 12.0106, -31.478)
+light_color = Color(0.439216, 0.54902, 0.737255, 1)
+light_energy = 13.27
+spot_range = 10.5392
+
+[node name="room3" type="Node3D" parent="roomsHandler"]
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="roomsHandler/room3"]
+use_collision = true
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="roomsHandler/room3/CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45.5, 15.5, -21)
+flip_faces = true
+size = Vector3(12, 31, 13)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="roomsHandler/room3/CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.5, 37, -21)
+flip_faces = true
+size = Vector3(12, 36, 13)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="roomsHandler/room3/CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45.5, 44, -25)
+flip_faces = true
+size = Vector3(12, 36, 13)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="roomsHandler/room3/CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 41, 33, -16)
+flip_faces = true
+size = Vector3(5, 36, 13)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="roomsHandler/room3"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 46, 24.9133, -22)
+light_energy = 20.0
+spot_range = 29.5426
+spot_angle = 21.6451
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="roomsHandler/room3"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 41.3001, 39.9133, -13.8589)
+light_color = Color(0.560784, 0.792157, 0.87451, 1)
+light_energy = 10.0
+spot_range = 29.5426
+spot_angle = 21.6451
+
+[node name="SpotLight3D3" type="SpotLight3D" parent="roomsHandler/room3"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 46.0494, 47.3333, -29.601)
+light_energy = 10.0
+spot_range = 34.1832
+spot_angle = 17.7323

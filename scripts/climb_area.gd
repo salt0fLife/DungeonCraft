@@ -3,15 +3,17 @@ extends StaticBody3D
 var pos = Vector2.ZERO
 var height = Vector2.ZERO
 @export var desired_height = 3.0
-var tool_tip = "enter"
-var tool_tip_color = Color.BLUE
+var tool_tip = "climb"
+var tool_tip_color = Color.YELLOW
 var facing_rot = 0.0
+var interact_time = -1.0 #instant kinda
 
 func _ready():
 	var shape = BoxShape3D.new()
-	shape.size = Vector3(1.0,desired_height,0.5)
+	shape.size = Vector3(1.0,desired_height,0.3)
 	$CollisionShape3D.shape = shape
 	$CollisionShape3D.position.y = desired_height*0.5
+	$CollisionShape3D.position.z = -0.1
 	pos = Vector2(position.x,position.z)
 	height = Vector2(position.y, position.y + desired_height)
 	facing_rot = rotation.y

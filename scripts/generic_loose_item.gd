@@ -5,8 +5,8 @@ extends Node3D
 var display_name = "loading"
 var type = 0
 var tool_tip = "pickup"
-var tool_tip_color = Color.WHITE
-
+var tool_tip_color = Color.GOLD
+var interact_time = 0.25
 
 func _ready():
 	if !Lookup.items.has(item_key[0]):
@@ -16,6 +16,7 @@ func _ready():
 	#just checking if the key is valid
 	var item = Lookup.items[item_key[0]]
 	display_name = item[0]
+	tool_tip = display_name
 	var mp = item[1]
 	if item_key[3].keys().has("custom_model_path"):
 		mp = item_key[3]["custom_model_path"]

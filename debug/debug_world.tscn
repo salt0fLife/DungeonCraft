@@ -326,7 +326,7 @@ transform = Transform3D(0.757332, 0, 1.14764, 0, 1.375, 0, -1.14764, 0, 0.757332
 
 [node name="portal_1" parent="." instance=ExtResource("12_kfbny")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -2)
-world_path = "dungeon_world"
+world_path = "test_modular"
 
 [node name="playerCorpse" parent="." instance=ExtResource("13_lys41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -5)
@@ -469,23 +469,26 @@ mesh = SubResource("QuadMesh_8sebf")
 [node name="doorway" parent="doors" instance=ExtResource("27_8tomo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.4099, 0, 11)
 sibling_door_path = NodePath("../doorway2")
+assigned_room_id = 0
 
 [node name="doorway2" parent="doors" instance=ExtResource("27_8tomo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.4099, 0, 11)
 sibling_door_path = NodePath("../doorway")
+assigned_room_id = 0
 
 [node name="doorway3" parent="doors" instance=ExtResource("27_8tomo")]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -17.4099, 0, 11)
 sibling_door_path = NodePath("../doorway4")
 visual_type = 1
+assigned_room_id = 0
 
 [node name="doorway4" parent="doors" instance=ExtResource("27_8tomo")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -20.4099, 0, 8)
 sibling_door_path = NodePath("../doorway3")
+assigned_room_id = 0
 
 [node name="climb_area" parent="." instance=ExtResource("28_236k0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, 10)
-desired_height = 6.0
 
 [node name="climb_area2" parent="." instance=ExtResource("28_236k0")]
 transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, -29, 0, 10)

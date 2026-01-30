@@ -415,7 +415,8 @@ func _update_attributes(attributes) -> void:
 				bold = true
 		var l = Label.new()
 		if Lookup.max_attributes.has(key):
-			var max_val = Lookup.max_attributes[key]
+			var max_val = Lookup.max_attributes[key] - default
+			val = val - default
 			if val == max_val:
 				text += " MAX"
 				col = Color("8a68ad")

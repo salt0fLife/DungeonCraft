@@ -1,6 +1,5 @@
-[gd_scene load_steps=6 format=3 uid="uid://cmdbwv1koq3np"]
+[gd_scene load_steps=12 format=3 uid="uid://cmdbwv1koq3np"]
 
-[ext_resource type="Texture2D" uid="uid://dt5fom6fqdecn" path="res://assets/textures/effects/blood_mist.png" id="1_4rsbt"]
 [ext_resource type="Script" path="res://scripts/death_timer.gd" id="1_g5r2b"]
 
 [sub_resource type="Shader" id="Shader_4aiqv"]
@@ -9,6 +8,7 @@ code = "// NOTE: Shader automatically converted from Godot Engine 4.2.1.stable's
 shader_type spatial;
 render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
 uniform vec4 albedo : source_color;
+uniform vec4 albedo_2 : source_color;
 uniform sampler2D texture_albedo : source_color,filter_nearest_mipmap,repeat_enable;
 uniform float proximity_fade_distance;
 uniform float point_size : hint_range(0,128);
@@ -17,43 +17,105 @@ uniform sampler2D depth_texture : hint_depth_texture, repeat_disable, filter_nea
 uniform vec3 uv1_offset;
 uniform vec3 uv2_scale;
 uniform vec3 uv2_offset;
+uniform sampler2D noise;
+uniform sampler2D normal;
 
+float gradient(vec2 uv) {
+	//return (sin(uv.x*PI)+sin(uv.y*PI))*0.5;
+	vec2 dif = vec2(0.5,0.5) - uv;
+	return sqrt(dif.x*dif.x + dif.y*dif.y);
+}
 
+float get_height(vec2 uv,vec3 node_pos){
+	vec2 aware_uv = uv+ vec2(node_pos.x+node_pos.y,node_pos.z+node_pos.y);
+	//return clamp(pow(texture(noise,aware_uv).r+0.25 - gradient(uv),3.0),0.0,1.0);
+	return texture(noise,aware_uv).r;
+	}
+
+vec3 calc_normal(vec2 uv, float height_range, vec3 node_pos) {
+    vec2 texelSize = (1.0 / vec2(64.0,64.0));
+	float left = get_height(uv + vec2(texelSize * vec2(-1.0, 0.0)),node_pos)* height_range;
+	float right = get_height(uv + vec2(texelSize * vec2(1.0, 0.0)),node_pos)* height_range;
+	float up = get_height(uv + vec2(texelSize * vec2(0.0, -1.0)),node_pos)* height_range;
+	float down = get_height(uv + vec2(texelSize * vec2(0.0, 1.0)),node_pos)* height_range;
+	return normalize(vec3(left - right, 4.0 * texelSize.x, up - down));
+}
 void vertex() {
 	UV=UV*uv1_scale.xy+uv1_offset.xy;
 }
 
 
 
-
-
-
 void fragment() {
 	vec2 base_uv = UV;
+	vec2 aware_uv = UV + vec2(NODE_POSITION_WORLD.x+NODE_POSITION_WORLD.y,NODE_POSITION_WORLD.z+NODE_POSITION_WORLD.y);
 	vec4 albedo_tex = texture(texture_albedo,base_uv);
-	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	float intensity = 0.5 + sin((NODE_POSITION_WORLD.x+NODE_POSITION_WORLD.z+NODE_POSITION_WORLD.y)*20.0)*0.5;
+	ALBEDO = mix(albedo,albedo_2,albedo_tex.r).rgb;
 	vec4 orm_tex = texture(texture_orm,base_uv);
-	ROUGHNESS = orm_tex.g;
-	METALLIC = orm_tex.b;
-	ALPHA *= albedo.a * albedo_tex.a;
-	float depth_tex = textureLod(depth_texture,SCREEN_UV,0.0).r;
-	vec4 world_pos = INV_PROJECTION_MATRIX * vec4(SCREEN_UV*2.0-1.0,depth_tex,1.0);
-	world_pos.xyz/=world_pos.w;
-	ALPHA*=clamp(smoothstep(world_pos.z+proximity_fade_distance,world_pos.z,VERTEX.z),0.0,1.0);
+	ROUGHNESS = 0.2;
+	METALLIC = 0.0;
+	//ALPHA *= albedo.a * albedo_tex.a;
+	ALPHA = 0.0;
+	float b_val = texture(noise,aware_uv).r;
+	if (b_val-gradient(UV) < (0.55-intensity*0.4)) {
+		ALBEDO = mix(ALBEDO,ALBEDO*(b_val-gradient(UV)),0.5);
+		}
+	if (b_val-gradient(UV) > (0.5-intensity*0.4)) {
+		ALPHA = 1.0;
+	}
+	NORMAL_MAP -= 0.2;
+	NORMAL_MAP += calc_normal(UV,1.0,NODE_POSITION_WORLD)*0.2;
+	//NORMAL_MAP = mix(NORMAL_MAP,texture(normal,UV).rgb,0.1);
+	//float depth_tex = textureLod(depth_texture,SCREEN_UV,0.0).r;
+	//vec4 world_pos = INV_PROJECTION_MATRIX * vec4(SCREEN_UV*2.0-1.0,depth_tex,1.0);
+	//world_pos.xyz/=world_pos.w;
+	//ALPHA*=clamp(smoothstep(world_pos.z+proximity_fade_distance,world_pos.z,VERTEX.z),0.0,1.0);
 }
 "
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_eh863"]
+noise_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ih1j6"]
+seamless = true
+noise = SubResource("FastNoiseLite_eh863")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_pvppi"]
+noise_type = 3
+frequency = 0.0382
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_s4n5n"]
+width = 64
+height = 64
+as_normal_map = true
+noise = SubResource("FastNoiseLite_pvppi")
+
+[sub_resource type="Gradient" id="Gradient_m0tyj"]
+offsets = PackedFloat32Array(0, 0.242268, 0.721649)
+colors = PackedColorArray(0, 0, 0, 1, 0.0360825, 0.0360825, 0.0360825, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_gynej"]
+noise_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_w2rt8"]
+color_ramp = SubResource("Gradient_m0tyj")
+noise = SubResource("FastNoiseLite_gynej")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_p5rkf"]
 render_priority = 0
 shader = SubResource("Shader_4aiqv")
-shader_parameter/albedo = Color(0.870588, 0.0941176, 0, 1)
+shader_parameter/albedo = Color(0.65098, 0.0588235, 0, 1)
+shader_parameter/albedo_2 = Color(0.427451, 0.0509804, 0, 1)
 shader_parameter/proximity_fade_distance = 1.0
 shader_parameter/point_size = 1.0
 shader_parameter/uv1_scale = Vector3(1, 1, 1)
 shader_parameter/uv1_offset = Vector3(0, 0, 0)
 shader_parameter/uv2_scale = Vector3(1, 1, 1)
 shader_parameter/uv2_offset = Vector3(0, 0, 0)
-shader_parameter/texture_albedo = ExtResource("1_4rsbt")
+shader_parameter/texture_albedo = SubResource("NoiseTexture2D_w2rt8")
+shader_parameter/noise = SubResource("NoiseTexture2D_ih1j6")
+shader_parameter/normal = SubResource("NoiseTexture2D_s4n5n")
 
 [sub_resource type="QuadMesh" id="QuadMesh_370gf"]
 material = SubResource("ShaderMaterial_p5rkf")
