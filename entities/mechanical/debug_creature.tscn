@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3 uid="uid://dh4wpr223uwjs"]
+
+[ext_resource type="Script" path="res://scripts/debug_creature.gd" id="1_0bi66"]
+[ext_resource type="Script" path="res://scripts/generic_health_handler.gd" id="2_bxdl5"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fofke"]
+radius = 0.287
+height = 1.1
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_f10qu"]
+radius = 0.287
+height = 1.1
+
+[sub_resource type="BoxMesh" id="BoxMesh_lpo4h"]
+size = Vector3(0.24, 0.65, 0.45)
+
+[node name="debugCreature" type="CharacterBody3D"]
+collision_layer = 2
+script = ExtResource("1_0bi66")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+shape = SubResource("CapsuleShape3D_fofke")
+
+[node name="graphics" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="graphics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+mesh = SubResource("CapsuleMesh_f10qu")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="graphics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.570127, -0.14406)
+mesh = SubResource("BoxMesh_lpo4h")
+
+[node name="RayCast3D" type="RayCast3D" parent="graphics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.878072, 0)
+target_position = Vector3(0, 0, -1)
+
+[node name="health_handler" type="Node3D" parent="."]
+script = ExtResource("2_bxdl5")

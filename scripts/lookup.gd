@@ -377,6 +377,7 @@ const fire_colors = [Color.ORANGE_RED, Color.AQUA, Color.DARK_RED,Color.SPRING_G
 const creatures = {
 	"young_spider" : "res://entities/youngSpider.tscn",
 	"lightning" : "res://entities/lightning_bolt.tscn",
+	"debug" : "res://entities/mechanical/debug_creature.tscn",
 }
 
 const base_player_attributes = {

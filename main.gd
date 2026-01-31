@@ -456,6 +456,7 @@ func _on_change_world(key, require_host = false):
 	for p in get_tree().get_nodes_in_group("player"):
 		p.tp(Vector3.ZERO)
 		p.tp.rpc(Vector3.ZERO)
+	
 	pass
 
 @onready var projectileSync = $projectileSync

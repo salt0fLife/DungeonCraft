@@ -365,7 +365,7 @@ layout_mode = 2
 text = "disconnect"
 
 [node name="creatureSync" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://debug/debug_enemy.tscn", "res://entities/blue_slime.tscn", "res://entities/youngSpider.tscn", "res://entities/lightning_bolt.tscn")
+_spawnable_scenes = PackedStringArray("res://debug/debug_enemy.tscn", "res://entities/blue_slime.tscn", "res://entities/youngSpider.tscn", "res://entities/lightning_bolt.tscn", "res://entities/mechanical/debug_creature.tscn")
 spawn_path = NodePath(".")
 
 [node name="projectileSync" type="MultiplayerSpawner" parent="."]

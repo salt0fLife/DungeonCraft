@@ -1,6 +1,9 @@
-extends Node3D
+@icon("res://assets/textures/icons/healthIcon.png")
+class_name health_handler extends Node3D
+#extends Node3D
 @export var entity_base : NodePath
 @export var entity_avatar : NodePath
+@export var disabled_avatar := false
 signal died
 var hitmarker = preload("res://assets/effects/hitmarker.tscn")
 
@@ -63,6 +66,8 @@ func add_status_effect(id,time):
 
 @rpc("any_peer","reliable")
 func update_status_effect_graphics(se):
+	if disabled_avatar:
+		return #just in case you dont have one made yet
 	var avatar = get_node(entity_avatar)
 	#handles burning
 	var burning = se.has(Lookup.statusEffectType.burning)

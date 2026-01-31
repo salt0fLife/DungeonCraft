@@ -111,7 +111,6 @@ const bone_names = [
 	"eyebrows_R"
 ]
 
-
 const avatar_profiles = {
 	"normal" : [
 	"res://assets/avatar/avatarProfiles/normal/torso_norm.tscn",
@@ -161,15 +160,19 @@ const avatar_profiles = {
 	"res://assets/avatar/avatarProfiles/nice/right_arm_1_slim_001.tscn",
 	"res://assets/avatar/avatarProfiles/nice/right_arm_2_slim_001.tscn",
 	]
-	
 }
 
 func instance_creature(key: String,location : Vector3,modifiers = {}):
 	emit_signal("spawnCreature",key,location,modifiers)
-	pass
 
 func instance_projectile(key : String, pos : Vector3, dir : Vector3, owned_by : String) -> void:
 	emit_signal("spawn_projectile", key,pos,dir,owned_by)
 
 func set_post(key,val):
 	emit_signal("set_post_param",key,val)
+
+var room_doors = [] #index is room id, data is door_indx
+var doors_val = [] #index is door_indx (door number in group "doorway"), data is [Location, output_location, output room_id]
+
+var room_ladders = [] #indes is room id, data is ladder_indx
+var ladders_val = [] #index is ladder_indx, data, is [position,height,rot]

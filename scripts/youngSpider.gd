@@ -193,8 +193,6 @@ func avoid_close_entities(delta):
 		if dis < avoid_radius:
 			var dir = dif.normalized()
 			velocity -= dir * delta * avoid_strength * (avoid_radius-dis)
-			pass
-	pass
 
 func die(attacker = "", weapon_name = "", add_vel = Vector3.ZERO):
 	call_deferred("queue_free")

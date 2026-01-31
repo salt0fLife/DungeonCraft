@@ -3,6 +3,7 @@ extends StaticBody3D
 var pos = Vector2.ZERO
 var height = Vector2.ZERO
 @export var desired_height = 3.0
+@export var assigned_room_id := 0
 var tool_tip = "climb"
 var tool_tip_color = Color.YELLOW
 var facing_rot = 0.0
