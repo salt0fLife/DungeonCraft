@@ -18,6 +18,7 @@ func _ready():
 		room_ladders += [[]] #adds array to store ladder indexes in for each room
 	for i in range(0,doors.size()):
 		var door = doors[i] #[Location, output_location, output room_id]
+		door.set_index_graphics(i) #makes the door change its visuals based on its index
 		var d_p = door.get_transforms(0.0)[0]
 		var data = [d_p, door.desired_pos, door.local_room_id]
 		doors_val += [data] #adds data to doors_val_list
@@ -30,11 +31,12 @@ func _ready():
 					room_internal_doors[a_r_id] += [i]#adds index to rooms list of internal_doors
 				_:
 					room_doors[a_r_id] += [i] #adds index to rooms list of doors
-			
+	
 	
 	#apply changes to global
 	Global.room_doors = room_doors
 	Global.doors_val = doors_val
+	Global.room_internal_doors = room_internal_doors
 	
 	#ladders
 	var ladders_val = [] #index is ladder_indx, data, is [position,height,rot]
@@ -53,5 +55,3 @@ func _ready():
 	#apply changes to global
 	Global.room_ladders = room_ladders
 	Global.ladders_val = ladders_val
-	print(Global.room_ladders)
-	print(Global.ladders_val)

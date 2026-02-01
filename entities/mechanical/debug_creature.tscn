@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://dh4wpr223uwjs"]
+[gd_scene load_steps=7 format=3 uid="uid://dh4wpr223uwjs"]
 
 [ext_resource type="Script" path="res://scripts/debug_creature.gd" id="1_0bi66"]
 [ext_resource type="Script" path="res://scripts/generic_health_handler.gd" id="2_bxdl5"]
+[ext_resource type="FontFile" uid="uid://dpxhqjhxj5i6i" path="res://assets/fonts/UNCIALANTIQUA-REGULAR.TTF" id="3_xgw08"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fofke"]
 radius = 0.287
@@ -38,3 +39,24 @@ target_position = Vector3(0, 0, -1)
 
 [node name="health_handler" type="Node3D" parent="."]
 script = ExtResource("2_bxdl5")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25697, 0)
+billboard = 1
+modulate = Color(0.52549, 0.937255, 0.862745, 1)
+text = "idle"
+font = ExtResource("3_xgw08")
+
+[node name="Label3D2" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.43869, 0)
+billboard = 1
+modulate = Color(0.698039, 0.882353, 0.968627, 1)
+text = "idle"
+font = ExtResource("3_xgw08")
+
+[node name="Label3D3" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.61946, 0)
+billboard = 1
+modulate = Color(0.929412, 0.839216, 0.647059, 1)
+text = "idle"
+font = ExtResource("3_xgw08")

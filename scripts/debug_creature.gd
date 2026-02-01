@@ -41,6 +41,7 @@ func _ready():
 func _physics_process(delta):
 	if !is_multiplayer_authority():
 		return
+	teller("target: " + str(target_door_indx),2)
 	if !is_on_floor():
 		velocity.y -= gravity*delta
 	velocity_towards_target(delta)
@@ -62,11 +63,12 @@ func navigate(wish_dir):
 	var r1 = false
 	if (last_pos - position).length() < 0.001: #unstuck operation
 		still_frames += 1
-		#if still_frames > 10: #long enough to be certain its stuck
-			#avoid_points += [(position + wish_dir)]
+		if still_frames > 10: #long enough to be certain its stuck
+			avoid_points += [(position + wish_dir + Vector3(randf_range(-0.5,0.5),0.0,randf_range(-0.5,0.5)))]
 		if still_frames > 90: #full second or so
 			#target_furthest_door_in_room() #just go somewhere completely different
-			enter_door(target_door_indx)
+			#enter_door(target_door_indx)
+			pass
 	else:
 		still_frames = 0
 	if $graphics/RayCast3D.is_colliding():
@@ -88,7 +90,9 @@ var ladder_height = Vector2.ZERO
 var ladder_target_override = false
 var climbing = false
 
-var sub_door_taget_override = false #make it able to climb ladders to this
+var sub_door_location = Vector3.ZERO
+var sub_door_indx = 0
+var sub_door_target_override = false #make it able to climb ladders to this
 #checks for close sub_doors close to target and then checks distance to their sibling against distance to target
 #after checks for sub_doors distance to target subdoor if applicable
 #then acts on premeditations using ladders as needed >:3c
@@ -119,17 +123,51 @@ func target_furthest_door_in_room() -> void:
 func velocity_towards_target(delta) -> void:
 	#sets wish_vel towards target
 	var pointer = (target_location - position)
+	if sub_door_target_override:
+		teller("moving towards sub_door: " + str(sub_door_indx),1)
+		pointer = (sub_door_location - position)
+		if pointer.length() < 0.75:
+			enter_sub_door(sub_door_indx)
+	elif !Global.room_internal_doors[room_id].is_empty():
+		teller("looking for sub_door shortcut",1)
+		var nearest_entrance = 1000.0 #arbitrary unrealisticly high value
+		var p_dist = pointer#pointer.length()*4.0 #biased towards using subdoors for testing
+		p_dist.y *= 1.5 #biased towards using subdoors when moving vertically
+		p_dist = p_dist.length()
+		for sd_i in Global.room_internal_doors[room_id]:
+			var sd_data = Global.doors_val[sd_i]#[Location, output_location, output room_id]
+			var dis_to_ent = (sd_data[0] - position).length()
+			var exit_to_target = (sd_data[1] - target_location).length()
+			if (dis_to_ent + exit_to_target) < p_dist:
+				#is a valid shortcut
+				#now loop to see if there are better ones
+				if (dis_to_ent + exit_to_target) < nearest_entrance:
+					#is currently the best fit
+					#set as sub_door_target_override
+					nearest_entrance = (dis_to_ent + exit_to_target)
+					sub_door_location = sd_data[0]
+					sub_door_indx = sd_i
+					sub_door_target_override = true
+					
+					pass
+				pass
+			pass
+		pass
 	for p in avoid_points:
-		var dif = p - position
-		var dis = dif.length() * 0.1 #seems like a good value (about 10m of effect)
-		pointer -= dif*dis
+		var p_dif = p - position
+		var dis = p_dif.length()
+		if dis == 0.0: #just in case
+			dis = 1.0
+		var mult = 10.0 / dis #seems like a good value (about 10m of effect)
+		pointer -= p_dif*dis
+	var dif = pointer
 	pointer = pointer.normalized()
 	var wish_dir = Vector3(pointer.x,0.0,pointer.z).normalized()
 	var wish_vel = wish_dir * attributes["speed"]
 	#moves towards previously picked ladder
 	if climbing:
 		if (position.y < ladder_height.y and position.y > ladder_height.x):
-			#print("climbing ladder")
+			teller("climbing ladder")
 			ladder_target_override = false
 			velocity.x = 0.0
 			velocity.z = 0.0
@@ -145,20 +183,23 @@ func velocity_towards_target(delta) -> void:
 	elif ladder_target_override:
 		#checks if has reached ladder
 		if (Vector2(position.x,position.z) - ladder_pos).length() < 0.75:
-			#print("reached ladder")
+			teller("reached ladder")
 			ladder_target_override = false
-			#print("started climbing")
+			position.y = clamp(position.y, ladder_height.x,ladder_height.y) #snap to ladder
+			position.x = ladder_pos.x
+			position.z = ladder_pos.y
+			teller("started climbing")
 			climbing = true
 		else:
 			var ladder_location = Vector3(ladder_pos.x,position.y,ladder_pos.y)
 			wish_vel = (ladder_location - position).normalized() * attributes["speed"]
-			#print("moving towards ladder ")
+			teller("moving towards ladder ")
 	#checks if it should find a ladder
-	elif abs(pointer.y) > 0.1: #less math and a bit cleaner #(abs(pointer.y) > Vector2(pointer.x,pointer.z).length()): #checks if wish_vel wants to go vertical more than horizontal
-		#print("wants to go up")
+	elif abs(pointer.y) > 0.1 or abs(dif.y) > 5.0: #less math and a bit cleaner #(abs(pointer.y) > Vector2(pointer.x,pointer.z).length()): #checks if wish_vel wants to go vertical more than horizontal
+		teller("wants to go up")
 		#checks if can climb last_computed ladder
 		if (Vector2(position.x,position.z) - ladder_pos).length() < 0.75 and (position.y < ladder_height.y and position.y > ladder_height.x):
-			#print("found previously computed ladder")
+			teller("found previously computed ladder")
 			ladder_target_override = false
 			velocity.x = 0.0
 			velocity.z = 0.0
@@ -169,7 +210,7 @@ func velocity_towards_target(delta) -> void:
 			velocity.y = (pointer.y / abs(pointer.y))*attributes["speed"]
 		#checks for new ladder because cannot climb last one anymore
 		elif !Global.room_ladders[room_id].is_empty():
-			#print("looking for new ladder")
+			teller("looking for new ladder")
 			var closest_fit = 100.0 #arbitrary unrealisticly high value
 			for l_i in Global.room_ladders[room_id]:
 				var ladder_data = Global.ladders_val[l_i] #[position,height,rot]
@@ -187,10 +228,11 @@ func velocity_towards_target(delta) -> void:
 					ladder_height = ladder_data[1]
 					ladder_rot = ladder_data[2]
 					ladder_target_override = true
-					#print("found ladder")
+					teller("found ladder")
 		else:
-			#print("no ladders in room")
-			pass
+			teller("no ladders in room")
+	else:
+		teller("desired height")
 	velocity = lerp(velocity,wish_vel,delta*4.0)
 	navigate(wish_dir)
 
@@ -208,3 +250,18 @@ func enter_door(door_index:int) -> void:
 	last_door_indx = door_index
 	target_furthest_door_in_room() #one must imagine him happy
 
+func enter_sub_door(door_index:int) -> void:
+	sub_door_target_override = false
+	var door_data = Global.doors_val[door_index]
+	position = door_data[1]
+	#room_id = door_data[2]
+	last_door_indx = door_index
+
+func teller(text = "", indx = 0):
+	match indx:
+		0:
+			$Label3D.text = text
+		1:
+			$Label3D2.text = text
+		_:
+			$Label3D3.text = text

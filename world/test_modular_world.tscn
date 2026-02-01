@@ -34,11 +34,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
 [node name="ladder" parent="traversal" instance=ExtResource("2_5ixju")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.27902, 0, -7)
 desired_height = 3.0
-assigned_room_id = 0
 
 [node name="ladder2" parent="traversal" instance=ExtResource("2_5ixju")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.26056, 0.183636, -10.2274)
-assigned_room_id = 0
 
 [node name="doorway" parent="traversal" instance=ExtResource("3_8yenc")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 7.47698, 0, -10)
@@ -205,9 +203,9 @@ flip_faces = true
 size = Vector3(5.646, 2.89258, 3)
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="roomsHandler/room/CSGCombiner3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.854, 1.06842, -9.93671)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.854, 1.06842, -10.1384)
 flip_faces = true
-size = Vector3(2, 2.13684, 0.99939)
+size = Vector3(2, 2.13684, 1.40283)
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="roomsHandler/room/CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 4.5, -7)

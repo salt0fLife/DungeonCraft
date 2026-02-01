@@ -62,3 +62,8 @@ func get_transforms(initial_rot : float) -> Array:
 	var rot = rotation.y - initial_rot
 	var pos = $output_pos.global_position
 	return [pos,rot]
+
+func set_index_graphics(indx : int) -> void:
+	$Label3D2.text = str(indx)
+	
+	pass
