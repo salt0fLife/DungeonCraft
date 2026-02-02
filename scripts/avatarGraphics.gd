@@ -67,6 +67,7 @@ const pos_and_rot_only = [
 var fire_mat = null
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	
 	var ebm = $root/chestBase/neck/eyeBrows_L.get_active_material(0).duplicate()
 	$root/chestBase/neck/eyeBrows_L.set_surface_override_material(0, ebm)
 	$root/chestBase/neck/eyeBrows_R.set_surface_override_material(0, ebm)

@@ -654,6 +654,7 @@ func _physics_process(delta):
 			avatar.crouching += abs(last_y_velocity/9.8)*0.25
 			var mult = (-last_y_velocity/9.8)*0.9
 			var d = int(pow(mult,3.0))
+			d = d / (attributes["jump_velocity"] * 0.16666666) #idk why but doing division with a constant feels illigal
 			if d > 0:
 				damage([[3,d]],"fall_damage","", "",Vector3(0.0,last_y_velocity,0.0),false)
 				#if d > 3:
@@ -1963,6 +1964,7 @@ func process_interact_data(data, normal, hit):
 			Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg")
 			room_id = data[1][2]
 			Global.emit_signal("enter_room",data[1][2])
+			pass
 		Lookup.interact_return_code.is_ladder:
 			is_climbing_ladder = true
 			var li = data[1] #[xz_pos, height_min_max,facing_rot]
@@ -1973,6 +1975,14 @@ func process_interact_data(data, normal, hit):
 			position.x = ladder_pos.x
 			position.z = ladder_pos.y
 
+func enter_door(door_index : int) -> void:
+	var dd= Global.doors_val[door_index] #[Location, output_location, output room_id, room_id]
+	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg")
+	position = dd[1]
+	graphics.rotation.y += 0.0 #rotation add is not store for navigation so just keep same rot
+	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg")
+	room_id = dd[2]
+	Global.emit_signal("enter_room",room_id)
 
 ##audio handling
 func settup_audio():

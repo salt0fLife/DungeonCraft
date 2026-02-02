@@ -65,5 +65,4 @@ func get_transforms(initial_rot : float) -> Array:
 
 func set_index_graphics(indx : int) -> void:
 	$Label3D2.text = str(indx)
-	
 	pass

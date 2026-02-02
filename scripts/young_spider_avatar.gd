@@ -69,7 +69,7 @@ func walk(delta):
 	if time > PI*64.0:
 		time -= PI*64.0
 	var height = stand + sin(time*4.0)*bounce_strength* (mult*0.75+0.25)
-	var tilt = lean * sin(time*3.0)*bounce_strength
+	var tilt = lean * sin(time*3.0)*bounce_strength + sin(time*22.0)*0.015
 	bone_paths[1].position.y = height + 0.2*mult + 0.2
 	bone_paths[4].rotation.y = sin(time*8.0)*bounce_strength* (mult*0.75+0.25)
 	bone_paths[3].rotation.y = sin(time*8.0+PI*0.9)*bounce_strength*0.75* (mult*0.75+0.25)
@@ -89,6 +89,8 @@ func walk(delta):
 		else:
 			bone_paths[i+5].rotation.y = sin(time*8.0+offset+PI*0.5+i*PI*leg_individuality)*0.5*mult + PI
 			bone_paths[i+5].rotation.z += tilt
+		bone_paths[i+5].rotation.y += sin(time*33.0 + i*5.0)*0.05 * mult
+		bone_paths[i+5].rotation.z += sin(time*40.0 + i*5.0)*0.025 * mult
 	pass
 
 func reset():

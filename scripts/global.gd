@@ -174,7 +174,7 @@ func set_post(key,val):
 
 var room_doors = [] #index is room id, data is door_indx
 var room_internal_doors = [] #index is room id, data is door_indx
-var doors_val = [] #index is door_indx (door number in group "doorway"), data is [Location, output_location, output room_id]
+var doors_val = [] #index is door_indx (door number in group "doorway"), data is [Location, output_location, output room_id, room_id]
 
 var room_ladders = [] #indes is room id, data is ladder_indx
 var ladders_val = [] #index is ladder_indx, data, is [position,height,rot]

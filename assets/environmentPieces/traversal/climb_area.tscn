@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/climb_area.gd" id="1_f835j"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_oa6sd"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_d4iou"]
 size = Vector3(1, 6, 0.3)
 
 [node name="ladder" type="StaticBody3D" groups=["climb_area", "interact", "tool_tip"]]
@@ -13,7 +13,7 @@ desired_height = 6.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -0.1)
-shape = SubResource("BoxShape3D_oa6sd")
+shape = SubResource("BoxShape3D_d4iou")
 
 [node name="graphics_handler" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.125, -0.2)

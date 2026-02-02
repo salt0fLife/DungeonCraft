@@ -17,10 +17,10 @@ func _ready():
 		room_internal_doors += [[]] #adds array to store internal_door indexs in for each room
 		room_ladders += [[]] #adds array to store ladder indexes in for each room
 	for i in range(0,doors.size()):
-		var door = doors[i] #[Location, output_location, output room_id]
+		var door = doors[i] #[Location, output_location, output room_id, own_room_id]
 		door.set_index_graphics(i) #makes the door change its visuals based on its index
 		var d_p = door.get_transforms(0.0)[0]
-		var data = [d_p, door.desired_pos, door.local_room_id]
+		var data = [d_p, door.desired_pos, door.local_room_id, door.assigned_room_id]
 		doors_val += [data] #adds data to doors_val_list
 		var a_r_id = door.assigned_room_id
 		if a_r_id > room_count:

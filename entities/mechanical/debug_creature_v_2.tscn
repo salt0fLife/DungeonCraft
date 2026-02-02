@@ -1,39 +1,38 @@
-[gd_scene load_steps=25 format=3 uid="uid://dh4wpr223uwjs"]
+[gd_scene load_steps=24 format=3 uid="uid://b3cm6h52ff5gp"]
 
-[ext_resource type="Script" path="res://scripts/debug_creature.gd" id="1_0bi66"]
-[ext_resource type="Script" path="res://scripts/generic_health_handler.gd" id="2_bxdl5"]
-[ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="2_hmua7"]
-[ext_resource type="Texture2D" uid="uid://dyh661ujm3ahi" path="res://assets/glb/playerAvatar002_eyeBrows2.png" id="3_fwtlk"]
-[ext_resource type="FontFile" uid="uid://dpxhqjhxj5i6i" path="res://assets/fonts/UNCIALANTIQUA-REGULAR.TTF" id="3_xgw08"]
-[ext_resource type="Shader" path="res://assets/avatar/eyes.gdshader" id="4_1jpso"]
-[ext_resource type="Shader" path="res://assets/avatar/mouth.gdshader" id="5_tenl1"]
-[ext_resource type="PackedScene" uid="uid://b5jul8tjuxj30" path="res://entities/raptor_avatar.tscn" id="6_hgwjk"]
-[ext_resource type="Script" path="res://scripts/hurtbox.gd" id="7_povin"]
+[ext_resource type="Script" path="res://scripts/debug_creature_v_2.gd" id="1_e2q4t"]
+[ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="2_k6e3l"]
+[ext_resource type="Texture2D" uid="uid://dyh661ujm3ahi" path="res://assets/glb/playerAvatar002_eyeBrows2.png" id="3_6vqmr"]
+[ext_resource type="Shader" path="res://assets/avatar/eyes.gdshader" id="4_u4w35"]
+[ext_resource type="Shader" path="res://assets/avatar/mouth.gdshader" id="5_1d3jk"]
+[ext_resource type="Script" path="res://scripts/generic_health_handler.gd" id="7_ujl4e"]
+[ext_resource type="FontFile" uid="uid://dpxhqjhxj5i6i" path="res://assets/fonts/UNCIALANTIQUA-REGULAR.TTF" id="8_mg7og"]
+[ext_resource type="Script" path="res://scripts/hurtbox.gd" id="9_meguv"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fofke"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_38pv4"]
 radius = 0.287
 height = 1.1
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_f10qu"]
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_5wicl"]
 radius = 0.287
 height = 1.1
 
-[sub_resource type="BoxMesh" id="BoxMesh_lpo4h"]
+[sub_resource type="BoxMesh" id="BoxMesh_18u75"]
 size = Vector3(0.24, 0.65, 0.45)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bqh66"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lj2q7"]
 resource_name = "eyeBrows"
 transparency = 2
 alpha_scissor_threshold = 0.5
 alpha_antialiasing_mode = 0
 albedo_color = Color(0, 0, 0, 1)
-albedo_texture = ExtResource("3_fwtlk")
+albedo_texture = ExtResource("3_6vqmr")
 texture_filter = 2
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_wurn3"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1l4p0"]
 resource_name = "eyes"
 render_priority = 0
-shader = ExtResource("4_1jpso")
+shader = ExtResource("4_u4w35")
 shader_parameter/uv1_scale = Vector3(2, 2, 1)
 shader_parameter/uv1_offset = Vector3(-1, -1, 0)
 shader_parameter/eyeSize = Vector2(1, 1)
@@ -58,9 +57,9 @@ shader_parameter/glow_col = Color(0, 0, 0, 1)
 shader_parameter/glow_col_2 = Color(0, 0, 0, 1)
 shader_parameter/glow_col_3 = Color(0, 0, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_2x3ng"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xmcvn"]
 render_priority = 0
-shader = ExtResource("5_tenl1")
+shader = ExtResource("5_1d3jk")
 shader_parameter/uv1_scale = Vector3(1, 1, 1)
 shader_parameter/uv1_offset = null
 shader_parameter/mouthPos = Vector2(0, 0)
@@ -78,7 +77,7 @@ shader_parameter/open = 0.0
 shader_parameter/outline_thickness = 0.025
 shader_parameter/transparency = 0.0
 
-[sub_resource type="Shader" id="Shader_7nsrr"]
+[sub_resource type="Shader" id="Shader_a2toi"]
 code = "
 shader_type spatial;
 render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
@@ -111,106 +110,105 @@ void fragment() {
 }
 "
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_jl3go"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_egbcc"]
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_h1p0l"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_gid0g"]
 width = 128
 height = 128
 seamless = true
-noise = SubResource("FastNoiseLite_jl3go")
+noise = SubResource("FastNoiseLite_egbcc")
 
-[sub_resource type="Gradient" id="Gradient_yt7lo"]
+[sub_resource type="Gradient" id="Gradient_00c25"]
 offsets = PackedFloat32Array(0.22973, 1)
 colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_hut1g"]
-gradient = SubResource("Gradient_yt7lo")
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_kwkk0"]
+gradient = SubResource("Gradient_00c25")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.2)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4pdxa"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_alu1w"]
 render_priority = 0
-shader = SubResource("Shader_7nsrr")
+shader = SubResource("Shader_a2toi")
 shader_parameter/fire_col = Color(0.796078, 0.247059, 0, 1)
-shader_parameter/fire_noise = SubResource("NoiseTexture2D_h1p0l")
-shader_parameter/gradient_tex = SubResource("GradientTexture2D_hut1g")
+shader_parameter/fire_noise = SubResource("NoiseTexture2D_gid0g")
+shader_parameter/gradient_tex = SubResource("GradientTexture2D_kwkk0")
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_cm13g"]
-size = Vector3(0.5, 1.439, 1.78723)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oxle8"]
+albedo_color = Color(0.321569, 0.572549, 0.882353, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3ieba"]
-albedo_color = Color(1, 0.219608, 0.235294, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_q1i6h"]
-material = SubResource("StandardMaterial3D_3ieba")
+[sub_resource type="BoxMesh" id="BoxMesh_fhmqg"]
+material = SubResource("StandardMaterial3D_oxle8")
 size = Vector3(0.5, 0.5, 0.5)
 
-[node name="debugCreature" type="CharacterBody3D" groups=["class_2"]]
+[sub_resource type="BoxShape3D" id="BoxShape3D_c2i0s"]
+size = Vector3(0.5, 1.5, 0.5)
+
+[node name="debug_creature_v2" type="CharacterBody3D" groups=["class_1"]]
 collision_layer = 2
-script = ExtResource("1_0bi66")
+script = ExtResource("1_e2q4t")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
-shape = SubResource("CapsuleShape3D_fofke")
+shape = SubResource("CapsuleShape3D_38pv4")
 
 [node name="graphics" type="Node3D" parent="."]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="graphics"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
 visible = false
-mesh = SubResource("CapsuleMesh_f10qu")
+mesh = SubResource("CapsuleMesh_5wicl")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="graphics"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.570127, -0.14406)
 visible = false
-mesh = SubResource("BoxMesh_lpo4h")
+mesh = SubResource("BoxMesh_18u75")
 
 [node name="RayCast3D" type="RayCast3D" parent="graphics"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.878072, 0)
 target_position = Vector3(0, 0, -1)
 
-[node name="playerAvatar" parent="graphics" instance=ExtResource("2_hmua7")]
-visible = false
+[node name="playerAvatar" parent="graphics" instance=ExtResource("2_k6e3l")]
 
 [node name="chestBase" parent="graphics/playerAvatar/genericAvatar/root" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, -0.00440562, -0.00916658, -0.000122169)
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, -0.00246219, -0.00892816, -0.000122169)
 
 [node name="hip_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="1"]
-transform = Transform3D(0.995002, -0.00797807, 0.0995139, 0, 0.996794, 0.0799142, -0.0998332, -0.0795146, 0.99182, 0.075, -0.282, -0.001)
+transform = Transform3D(0.995002, -0.00790689, 0.0995196, 0, 0.996851, 0.0792012, -0.0998332, -0.0788052, 0.991876, 0.075, -0.282, -0.001)
 
 [node name="knee_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase/hip_L" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.996595, -0.0824059, 0, 0.0824059, 0.996595, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.996654, -0.0816931, 0, 0.0816931, 0.996654, 0, -0.274171, 0)
 
 [node name="hip_R" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="2"]
-transform = Transform3D(0.995003, 0.00797808, -0.0995141, 0, 0.996795, 0.0799144, 0.0998333, -0.0795147, 0.991822, -0.075, -0.282, -0.001)
+transform = Transform3D(0.995003, 0.0079069, -0.0995198, 0, 0.996852, 0.0792014, 0.0998333, -0.0788053, 0.991878, -0.075, -0.282, -0.001)
 
 [node name="knee_R" parent="graphics/playerAvatar/genericAvatar/root/chestBase/hip_R" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.996594, -0.0824058, 0, 0.0824058, 0.996594, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.996653, -0.0816929, 0, 0.0816929, 0.996653, 0, -0.274171, 0)
 
 [node name="neck" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="3"]
 transform = Transform3D(1, 0, 0, 0, 0.999297, 0.0374911, 0, -0.0374912, 0.999295, 0, 0.289384, -0.00323021)
 
 [node name="eyeBrows_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
-surface_material_override/0 = SubResource("StandardMaterial3D_bqh66")
+surface_material_override/0 = SubResource("StandardMaterial3D_lj2q7")
 
 [node name="eyeBrows_R" parent="graphics/playerAvatar/genericAvatar/root/chestBase/neck" index="2"]
-surface_material_override/0 = SubResource("StandardMaterial3D_bqh66")
+surface_material_override/0 = SubResource("StandardMaterial3D_lj2q7")
 
 [node name="eyes" parent="graphics/playerAvatar/genericAvatar/root/chestBase/neck" index="3"]
-surface_material_override/0 = SubResource("ShaderMaterial_wurn3")
+surface_material_override/0 = SubResource("ShaderMaterial_1l4p0")
 
 [node name="mouth" parent="graphics/playerAvatar/genericAvatar/root/chestBase/neck" index="7"]
-surface_material_override/0 = SubResource("ShaderMaterial_2x3ng")
+surface_material_override/0 = SubResource("ShaderMaterial_xmcvn")
 
 [node name="shoulder_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="4"]
-transform = Transform3D(0.999122, -0.0418313, 0.00236433, 0.0418082, 0.999079, 0.0091663, -0.0027456, -0.00905937, 0.999954, 0.14978, 0.241, -0.0014265)
+transform = Transform3D(0.99865, -0.0517721, 0.00435156, 0.0517337, 0.99862, 0.00857028, -0.00478928, -0.00833355, 0.999953, 0.14978, 0.241, -0.0014265)
 
 [node name="elbowL" parent="graphics/playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.99663, 0.082018, 0, -0.082018, 0.99663, 0.079, -0.24, -0.003)
+transform = Transform3D(1, 0, 0, 0, 0.999224, 0.0393894, 0, -0.0393894, 0.999224, 0.079, -0.24, -0.003)
 
 [node name="shoulder_R" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="5"]
-transform = Transform3D(0.998648, 0.0517957, -0.00435617, -0.0517567, 0.998623, 0.0086188, 0.00479659, -0.00838169, 0.999953, -0.15, 0.241, -0.00100074)
+transform = Transform3D(0.998648, 0.0517957, -0.00435618, -0.0517567, 0.998623, 0.00861881, 0.00479659, -0.00838169, 0.999954, -0.15, 0.241, -0.00100074)
 
 [node name="elbowR" parent="graphics/playerAvatar/genericAvatar/root/chestBase/shoulder_R" index="1"]
 transform = Transform3D(1, 0, 0, 0, 0.76154, 0.648121, 0, -0.648121, 0.76154, -0.079, -0.24, -0.00300002)
@@ -219,25 +217,11 @@ transform = Transform3D(1, 0, 0, 0, 0.76154, 0.648121, 0, -0.648121, 0.76154, -0
 transform = Transform3D(1, 0, 0, 0, 0.173651, -0.984807, 0, 0.984807, 0.173651, 0, -0.21, 0.075)
 
 [node name="fire" parent="graphics/playerAvatar" index="1"]
-surface_material_override/0 = SubResource("ShaderMaterial_4pdxa")
-
-[node name="raptorAvatar" parent="graphics" instance=ExtResource("6_hgwjk")]
-transform = Transform3D(-0.595, 0, -8.98425e-08, 0, 0.595, 0, 8.98425e-08, 0, -0.595, 0, 0, 0)
-
-[node name="hurtbox" type="CharacterBody3D" parent="graphics"]
-collision_layer = 72
-collision_mask = 0
-script = ExtResource("7_povin")
-health_handler = NodePath("../../health_handler")
-id = "body"
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="graphics/hurtbox"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.713623, 0.024312)
-shape = SubResource("BoxShape3D_cm13g")
+surface_material_override/0 = SubResource("ShaderMaterial_alu1w")
 
 [node name="health_handler" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92424, 0)
-script = ExtResource("2_bxdl5")
+script = ExtResource("7_ujl4e")
 entity_base = NodePath("..")
 entity_avatar = NodePath("../graphics/playerAvatar/genericAvatar")
 
@@ -246,28 +230,35 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.64863, 0)
 billboard = 1
 modulate = Color(0.52549, 0.937255, 0.862745, 1)
 text = "idle"
-font = ExtResource("3_xgw08")
+font = ExtResource("8_mg7og")
 
 [node name="Label3D2" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.83035, 0)
 billboard = 1
 modulate = Color(0.698039, 0.882353, 0.968627, 1)
 text = "idle"
-font = ExtResource("3_xgw08")
+font = ExtResource("8_mg7og")
 
 [node name="Label3D3" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.01112, 0)
 billboard = 1
 modulate = Color(0.929412, 0.839216, 0.647059, 1)
 text = "idle"
-font = ExtResource("3_xgw08")
+font = ExtResource("8_mg7og")
+
+[node name="Label3D4" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.22337, 0)
+billboard = 1
+modulate = Color(0.956863, 0.8, 0.843137, 1)
+text = "0"
+font = ExtResource("8_mg7og")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 top_level = true
-mesh = SubResource("BoxMesh_q1i6h")
+mesh = SubResource("BoxMesh_fhmqg")
 
 [node name="Label3D" type="Label3D" parent="MeshInstance3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.496929, 0)
@@ -275,6 +266,17 @@ billboard = 1
 modulate = Color(0.803922, 0.74902, 0, 1)
 text = "current goal
 Vector3(0,0,0)"
-font = ExtResource("3_xgw08")
+font = ExtResource("8_mg7og")
+
+[node name="hurtbox" type="CharacterBody3D" parent="."]
+collision_layer = 72
+collision_mask = 0
+script = ExtResource("9_meguv")
+health_handler = NodePath("../health_handler")
+id = "body"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="hurtbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+shape = SubResource("BoxShape3D_c2i0s")
 
 [editable path="graphics/playerAvatar"]

@@ -6,23 +6,19 @@
 
 [node name="hitmarker" type="Label3D"]
 billboard = 1
-no_depth_test = true
-fixed_size = true
 texture_filter = 2
 modulate = Color(1, 0, 0, 1)
 text = "damage"
 font = ExtResource("1_q7m2j")
-font_size = 12
+font_size = 48
 outline_size = 2
 horizontal_alignment = 0
 script = ExtResource("1_3bl0b")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 offset = Vector2(-8, 0)
-pixel_size = 0.005
+pixel_size = 0.02
 billboard = 1
-no_depth_test = true
-fixed_size = true
 texture_filter = 2
 texture = ExtResource("3_ctcyn")
 hframes = 3

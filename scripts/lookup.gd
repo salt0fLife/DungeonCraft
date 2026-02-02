@@ -378,6 +378,7 @@ const creatures = {
 	"young_spider" : "res://entities/youngSpider.tscn",
 	"lightning" : "res://entities/lightning_bolt.tscn",
 	"debug" : "res://entities/mechanical/debug_creature.tscn",
+	"debug_v2" : "res://entities/mechanical/debug_creature_v_2.tscn",
 }
 
 const base_player_attributes = {
