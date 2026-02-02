@@ -36,24 +36,55 @@ func _ready():
 		return
 	await  get_tree().process_frame #if the world was just loaded we have to let the room_and_doors_information_populate first
 	target_furthest_door_in_room() #>:3c
+	avatar.animation_state = "walk"
 
+@onready var avatar = $graphics/playerAvatar/genericAvatar
 @onready var graphics = $graphics
 func _physics_process(delta):
 	if !is_multiplayer_authority():
 		return
-	teller("target: " + str(target_door_indx),2)
+	if target_is_door:
+		teller("target: door " + str(target_door_indx),2)
+	elif sub_door_target_override:
+		teller("target: sub_door" + str(sub_door_indx),2)
+	elif targeting_node:
+		teller("target: entity " + str(target_node.name),2)
+	else:
+		teller("no valid target",2)
 	if !is_on_floor():
 		velocity.y -= gravity*delta
+	else:
+		failed_last_ladder_jump = false
+		commiting_to_ladder_dir = false
+	look_for_prey()
 	velocity_towards_target(delta)
 	check_for_reached_target()
 	last_pos = position
 	move_and_slide()
-	sync.rpc(position,graphics.rotation.y)
+	avatar.walk_speed = (velocity.length()/attributes["speed"])*2.0
+	var dir = (target_location - position)
+	avatar.head_angle.y = graphics.rotation.y - (atan2(dir.z,-dir.x)+PI*0.5)
+	var hori_dist = Vector2(dir.x,dir.z).length()
+	#avatar.head_angle.x = atan2(hori_dist,dir.y) + PI*0.5
+	if !is_on_floor() and !climbing:
+		avatar.falling += delta*0.25
+		if avatar.falling > 1.0:
+			avatar.falling = 1.0
+	else:
+		avatar.falling = 0.0
+	if !climbing:
+		avatar.animation_state = "walk"
+	else:
+		avatar.animation_state = "idle"
+	sync.rpc(position,graphics.rotation.y,$Label3D.text,$Label3D2.text,$Label3D3.text)
 
 @rpc("any_peer","unreliable")
-func sync(pos,rot):
+func sync(pos,rot,txt1,txt2,txt3):
 	position = pos
 	graphics.rotation.y = rot
+	$Label3D.text = txt1
+	$Label3D2.text = txt2
+	$Label3D3.text = txt3
 
 var last_pos = Vector3.ZERO
 var still_frames = 0
@@ -90,6 +121,10 @@ var ladder_height = Vector2.ZERO
 var ladder_target_override = false
 var climbing = false
 
+var failed_last_ladder_jump = false
+var commiting_to_ladder_dir = false
+var commit_ladder_up = true #false is commit down
+
 var sub_door_location = Vector3.ZERO
 var sub_door_indx = 0
 var sub_door_target_override = false #make it able to climb ladders to this
@@ -98,7 +133,9 @@ var sub_door_target_override = false #make it able to climb ladders to this
 #then acts on premeditations using ladders as needed >:3c
 
 var target_location = position #should cause it to reach target and rethink at start
+var target_type = 0
 var target_is_door = false
+
 var target_door_indx = 0
 var last_door_indx = 0
 
@@ -107,6 +144,9 @@ func target_furthest_door_in_room() -> void:
 	#var doors_val = [] #index is door_indx (door number in group "doorway"), data is [Location, output_location, output room_id]
 	#target_location = get_tree().get_first_node_in_group("player").position
 	#return
+	ladder_target_override = false
+	sub_door_target_override = false
+	targeting_node = false
 	var furthest_dist = 0.0
 	for d_i in Global.room_doors[room_id]:
 		var dd = Global.doors_val[d_i]
@@ -116,11 +156,11 @@ func target_furthest_door_in_room() -> void:
 			target_door_indx = d_i
 			target_location = dd[0]
 			target_is_door = true
-			
 		#else dont do anything because closer than last
 	#already set it all in the loop
 
 func velocity_towards_target(delta) -> void:
+	var next_desired_pos = target_location
 	#sets wish_vel towards target
 	var pointer = (target_location - position)
 	if sub_door_target_override:
@@ -128,15 +168,21 @@ func velocity_towards_target(delta) -> void:
 		pointer = (sub_door_location - position)
 		if pointer.length() < 0.75:
 			enter_sub_door(sub_door_indx)
-	elif !Global.room_internal_doors[room_id].is_empty():
+	elif !Global.room_internal_doors[room_id].is_empty() and !climbing:
 		teller("looking for sub_door shortcut",1)
 		var nearest_entrance = 1000.0 #arbitrary unrealisticly high value
 		var p_dist = pointer#pointer.length()*4.0 #biased towards using subdoors for testing
-		p_dist.y *= 1.5 #biased towards using subdoors when moving vertically
+		p_dist.y *= 4.0 #biased towards using subdoors when moving vertically
 		p_dist = p_dist.length()
 		for sd_i in Global.room_internal_doors[room_id]:
 			var sd_data = Global.doors_val[sd_i]#[Location, output_location, output room_id]
 			var dis_to_ent = (sd_data[0] - position).length()
+			if climbing:
+				dis_to_ent = (sd_data[0] - Vector3(ladder_pos.x,ladder_height.x,ladder_pos.y)).length()
+				var opt_2 = (sd_data[0] - Vector3(ladder_pos.x,ladder_height.y,ladder_pos.y)).length()
+				if opt_2 < dis_to_ent:
+					dis_to_ent = opt_2
+				#checks from end of ladder instead of current location so it doesent jump prematurely
 			var exit_to_target = (sd_data[1] - target_location).length()
 			if (dis_to_ent + exit_to_target) < p_dist:
 				#is a valid shortcut
@@ -148,11 +194,6 @@ func velocity_towards_target(delta) -> void:
 					sub_door_location = sd_data[0]
 					sub_door_indx = sd_i
 					sub_door_target_override = true
-					
-					pass
-				pass
-			pass
-		pass
 	for p in avoid_points:
 		var p_dif = p - position
 		var dis = p_dif.length()
@@ -161,12 +202,13 @@ func velocity_towards_target(delta) -> void:
 		var mult = 10.0 / dis #seems like a good value (about 10m of effect)
 		pointer -= p_dif*dis
 	var dif = pointer
+	next_desired_pos = (pointer + position)
 	pointer = pointer.normalized()
 	var wish_dir = Vector3(pointer.x,0.0,pointer.z).normalized()
 	var wish_vel = wish_dir * attributes["speed"]
 	#moves towards previously picked ladder
 	if climbing:
-		if (position.y < ladder_height.y and position.y > ladder_height.x):
+		if (position.y <= ladder_height.y and position.y >= ladder_height.x):
 			teller("climbing ladder")
 			ladder_target_override = false
 			velocity.x = 0.0
@@ -175,27 +217,53 @@ func velocity_towards_target(delta) -> void:
 			position.z = ladder_pos.y
 			if pointer.y == 0.0: #just in case
 				pointer.y = 1.0
-			velocity.y = (pointer.y / abs(pointer.y))*attributes["speed"]
+			if failed_last_ladder_jump: #self explanatory keeps from jumping and regrabbing ladders a bunch
+				if commiting_to_ladder_dir:
+					if commit_ladder_up:
+						velocity.y = 2.0
+					else:
+						velocity.y = -2.0
+				else:
+					commiting_to_ladder_dir = true
+					if (pointer.y / abs(pointer.y))*attributes["speed"] > 0.0:
+						commit_ladder_up = true
+					else:
+						commit_ladder_up = false
+			else:
+				velocity.y = (pointer.y / abs(pointer.y))*attributes["speed"]
 		else:
+			#reached top or bottom of ladder
 			climbing = false
-		if abs(pointer.y) < 0.05:
-			climbing = false #jumps if level
+			failed_last_ladder_jump = false
+			commiting_to_ladder_dir = false
+		if abs(dif.y) < 0.05 and !commiting_to_ladder_dir:
+			velocity.y = 2.0
+			climbing = false #jumps if close to level
+			failed_last_ladder_jump = true #set to false as soon as touches ground
 	elif ladder_target_override:
-		#checks if has reached ladder
-		if (Vector2(position.x,position.z) - ladder_pos).length() < 0.75:
-			teller("reached ladder")
+		var ladder_top_pos = Vector3(ladder_pos.x,ladder_height.x,ladder_pos.y)
+		var ladder_bottom_pos = Vector3(ladder_pos.x,ladder_height.y,ladder_pos.y)
+		var dist = (target_location - position).length()
+		if ((ladder_top_pos - target_location).length() > dist or (ladder_bottom_pos - target_location).length() > dist) and (target_location.y < ladder_height.x-0.1 or target_location.y > ladder_height.y+0.1): 
+			#is not helpful anymore stop moving towards it
 			ladder_target_override = false
-			position.y = clamp(position.y, ladder_height.x,ladder_height.y) #snap to ladder
-			position.x = ladder_pos.x
-			position.z = ladder_pos.y
-			teller("started climbing")
-			climbing = true
 		else:
-			var ladder_location = Vector3(ladder_pos.x,position.y,ladder_pos.y)
-			wish_vel = (ladder_location - position).normalized() * attributes["speed"]
-			teller("moving towards ladder ")
+			#checks if has reached ladder
+			if (Vector2(position.x,position.z) - ladder_pos).length() < 0.75:
+				teller("reached ladder")
+				ladder_target_override = false
+				position.y = clamp(position.y, ladder_height.x,ladder_height.y) #snap to ladder
+				#position.x = ladder_pos.x
+				#position.z = ladder_pos.y
+				teller("started climbing")
+				climbing = true
+			else:
+				var ladder_location = Vector3(ladder_pos.x,position.y,ladder_pos.y)
+				wish_vel = (ladder_location - position).normalized() * attributes["speed"]
+				next_desired_pos = ladder_location
+				teller("moving towards ladder ")
 	#checks if it should find a ladder
-	elif abs(pointer.y) > 0.1 or abs(dif.y) > 5.0: #less math and a bit cleaner #(abs(pointer.y) > Vector2(pointer.x,pointer.z).length()): #checks if wish_vel wants to go vertical more than horizontal
+	elif abs(pointer.y) > 0.1 or abs(dif.y) > 7.5: #less math and a bit cleaner #(abs(pointer.y) > Vector2(pointer.x,pointer.z).length()): #checks if wish_vel wants to go vertical more than horizontal
 		teller("wants to go up")
 		#checks if can climb last_computed ladder
 		if (Vector2(position.x,position.z) - ladder_pos).length() < 0.75 and (position.y < ladder_height.y and position.y > ladder_height.x):
@@ -233,8 +301,35 @@ func velocity_towards_target(delta) -> void:
 			teller("no ladders in room")
 	else:
 		teller("desired height")
+	var new_pos = consider_navigation_mesh(next_desired_pos) #considers navigation mesh
+	if nav_agent.is_target_reachable():
+		#target is always reachable >:3c
+		wish_vel = (new_pos - position).normalized() * attributes["speed"]
+	elif !climbing: #always unreachable when on ladder
+		#wish_vel does not change
+		if !looking_menacingly:
+			looking_menacingly = true
+			look_menacing_timer = 0.0
+			print("started waiting for change")
+		else:
+			teller("looking menacingly")
+			look_menacing_timer += delta
+			if look_menacing_timer > 15.0:
+				print(target_location)
+				target_closest_door(position)
+				print("giving up and leaving")
+				looking_menacingly = false
+				tired_of_this_shit = true
+	var last_y_vel = velocity.y
 	velocity = lerp(velocity,wish_vel,delta*4.0)
+	velocity.y = last_y_vel #gravity is a thing
+	$MeshInstance3D.position = next_desired_pos
+	$MeshInstance3D/Label3D.text = "current goal\n" + str(next_desired_pos)
 	navigate(wish_dir)
+
+var look_menacing_timer = 0.0
+var looking_menacingly = false
+var tired_of_this_shit = false
 
 func check_for_reached_target() -> void:
 	if (position - target_location).length() < 0.75: #seems like a good number lmao
@@ -244,10 +339,13 @@ func check_for_reached_target() -> void:
 			target_furthest_door_in_room() #we only walk through doors in this house
 
 func enter_door(door_index:int) -> void:
+	tired_of_this_shit = false
+	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg")
 	var door_data = Global.doors_val[door_index]
 	position = door_data[1]
 	room_id = door_data[2]
 	last_door_indx = door_index
+	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg")
 	target_furthest_door_in_room() #one must imagine him happy
 
 func enter_sub_door(door_index:int) -> void:
@@ -265,3 +363,66 @@ func teller(text = "", indx = 0):
 			$Label3D2.text = text
 		_:
 			$Label3D3.text = text
+
+var targeting_node = false
+var target_node = null
+
+func look_for_prey():
+	var new_prey = false
+	var lost_track = false
+	var prey = get_tree().get_nodes_in_group("player")
+	if targeting_node:
+		if target_node != null:
+			if target_node.room_id == room_id:
+				target_location = target_node.position
+				target_is_door = false
+				return #is already chasing valid prey no need to track another
+			else:
+				lost_track = true
+				targeting_node = false
+	if !prey.is_empty() and !tired_of_this_shit: #tired of everything in that room just going to leave
+		var min_distance = 1000.0 #arbitrary unrealisticly high value
+		for e in prey: #maybe make groups for class_1 (prey), class_2 (middle_ground ie player), class_3 (predators)
+			if e.room_id == room_id:
+				#is in same room
+				var dis_to = (e.position - position).length()
+				if dis_to < min_distance: #we can make other weights besides distance like tastiness or smth
+					target_node = e
+					targeting_node = true
+					min_distance = dis_to
+	else:
+		#no prey nodes currently in tree
+		pass
+	
+	if new_prey:
+		ladder_target_override = false
+		sub_door_target_override = false
+	
+	if !targeting_node and lost_track:
+		print("lost track of prey")
+		#had prey last frame but they left room and there is no more prey in room
+		target_closest_door(target_location)
+
+func target_closest_door(pos : Vector3) -> void:
+	ladder_target_override = false
+	sub_door_target_override = false
+	targeting_node = false
+	var closest_dist = 1000.0 #arbitrary unrealistically high value
+	for d_i in Global.room_doors[room_id]:
+		var dd = Global.doors_val[d_i]
+		var dist = (dd[0] - pos).length()
+		if dist < closest_dist: #dont care if it loops because it is could be chasing something that is looping
+			closest_dist = dist
+			target_door_indx = d_i
+			target_location = dd[0]
+			target_is_door = true
+
+@onready var nav_agent = $NavigationAgent3D
+func consider_navigation_mesh(target_pos : Vector3) -> Vector3:
+	var next_path_point = Vector3.ZERO
+	nav_agent.target_position = target_pos
+	next_path_point = nav_agent.get_next_path_position()
+	if (next_path_point - position).length() < 0.05:
+		next_path_point = target_pos #should help from indecision
+	return next_path_point
+

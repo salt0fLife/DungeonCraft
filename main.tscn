@@ -531,6 +531,8 @@ popup/item_3/id = 3
 
 [node name="thunderHandler" type="Node" parent="."]
 
+[node name="spacialAudioHandler" type="Node3D" parent="."]
+
 [connection signal="button_down" from="Control/hostLocal" to="." method="_on_host_local_button_down"]
 [connection signal="button_down" from="Control/joinLocal" to="." method="_on_join_local_button_down"]
 [connection signal="button_down" from="Control/refreshList" to="." method="_on_refresh_list_button_down"]

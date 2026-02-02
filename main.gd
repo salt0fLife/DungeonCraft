@@ -20,6 +20,7 @@ func _ready():
 	Global.connect("change_world", _on_change_world)
 	Global.connect("create_item", _on_create_item)
 	Global.connect("thunder_from_point",_on_thunder_from_point)
+	Global.connect("signal_play_sound",_on_play_sound)
 	skin_key = load_file("", "skin_key.dat")
 	print("loaded skin_key " + str(skin_key))
 	if skin_key == null:
@@ -573,3 +574,20 @@ func _on_thunder_from_point(point : Vector3, sound_index = 0) -> void: #I was th
 	player.play() #THUNDAAAAA
 	await  player.finished
 	player.call_deferred("queue_free")
+
+
+func _on_play_sound(pos : Vector3, file_path : String) -> void:
+	create_spacial_audio_player(pos,file_path)
+	create_spacial_audio_player.rpc(pos,file_path)
+
+@rpc("any_peer")
+func create_spacial_audio_player(pos : Vector3, file_path : String):
+	var ap = AudioStreamPlayer3D.new()
+	ap.stream = load(file_path)
+	$spacialAudioHandler.add_child(ap)
+	ap.position = pos
+	ap.connect("finished",kill_node.bind(ap)) #hope this doesn't cause problems later
+	ap.play()
+
+func kill_node(node):
+	node.queue_free()

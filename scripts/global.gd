@@ -16,6 +16,7 @@ signal update_health_graphics
 signal update_mana_graphics
 signal update_attributes
 signal enter_room #called with an id when moving using doors for hiding unused rooms
+signal signal_play_sound #needs (pos,filepath)
 var inside = 0.0
 
 var skin = [64,64,false,0,[]]
@@ -177,3 +178,6 @@ var doors_val = [] #index is door_indx (door number in group "doorway"), data is
 
 var room_ladders = [] #indes is room id, data is ladder_indx
 var ladders_val = [] #index is ladder_indx, data, is [position,height,rot]
+
+func play_sound(pos : Vector3, file_path : String) -> void:
+	emit_signal("signal_play_sound", pos, file_path)

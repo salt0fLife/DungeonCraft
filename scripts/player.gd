@@ -1947,6 +1947,8 @@ var ladder_pos = Vector2.ZERO
 var ladder_height = Vector2.ZERO
 var ladder_facing = 0.0
 
+var room_id = 0
+
 func process_interact_data(data, normal, hit):
 	match data[0]:
 		Lookup.interact_return_code.is_item: 
@@ -1955,8 +1957,11 @@ func process_interact_data(data, normal, hit):
 			else:
 				print("cant pick up inventory full")
 		Lookup.interact_return_code.is_doorway:
+			Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg")
 			position = data[1][0]
 			graphics.rotation.y += data[1][1]
+			Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg")
+			room_id = data[1][2]
 			Global.emit_signal("enter_room",data[1][2])
 		Lookup.interact_return_code.is_ladder:
 			is_climbing_ladder = true

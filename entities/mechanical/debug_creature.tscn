@@ -1,8 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://dh4wpr223uwjs"]
+[gd_scene load_steps=22 format=3 uid="uid://dh4wpr223uwjs"]
 
 [ext_resource type="Script" path="res://scripts/debug_creature.gd" id="1_0bi66"]
 [ext_resource type="Script" path="res://scripts/generic_health_handler.gd" id="2_bxdl5"]
+[ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="2_hmua7"]
+[ext_resource type="Texture2D" uid="uid://dyh661ujm3ahi" path="res://assets/glb/playerAvatar002_eyeBrows2.png" id="3_fwtlk"]
 [ext_resource type="FontFile" uid="uid://dpxhqjhxj5i6i" path="res://assets/fonts/UNCIALANTIQUA-REGULAR.TTF" id="3_xgw08"]
+[ext_resource type="Shader" path="res://assets/avatar/eyes.gdshader" id="4_1jpso"]
+[ext_resource type="Shader" path="res://assets/avatar/mouth.gdshader" id="5_tenl1"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fofke"]
 radius = 0.287
@@ -14,6 +18,128 @@ height = 1.1
 
 [sub_resource type="BoxMesh" id="BoxMesh_lpo4h"]
 size = Vector3(0.24, 0.65, 0.45)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rkrxl"]
+resource_name = "eyeBrows"
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+albedo_texture = ExtResource("3_fwtlk")
+texture_filter = 2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ekn1a"]
+resource_name = "eyes"
+render_priority = 0
+shader = ExtResource("4_1jpso")
+shader_parameter/uv1_scale = Vector3(2, 2, 1)
+shader_parameter/uv1_offset = Vector3(-1, -1, 0)
+shader_parameter/eyeSize = Vector2(1, 1)
+shader_parameter/pupilSize = Vector2(0.48, 0.595)
+shader_parameter/eyePos = Vector2(0, 0)
+shader_parameter/whitesColor = Color(0.917647, 0.917647, 0.917647, 1)
+shader_parameter/eyeColor = Color(0.537255, 0.356863, 0.227451, 1)
+shader_parameter/eyeColor2 = Color(0.345098, 0.219608, 0.164706, 1)
+shader_parameter/pupilColor = Color(0, 0, 0, 1)
+shader_parameter/ec2os = 0.14
+shader_parameter/eyeLids = Vector2(1.05, 0.32)
+shader_parameter/eyeScale = 1.035
+shader_parameter/eyeTaper = 0.1
+shader_parameter/highlightSize = Vector2(0.195, 0.11)
+shader_parameter/highlightPos = Vector2(0.53, -0.3)
+shader_parameter/highlightTrackIntensity = 0.75
+shader_parameter/eyelashes = Vector2(0.345, 0.24)
+shader_parameter/eyelashCol = Color(0, 0, 0, 1)
+shader_parameter/eyelashTaper = 0.205
+shader_parameter/transparency = 0.0
+shader_parameter/glow_col = Color(0, 0, 0, 1)
+shader_parameter/glow_col_2 = Color(0, 0, 0, 1)
+shader_parameter/glow_col_3 = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rb5cl"]
+render_priority = 0
+shader = ExtResource("5_tenl1")
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = null
+shader_parameter/mouthPos = Vector2(0, 0)
+shader_parameter/mouth_size = Vector2(0.1, 0.04)
+shader_parameter/smile = 0.0
+shader_parameter/owo = 0.0
+shader_parameter/col_outline = Color(0, 0, 0, 1)
+shader_parameter/col_internal = Color(0.376471, 0.188235, 0.117647, 1)
+shader_parameter/col_tongue = Color(0.529412, 0.168627, 0.121569, 1)
+shader_parameter/col_teeth = Color(1, 1, 1, 1)
+shader_parameter/teeth = 0.1
+shader_parameter/fangs = 0.0
+shader_parameter/pointy_teeth = 0.0
+shader_parameter/open = 0.0
+shader_parameter/outline_thickness = 0.025
+shader_parameter/transparency = 0.0
+
+[sub_resource type="Shader" id="Shader_7ykqe"]
+code = "
+shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
+uniform sampler2D fire_noise : repeat_enable;
+uniform vec3 fire_col : source_color;
+uniform sampler2D gradient_tex;
+
+void vertex() {
+	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(vec4(normalize(cross(vec3(0.0, 1.0, 0.0), INV_VIEW_MATRIX[2].xyz)), 0.0), vec4(0.0, 1.0, 0.0, 0.0), vec4(normalize(cross(INV_VIEW_MATRIX[0].xyz, vec3(0.0, 1.0, 0.0))), 0.0), MODEL_MATRIX[3]);
+	MODELVIEW_NORMAL_MATRIX = mat3(MODELVIEW_MATRIX);
+}
+
+
+
+
+
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 fire = texture(fire_noise,base_uv+vec2(0.0,TIME*2.0));
+	fire *= texture(fire_noise,base_uv+vec2(0.25,TIME*3.2));
+	vec4 gradient = texture(gradient_tex,base_uv+vec2(0.0,0.01));
+	ALPHA = fire.a * gradient.r;
+	ALBEDO = mix(fire_col,fire_col*vec3(0.7,0.7,0.1),fire.r*ALPHA);
+	//ALBEDO *= gradient.r;
+	EMISSION = ALBEDO*4.0;
+	if (fire.r*gradient.r < 0.05) {
+		ALPHA = 0.0;
+	}
+}
+"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jl3go"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_cme5f"]
+width = 128
+height = 128
+seamless = true
+noise = SubResource("FastNoiseLite_jl3go")
+
+[sub_resource type="Gradient" id="Gradient_yt7lo"]
+offsets = PackedFloat32Array(0.22973, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_x2pq6"]
+gradient = SubResource("Gradient_yt7lo")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.2)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_si6oh"]
+render_priority = 0
+shader = SubResource("Shader_7ykqe")
+shader_parameter/fire_col = Color(0.796078, 0.247059, 0, 1)
+shader_parameter/fire_noise = SubResource("NoiseTexture2D_cme5f")
+shader_parameter/gradient_tex = SubResource("GradientTexture2D_x2pq6")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oxle8"]
+albedo_color = Color(1, 0.219608, 0.235294, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_q1i6h"]
+material = SubResource("StandardMaterial3D_oxle8")
+size = Vector3(0.5, 0.5, 0.5)
 
 [node name="debugCreature" type="CharacterBody3D"]
 collision_layer = 2
@@ -27,15 +153,67 @@ shape = SubResource("CapsuleShape3D_fofke")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="graphics"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+visible = false
 mesh = SubResource("CapsuleMesh_f10qu")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="graphics"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.570127, -0.14406)
+visible = false
 mesh = SubResource("BoxMesh_lpo4h")
 
 [node name="RayCast3D" type="RayCast3D" parent="graphics"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.878072, 0)
 target_position = Vector3(0, 0, -1)
+
+[node name="playerAvatar" parent="graphics" instance=ExtResource("2_hmua7")]
+
+[node name="chestBase" parent="graphics/playerAvatar/genericAvatar/root" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, 0.00323818, -0.0273693, -0.000122169)
+
+[node name="hip_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="1"]
+transform = Transform3D(0.995002, -0.0133977, 0.0989301, 0, 0.990947, 0.134202, -0.0998332, -0.13353, 0.986001, 0.075, -0.282, -0.001)
+
+[node name="knee_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase/hip_L" index="1"]
+transform = Transform3D(1, 0, 0, 0, 0.990613, -0.136678, 0, 0.136678, 0.990613, 0, -0.274171, 0)
+
+[node name="hip_R" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="2"]
+transform = Transform3D(0.995003, 0.0133977, -0.0989303, 0, 0.990948, 0.134202, 0.0998333, -0.133531, 0.986003, -0.075, -0.282, -0.001)
+
+[node name="knee_R" parent="graphics/playerAvatar/genericAvatar/root/chestBase/hip_R" index="1"]
+transform = Transform3D(1, 0, 0, 0, 0.990611, -0.136678, 0, 0.136678, 0.990611, 0, -0.274171, 0)
+
+[node name="neck" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="3"]
+transform = Transform3D(1, 0, 0, 0, 0.999297, 0.0374911, 0, -0.0374912, 0.999295, 0, 0.289384, -0.00323021)
+
+[node name="eyeBrows_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
+surface_material_override/0 = SubResource("StandardMaterial3D_rkrxl")
+
+[node name="eyeBrows_R" parent="graphics/playerAvatar/genericAvatar/root/chestBase/neck" index="2"]
+surface_material_override/0 = SubResource("StandardMaterial3D_rkrxl")
+
+[node name="eyes" parent="graphics/playerAvatar/genericAvatar/root/chestBase/neck" index="3"]
+surface_material_override/0 = SubResource("ShaderMaterial_ekn1a")
+
+[node name="mouth" parent="graphics/playerAvatar/genericAvatar/root/chestBase/neck" index="7"]
+surface_material_override/0 = SubResource("ShaderMaterial_rb5cl")
+
+[node name="shoulder_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="4"]
+transform = Transform3D(0.99878, -0.0492365, 0.00380404, 0.0489558, 0.997301, 0.054646, -0.00648439, -0.054393, 0.998498, 0.14978, 0.241, -0.0014265)
+
+[node name="elbowL" parent="graphics/playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="1"]
+transform = Transform3D(1, 0, 0, 0, 0.998566, 0.053529, 0, -0.053529, 0.998566, 0.079, -0.24, -0.003)
+
+[node name="shoulder_R" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="5"]
+transform = Transform3D(0.998648, 0.0517957, -0.00435618, -0.0517567, 0.998623, 0.00861881, 0.00479659, -0.00838169, 0.999954, -0.15, 0.241, -0.00100074)
+
+[node name="elbowR" parent="graphics/playerAvatar/genericAvatar/root/chestBase/shoulder_R" index="1"]
+transform = Transform3D(1, 0, 0, 0, 0.76154, 0.648121, 0, -0.648121, 0.76154, -0.079, -0.24, -0.00300002)
+
+[node name="tp_item_handler" parent="graphics/playerAvatar/genericAvatar/root/chestBase/shoulder_R/elbowR" index="1"]
+transform = Transform3D(1, 0, 0, 0, 0.173651, -0.984807, 0, 0.984807, 0.173651, 0, -0.21, 0.075)
+
+[node name="fire" parent="graphics/playerAvatar" index="1"]
+surface_material_override/0 = SubResource("ShaderMaterial_si6oh")
 
 [node name="health_handler" type="Node3D" parent="."]
 script = ExtResource("2_bxdl5")
@@ -60,3 +238,20 @@ billboard = 1
 modulate = Color(0.929412, 0.839216, 0.647059, 1)
 text = "idle"
 font = ExtResource("3_xgw08")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+top_level = true
+mesh = SubResource("BoxMesh_q1i6h")
+
+[node name="Label3D" type="Label3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.496929, 0)
+billboard = 1
+modulate = Color(0.803922, 0.74902, 0, 1)
+text = "current goal
+Vector3(0,0,0)"
+font = ExtResource("3_xgw08")
+
+[editable path="graphics/playerAvatar"]
