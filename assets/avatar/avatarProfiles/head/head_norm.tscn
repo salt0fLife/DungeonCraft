@@ -1,13 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://cl4h68t46k147"]
+[gd_scene load_steps=6 format=3 uid="uid://cl4h68t46k147"]
 
-[ext_resource type="Texture2D" uid="uid://cc1h6luk1w0po" path="res://assets/glb/avatarProfiles/playerAvatarHeadNorm_128x-dapper128Secondary.png" id="1_l25xi"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5qe4c"]
-resource_name = "skin1"
-transparency = 4
-cull_mode = 2
-albedo_texture = ExtResource("1_l25xi")
-texture_filter = 2
+[ext_resource type="Material" uid="uid://cs5uq77gi4wbq" path="res://assets/avatar/playerSkinShaderMat.tres" id="1_aaxye"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_rl5rg"]
 _surfaces = [{
@@ -31,7 +24,7 @@ _surfaces = [{
 "format": 34896613399,
 "index_count": 36,
 "index_data": PackedByteArray(13, 0, 7, 0, 1, 0, 13, 0, 19, 0, 7, 0, 12, 0, 3, 0, 15, 0, 12, 0, 0, 0, 3, 0, 23, 0, 14, 0, 17, 0, 23, 0, 20, 0, 14, 0, 2, 0, 11, 0, 5, 0, 2, 0, 8, 0, 11, 0, 18, 0, 9, 0, 6, 0, 18, 0, 21, 0, 9, 0, 22, 0, 4, 0, 10, 0, 22, 0, 16, 0, 4, 0),
-"material": SubResource("StandardMaterial3D_5qe4c"),
+"material": ExtResource("1_aaxye"),
 "name": "skin1",
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),
@@ -63,7 +56,7 @@ _surfaces = [{
 "format": 34896613399,
 "index_count": 36,
 "index_data": PackedByteArray(13, 0, 7, 0, 1, 0, 13, 0, 19, 0, 7, 0, 12, 0, 3, 0, 15, 0, 12, 0, 0, 0, 3, 0, 23, 0, 14, 0, 17, 0, 23, 0, 20, 0, 14, 0, 2, 0, 11, 0, 5, 0, 2, 0, 8, 0, 11, 0, 18, 0, 9, 0, 6, 0, 18, 0, 21, 0, 9, 0, 22, 0, 4, 0, 10, 0, 22, 0, 16, 0, 4, 0),
-"material": SubResource("StandardMaterial3D_5qe4c"),
+"material": ExtResource("1_aaxye"),
 "name": "skin1",
 "primitive": 3,
 "uv_scale": Vector4(0, 0, 0, 0),

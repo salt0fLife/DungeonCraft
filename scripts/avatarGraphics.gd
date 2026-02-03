@@ -143,6 +143,13 @@ func apply_pose(pose):
 					print(k + " pos and rot set too " + str(pose[k]))
 	print("applied " + str(pose))
 
+func get_material():
+	return meshes[0].get_active_material(0)
+
+func set_material_for_all(mat):
+	for m in meshes:
+		m.set_surface_override_material(mat)
+
 @export var animation_state = "idle"
 @export var animated = true
 @export var walk_speed = 1.0
@@ -1021,6 +1028,9 @@ func set_eye_param(key, value):
 @onready var mouth = $root/chestBase/neck/mouth
 func set_mouth_param(key, value):
 	mouth.get_active_material(0).set(key, value)
+
+func set_body_param(key,value):
+	base_skin_mat.set(key,value)
 
 ##    for saving
 const savePath = "res://tempSaveFolder/save1/"

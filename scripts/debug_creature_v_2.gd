@@ -28,6 +28,10 @@ var attributes = {
 }
 var room_id = 0
 
+var update_frame_count = 24
+var update_frame_counter = 0
+var update_on_frame = 0
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -49,6 +53,16 @@ func load_players_skin() -> void:
 func _physics_process(delta):
 	if !is_multiplayer_authority():
 		return
+	#update_frame_counter += 1
+	#if update_frame_counter > update_frame_count:
+		#update_frame_counter = 0
+	#if !update_frame_counter == update_on_frame: #is not time to update pathfinding so just do bare minimum
+		#check_for_reached_target()
+		#last_pos = position
+		#if !is_on_floor():
+			#velocity.y -= gravity*delta
+		#move_and_slide()
+		#return #only update when its on update frame
 	$Label3D4.text = str(room_id)
 	if target_is_door:
 		teller("target: door " + str(target_door_indx),2)
@@ -150,6 +164,7 @@ var target_is_door = false
 
 var target_door_indx = 0
 var last_door_indx = 0
+var ghost = false
 
 func target_furthest_door_in_room() -> void:
 	#var room_doors = [] #index is room id, data is door_indx
@@ -373,13 +388,18 @@ func check_for_reached_target() -> void:
 
 func enter_door(door_index:int) -> void:
 	tired_of_this_shit = false
-	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg")
+	var sounds = true
 	var door_data = Global.doors_val[door_index]
+	if door_data[2] == last_exited_room:
+		sounds = false
+	else:
+		Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg")
 	position = door_data[1]
 	last_exited_room = room_id
 	room_id = door_data[2]
 	last_door_indx = door_index
-	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg")
+	if sounds:
+		Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg")
 	#target_furthest_door_in_room() #one must imagine him happy
 	target_random_door() #more random and lifelike, need to add some pausing and thinking/smelling/looking stuff too
 
@@ -505,7 +525,8 @@ func set_health(value):
 	attributes["health"] = value
 	pass
 
-func die():
+@rpc("any_peer")
+func die(_attacker = "",_weapon_name = ""):
 	#dont do anything :D
 	targeting_node = false
 	ladder_target_override = false

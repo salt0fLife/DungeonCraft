@@ -8,7 +8,18 @@ var tool_tip = "pickup"
 var tool_tip_color = Color.GOLD
 var interact_time = 0.25
 
+
 func _ready():
+	#settup_position
+	$RayCast3D.force_raycast_update()
+	if $RayCast3D.is_colliding():
+		var poi = $RayCast3D.get_collision_point()
+		position = poi
+		rotation.y = randf_range(-PI,PI)
+	else:
+		printerr("item was unable to find ground so is floating :/")
+	
+	
 	if !Lookup.items.has(item_key[0]):
 		printerr("invalid item key of value " + item_key[0] + ". freeing from queue")
 		queue_free()
@@ -39,6 +50,7 @@ var vel = 0.0
 var gravity = 4.0
 var time = randf_range(0.0,4.0*PI)
 func _physics_process(delta):
+	return
 	if !$RayCast3D.is_colliding():
 		vel -= gravity * delta
 		if vel < -5.0:

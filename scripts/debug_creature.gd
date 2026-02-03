@@ -338,7 +338,7 @@ func velocity_towards_target(delta) -> void:
 	else:
 		teller("desired height")
 	var new_pos = consider_navigation_mesh(next_desired_pos) #considers navigation mesh
-	if nav_agent.is_target_reachable():
+	if nav_agent.is_target_reachable() or tired_of_this_shit:
 		#target is always reachable >:3c
 		wish_vel = (new_pos - position).normalized() * attributes["speed"]
 	elif !climbing: #always unreachable when on ladder
@@ -372,10 +372,13 @@ func check_for_reached_target() -> void:
 		if target_is_door:
 			enter_door(target_door_indx)
 		elif targeting_node:
-			#target_node.die()
-			target_node.enter_door(range(0,Global.doors_val.size()).pick_random())
-			print("*ate creature*")
-			Global.play_sound(position, "res://assets/sounds/spawnSounds/spawnIn.ogg")
+			target_node.die("debug", "petrification")
+			target_node.die.rpc("debug", "petrification")
+			targeting_node = false
+			target_node = null
+			#target_node.enter_door(range(0,Global.doors_val.size()).pick_random())
+			#print("*ate creature*")
+			#Global.play_sound(position, "res://assets/sounds/spawnSounds/spawnIn.ogg")
 			pass
 		else:
 			target_furthest_door_in_room() #we only walk through doors in this house
@@ -412,6 +415,7 @@ func teller(text = "", indx = 0):
 var targeting_node = false
 var target_node = null
 var last_exited_room = 0
+var ghost = false
 
 func look_for_prey():
 	var new_prey = false
@@ -429,11 +433,12 @@ func look_for_prey():
 	if !prey.is_empty() and !tired_of_this_shit: #tired of everything in that room just going to leave
 		var min_distance = 1000.0 #arbitrary unrealisticly high value
 		for e in prey: #maybe make groups for class_1 (prey), class_2 (middle_ground ie player), class_3 (predators)
-			if e.room_id == room_id:
-				#is in same room
+			if e.room_id == room_id and !e.ghost:
+				#is in same room and not a ghost
 				var dis_to = (e.position - position).length()
 				if dis_to < min_distance: #we can make other weights besides distance like tastiness or smth
 					target_node = e
+					target_location = e.position #no more chain killing for u
 					targeting_node = true
 					min_distance = dis_to
 	else:
@@ -495,7 +500,19 @@ func set_health(_value):
 	#dont do anything :D
 	pass
 
-func die():
+@rpc("any_peer")
+func die(_attacker = "",_weapon_name = ""):
 	#dont do anything :D
+	targeting_node = false
+	ladder_target_override = false
+	sub_door_target_override = false
+	target_is_door = false
+	call_deferred("respawn")
+	#target_furthest_door_in_room()
 	pass
+
+func respawn() -> void:
+	enter_door(range(0,Global.doors_val.size()).pick_random()) #enters random door to "reset" position
+	pass
+
 

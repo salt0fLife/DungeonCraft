@@ -1,4 +1,4 @@
-[gd_resource type="ShaderMaterial" load_steps=9 format=3 uid="uid://cs5uq77gi4wbq"]
+[gd_resource type="ShaderMaterial" load_steps=12 format=3 uid="uid://cs5uq77gi4wbq"]
 
 [ext_resource type="Texture2D" uid="uid://b6cpqftytnnam" path="res://assets/playerSkins/dapper128Secondary.png" id="1_3f7et"]
 
@@ -34,6 +34,8 @@ uniform vec3 cursed_col : source_color;
 uniform sampler2D blessed_tex : repeat_enable, filter_linear;
 uniform vec3 blessed_col : source_color;
 uniform float damaged = 0.0;
+uniform bool petrified = false;
+uniform sampler2D stone_texture : filter_nearest;
 
 void vertex() {
 	UV=UV*uv1_scale.xy+uv1_offset.xy;
@@ -84,6 +86,12 @@ void fragment() {
 			EMISSION += mix(blessed_col, blessed_col*vec3(0.5,0.0,0.2),texture(blessed_tex,base_uv).r)*4.0;
 		}
 	}
+	if (petrified) {
+		EMISSION = vec3(0.0,0.0,0.0);
+		float greyScale = (ALBEDO.r + ALBEDO.g + ALBEDO.b)*0.3333;
+		ALBEDO = texture(stone_texture,UV).rgb;
+		ALBEDO = mix(ALBEDO,vec3(0.5,0.5,0.5),greyScale);
+	}
 	ALBEDO = mix(ALBEDO,vec3(0.5,0.0,0.0),damaged*0.25);
 	EMISSION = mix(EMISSION,vec3(0.5,0.0,0.0),damaged*0.25);
 }
@@ -117,6 +125,20 @@ height = 128
 seamless = true
 noise = SubResource("FastNoiseLite_h68nv")
 
+[sub_resource type="Gradient" id="Gradient_phm8d"]
+offsets = PackedFloat32Array(0.0840708, 0.676991, 0.831858)
+colors = PackedColorArray(0.0430392, 0.0430392, 0.0430391, 1, 0.124414, 0.129441, 0.143389, 1, 0.162118, 0.15165, 0.113317, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ag37y"]
+noise_type = 4
+frequency = 0.4509
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_gv4lf"]
+width = 128
+height = 128
+color_ramp = SubResource("Gradient_phm8d")
+noise = SubResource("FastNoiseLite_ag37y")
+
 [resource]
 render_priority = 0
 shader = SubResource("Shader_hlm4j")
@@ -140,7 +162,9 @@ shader_parameter/blessed = false
 shader_parameter/cursed_col = Color(0.14902, 0.00392157, 0.0509804, 1)
 shader_parameter/blessed_col = Color(0.678431, 0.568627, 0.0784314, 1)
 shader_parameter/damaged = 0.0
+shader_parameter/petrified = false
 shader_parameter/texture_albedo = ExtResource("1_3f7et")
 shader_parameter/fire_tex = SubResource("NoiseTexture2D_xik6f")
 shader_parameter/cursed_tex = SubResource("NoiseTexture2D_xiwry")
 shader_parameter/blessed_tex = SubResource("NoiseTexture2D_8vq3x")
+shader_parameter/stone_texture = SubResource("NoiseTexture2D_gv4lf")

@@ -38,7 +38,7 @@ height = 128
 seamless = true
 noise = SubResource("FastNoiseLite_h68nv")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_41sd8"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t4xha"]
 render_priority = 0
 shader = ExtResource("2_elvly")
 shader_parameter/albedo = Color(0.443137, 0.262745, 0.4, 1)
@@ -199,7 +199,7 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.2)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jbk4x"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_512vy"]
 render_priority = 0
 shader = SubResource("Shader_82q5v")
 shader_parameter/fire_col = Color(0.796078, 0.247059, 0, 1)
@@ -364,31 +364,31 @@ lean = 1.725
 [node name="root" type="Node3D" parent="."]
 
 [node name="body" type="Node3D" parent="root"]
-transform = Transform3D(0.998869, -0.0475232, 0, 0.0475232, 0.998869, 0, 0, 0, 1, 0, 0.435699, 0)
+transform = Transform3D(0.998845, 0.0480175, 0, -0.0480175, 0.998845, 0, 0, 0, 1, 0, 0.364016, 0)
 
 [node name="torso" type="Node3D" parent="root/body"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="root/body/torso"]
 mesh = SubResource("BoxMesh_uv8wh")
 skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_41sd8")
+surface_material_override/0 = SubResource("ShaderMaterial_t4xha")
 
 [node name="leg_base" type="Node3D" parent="root/body/torso"]
 transform = Transform3D(0.848667, 0, -0.528927, 0, 1, 0, 0.528927, 0, 0.848667, 0.132365, 0, 0.0903412)
 
 [node name="leg" type="Node3D" parent="root/body/torso/leg_base"]
-transform = Transform3D(-0.873409, -0.40067, 0.276804, -0.416963, 0.908923, 0, -0.251593, -0.115417, -0.960927, 0, 0, 0)
+transform = Transform3D(-0.451871, -0.820248, 0.350721, -0.875885, 0.48252, -4.98535e-07, -0.169229, -0.307191, -0.936481, 0, 0, 0)
 
 [node name="knee" type="Node3D" parent="root/body/torso/leg_base/leg"]
-transform = Transform3D(0.366423, -0.930448, 0, 0.930448, 0.366423, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
+transform = Transform3D(0.590748, -0.806855, 0, 0.806855, 0.590748, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base/leg/knee"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
 mesh = SubResource("BoxMesh_ggbkj")
-surface_material_override/0 = SubResource("ShaderMaterial_41sd8")
+surface_material_override/0 = SubResource("ShaderMaterial_t4xha")
 
 [node name="knee2" type="Node3D" parent="root/body/torso/leg_base/leg/knee"]
-transform = Transform3D(0.377745, -0.92591, 0, 0.92591, 0.377745, 0, 0, 0, 1, -0.35, 0, 0)
+transform = Transform3D(0.4848, -0.874625, 0, 0.874625, 0.4848, 0, 0, 0, 1, -0.35, 0, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base/leg/knee/knee2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
@@ -402,17 +402,17 @@ mesh = SubResource("BoxMesh_ggbkj")
 transform = Transform3D(0.998481, 0, -0.0550896, 0, 1, 0, 0.0550896, 0, 0.998481, 0.138675, 0, 0)
 
 [node name="leg5" type="Node3D" parent="root/body/torso/leg_base2"]
-transform = Transform3D(-0.678842, -0.535417, -0.502496, -0.61928, 0.785169, 0, 0.394544, 0.311185, -0.864581, 0, 0, 0)
+transform = Transform3D(-0.778263, -0.627925, 0.00387993, -0.627931, 0.778268, -1.13375e-07, -0.00301956, -0.00243641, -0.999994, 0, 0, 0)
 
 [node name="knee" type="Node3D" parent="root/body/torso/leg_base2/leg5"]
-transform = Transform3D(0.73548, -0.677548, 0, 0.677548, 0.73548, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
+transform = Transform3D(0.291153, -0.956677, 0, 0.956677, 0.291153, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base2/leg5/knee"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
 mesh = SubResource("BoxMesh_ggbkj")
 
 [node name="knee2" type="Node3D" parent="root/body/torso/leg_base2/leg5/knee"]
-transform = Transform3D(0.777866, -0.628429, 0, 0.628429, 0.777866, 0, 0, 0, 1, -0.35, 0, 0)
+transform = Transform3D(0.374897, -0.927066, 0, 0.927066, 0.374897, 0, 0, 0, 1, -0.35, 0, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base2/leg5/knee/knee2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
@@ -426,17 +426,17 @@ mesh = SubResource("BoxMesh_ggbkj")
 transform = Transform3D(0.979028, 0, 0.203727, 0, 1, 0, -0.203727, 0, 0.979028, 0.135404, 0, -0.0882127)
 
 [node name="leg6" type="Node3D" parent="root/body/torso/leg_base3"]
-transform = Transform3D(-0.716711, -0.536161, 0.445933, -0.599017, 0.800736, 0, -0.357074, -0.267121, -0.895067, 0, 0, 0)
+transform = Transform3D(-0.409728, -0.858333, -0.308848, -0.902452, 0.430788, 6.20367e-07, 0.133047, 0.278721, -0.951112, 0, 0, 0)
 
 [node name="knee" type="Node3D" parent="root/body/torso/leg_base3/leg6"]
-transform = Transform3D(0.559186, -0.829042, 0, 0.829042, 0.559186, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
+transform = Transform3D(0.709136, -0.705071, 0, 0.705071, 0.709136, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base3/leg6/knee"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
 mesh = SubResource("BoxMesh_ggbkj")
 
 [node name="knee2" type="Node3D" parent="root/body/torso/leg_base3/leg6/knee"]
-transform = Transform3D(0.458416, -0.888739, 0, 0.888739, 0.458416, 0, 0, 0, 1, -0.35, 0, 0)
+transform = Transform3D(0.696391, -0.717664, 0, 0.717664, 0.696391, 0, 0, 0, 1, -0.35, 0, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base3/leg6/knee/knee2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
@@ -450,17 +450,17 @@ mesh = SubResource("BoxMesh_ggbkj")
 transform = Transform3D(0.855183, 0, 0.518326, 0, 1, 0, -0.518326, 0, 0.855183, 0.131268, 0, -0.172465)
 
 [node name="leg7" type="Node3D" parent="root/body/torso/leg_base4"]
-transform = Transform3D(-0.898798, -0.36301, -0.245736, -0.374494, 0.927229, 0, 0.227853, 0.0920264, -0.969337, 0, 0, 0)
+transform = Transform3D(-0.60304, -0.682519, 0.412928, -0.749393, 0.662125, 2.35973e-07, -0.273411, -0.309445, -0.910764, 0, 0, 0)
 
 [node name="knee" type="Node3D" parent="root/body/torso/leg_base4/leg7"]
-transform = Transform3D(0.496139, -0.868245, 0, 0.868245, 0.496139, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
+transform = Transform3D(0.321577, -0.946885, 0, 0.946885, 0.321577, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base4/leg7/knee"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
 mesh = SubResource("BoxMesh_ggbkj")
 
 [node name="knee2" type="Node3D" parent="root/body/torso/leg_base4/leg7/knee"]
-transform = Transform3D(0.600299, -0.799775, 0, 0.799775, 0.600299, 0, 0, 0, 1, -0.35, 0, 0)
+transform = Transform3D(0.26435, -0.964426, 0, 0.964426, 0.26435, 0, 0, 0, 1, -0.35, 0, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base4/leg7/knee/knee2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
@@ -474,17 +474,17 @@ mesh = SubResource("BoxMesh_ggbkj")
 transform = Transform3D(0.787538, 0, 0.616266, 0, 1, 0, -0.616266, 0, 0.787538, -0.135993, 0, 0.067851)
 
 [node name="leg8" type="Node3D" parent="root/body/torso/leg_base5"]
-transform = Transform3D(0.601481, 0.797888, -0.0399188, -0.798524, 0.601961, 0, 0.0240296, 0.0318762, 0.999201, 0, 0, 0)
+transform = Transform3D(0.651921, 0.592924, -0.472693, -0.672839, 0.739788, 7.55113e-10, 0.349693, 0.318047, 0.881225, 0, 0, 0)
 
 [node name="knee" type="Node3D" parent="root/body/torso/leg_base5/leg8"]
-transform = Transform3D(0.765789, -0.643092, 0, 0.643092, 0.765789, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
+transform = Transform3D(0.54825, -0.836314, 0, 0.836314, 0.54825, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base5/leg8/knee"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
 mesh = SubResource("BoxMesh_ggbkj")
 
 [node name="knee2" type="Node3D" parent="root/body/torso/leg_base5/leg8/knee"]
-transform = Transform3D(0.708691, -0.705519, 0, 0.705519, 0.708691, 0, 0, 0, 1, -0.35, 0, 0)
+transform = Transform3D(0.640423, -0.768022, 0, 0.768022, 0.640423, 0, 0, 0, 1, -0.35, 0, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base5/leg8/knee/knee2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
@@ -498,17 +498,17 @@ mesh = SubResource("BoxMesh_ggbkj")
 transform = Transform3D(0.99328, 0, 0.115735, 0, 1, 0, -0.115735, 0, 0.99328, -0.135993, 0, 0)
 
 [node name="leg2" type="Node3D" parent="root/body/torso/leg_base6"]
-transform = Transform3D(0.821721, 0.476035, 0.313315, -0.501274, 0.865288, 0, -0.271108, -0.157057, 0.94965, 0, 0, 0)
+transform = Transform3D(0.544759, 0.798409, 0.256477, -0.82604, 0.563612, 1.55348e-07, -0.144553, -0.21186, 0.966551, 0, 0, 0)
 
 [node name="knee" type="Node3D" parent="root/body/torso/leg_base6/leg2"]
-transform = Transform3D(0.366423, -0.930448, 0, 0.930448, 0.366423, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
+transform = Transform3D(0.590748, -0.806855, 0, 0.806855, 0.590748, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base6/leg2/knee"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
 mesh = SubResource("BoxMesh_ggbkj")
 
 [node name="knee2" type="Node3D" parent="root/body/torso/leg_base6/leg2/knee"]
-transform = Transform3D(0.377745, -0.92591, 0, 0.92591, 0.377745, 0, 0, 0, 1, -0.35, 0, 0)
+transform = Transform3D(0.4848, -0.874625, 0, 0.874625, 0.4848, 0, 0, 0, 1, -0.35, 0, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base6/leg2/knee/knee2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
@@ -522,17 +522,17 @@ mesh = SubResource("BoxMesh_ggbkj")
 transform = Transform3D(0.964276, 0, -0.2649, 0, 1, 0, 0.2649, 0, 0.964276, -0.135993, 0, -0.0847688)
 
 [node name="leg3" type="Node3D" parent="root/body/torso/leg_base7"]
-transform = Transform3D(0.659867, 0.626791, -0.414376, -0.688703, 0.725043, 0, 0.30044, 0.285381, 0.910107, 0, 0, 0)
+transform = Transform3D(0.832534, 0.552777, -0.0363861, -0.553145, 0.833084, -4.15914e-07, 0.0303124, 0.0201271, 0.999339, 0, 0, 0)
 
 [node name="knee" type="Node3D" parent="root/body/torso/leg_base7/leg3"]
-transform = Transform3D(0.73548, -0.677548, 0, 0.677548, 0.73548, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
+transform = Transform3D(0.291153, -0.956677, 0, 0.956677, 0.291153, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base7/leg3/knee"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
 mesh = SubResource("BoxMesh_ggbkj")
 
 [node name="knee2" type="Node3D" parent="root/body/torso/leg_base7/leg3/knee"]
-transform = Transform3D(0.777866, -0.628429, 0, 0.628429, 0.777866, 0, 0, 0, 1, -0.35, 0, 0)
+transform = Transform3D(0.374897, -0.927066, 0, 0.927066, 0.374897, 0, 0, 0, 1, -0.35, 0, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base7/leg3/knee/knee2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
@@ -546,17 +546,17 @@ mesh = SubResource("BoxMesh_ggbkj")
 transform = Transform3D(0.886422, 0, -0.462878, 0, 1, 0, 0.462878, 0, 0.886422, -0.135993, 0, -0.169101)
 
 [node name="leg4" type="Node3D" parent="root/body/torso/leg_base8"]
-transform = Transform3D(0.657514, 0.595143, 0.46204, -0.671067, 0.741396, 0, -0.342554, -0.31006, 0.88686, 0, 0, 0)
+transform = Transform3D(0.5, 0.833354, -0.235628, -0.857498, 0.514486, 1.33708e-07, 0.121227, 0.20205, 0.971844, 0, 0, 0)
 
 [node name="knee" type="Node3D" parent="root/body/torso/leg_base8/leg4"]
-transform = Transform3D(0.559186, -0.829042, 0, 0.829042, 0.559186, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
+transform = Transform3D(0.709136, -0.705071, 0, 0.705071, 0.709136, 0, 0, 0, 1, -0.35, -2.98023e-08, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base8/leg4/knee"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
 mesh = SubResource("BoxMesh_ggbkj")
 
 [node name="knee2" type="Node3D" parent="root/body/torso/leg_base8/leg4/knee"]
-transform = Transform3D(0.458416, -0.888739, 0, 0.888739, 0.458416, 0, 0, 0, 1, -0.35, 0, 0)
+transform = Transform3D(0.696391, -0.717664, 0, 0.717664, 0.696391, 0, 0, 0, 1, -0.35, 0, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/torso/leg_base8/leg4/knee/knee2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
@@ -567,25 +567,25 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.175, 0, 0)
 mesh = SubResource("BoxMesh_ggbkj")
 
 [node name="abdomen" type="Node3D" parent="root/body"]
-transform = Transform3D(0.999594, 0.00802172, -0.0273135, 0, 0.959478, 0.281789, 0.0284671, -0.281675, 0.959087, 0, 0, 0.149399)
+transform = Transform3D(0.99986, -0.00531096, 0.0158153, 0, 0.947978, 0.31834, -0.0166832, -0.318297, 0.947844, 0, 0, 0.149399)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="root/body/abdomen"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.178296)
 mesh = SubResource("BoxMesh_vriyv")
-surface_material_override/0 = SubResource("ShaderMaterial_41sd8")
+surface_material_override/0 = SubResource("ShaderMaterial_t4xha")
 
 [node name="head" type="Node3D" parent="root/body"]
-transform = Transform3D(0.999481, 0, 0.0322019, 0, 1, 0, -0.0322019, 0, 0.999481, 0, 0, -0.0829292)
+transform = Transform3D(0.999506, 0, -0.0314243, 0, 1, 0, 0.0314243, 0, 0.999506, 0, 0, -0.0829292)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="root/body/head"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0207397, -0.135243)
 mesh = SubResource("BoxMesh_xfsd7")
-surface_material_override/0 = SubResource("ShaderMaterial_41sd8")
+surface_material_override/0 = SubResource("ShaderMaterial_t4xha")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="root/body/head"]
 transform = Transform3D(0.968735, -0.248098, 0, 0.248098, 0.968735, 0, 0, 0, 1, -0.100624, -0.0469786, -0.269754)
 mesh = SubResource("BoxMesh_akipj")
-surface_material_override/0 = SubResource("ShaderMaterial_41sd8")
+surface_material_override/0 = SubResource("ShaderMaterial_t4xha")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="root/body/head"]
 transform = Transform3D(0.956366, 0.292171, 0, -0.292171, 0.956366, 0, 0, 0, 1, 0.0917635, -0.0469786, -0.269754)
@@ -595,7 +595,7 @@ mesh = SubResource("BoxMesh_akipj")
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.935581, 0)
 visible = false
 mesh = SubResource("PlaneMesh_a7yr4")
-surface_material_override/0 = SubResource("ShaderMaterial_jbk4x")
+surface_material_override/0 = SubResource("ShaderMaterial_512vy")
 
 [node name="fire_light" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.891093, 0)

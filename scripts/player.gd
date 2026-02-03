@@ -1262,8 +1262,11 @@ func sync_information(pos: Vector3, rot: float, rotB: float, anim_state: String,
 	update_shadow()
 	pass
 
+var cosmetics_data = [] #loads for everything regardless of local or remote
+
 @rpc("any_peer", "reliable")
 func sync_cosmetics(skin, t: Array, dn: String):
+	cosmetics_data = [skin,t]
 	avatar.set_display_name(dn)
 	display_name = dn
 	var skin_img = Global.data_to_image(skin)
@@ -1568,7 +1571,11 @@ const key_nicknames = {
 
 signal died
 @onready var corpse = preload("res://entities/ragdolls/player_corpse.tscn")
+@rpc("any_peer","reliable") #for the funny cool stuff like petrification
 func die(attacker = "", key = "", weapon_name = "", add_vel = Vector3.ZERO, damage_id = 0):
+	if !is_multiplayer_authority():
+		ghost = true #for the creatures
+		return
 	clear_status_effects = true
 	print(attacker)
 	print(last_attacker)
@@ -1620,9 +1627,12 @@ func die(attacker = "", key = "", weapon_name = "", add_vel = Vector3.ZERO, dama
 		emit_signal("died")
 		return
 	update_health_graphics()
-	create_ragdoll.rpc(add_vel, position, graphics.rotation.y, velocity,Inventory.accessories)
-	await create_ragdoll(add_vel, position, graphics.rotation.y, velocity,Inventory.accessories)
-	#await get_tree().process_frame
+	#create_ragdoll.rpc(add_vel, position, graphics.rotation.y, velocity,Inventory.accessories)
+	#await create_ragdoll(add_vel, position, graphics.rotation.y, velocity,Inventory.accessories)
+	#add_vel,pos,rot,vel,acc,key = "", damage_id = 0
+	create_appropriate_corpse(add_vel,position,graphics.rotation.y,velocity,Inventory.accessories,key,damage_id)
+	create_appropriate_corpse.rpc(add_vel,position,graphics.rotation.y,velocity,Inventory.accessories,key,damage_id)
+	await get_tree().process_frame
 	update_status_effect_graphics({})
 	update_status_effect_graphics.rpc({})
 	set_ghost(true)
@@ -1649,6 +1659,10 @@ func get_death_message(attacker = "", key = "", weapon_name = "", damage_id = 0)
 			message = display_name + perish_messages.pick_random()
 			if attacker != "":
 				message += " while fighting " + attacker
+		"petrification":
+			message = display_name + " was turned to stone"
+			if attacker != "":
+				message += " by " + attacker
 		"status_effect":
 			match damage_id:
 				Lookup.damageType.fire:
@@ -1670,6 +1684,14 @@ func get_death_message(attacker = "", key = "", weapon_name = "", damage_id = 0)
 				message = display_name + " was " + damage_types_verbs[damage_id].pick_random() + " by " + attacker
 	return message
 
+@rpc("any_peer","reliable")
+func create_appropriate_corpse(add_vel,pos,rot,vel,acc,key = "", damage_id = 0) -> void:
+	match key:
+		"petrification":
+			create_petrification_statue(pos,rot)
+		_:
+			create_ragdoll(add_vel,pos,rot,vel,acc)
+
 @rpc("unreliable","call_remote")
 func phantom_signal(signal_key : String): #sick ass function name
 	emit_signal(signal_key)
@@ -1680,8 +1702,9 @@ func set_ghost(val):
 	$ghostParticles.emitting = val
 	voip.set_ghostly(val)
 	avatar.set_ghost(val)
-	set_collision_layer_value(3, !val)
-	set_collision_mask_value(1, !val)
+	#set_collision_layer_value(3, !val)
+	#set_collision_mask_value(1, !val)
+	#we want collision now no more flying through stuff because of room system
 	if val:
 		avatar.set_eye_param("blend_mode", 1)
 		avatar.set_mouth_param("blend_mode", 1)
@@ -1702,8 +1725,10 @@ func set_ghost(val):
 		return
 	if val:
 		print("set_ghost_perspective")
-		set_perspective(3)
-		forced_perspective = true
+		velocity -= get_look_dir() * 4.0 #push you back a bit so it feels like you left body
+		#set_perspective(3)
+		#forced_perspective = true
+		#no longer forced because it feels bad
 	else:
 		set_perspective(desired_perspective)
 		forced_perspective = false
@@ -1727,18 +1752,37 @@ func respawn(pos = position):
 
 @rpc("any_peer","reliable")
 func create_ragdoll(add_vel,pos,rot,vel,acc):
+	if $ragdollHandler.get_child_count(false) > 8:
+		$ragdollHandler.get_child(0).queue_free()
+	#makes sure there is never a truly unholy amount of ragdolls
 	var c = corpse.instantiate()
 	await get_tree().physics_frame
 	c.rotation.y = rot
 	c.position = pos
 	c.accessories = acc
-	get_parent().add_child(c)
+	c.connect("blood_decal",add_blood) #allows player to handle blood seperately
+	$ragdollHandler.add_child(c)
 	var mat = avatar.base_skin_mat.duplicate()#meshes[1].get_active_material(0).duplicate()
 	#mat.set("blend_mode", 0)
 	c.load_skin(mat,avatar.is_slim)
 	c.activate("", vel+add_vel, Vector3(0.0,5.0,0.0))
 	return true
 
+func create_petrification_statue(pos:Vector3,rot:float)-> void:
+	if $ragdollHandler.get_child_count(false) > 8:
+		$ragdollHandler.get_child(0).queue_free()
+	#makes sure there is never a truly unholy amount of ragdolls
+	var c = load("res://entities/ragdolls/petrified_player_corpse.tscn").instantiate()
+	c.rotation.y = rot
+	c.position = pos
+	#->stone does not bleed
+	#c.connect("blood_decal",add_blood) #allows player to handle blood seperately
+	$ragdollHandler.add_child(c)
+	var mat = avatar.base_skin_mat.duplicate()
+	#mat.set("blend_mode", 0)
+	#c.set_mat(mat)
+	c.load_skin(cosmetics_data)
+	c.set_pose(avatar.get_pose()) #:3
 
 @onready var hurtboxes = [
 	$playerAvatar/genericAvatar/root/chestBase/hip_L/knee_L/hurtbox,

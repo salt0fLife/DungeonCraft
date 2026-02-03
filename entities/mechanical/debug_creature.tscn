@@ -21,7 +21,7 @@ height = 1.1
 [sub_resource type="BoxMesh" id="BoxMesh_lpo4h"]
 size = Vector3(0.24, 0.65, 0.45)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bqh66"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tft8y"]
 resource_name = "eyeBrows"
 transparency = 2
 alpha_scissor_threshold = 0.5
@@ -30,7 +30,7 @@ albedo_color = Color(0, 0, 0, 1)
 albedo_texture = ExtResource("3_fwtlk")
 texture_filter = 2
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_wurn3"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_esuhp"]
 resource_name = "eyes"
 render_priority = 0
 shader = ExtResource("4_1jpso")
@@ -58,7 +58,7 @@ shader_parameter/glow_col = Color(0, 0, 0, 1)
 shader_parameter/glow_col_2 = Color(0, 0, 0, 1)
 shader_parameter/glow_col_3 = Color(0, 0, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_2x3ng"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r1vlf"]
 render_priority = 0
 shader = ExtResource("5_tenl1")
 shader_parameter/uv1_scale = Vector3(1, 1, 1)
@@ -129,7 +129,7 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.2)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4pdxa"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vk2jx"]
 render_priority = 0
 shader = SubResource("Shader_7nsrr")
 shader_parameter/fire_col = Color(0.796078, 0.247059, 0, 1)
@@ -174,52 +174,43 @@ target_position = Vector3(0, 0, -1)
 visible = false
 
 [node name="chestBase" parent="graphics/playerAvatar/genericAvatar/root" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, -0.00440562, -0.00916658, -0.000122169)
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, -0.00496349, -0.0151052, -0.000122169)
 
 [node name="hip_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="1"]
-transform = Transform3D(0.995002, -0.00797807, 0.0995139, 0, 0.996794, 0.0799142, -0.0998332, -0.0795146, 0.99182, 0.075, -0.282, -0.001)
+transform = Transform3D(0.995002, -0.00974964, 0.099356, 0, 0.995213, 0.0976595, -0.0998332, -0.0971712, 0.990245, 0.075, -0.282, -0.001)
 
 [node name="knee_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase/hip_L" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.996595, -0.0824059, 0, 0.0824059, 0.996595, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.994969, -0.100147, 0, 0.100147, 0.994969, 0, -0.274171, 0)
 
 [node name="hip_R" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="2"]
-transform = Transform3D(0.995003, 0.00797808, -0.0995141, 0, 0.996795, 0.0799144, 0.0998333, -0.0795147, 0.991822, -0.075, -0.282, -0.001)
+transform = Transform3D(0.995003, 0.00974965, -0.0993562, 0, 0.995214, 0.0976597, 0.0998333, -0.0971713, 0.990248, -0.075, -0.282, -0.001)
 
 [node name="knee_R" parent="graphics/playerAvatar/genericAvatar/root/chestBase/hip_R" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.996594, -0.0824058, 0, 0.0824058, 0.996594, 0, -0.274171, 0)
-
-[node name="neck" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="3"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, 0.0374911, 0, -0.0374912, 0.999295, 0, 0.289384, -0.00323021)
+transform = Transform3D(1, 0, 0, 0, 0.994967, -0.100147, 0, 0.100147, 0.994967, 0, -0.274171, 0)
 
 [node name="eyeBrows_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
-surface_material_override/0 = SubResource("StandardMaterial3D_bqh66")
+surface_material_override/0 = SubResource("StandardMaterial3D_tft8y")
 
 [node name="eyeBrows_R" parent="graphics/playerAvatar/genericAvatar/root/chestBase/neck" index="2"]
-surface_material_override/0 = SubResource("StandardMaterial3D_bqh66")
+surface_material_override/0 = SubResource("StandardMaterial3D_tft8y")
 
 [node name="eyes" parent="graphics/playerAvatar/genericAvatar/root/chestBase/neck" index="3"]
-surface_material_override/0 = SubResource("ShaderMaterial_wurn3")
+surface_material_override/0 = SubResource("ShaderMaterial_esuhp")
 
 [node name="mouth" parent="graphics/playerAvatar/genericAvatar/root/chestBase/neck" index="7"]
-surface_material_override/0 = SubResource("ShaderMaterial_2x3ng")
+surface_material_override/0 = SubResource("ShaderMaterial_r1vlf")
 
 [node name="shoulder_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="4"]
-transform = Transform3D(0.999122, -0.0418313, 0.00236433, 0.0418082, 0.999079, 0.0091663, -0.0027456, -0.00905937, 0.999954, 0.14978, 0.241, -0.0014265)
+transform = Transform3D(0.999454, -0.0330238, 0.000602922, 0.033, 0.999162, 0.0240107, -0.00139535, -0.0239776, 0.99971, 0.14978, 0.241, -0.0014265)
 
 [node name="elbowL" parent="graphics/playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.99663, 0.082018, 0, -0.082018, 0.99663, 0.079, -0.24, -0.003)
+transform = Transform3D(1, 0, 0, 0, 0.995119, 0.0986752, 0, -0.0986752, 0.995119, 0.079, -0.24, -0.003)
 
 [node name="shoulder_R" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="5"]
 transform = Transform3D(0.998648, 0.0517957, -0.00435617, -0.0517567, 0.998623, 0.0086188, 0.00479659, -0.00838169, 0.999953, -0.15, 0.241, -0.00100074)
 
-[node name="elbowR" parent="graphics/playerAvatar/genericAvatar/root/chestBase/shoulder_R" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.76154, 0.648121, 0, -0.648121, 0.76154, -0.079, -0.24, -0.00300002)
-
-[node name="tp_item_handler" parent="graphics/playerAvatar/genericAvatar/root/chestBase/shoulder_R/elbowR" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.173651, -0.984807, 0, 0.984807, 0.173651, 0, -0.21, 0.075)
-
 [node name="fire" parent="graphics/playerAvatar" index="1"]
-surface_material_override/0 = SubResource("ShaderMaterial_4pdxa")
+surface_material_override/0 = SubResource("ShaderMaterial_vk2jx")
 
 [node name="raptorAvatar" parent="graphics" instance=ExtResource("6_hgwjk")]
 transform = Transform3D(-0.595, 0, -8.98425e-08, 0, 0.595, 0, 8.98425e-08, 0, -0.595, 0, 0, 0)
