@@ -393,13 +393,13 @@ func enter_door(door_index:int) -> void:
 	if door_data[2] == last_exited_room:
 		sounds = false
 	else:
-		Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg")
+		Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg",room_id)
 	position = door_data[1]
 	last_exited_room = room_id
 	room_id = door_data[2]
 	last_door_indx = door_index
 	if sounds:
-		Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg")
+		Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg",room_id)
 	#target_furthest_door_in_room() #one must imagine him happy
 	target_random_door() #more random and lifelike, need to add some pausing and thinking/smelling/looking stuff too
 

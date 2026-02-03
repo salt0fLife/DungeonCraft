@@ -174,19 +174,19 @@ target_position = Vector3(0, 0, -1)
 visible = false
 
 [node name="chestBase" parent="graphics/playerAvatar/genericAvatar/root" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, -0.00496349, -0.0151052, -0.000122169)
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, -0.000230527, -0.0184211, -0.000122169)
 
 [node name="hip_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="1"]
-transform = Transform3D(0.995002, -0.00974964, 0.099356, 0, 0.995213, 0.0976595, -0.0998332, -0.0971712, 0.990245, 0.075, -0.282, -0.001)
+transform = Transform3D(0.995002, -0.0107375, 0.0992541, 0, 0.994192, 0.107555, -0.0998332, -0.107017, 0.98923, 0.075, -0.282, -0.001)
 
 [node name="knee_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase/hip_L" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.994969, -0.100147, 0, 0.100147, 0.994969, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.993924, -0.11004, 0, 0.11004, 0.993924, 0, -0.274171, 0)
 
 [node name="hip_R" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="2"]
-transform = Transform3D(0.995003, 0.00974965, -0.0993562, 0, 0.995214, 0.0976597, 0.0998333, -0.0971713, 0.990248, -0.075, -0.282, -0.001)
+transform = Transform3D(0.995003, 0.0107375, -0.0992543, 0, 0.994193, 0.107555, 0.0998333, -0.107017, 0.989232, -0.075, -0.282, -0.001)
 
 [node name="knee_R" parent="graphics/playerAvatar/genericAvatar/root/chestBase/hip_R" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.994967, -0.100147, 0, 0.100147, 0.994967, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.993922, -0.11004, 0, 0.11004, 0.993922, 0, -0.274171, 0)
 
 [node name="eyeBrows_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
 surface_material_override/0 = SubResource("StandardMaterial3D_tft8y")
@@ -201,10 +201,10 @@ surface_material_override/0 = SubResource("ShaderMaterial_esuhp")
 surface_material_override/0 = SubResource("ShaderMaterial_r1vlf")
 
 [node name="shoulder_L" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="4"]
-transform = Transform3D(0.999454, -0.0330238, 0.000602922, 0.033, 0.999162, 0.0240107, -0.00139535, -0.0239776, 0.99971, 0.14978, 0.241, -0.0014265)
+transform = Transform3D(0.999975, -0.00486517, -0.00499205, 0.00502394, 0.999461, 0.0322971, 0.00483226, -0.0323213, 0.999464, 0.14978, 0.241, -0.0014265)
 
 [node name="elbowL" parent="graphics/playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.995119, 0.0986752, 0, -0.0986752, 0.995119, 0.079, -0.24, -0.003)
+transform = Transform3D(1, 0, 0, 0, 0.999796, 0.0201687, 0, -0.0201687, 0.999796, 0.079, -0.24, -0.003)
 
 [node name="shoulder_R" parent="graphics/playerAvatar/genericAvatar/root/chestBase" index="5"]
 transform = Transform3D(0.998648, 0.0517957, -0.00435617, -0.0517567, 0.998623, 0.0086188, 0.00479659, -0.00838169, 0.999953, -0.15, 0.241, -0.00100074)

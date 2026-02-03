@@ -34,7 +34,8 @@ func _ready():
 	multiplayer.connect("server_disconnected", _on_lost_connection)
 	load_skin_info()
 	worldSync.connect("spawned",emit_world_loaded)
-	Global.connect("player_death",_on_player_death)
+	#Global.connect("player_death",_on_player_death)
+	playerSync.connect("player_died",_on_player_death)
 
 signal world_loaded
 func emit_world_loaded():
@@ -494,7 +495,6 @@ func add_item_to_world(key, pos):
 	li.item_key = key
 	li.connect("destroyed", _on_item_destruction)
 	itemHandler.add_child(li)
-	
 
 var item_sync_index = 0
 func _process(delta):
@@ -537,20 +537,45 @@ func _on_item_destruction(node):
 	destroy_item.rpc(node.get_index())
 
 func get_living_players() -> Array:
-	var list = []
-	for pk in playerSync.players.keys():
-		var n = playerSync.players[pk]
-		if !n.rpc_id(pk, "request_ghost"):
-			list += [n]
-	return list
+	return playerSync.get_living_players()
+	#var list = []
+	#for pk in playerSync.players.keys():
+		#var n = playerSync.players[pk]
+		#if !n.rpc_id(pk, "request_ghost"):
+			#list += [n]
+	#return list
+	#return
 
-@rpc("reliable")
 func _on_player_death():
 	if hosting:
-		print(get_living_players())
+		check_for_living_players()
+		#print("player died")
+		#var living_players= get_living_players()
+		#print(living_players)
+		#if living_players.size() < 0.0:
+			#print("all players dead ;-;")
 	else:
-		rpc_id(0,"_on_player_death")
-	pass
+		#rpc_id(0,"_on_player_death") #yeah yeah yeah I know this is really bad but whatever dont change anything
+		rpc_id(0,"check_for_living_players") #so i sleep well at night
+
+@rpc("reliable")
+func check_for_living_players() -> void:
+	print("player died")
+	var living_players= get_living_players()
+	print(living_players)
+	if living_players.size() < 1:
+		print("all players dead ;-;")
+		game_over()
+
+func game_over(): #only called on host rpc other graphical changes for everyone else
+	print("game over")
+	Global.room_id = 0
+	for auth in playerSync.players.keys():
+		var node = playerSync.players[auth]
+		node.reset_all()#.rpc() #other was not working and im lazy :3
+		node.reset_all.rpc()
+		#node.rpc_id(auth,"reset_all") #tells that player node to reset like it was just spawned in
+	_on_change_world("test_modular")
 
 var thunder_sounds = [
 	"res://assets/sounds/explosion/lightning_thunder.ogg",
@@ -575,13 +600,14 @@ func _on_thunder_from_point(point : Vector3, sound_index = 0) -> void: #I was th
 	await  player.finished
 	player.call_deferred("queue_free")
 
-
-func _on_play_sound(pos : Vector3, file_path : String) -> void:
-	create_spacial_audio_player(pos,file_path)
-	create_spacial_audio_player.rpc(pos,file_path)
+func _on_play_sound(pos : Vector3, file_path : String, room_id := -1) -> void:
+	create_spacial_audio_player(pos,file_path,room_id)
+	create_spacial_audio_player.rpc(pos,file_path,room_id)
 
 @rpc("any_peer")
-func create_spacial_audio_player(pos : Vector3, file_path : String):
+func create_spacial_audio_player(pos : Vector3, file_path : String, room_id := -1):
+	if Global.room_id != room_id:
+		return
 	var ap = AudioStreamPlayer3D.new()
 	ap.stream = load(file_path)
 	$spacialAudioHandler.add_child(ap)

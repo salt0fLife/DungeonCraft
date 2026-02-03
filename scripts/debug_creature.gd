@@ -299,7 +299,7 @@ func velocity_towards_target(delta) -> void:
 				next_desired_pos = ladder_location
 				teller("moving towards ladder ")
 	#checks if it should find a ladder
-	elif abs(pointer.y) > 0.1 or abs(dif.y) > 7.5 and !nav_agent.is_target_reachable(): #less math and a bit cleaner #(abs(pointer.y) > Vector2(pointer.x,pointer.z).length()): #checks if wish_vel wants to go vertical more than horizontal
+	elif (abs(pointer.y) > 0.1 or abs(dif.y) > 7.5) and (!nav_agent.is_target_reachable() or tired_of_this_shit) and abs(dif.y) > 1.0: # we can walk up that: #less math and a bit cleaner #(abs(pointer.y) > Vector2(pointer.x,pointer.z).length()): #checks if wish_vel wants to go vertical more than horizontal
 		teller("wants to go up")
 		#checks if can climb last_computed ladder
 		if (Vector2(position.x,position.z) - ladder_pos).length() < 0.75 and (position.y < ladder_height.y and position.y > ladder_height.x):
@@ -385,13 +385,13 @@ func check_for_reached_target() -> void:
 
 func enter_door(door_index:int) -> void:
 	tired_of_this_shit = false
-	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg")
+	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg",room_id)
 	var door_data = Global.doors_val[door_index]
 	position = door_data[1]
 	last_exited_room = room_id
 	room_id = door_data[2]
 	last_door_indx = door_index
-	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg")
+	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg",room_id)
 	#target_furthest_door_in_room() #one must imagine him happy
 	target_random_door() #more random and lifelike, need to add some pausing and thinking/smelling/looking stuff too
 	look_for_prey()

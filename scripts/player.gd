@@ -1624,7 +1624,7 @@ func die(attacker = "", key = "", weapon_name = "", add_vel = Vector3.ZERO, dama
 		#"head" : 
 	if !is_multiplayer_authority():
 		await  get_tree().process_frame
-		emit_signal("died")
+		#emit_signal("died") #phantom signal will do this after the other calls are made
 		return
 	update_health_graphics()
 	#create_ragdoll.rpc(add_vel, position, graphics.rotation.y, velocity,Inventory.accessories)
@@ -1698,6 +1698,7 @@ func phantom_signal(signal_key : String): #sick ass function name
 
 @rpc("any_peer", "reliable")
 func set_ghost(val):
+	ghost = val
 	print("set_ghost")
 	$ghostParticles.emitting = val
 	voip.set_ghostly(val)
@@ -1718,20 +1719,19 @@ func set_ghost(val):
 		handR.get_child(0).get_child(0).get_active_material(0).set("blend_mode", 0)
 		handR.get_child(0).get_child(0).get_child(0,true).get_active_material(0).set("blend_mode", 0)
 	set_invulnerable(val)
-	ghost = val
 	print("set_ghost2")
 	if !is_multiplayer_authority():
 		$playerAvatar/genericAvatar/root/chestBase/neck/nameTag.visible = !val
 		return
 	if val:
-		print("set_ghost_perspective")
+		#print("set_ghost_perspective")
 		velocity -= get_look_dir() * 4.0 #push you back a bit so it feels like you left body
 		#set_perspective(3)
 		#forced_perspective = true
 		#no longer forced because it feels bad
-	else:
-		set_perspective(desired_perspective)
-		forced_perspective = false
+	#else:
+		#set_perspective(desired_perspective)
+		#forced_perspective = false
 	update_health_graphics()
 
 func set_invulnerable(val):
@@ -1749,6 +1749,19 @@ func respawn(pos = position):
 	set_ghost(false)
 	set_ghost.rpc(false)
 	update_health_graphics()
+
+@rpc("any_peer","reliable")
+func reset_all(): #like it was all a bad dream
+	print("reset all")
+	respawn(Vector3.ZERO)
+	leave_no_trace()
+
+func leave_no_trace() -> void: #cleans up all blood and bodies
+	print("left no trace")
+	for c in $ragdollHandler.get_children(false):
+		c.queue_free()
+	for b in $blood_handler.get_children(false):
+		b.queue_free()
 
 @rpc("any_peer","reliable")
 func create_ragdoll(add_vel,pos,rot,vel,acc):
@@ -2021,12 +2034,13 @@ func process_interact_data(data, normal, hit):
 
 func enter_door(door_index : int) -> void:
 	var dd= Global.doors_val[door_index] #[Location, output_location, output room_id, room_id]
-	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg")
+	var old_room = room_id
 	position = dd[1]
 	graphics.rotation.y += 0.0 #rotation add is not store for navigation so just keep same rot
-	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg")
 	room_id = dd[2]
 	Global.emit_signal("enter_room",room_id)
+	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg",old_room)
+	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg",room_id)
 
 ##audio handling
 func settup_audio():

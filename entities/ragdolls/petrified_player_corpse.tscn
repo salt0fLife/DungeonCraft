@@ -125,7 +125,6 @@ shader_parameter/gradient_tex = SubResource("GradientTexture2D_x2pq6")
 script = ExtResource("1_6m1r8")
 
 [node name="playerAvatar" parent="." instance=ExtResource("1_kwvkr")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="genericAvatar" parent="playerAvatar" index="0"]
 animated = false
