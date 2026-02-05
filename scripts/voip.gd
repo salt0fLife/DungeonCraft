@@ -164,6 +164,8 @@ func send_data(data : PackedFloat32Array):
 	pass
 
 func set_ghostly(val):
+	if !is_multiplayer_authority():
+		return #self explanatory is record bus change
 	#AudioServer.set_bus_effect_enabled(index, 0, val)
 	#AudioServer.set_bus_effect_enabled(index, 1, val)
 	AudioServer.set_bus_effect_enabled(2, 0, val) #changes recording bus

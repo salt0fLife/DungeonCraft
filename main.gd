@@ -573,6 +573,8 @@ func game_over(): #only called on host rpc other graphical changes for everyone 
 		node.reset_all()#.rpc() #other was not working and im lazy :3
 		node.reset_all.rpc()
 		#node.rpc_id(auth,"reset_all") #tells that player node to reset like it was just spawned in
+	for i in itemHandler.get_children(false):
+		i.call_deferred("queue_free") #destroys all items
 	_on_change_world("the_moor")
 
 var thunder_sounds = [

@@ -23,6 +23,7 @@ var idle_anim_key = "idle"
 var attributes = {
 	##vision
 	"dark_vision" : 0.0,
+	"ghost_communication" : false,
 	##movement
 	#ground
 	"speed" : 3.0,
@@ -41,8 +42,11 @@ var attributes = {
 	"max_stamina" : 10.0,
 	"mana_regen_speed" : 1.0,
 	"stamina_regen_speed": 1.0,
-	##physical enhancements
-	"strength" : 1.0,
+	##damage enhancements
+	"strength" : 1.0, #increases physical attacks
+	"chaotic_affinity" : 1.0, #increases blight explosion and lightning attacks
+	"divine_affinity" : 1.0, #increases holy and fire attacks attacks
+	"arcane_affinity" : 1.0, #increases magic ice and toxic attacks (magic ie curses and spells or something)
 	"size" : 1.0,
 	##defenses
 	#localized_generic_defense
@@ -73,34 +77,33 @@ var attributes = {
 const base_attributes = {
 	##vision
 	"dark_vision" : 0.0,
+	"ghost_communication" : false,
 	##movement
 	#ground
-	"movement ground" : "break",#
 	"speed" : 3.0,
 	"speed_multiplier" : 1.0,
 	"jump_velocity" : 6.0,
 	"air_acceleration": 1.0,
 	#air
-	"movement air" : "break",#
 	"can_fly" : false,
-	"flying_can_glide" : false,
-	"flying_can_hover" : false,
 	"flying_speed" : 5.0,
 	"flying_control" : 1.0,
+	"flying_can_glide" : false,
+	"flying_can_hover" : false,
 	##bars and such
-	"resiliance" : "break", #
 	"max_health" : 10.0,
 	"max_mana" : 10.0,
-	"mana_regen_speed" : 1.0,
 	"max_stamina" : 10.0,
+	"mana_regen_speed" : 1.0,
 	"stamina_regen_speed": 1.0,
-	##physical enhancements
-	"combat strength" : "break", #
-	"strength" : 1.0,
+	##damage enhancements
+	"strength" : 1.0, #increases physical attacks
+	"chaotic_affinity" : 1.0, #increases blight explosion and lightning attacks
+	"divine_affinity" : 1.0, #increases holy and fire attacks attacks
+	"arcane_affinity" : 1.0, #increases magic ice and toxic attacks (magic ie curses and spells or something)
 	"size" : 1.0,
 	##defenses
 	#localized_generic_defense
-	"localized defenses" : "break", #
 	"defense_head" : 1.0,
 	"defense_torso" : 1.0,
 	"defense_arms" : 1.0,
@@ -110,7 +113,6 @@ const base_attributes = {
 	"defense_footR" : 1.0,
 	"defense_footL" : 1.0,
 	#real_defense
-	"real defenses" : "break", #
 	"true_defense" : 1.0, #only changed through race and subclass, effects all damage
 	"generic_defense" : 1.0,
 	"stab_defense" : 1.0,
@@ -140,11 +142,12 @@ func update_accessories():
 
 var last_mh_c_l:float = 1.0 #max health changed level idk man
 func update_stats_from_accessories():
+	var attribute_multipliers = {}
 	set_stats_to_default()
 	var applied_bonuses = []
 	for i in Inventory.accessories.keys():
 		var val = Inventory.accessories[i]
-		if val[0] != "":
+		if val[0] != "": #applies all of the equipments and sets modifiers
 			var data = Lookup.items[val[0]]
 			for k in data[3][1].keys():
 				if attributes.has(k):
@@ -170,11 +173,68 @@ func update_stats_from_accessories():
 									attributes[sbk] = sb_data[1][sbk]
 								else:
 									attributes[sbk] += sb_data[1][sbk]
+		#enchantments
+		if val[3].has("enchantments"): #val[3] is items custom data
+			for ench in val[3]["enchantments"]:
+				match ench:
+					Lookup.enchantments.eyes_of_the_dead:
+						attributes["ghost_communication"] = true
+					Lookup.enchantments.resilience:
+						attributes["true_defense"] += 0.05 #efffectively decreases all damage by 5% and it stacks
+					Lookup.enchantments.advanced_resiliance:
+						attributes["true_defense"] += 0.15 #efffectively decreases all damage by 15% and it stacks
+					Lookup.enchantments.desolation:
+						attributes["chaotic_affinity"] += 0.5
+					Lookup.enchantments.mastery:
+						attributes["chaotic_affinity"] += 0.5
+						attributes["divine_affinity"] += 0.5
+						attributes["arcane_affinity"] += 0.5
+					Lookup.enchantments.advanced_mastery:
+						attributes["chaotic_affinity"] += 2.0
+						attributes["divine_affinity"] += 2.0
+						attributes["arcane_affinity"] += 2.0
+					Lookup.enchantments.perfect_mastery:
+						attributes["chaotic_affinity"] += 10.0
+						attributes["divine_affinity"] += 10.0
+						attributes["arcane_affinity"] += 10.0
+	#"strength" : 1.0, #increases physical attacks
+	#"chaotic_affinity" : 1.0, #increases blight explosion and lightning attacks
+	#"divine_affinity" : 1.0, #increases holy and fire attacks attacks
+	#"arcane_affinity" : 1.0, #increases magic ice and toxic attacks (magic ie curses and spells or something)
+	#"true_defense" : 1.0, #only changed through race and subclass, effects all damage
+	#"generic_defense" : 1.0,
+	#"stab_defense" : 1.0,
+	#"slash_defense" : 1.0,
+	#"blunt_defense" : 1.0,
+	#"fire_defense" : 1.0,
+	#"ice_defense" : 1.0,
+	#"toxic_defense" : 1.0,
+	#"explosion_defense" : 1.0,
+	#"magic_defense" : 1.0,
+	#"lightning_defense" : 1.0,
+	#"holy_defense" : 1.0,
+	#"blight_defense" : 1.0
+	
+	#resilience, #improves all defensive attributes by small amounts
+	#advanced_resiliance, #better resiliance resiliance
+	#desolation, #applies blight and increases damage attributes decreases defensive effects
+	#mastery, #improves everything by a little bit
+	#advanced_mastery, #better mastery
+	#perfect_mastery, #better better mastery
+	#weightless, #removes movement debuffs and knockback resistance if applicable #weightlessness?
+	#density, #increases movment debuffs and knockback resistance if applicable
+	#swiftness, #increases attack speed and all ground movement speed
+	#blessing, #increases blight and holy defense
+	#divine_blessing, #better blessed
+	#eyes_of_the_dead, #allows you too talk to dead players
+	
 	for k in attributes.keys(): #applies a cap on some attributes because yes
 		if Lookup.max_attributes.has(k):
 			if attributes[k] > Lookup.max_attributes[k]:
 				attributes[k] = Lookup.max_attributes[k]
 	health = attributes["max_health"]*last_mh_c_l #no infinite health for you :3
+	#Global.ghost_communication = attributes["ghost_communication"]
+	update_ghost_communication(attributes["ghost_communication"]) #also sets the Global
 	update_health_graphics()
 	Global.emit_signal("update_attributes", attributes)
 	pass
@@ -264,6 +324,8 @@ func update_anims_from_item_type(type):
 			walk_anim_key = "walk_weapon"
 			idle_anim_key = "idle_staff"
 			play_arm_anim("draw_weapon")
+		Lookup.itemType.book:
+			play_arm_anim("read")
 		_:
 			walk_anim_key = "walk"
 			idle_anim_key = "idle"
@@ -601,9 +663,25 @@ var vel_last_frame = Vector3.ZERO
 var after_image_pos = Vector3.ZERO
 var after_image_this_frame = false
 var after_image_buffer = 0
+
+#var spectating = false
+#var spectating_entity = null
+#var spectate_index = 0
+# idea is to trap person in room or around other player but I think I will not do that
+#maybe instead just limit what they can do as a ghost
+#func spectate_next_player() -> void:
+	#var valid_targets = []
+	#var players = get_tree().get_nodes_in_group("player")
+	#for i in range(0,players.size()):
+		#var p = players[i]
+		#if !p.ghost:
+			#valid_targets += [i]
+	#pass
+
 func _physics_process(delta):
 	if !is_multiplayer_authority():
 		return
+	
 	if head_bonk.is_colliding():
 		crouching = true
 	else:
@@ -795,7 +873,7 @@ func _physics_process(delta):
 	Global.set_post("shader_parameter/action_lines",speed_appeal)
 	$genericAudio/movement_wind.volume_db = remap(speed_appeal,0.0,1.0,-80.0,-15.0)
 	update_shadow()
-	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting)
+	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting,room_id)
 	$UI/second_pass/SubViewport/second_pass.global_transform = camera.global_transform
 	$UI/second_pass/SubViewport/second_pass.fov = camera.fov
 
@@ -841,10 +919,9 @@ func climbing_ladder(delta):
 	Global.set_post("shader_parameter/action_lines",speed_appeal)
 	$genericAudio/movement_wind.volume_db = remap(speed_appeal,0.0,1.0,-80.0,-15.0)
 	update_shadow()
-	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting)
+	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting,room_id)
 	$UI/second_pass/SubViewport/second_pass.global_transform = camera.global_transform
 	$UI/second_pass/SubViewport/second_pass.fov = camera.fov
-	pass
 
 @onready var shadow = $playerAvatar/projected_shadow/shadow
 @onready var shadow_mat = shadow.get_active_material(0)
@@ -1245,7 +1322,7 @@ func snap_up_to_stairs_check(delta) -> bool:
 	return false
 
 @rpc("any_peer", "unreliable")
-func sync_information(pos: Vector3, rot: float, rotB: float, anim_state: String, WalkS: float, AnimS: float, C: float, HA: Vector2, F:float, A: float, T: float, res_dir: Vector2, em_dust: bool):
+func sync_information(pos: Vector3, rot: float, rotB: float, anim_state: String, WalkS: float, AnimS: float, C: float, HA: Vector2, F:float, A: float, T: float, res_dir: Vector2, em_dust: bool, r_id: int):
 	position = pos
 	graphics.rotation.y = rot
 	body.rotation.y = rotB
@@ -1260,6 +1337,7 @@ func sync_information(pos: Vector3, rot: float, rotB: float, anim_state: String,
 	avatar.walk_tilt = T
 	avatar.resist_dir = res_dir
 	dust_particles.emitting = em_dust
+	room_id = r_id
 	update_shadow()
 	pass
 
@@ -1723,17 +1801,67 @@ func set_ghost(val):
 	print("set_ghost2")
 	if !is_multiplayer_authority():
 		$playerAvatar/genericAvatar/root/chestBase/neck/nameTag.visible = !val
-		return
-	if val:
+	else:
+		if !attributes["ghost_communication"]:
+			Global.ghost_communication = val # always yes if ghost but otherwise skill
+		if val:
 		#print("set_ghost_perspective")
-		velocity -= get_look_dir() * 4.0 #push you back a bit so it feels like you left body
+			velocity -= get_look_dir() * 4.0 #push you back a bit so it feels like you left body
 		#set_perspective(3)
 		#forced_perspective = true
 		#no longer forced because it feels bad
 	#else:
 		#set_perspective(desired_perspective)
 		#forced_perspective = false
-	update_health_graphics()
+	if is_multiplayer_authority(): #makes sure visibility is always correctly set
+		update_health_graphics() #yeah this too
+		if val: #you are a ghost
+			for p in get_tree().get_nodes_in_group("player"):
+				if p.ghost:
+					p.set_mute(false)
+					p.set_graphics_visible(true) #you are ghost can see everyone (invisibility will be in shader if I even add it)
+		else:
+			if Global.ghost_communication: #alive but can see them anyways
+				#dont really need to do anything because you can always see them
+				pass
+			else: #cannot see them now so have to hide manually
+				for p in get_tree().get_nodes_in_group("player"):
+					if p.ghost:
+						p.set_mute(true)
+						p.set_graphics_visible(false) #you are ghost can see everyone (invisibility will be in shader if I even add it)
+	else:
+		if val: #only for non main person players
+			if !Global.ghost_communication: #handles it if your
+				set_mute(true)
+				set_graphics_visible(false)
+			else:
+				set_mute(false)
+				set_graphics_visible(true)
+		else: #always visible and not mute when alive 
+			#(i dont think an attribute that mutes you would ever be fun so no dont need to worry about that)
+			set_mute(false)
+			set_graphics_visible(true)
+
+func update_ghost_communication(val : bool): #specifically for the ghost_communication attribute
+	if ghost: #dead
+		#really dont need to do anything you should already be able to see everyone
+		pass
+	else: #alive
+		if val == Global.ghost_communication:
+			return #no need to compute this again its up to date
+		#need to compute again
+		Global.ghost_communication = val
+		if val: #you can see them now couldnt before
+			for p in get_tree().get_nodes_in_group("player"):
+				if p.ghost:
+					p.set_mute(false)
+					p.set_graphics_visible(true)
+		else: #you cant see them now could before
+			for p in get_tree().get_nodes_in_group("player"):
+				if p.ghost:
+					p.set_mute(true)
+					p.set_graphics_visible(false)
+
 
 func set_invulnerable(val):
 	if val:
@@ -1821,6 +1949,7 @@ func _on_left_mouse():
 		type = held_item_data[2]
 	
 	match type:
+		Lookup.itemType.book :use_book(false)
 		Lookup.itemType.weapons_sword: use_sword()
 		Lookup.itemType.weapons_projectile: use_projectile_weapon()
 		Lookup.itemType.weapons_longsword: use_longsword()
@@ -1835,6 +1964,13 @@ func _on_left_mouse():
 		_:
 			punch()
 	pass
+
+func use_book(flip_forward : bool):
+	for b in fp_item_handler.get_children(false):
+		if flip_forward and b.has_method("flip_forward"):
+			b.flip_forward()
+		elif b.has_method("flip_back"):
+			b.flip_back()
 
 func punch():
 	deal_look_damage()
@@ -1941,6 +2077,7 @@ func _on_right_mouse():
 		type = held_item_data[2]
 	
 	match type:
+		Lookup.itemType.book:use_book(true)
 		Lookup.itemType.weapons_sword:
 			use_sword_special()
 		Lookup.itemType.weapons_projectile:
@@ -2021,8 +2158,9 @@ func process_interact_data(data, normal, hit):
 			graphics.rotation.y += data[1][1]
 			room_id = data[1][2]
 			Global.emit_signal("enter_room",data[1][2])
-			Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg",room_id)
-			Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg",old_room_id)
+			if !ghost:
+				Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg",room_id)
+				Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg",old_room_id)
 			pass
 		Lookup.interact_return_code.is_ladder:
 			is_climbing_ladder = true
@@ -2071,10 +2209,17 @@ func play_footstep():
 @onready var elbowR = $playerAvatar/cameraHandler/hands/handR/elbow
 
 func play_arm_anim(key):
+	reset_first_person_hand()
 	current_animation = key
 	play_avatar_arm_anim(key)
 	play_avatar_arm_anim.rpc(key)
 	anim_time = 1.0
+
+func reset_first_person_hand() -> void:
+	handR.position = Vector3(0.566,-0.382,-0.129)
+	handR.rotation_degrees = Vector3(90.0,-9.1,0.0)
+	fp_item_handler.position = Vector3(0.0,-0.465,-0.09)
+	fp_item_handler.rotation_degrees = Vector3(-90.0,0.0,0.0)
 
 @rpc("any_peer","reliable")
 func play_avatar_arm_anim(key):
@@ -2173,6 +2318,11 @@ func _process(delta):
 			if anim_time < 0.0:
 				current_animation = ""
 			pass
+		"read":
+			handR.position = Vector3(0.163,-0.554,-0.243)
+			handR.rotation_degrees = Vector3(50.3,-140.2,-163.9)
+			fp_item_handler.position = Vector3(-0.153,-0.514,-0.192)
+			fp_item_handler.rotation_degrees = Vector3(-44.9,9.5,24.6)
 	if !is_multiplayer_authority():
 		return
 	$UI/tooltip.visible = false
@@ -2426,4 +2576,13 @@ func request_ghost() -> bool:
 	return ghost
 
 
+func set_mute(val : bool) -> void:
+	if !val:
+		$playerAvatar/genericAvatar/root/chestBase/neck/voicePlayer.set("volume_db",0.0)
+	else:
+		$playerAvatar/genericAvatar/root/chestBase/neck/voicePlayer.set("volume_db",-80.0)
+	pass
+
+func set_graphics_visible(val : bool) -> void:
+	$playerAvatar.visible = val
 

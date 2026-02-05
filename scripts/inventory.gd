@@ -62,7 +62,7 @@ var accessories = {
 	"necklace2" : empty_item,
 	"necklace3" : empty_item,
 	"necklace4" : empty_item,
-	"crown" : key_to_item("crown_of_god"),
+	"crown" : key_to_item("crown_of_god",{"enchantments" : [Lookup.enchantments.eyes_of_the_dead,Lookup.enchantments.perfect_mastery]}),
 	"braceletR" : empty_item,
 	"braceletL" : empty_item,
 	"belt" : empty_item,
@@ -85,7 +85,7 @@ var accessories = {
 
 var hotbar = [
 	["iron_sword",1,Lookup.itemType.weapons_sword,{"enchantment_color": Color.GREEN, "enchantments" : [Lookup.enchantments.perfect_mastery,Lookup.enchantments.advanced_resiliance], "custom_texture_path" : "res://assets/textures/icons/silverMinnow.png"}], #0
-	empty_item,#["longsword_debug",3,Lookup.itemType.weapons_longsword,{"storage" : [key_to_item("mace_debug"),key_to_item("mace_debug"),key_to_item("iron_sword"),empty_item, key_to_item("iron_helmet"),empty_item,empty_item]}], #1
+	key_to_item("players_manual"),#empty_item,#["longsword_debug",3,Lookup.itemType.weapons_longsword,{"storage" : [key_to_item("mace_debug"),key_to_item("mace_debug"),key_to_item("iron_sword"),empty_item, key_to_item("iron_helmet"),empty_item,empty_item]}], #1
 	empty_item,#["mace_debug",2,Lookup.itemType.weapons_mace,{"enchantments" : [0]}], #2
 	empty_item,#["bow_debug",1,Lookup.itemType.weapons_bow,{"enchantments" : [3,2,1]}], #3
 	["spear_debug",1,Lookup.itemType.weapons_spear,{}], #4
@@ -246,5 +246,5 @@ const accessories_accepted_item_types = {
 	"ringPL" : Lookup.itemType.accessories_ring,
 }
 
-func key_to_item(key : String) -> Array:
-	return [key, 1, Lookup.items[key][2], {}]
+func key_to_item(key : String, custom_data := {}) -> Array:
+	return [key, 1, Lookup.items[key][2], custom_data]

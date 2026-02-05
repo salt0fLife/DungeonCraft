@@ -21,6 +21,7 @@ var room_id = 0
 signal signal_play_sound #needs (pos,filepath)
 var inside = 0.0
 
+var ghost_communication = false
 
 var visited_places = []
 

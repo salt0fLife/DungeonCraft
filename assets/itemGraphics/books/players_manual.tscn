@@ -1,0 +1,212 @@
+[gd_scene load_steps=11 format=3 uid="uid://dmpcgno2466ot"]
+
+[ext_resource type="Script" path="res://scripts/players_manual.gd" id="1_quo6v"]
+[ext_resource type="FontFile" uid="uid://d04jqh1m2w8v1" path="res://assets/fonts/PIXELOIDSANSBOLD-PKNYD.TTF" id="3_yrby6"]
+
+[sub_resource type="Shader" id="Shader_0jvd8"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.2.1.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_disabled,diffuse_burley,specular_schlick_ggx;
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,filter_nearest_mipmap,repeat_enable;
+uniform float point_size : hint_range(0,128);
+uniform float roughness : hint_range(0,1);
+uniform sampler2D texture_metallic : hint_default_white,filter_nearest_mipmap,repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r,filter_nearest_mipmap,repeat_enable;
+uniform float specular;
+uniform float metallic;
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+uniform sampler2D enchanted_tex : repeat_enable;
+uniform vec3 enchanted_col : source_color;
+
+void vertex() {
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+}
+
+
+
+
+
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	float metallic_tex = dot(texture(texture_metallic,base_uv),metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
+	float roughness_tex = dot(texture(texture_roughness,base_uv),roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+	SPECULAR = specular;
+	float gradient = sin(UV.x*PI)*(UV.y*2.5);
+	//COLOR.rgb *= gradient;
+	float ench = pow((texture(enchanted_tex,UV*0.25+vec2(TIME*0.005,TIME*0.0025)+vec2(0.5,0.5)).r+texture(enchanted_tex,UV*0.25+vec2(TIME*0.003,TIME*0.005)).r+texture(enchanted_tex,UV*0.25+vec2(TIME*-0.002,TIME*0.001)).r)*0.3,3.0);
+	ALBEDO.rgb += (enchanted_col*ench+ench*0.1)*ALBEDO.rgb*8.0*(enchanted_col*ench+ench*0.1);
+	//EMISSION.rgb += (enchanted_col*ench+ench*0.1)*ALBEDO.rgb*8.0*(enchanted_col*ench+ench*0.1);
+	//ALPHA = ALBEDO.a;
+	//ALPHA = albedo_tex.a;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6cq1t"]
+resource_name = "ironArmor"
+render_priority = 0
+shader = SubResource("Shader_0jvd8")
+shader_parameter/albedo = Color(0.231373, 0.137255, 0.117647, 1)
+shader_parameter/point_size = null
+shader_parameter/roughness = null
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = null
+shader_parameter/metallic = null
+shader_parameter/uv1_scale = null
+shader_parameter/uv1_offset = null
+shader_parameter/uv2_scale = null
+shader_parameter/uv2_offset = null
+shader_parameter/enchanted_col = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jetmo"]
+material = SubResource("ShaderMaterial_6cq1t")
+size = Vector3(0.041, 0.01, 0.435)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l1ro2"]
+cull_mode = 2
+shading_mode = 2
+diffuse_mode = 3
+albedo_color = Color(0.784314, 0.752941, 0.666667, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_r6p1y"]
+material = SubResource("StandardMaterial3D_l1ro2")
+top_radius = 0.025
+bottom_radius = 0.025
+height = 0.41
+
+[sub_resource type="BoxMesh" id="BoxMesh_6ycqi"]
+material = SubResource("ShaderMaterial_6cq1t")
+size = Vector3(0.335, 0.01, 0.435)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kg7p2"]
+material = SubResource("StandardMaterial3D_l1ro2")
+size = Vector3(0.31, 0.02, 0.41)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_wbbvh"]
+material = SubResource("StandardMaterial3D_l1ro2")
+size = Vector2(0.31, 0.41)
+
+[node name="players manual" type="Node3D"]
+script = ExtResource("1_quo6v")
+desired_open = 0.9
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+skeleton = NodePath("../cover1")
+
+[node name="spine" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_jetmo")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="spine"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -0.315, 0, 1, -1.37691e-08, 0, 0.0104352, 0)
+mesh = SubResource("CylinderMesh_r6p1y")
+
+[node name="cover1" type="Node3D" parent="."]
+transform = Transform3D(0.987688, -0.156434, 0, 0.156434, 0.987688, 0, 0, 0, 1, 0.02, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="cover1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.168, 0, 0)
+mesh = SubResource("BoxMesh_6ycqi")
+skeleton = NodePath("../..")
+
+[node name="pagesLeft" type="MeshInstance3D" parent="cover1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.155355, 0.00993158, 0)
+mesh = SubResource("BoxMesh_kg7p2")
+
+[node name="pageRight" type="Label3D" parent="cover1"]
+transform = Transform3D(0.13, 0, 0, 0, -5.68248e-09, 0.13, 0, -0.13, -5.68248e-09, 0.0054284, 0.0222093, -0.198664)
+visibility_range_end = 20.0
+shaded = true
+alpha_cut = 1
+texture_filter = 0
+modulate = Color(0, 0, 0, 1)
+outline_modulate = Color(1, 1, 1, 1)
+text = "and the sixth just because :D"
+font = ExtResource("3_yrby6")
+outline_size = 0
+horizontal_alignment = 0
+vertical_alignment = 0
+autowrap_mode = 2
+
+[node name="cover2" type="Node3D" parent="."]
+transform = Transform3D(-0.987688, -0.156434, 0, 0.156434, -0.987688, 0, 0, 0, 1, -0.02, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="cover2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.168, 0, 0)
+mesh = SubResource("BoxMesh_6ycqi")
+skeleton = NodePath("../..")
+
+[node name="pagesLeft" type="MeshInstance3D" parent="cover2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.154956, -0.0107693, 0)
+mesh = SubResource("BoxMesh_kg7p2")
+
+[node name="pageLeft" type="Label3D" parent="cover2"]
+transform = Transform3D(-0.13, 4.96778e-16, -1.1365e-08, 1.1365e-08, 5.68248e-09, -0.13, 0, -0.13, -5.68248e-09, 0.304007, -0.0222093, -0.198664)
+visibility_range_end = 20.0
+shaded = true
+alpha_cut = 1
+texture_filter = 0
+modulate = Color(0, 0, 0, 1)
+outline_modulate = Color(1, 1, 1, 1)
+text = "and the third to be a little unique"
+font = ExtResource("3_yrby6")
+outline_size = 0
+horizontal_alignment = 0
+vertical_alignment = 0
+autowrap_mode = 2
+
+[node name="centerPage" type="Node3D" parent="."]
+transform = Transform3D(-0.987689, -0.156435, 0, 0.156435, -0.987689, 0, 0, 0, 1, -0.018, 0.0225, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="centerPage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.155, 0, 0)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_wbbvh")
+
+[node name="front" type="Label3D" parent="centerPage"]
+transform = Transform3D(0.13, 0, 0, 0, -5.68248e-09, 0.13, 0, -0.13, -5.68248e-09, 0.00139143, 0.000256106, -0.201003)
+visibility_range_end = 20.0
+shaded = true
+alpha_cut = 1
+texture_filter = 0
+modulate = Color(0, 0, 0, 1)
+outline_modulate = Color(1, 1, 1, 1)
+text = "alright lets hope you can see this one
+
+
+
+
+         (its the fourth page btw)"
+font = ExtResource("3_yrby6")
+outline_size = 0
+horizontal_alignment = 0
+vertical_alignment = 0
+autowrap_mode = 2
+
+[node name="back" type="Label3D" parent="centerPage"]
+transform = Transform3D(-0.13, 4.96778e-16, -1.1365e-08, 1.1365e-08, 5.68248e-09, -0.13, 0, -0.13, -5.68248e-09, 0.305571, -0.00259794, -0.201003)
+visibility_range_end = 20.0
+shaded = true
+alpha_cut = 1
+texture_filter = 0
+modulate = Color(0, 0, 0, 1)
+outline_modulate = Color(1, 1, 1, 1)
+text = "and now for my final trick!!!!
+
+
+       THE FIFTH PAGE!!"
+font = ExtResource("3_yrby6")
+outline_size = 0
+horizontal_alignment = 0
+vertical_alignment = 0
+autowrap_mode = 2

@@ -1,5 +1,6 @@
 extends Node3D
-
+var activated = false
+@export var world_key: String
 
 func _ready():
 	await get_tree().process_frame #so all the players can spawn in too
@@ -21,7 +22,8 @@ func _on_area_3d_body_exited(body):
 @onready var candelabra = $candelabra
 func check_players_status():
 	#print(Global.living_players)
-	
+	if activated:
+		return
 	candelabra.heads = get_living_player_count()#Global.living_players.size()
 	candelabra.lit_count = valid_players
 	candelabra.update_graphics()
@@ -42,5 +44,12 @@ func get_living_player_count():
 
 @rpc("reliable")
 func activate():
+	activated = true
 	$AnimationPlayer.play("activate")
+	print("activated")
+	$StaticBody3D.set_collision_layer_value(1,true)
+	
+	if is_multiplayer_authority():
+		await  get_tree().create_timer(3.0).timeout
+		Global.emit_signal("change_world",world_key) #yay! :D
 	pass

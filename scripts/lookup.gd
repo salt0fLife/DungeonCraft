@@ -54,6 +54,7 @@ const worlds = {
 
 enum itemType {
 	crafting_throwable, #[damage]
+	book, #[path to real book] book handles its own page_turning because its so complex
 	accessories_cape, #[[[scene_path, bone_parent_index],[scene_path, bone_parent_index]], {attribute_modifiers}]
 	accessories_shirt,
 	accessories_chestplate,
@@ -181,6 +182,9 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 	
 	##crafting
 	"simple_rock" : ["rock", "res://assets/itemGraphics/rock_graphics.tscn", itemType.crafting_throwable, [10.0], ""],
+	
+	##story
+	"players_manual" : ["player's manual", "res://assets/itemGraphics/books/players_manual.tscn", itemType.book, ["res://assets/itemGraphics/books/players_manual.tscn"], ""],
 	
 	##accessories
 	"debug_wings" : ["admin wings", "res://accessories/cape/wings.tscn", itemType.accessories_cape, [[["res://accessories/cape/wings.tscn", 0]], {"can_fly":true,"flying_can_hover" : true, "flying_speed":+2.0,"jump_velocity":+3.0, "speed" : +0.25}], ""],
@@ -385,34 +389,33 @@ const creatures = {
 const base_player_attributes = {
 	##vision
 	"dark_vision" : 0.0,
+	"ghost_communication" : false,
 	##movement
 	#ground
-	"movement ground" : "dark gray",#
 	"speed" : 3.0,
 	"speed_multiplier" : 1.0,
 	"jump_velocity" : 6.0,
 	"air_acceleration": 1.0,
 	#air
-	"movement air" : "gray",#
 	"can_fly" : false,
 	"flying_speed" : 5.0,
 	"flying_control" : 1.0,
 	"flying_can_glide" : false,
 	"flying_can_hover" : false,
 	##bars and such
-	"resiliance" : "light blue", #
 	"max_health" : 10.0,
 	"max_mana" : 10.0,
-	"mana_regen_speed" : 1.0,
 	"max_stamina" : 10.0,
+	"mana_regen_speed" : 1.0,
 	"stamina_regen_speed": 1.0,
-	##physical enhancements
-	"combat strength" : "purple", #
-	"strength" : 1.0,
+	##damage enhancements
+	"strength" : 1.0, #increases physical attacks
+	"chaotic_affinity" : 1.0, #increases blight explosion and lightning attacks
+	"divine_affinity" : 1.0, #increases holy and fire attacks attacks
+	"arcane_affinity" : 1.0, #increases magic ice and toxic attacks (magic ie curses and spells or something)
 	"size" : 1.0,
 	##defenses
 	#localized_generic_defense
-	"localized defenses" : "dark red", #
 	"defense_head" : 1.0,
 	"defense_torso" : 1.0,
 	"defense_arms" : 1.0,
@@ -422,7 +425,6 @@ const base_player_attributes = {
 	"defense_footR" : 1.0,
 	"defense_footL" : 1.0,
 	#real_defense
-	"real defenses" : "red", #
 	"true_defense" : 1.0, #only changed through race and subclass, effects all damage
 	"generic_defense" : 1.0,
 	"stab_defense" : 1.0,
@@ -454,28 +456,30 @@ const max_attributes = {
 	"max_stamina" : 500.0,
 	"stamina_regen_speed": 100.0,
 	"strength" : 100.0,
-	#"size" : 2.0, default is expert, just dont messa round with this too much because kinda wacky :/
-	"defense_head" : 1000.0,
-	"defense_torso" : 1000.0,
-	"defense_arms" : 1000.0,
-	"defense_handL" : 1000.0,
-	"defense_handR" : 1000.0,
-	"defense_legs" : 1000.0,
-	"defense_footR" : 1000.0,
-	"defense_footL" : 1000.0,
-	"true_defense" : 1000.0, #only changed through race and subclass, effects all damage
-	"generic_defense" : 1000.0,
-	"stab_defense" : 1000.0,
-	"slash_defense" : 1000.0,
-	"blunt_defense" : 1000.0,
-	"fire_defense" : 1000.0,
-	"ice_defense" : 1000.0,
-	"toxic_defense" : 1000.0,
-	"explosion_defense" : 1000.0,
-	"magic_defense" : 1000.0,
-	"lightning_defense" : 1000.0,
-	"holy_defense" : 1000.0,
-	"blight_defense" : 1000.0
+	"chaotic_affinity" : 100.0,
+	"divine_affinity" : 100.0, 
+	"arcane_affinity" : 100.0,
+	"defense_head" : 100.0,
+	"defense_torso" : 100.0,
+	"defense_arms" : 100.0,
+	"defense_handL" : 100.0,
+	"defense_handR" : 100.0,
+	"defense_legs" : 100.0,
+	"defense_footR" : 100.0,
+	"defense_footL" : 100.0,
+	"true_defense" : 500.0, #yeah good luck with that >:3c
+	"generic_defense" : 100.0,
+	"stab_defense" : 100.0,
+	"slash_defense" : 100.0,
+	"blunt_defense" : 100.0,
+	"fire_defense" : 100.0,
+	"ice_defense" : 100.0,
+	"toxic_defense" : 100.0,
+	"explosion_defense" : 100.0,
+	"magic_defense" : 100.0,
+	"lightning_defense" : 100.0,
+	"holy_defense" : 100.0,
+	"blight_defense" : 100.0
 }
 
 enum enchantments {
@@ -488,6 +492,9 @@ enum enchantments {
 	weightless, #removes movement debuffs and knockback resistance if applicable #weightlessness?
 	density, #increases movment debuffs and knockback resistance if applicable
 	swiftness, #increases attack speed and all ground movement speed
+	blessing, #increases blight and holy defense
+	divine_blessing, #better blessed
+	eyes_of_the_dead, #allows you too talk to dead players
 }
 
 const enchantment_names = [
@@ -503,6 +510,7 @@ const enchantment_names = [
 	"𐱆𐰕𐰃𐰐", #"swiftness",
 	"𐰃𐰑𐰸", #holy or blessing, adds holy damage or blight defense
 	"𐰑𐰨𐰃𐰍 𐰃𐰑𐰸", #better holy
+	"dead eyes", #allows ghost_communication
 ]
 
 const enchantment_colors = [
@@ -517,6 +525,7 @@ const enchantment_colors = [
 	Color.PALE_TURQUOISE,
 	Color.GOLD,
 	Color.GOLDENROD,
+	Color.WEB_PURPLE,
 ]
 
 const good_enchantments =[
@@ -531,5 +540,6 @@ const godly_enchantments =[
 ]
 
 const evil_enchantments = [
-	enchantments.desolation
+	enchantments.desolation,
+	enchantments.eyes_of_the_dead
 ]
