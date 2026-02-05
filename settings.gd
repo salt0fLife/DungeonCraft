@@ -1,5 +1,6 @@
 extends Node
 signal updated
+signal update_combat_boxes
 
 var user_settings = {
 	"auto_flying_perspective" : false,
@@ -9,3 +10,5 @@ var user_settings = {
 	"speed_fov_effect" : 20.0,
 	"flying_tilt_power" : 1.0,
 }
+
+var show_combat_boxes = false

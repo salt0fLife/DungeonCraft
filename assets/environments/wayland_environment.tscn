@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://cwxvge8rtx0je"]
+
+[ext_resource type="Texture2D" uid="uid://cn8ula6inhmyc" path="res://assets/textures/hdris/waylandHDRI1.hdr" id="1_am8wq"]
+
+[sub_resource type="Gradient" id="Gradient_lfus4"]
+offsets = PackedFloat32Array(0.188679, 0.515723, 1)
+colors = PackedColorArray(0.0120885, 1.4358e-05, 0.0528563, 1, 0.293436, 0.424052, 0.404997, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_bx5pa"]
+gradient = SubResource("Gradient_lfus4")
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_al4l7"]
+panorama = ExtResource("1_am8wq")
+
+[sub_resource type="Sky" id="Sky_8178i"]
+sky_material = SubResource("PanoramaSkyMaterial_al4l7")
+
+[sub_resource type="Environment" id="Environment_xjc05"]
+background_mode = 2
+sky = SubResource("Sky_8178i")
+ssao_enabled = true
+glow_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.937255, 0.705882, 0.603922, 1)
+fog_density = 0.0025
+fog_sky_affect = 0.0
+fog_height = -30.0
+fog_height_density = 0.01
+adjustment_enabled = true
+adjustment_brightness = 1.1
+adjustment_contrast = 1.1
+adjustment_color_correction = SubResource("GradientTexture1D_bx5pa")
+
+[node name="waylandEnvironment" type="WorldEnvironment"]
+environment = SubResource("Environment_xjc05")

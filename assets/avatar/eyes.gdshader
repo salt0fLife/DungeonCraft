@@ -22,6 +22,9 @@ uniform vec2 eyelashes;
 uniform vec3 eyelashCol : source_color;
 uniform float eyelashTaper;
 uniform float transparency = 0.0;
+uniform vec3 glow_col : source_color;
+uniform vec3 glow_col_2 : source_color;
+uniform vec3 glow_col_3 : source_color;
 
 void vertex() {
 	UV=UV*uv1_scale.xy+uv1_offset.xy;
@@ -35,16 +38,20 @@ void vertex() {
 void fragment() {
 	vec2 uv = UV;
 	vec3 color = whitesColor;
+	vec3 glow = glow_col*0.01;//vec3(0.0,0.0,0.0);
 	//eyeColor
 	if (uv.x > eyePos.x - eyeSize.x*0.5*eyeScale && uv.x < eyePos.x + eyeSize.x*0.5*eyeScale && uv.y > eyePos.y - eyeSize.y*0.5*eyeScale && uv.y < eyePos.y + eyeSize.y * 0.5*eyeScale){
 		color = eyeColor;
+		glow = glow_col_3;
 	}
 	if (uv.x > eyePos.x - pupilSize.x*0.5*eyeScale-ec2os && uv.x < eyePos.x + pupilSize.x*0.5*eyeScale+ec2os && uv.y > eyePos.y - pupilSize.y*0.5*eyeScale-ec2os && uv.y < eyePos.y + pupilSize.y * 0.5*eyeScale+ec2os){
 		color = eyeColor2;
+		glow = glow_col_2;
 	}
 	//pupil
 	if (uv.x > eyePos.x - pupilSize.x*0.5*eyeScale && uv.x < eyePos.x + pupilSize.x*0.5*eyeScale && uv.y > eyePos.y - pupilSize.y*0.5*eyeScale && uv.y < eyePos.y + pupilSize.y * 0.5*eyeScale){
 		color = pupilColor;
+		glow = glow_col;
 	}
 	//gradient shadow
 	color = (UV.y*2.0-eyeLids.x+2.0)*0.95*color;
@@ -56,16 +63,22 @@ void fragment() {
 		//color = vec3(255.0,255.0,255.0);
 		color = vec3(1.0,1.0,1.0);
 	}
+	//EMISSION = glow_col*4.0;
 	//eyelashes
 	if (uv.y + cos(uv.x)*(eyelashTaper+eyeTaper) < eyeLids.x + eyelashes.x-1.5) {
 		color = eyelashCol;
+		glow = vec3(0.0,0.0,0.0);
+		EMISSION = vec3(0.0,0.0,0.0);
 	}
 	if (uv.y - cos(uv.x)*(eyelashTaper+eyeTaper*0.25) > eyeLids.y - eyelashes.y+0.5) {
 		color = eyelashCol;
+		glow = vec3(0.0,0.0,0.0);
+		EMISSION = vec3(0.0,0.0,0.0);
 	}
 	
+	EMISSION = glow*4.0;
+	//EMISSION = color*0.25;
 	ALBEDO = color;
-	EMISSION = color*0.25;
 	float trans = 1.0 - (transparency*(1.0-ALBEDO.g));
 	if (uv.y + cos(uv.x)* eyeTaper < eyeLids.x-1.5) {
 		trans = 0.0;

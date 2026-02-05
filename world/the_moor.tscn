@@ -1,0 +1,247 @@
+[gd_scene load_steps=19 format=3 uid="uid://ypqlw3u87lmv"]
+
+[ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_mfk44"]
+[ext_resource type="Script" path="res://scripts/the_moor.gd" id="1_vyo31"]
+[ext_resource type="Theme" uid="uid://bxsqmdqtm4i4k" path="res://assets/themes/genericTheme.tres" id="3_g1qmm"]
+[ext_resource type="Shader" path="res://assets/shaders/item_slot.gdshader" id="3_vmhbv"]
+[ext_resource type="AudioStream" uid="uid://bbh7g8qnq2m4h" path="res://assets/sounds/misc/discovery7.ogg" id="5_a00df"]
+[ext_resource type="PackedScene" uid="uid://cfuq164y84rpp" path="res://assets/environmentPieces/traversal/all_players_world_changer.tscn" id="6_dta4i"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_0ags3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pyfwx"]
+albedo_texture = ExtResource("1_mfk44")
+uv1_scale = Vector3(100, 100, 100)
+
+[sub_resource type="QuadMesh" id="QuadMesh_mllfs"]
+material = SubResource("StandardMaterial3D_pyfwx")
+size = Vector2(100, 100)
+orientation = 1
+
+[sub_resource type="Animation" id="Animation_u3nfo"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("animationPlayer/Control/Label:material:shader_parameter/fade")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("animationPlayer/Control/Label:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("animationPlayer/Control/Label:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(354.5, 260.5)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("animationPlayer/Control/Control/CPUParticles2D:emitting")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_ocdi6"]
+resource_name = "welcome"
+length = 6.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("animationPlayer/Control/Label:material:shader_parameter/fade")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.8, 3.8, 3.9, 4.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [1.0, 0.0, 0.0, 0.525, 1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("animationPlayer/Control/Label:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.1, 1.1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("animationPlayer/Control/Label:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(354.5, 260.5), Vector2(334, 252)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("animationPlayer/Control/Control/CPUParticles2D:emitting")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(3.9),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bgb4u"]
+_data = {
+"RESET": SubResource("Animation_u3nfo"),
+"welcome": SubResource("Animation_ocdi6")
+}
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_82glj"]
+load_path = "res://.godot/imported/enchantedTesxture.png-e8062117ee1cbaaff3303a87d933f99f.s3tc.ctex"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ymb1v"]
+shader = ExtResource("3_vmhbv")
+shader_parameter/wavy = true
+shader_parameter/shaky = false
+shader_parameter/enchanted_col = Color(0, 0, 0, 1)
+shader_parameter/transparent_background = false
+shader_parameter/fade = 1.0
+shader_parameter/enchanted_tex = SubResource("CompressedTexture2D_82glj")
+
+[sub_resource type="Gradient" id="Gradient_qc21m"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.5)
+colors = PackedColorArray(0.917647, 0.423529, 0.27451, 1, 1, 1, 1, 0)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_wo72l"]
+frequency = 0.1438
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ukydk"]
+width = 8
+height = 8
+color_ramp = SubResource("Gradient_qc21m")
+noise = SubResource("FastNoiseLite_wo72l")
+
+[sub_resource type="Curve" id="Curve_g7ndb"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.019084, 1), -0.523954, -0.523954, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[node name="world_1" type="Node3D"]
+script = ExtResource("1_vyo31")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("WorldBoundaryShape3D_0ags3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("QuadMesh_mllfs")
+skeleton = NodePath("../..")
+
+[node name="animationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_bgb4u")
+}
+
+[node name="Control" type="Control" parent="animationPlayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="animationPlayer/Control"]
+material = SubResource("ShaderMaterial_ymb1v")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 354.5
+offset_top = 260.5
+offset_right = 797.5
+offset_bottom = 387.511
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_g1qmm")
+theme_override_colors/font_color = Color(0.917647, 0.423529, 0.27451, 1)
+theme_override_colors/font_shadow_color = Color(0.297022, 0.10672, 0.155261, 1)
+theme_override_font_sizes/font_size = 126
+text = "The Moor
+"
+
+[node name="Control" type="Control" parent="animationPlayer/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="animationPlayer/Control/Control"]
+emitting = false
+amount = 32
+lifetime = 4.0
+one_shot = true
+explosiveness = 0.81
+lifetime_randomness = 0.49
+texture = SubResource("NoiseTexture2D_ukydk")
+emission_shape = 3
+emission_rect_extents = Vector2(220, 41.71)
+direction = Vector2(-1, -1)
+gravity = Vector2(0, 0)
+initial_velocity_min = 2.91
+initial_velocity_max = 17.09
+angular_velocity_min = -296.17
+angular_velocity_max = 173.62
+linear_accel_min = 65.6
+linear_accel_max = 65.6
+radial_accel_min = -44.8
+radial_accel_max = 35.2
+damping_min = 16.8
+damping_max = 16.8
+scale_amount_max = 4.0
+scale_amount_curve = SubResource("Curve_g7ndb")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="animationPlayer"]
+stream = ExtResource("5_a00df")
+volume_db = -4.554
+
+[node name="all_players_world_changer" parent="." instance=ExtResource("6_dta4i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -8)

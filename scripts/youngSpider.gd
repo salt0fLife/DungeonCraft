@@ -149,8 +149,13 @@ func lunge(dir):
 func bite():
 	#print("bite")
 	bite_timer = bite_cooldown
+	var remember = []
 	for b in bite_area.get_overlapping_bodies():
 		if b.has_method("take_damage") and !b.is_in_group("entity_spider"):
+			var hh = get_node(b.health_handler)
+			if remember.has(hh):
+				continue #dont apply damage more than once
+			remember += [hh]
 			b.take_damage.rpc([[bite_strength,Lookup.damageType.stab]], bite_area.global_position, "young spider", "fangs")
 			break #only bite one person
 
@@ -188,8 +193,6 @@ func avoid_close_entities(delta):
 		if dis < avoid_radius:
 			var dir = dif.normalized()
 			velocity -= dir * delta * avoid_strength * (avoid_radius-dis)
-			pass
-	pass
 
 func die(attacker = "", weapon_name = "", add_vel = Vector3.ZERO):
 	call_deferred("queue_free")

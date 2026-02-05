@@ -59,6 +59,7 @@ size = Vector3(0.1, 0.1, 0.1)
 
 [node name="rain" type="Node3D"]
 script = ExtResource("1_x6rxq")
+lightning_chance = 0.1
 
 [node name="rainNear" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)

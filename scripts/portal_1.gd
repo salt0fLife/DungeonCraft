@@ -9,12 +9,11 @@ func open_animation():
 	opening = true
 	$CPUParticles3D.emitting = true
 	#$spiral_screen.visible = true
-	pass
 
 var spiral = 0.0
 func _process(delta):
 	if opening:
-		a_time += delta*0.25
+		a_time += delta*8.0
 		if a_time < 1.0:
 			spiral = 0.001
 			set_shader_param("shader_parameter/symbols_cutoff", 1.0 -a_time + 0.003)

@@ -6,6 +6,7 @@ var localPeer = ENetMultiplayerPeer.new()
 var playerName = str(Steam.getPersonaName())
 @onready var playerSync = $playerSync
 @onready var key_selector = $Control/skinKey
+@onready var music_handler = $musicHandler
 var hosting = false
 
 var skin_key = "default"
@@ -14,11 +15,14 @@ var skins = ["default"]
 const naming = [["cruel", "laughable", "evil", "friendly", "small", "diabolical"], ["Jonathan", "Julius", "Jessica", "Jeremy", "Jerimiah", "Justin", "Josiah", "James", "Dave"]]
 
 func _ready():
+	#music_handler.play_song("res://assets/sounds/music/mainTheme.wav")
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	Global.connect("spawn_projectile", _on_spawn_projectile)
 	Global.connect("spawnCreature", _on_spawn_creature)
 	Global.connect("change_world", _on_change_world)
 	Global.connect("create_item", _on_create_item)
+	Global.connect("thunder_from_point",_on_thunder_from_point)
+	Global.connect("signal_play_sound",_on_play_sound)
 	skin_key = load_file("", "skin_key.dat")
 	print("loaded skin_key " + str(skin_key))
 	if skin_key == null:
@@ -32,7 +36,8 @@ func _ready():
 	multiplayer.connect("server_disconnected", _on_lost_connection)
 	load_skin_info()
 	worldSync.connect("spawned",emit_world_loaded)
-	Global.connect("player_death",_on_player_death)
+	#Global.connect("player_death",_on_player_death)
+	playerSync.connect("player_died",_on_player_death)
 
 signal world_loaded
 func emit_world_loaded():
@@ -95,7 +100,7 @@ func host_local():
 	multiplayer.server_relay = true
 	playerSync.boot(true)
 	hide_menu()
-	_on_change_world("debug")
+	_on_change_world("the_moor")
 
 func join_local(address = ""):
 	Global.is_host = false
@@ -183,7 +188,7 @@ func host():
 	multiplayer.server_relay = true
 	playerSync.boot(true)
 	hide_menu()
-	_on_change_world("debug")
+	_on_change_world("the_moor")
 
 func refresh():
 	for i in $Control/lobbyButtons.get_children(false):
@@ -402,9 +407,6 @@ func _input(event):
 			Global.disable_avatar = true
 			settings_menu.show()
 
-
-
-
 func _on_resume_button_down():
 	is_paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -434,17 +436,19 @@ func disconnect_multiplayer() -> void:
 
 ##spawning creatures
 @onready var creatureSync = $creatureSync
-func _on_spawn_creature(key, location, attribute_modifiers = {}, require_host = true):
+func _on_spawn_creature(key, location, attribute_modifiers = null, require_host = true):
 	if !hosting and require_host:
 		return
 	var c = load(Lookup.creatures[key]).instantiate()
 	c.position = location
-	for a in attribute_modifiers.keys(): #adds modifiers
-		c.attributes[a] = attribute_modifiers[a]
+	if attribute_modifiers != null:
+		for a in attribute_modifiers.keys(): #adds modifiers
+			c.attributes[a] = attribute_modifiers[a]
 	creatureSync.add_child(c,true)
 
 @onready var worldSync = $worldSync
 func _on_change_world(key, require_host = false):
+	music_handler.stop_the_music() #let the world choose its music
 	for e in creatureSync.get_children(false):
 		e.queue_free()
 	for i in worldSync.get_children(false):
@@ -460,6 +464,7 @@ func _on_change_world(key, require_host = false):
 func _on_spawn_projectile(proj, pos, dir, owned_by = ""):
 	if multiplayer.get_unique_id() != 1:
 		spawn_projectile.rpc_id(1, proj, pos, dir, owned_by)
+		print("spawned_host_projectile")
 		#rpc_id(1, "spawn_projectile", proj, pos, dir)
 	else:
 		spawn_projectile(proj, pos, dir, owned_by)
@@ -489,7 +494,6 @@ func add_item_to_world(key, pos):
 	li.item_key = key
 	li.connect("destroyed", _on_item_destruction)
 	itemHandler.add_child(li)
-	
 
 var item_sync_index = 0
 func _process(delta):
@@ -517,8 +521,6 @@ func sync_item(index, pos, key, total_items):
 		for i in range(0,dif):
 			itemHandler.get_child(total_items+dif).queue_free()
 
-
-
 @rpc("reliable", "any_peer")
 func destroy_item(index):
 	if itemHandler.get_child_count() <= index:
@@ -532,17 +534,84 @@ func _on_item_destruction(node):
 	destroy_item.rpc(node.get_index())
 
 func get_living_players() -> Array:
-	var list = []
-	for pk in playerSync.players.keys():
-		var n = playerSync.players[pk]
-		if !n.rpc_id(pk, "request_ghost"):
-			list += [n]
-	return list
+	return playerSync.get_living_players()
+	#var list = []
+	#for pk in playerSync.players.keys():
+		#var n = playerSync.players[pk]
+		#if !n.rpc_id(pk, "request_ghost"):
+			#list += [n]
+	#return list
+	#return
 
-@rpc("reliable")
 func _on_player_death():
 	if hosting:
-		print(get_living_players())
+		check_for_living_players()
+		#print("player died")
+		#var living_players= get_living_players()
+		#print(living_players)
+		#if living_players.size() < 0.0:
+			#print("all players dead ;-;")
 	else:
-		rpc_id(0,"_on_player_death")
-	pass
+		#rpc_id(0,"_on_player_death") #yeah yeah yeah I know this is really bad but whatever dont change anything
+		rpc_id(0,"check_for_living_players") #so i sleep well at night
+
+
+@rpc("reliable")
+func check_for_living_players() -> void:
+	print("player died")
+	var living_players= get_living_players()
+	Global.living_players = living_players
+	if living_players.size() < 1:
+		print("all players dead ;-;")
+		game_over()
+
+func game_over(): #only called on host rpc other graphical changes for everyone else
+	print("game over")
+	Global.room_id = 0
+	for auth in playerSync.players.keys():
+		var node = playerSync.players[auth]
+		node.reset_all()#.rpc() #other was not working and im lazy :3
+		node.reset_all.rpc()
+		#node.rpc_id(auth,"reset_all") #tells that player node to reset like it was just spawned in
+	_on_change_world("the_moor")
+
+var thunder_sounds = [
+	"res://assets/sounds/explosion/lightning_thunder.ogg",
+	"res://assets/sounds/explosion/explosion.wav",
+]
+
+func _on_thunder_from_point(point : Vector3, sound_index = 0) -> void: #I was the lightning before the thunda
+	var player = AudioStreamPlayer.new()
+	player.stream = load(thunder_sounds[sound_index])
+	$thunderHandler.add_child(player)
+	var camera_pos = get_viewport().get_camera_3d().global_position
+	var dis = (camera_pos - point).length()
+	var delay = dis / 343.0
+	var pitch = (1.0 - clamp(delay*0.2,0.0,0.9))*4.0
+	#var vol = remap(pitch,0.04,4.0,-20.0,0.0)
+	var vol = -30.0*(clamp(delay,0.0,5.0)*0.2) #-30 db sounds pretty good to me
+	var t = get_tree().create_timer(delay)
+	await t.timeout
+	player.pitch_scale = pitch
+	player.volume_db = vol
+	player.play() #THUNDAAAAA
+	await  player.finished
+	player.call_deferred("queue_free")
+
+func _on_play_sound(pos : Vector3, file_path : String, room_id := -1) -> void:
+	create_spacial_audio_player(pos,file_path,room_id)
+	create_spacial_audio_player.rpc(pos,file_path,room_id)
+
+@rpc("any_peer")
+func create_spacial_audio_player(pos : Vector3, file_path : String, room_id := -1):
+	if Global.room_id != room_id:
+		return
+	var ap = AudioStreamPlayer3D.new()
+	ap.stream = load(file_path)
+	$spacialAudioHandler.add_child(ap)
+	ap.position = pos
+	ap.connect("finished",kill_node.bind(ap)) #hope this doesn't cause problems later
+	ap.play()
+
+func kill_node(node):
+	node.queue_free()

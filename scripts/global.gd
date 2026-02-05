@@ -8,10 +8,28 @@ signal set_post_param
 signal spawn_projectile
 signal camera_impact
 signal player_death
+signal player_count_changed
 signal chat
 signal update_skin
 signal create_item
+signal thunder_from_point
+signal update_health_graphics
+signal update_mana_graphics
+signal update_attributes
+signal enter_room #called with an id when moving using doors for hiding unused rooms
+var room_id = 0
+signal signal_play_sound #needs (pos,filepath)
 var inside = 0.0
+
+
+var visited_places = []
+
+var living_players = []
+
+func _ready():
+	connect("enter_room",_on_enter_room)
+func _on_enter_room(id):
+	room_id = id
 
 var skin = [64,64,false,0,[]]
 
@@ -37,6 +55,8 @@ var camera_transform = Transform3D(Vector3.ZERO,Vector3.ZERO,Vector3.ZERO,Vector
 #var savePath = OS.get_executable_path().get_base_dir() + "/"#"res://"#"user://"#"res://tempSaveFolder/"#OS.get_executable_path().get_base_dir() + "/"#"res://"#"user://"
 var savePath = "res://tempSaveFolder/"#OS.get_executable_path().get_base_dir() + "/"#"res://"#"user://" 
 
+
+
 func get_skin_list():
 	if DirAccess.dir_exists_absolute(savePath+"/skins"):
 		var skins = DirAccess.get_files_at(savePath+"/skins")
@@ -59,6 +79,9 @@ func _input(event):
 		get_viewport().debug_draw = Viewport.DEBUG_DRAW_UNSHADED
 	if Input.is_action_just_pressed("debugRenderLighting"):
 		get_viewport().debug_draw = Viewport.DEBUG_DRAW_LIGHTING
+	if Input.is_action_just_pressed("toggle_visible_combat_boxes"):
+		Settings.show_combat_boxes = !Settings.show_combat_boxes
+		Settings.emit_signal("update_combat_boxes")
 
 func vec3_rot_lerp(rot1: Vector3, rot2: Vector3, val: float):
 	var x = lerp_angle(rot2.x, rot1.x, val)
@@ -102,7 +125,6 @@ const bone_names = [
 	"eyebrows_L",
 	"eyebrows_R"
 ]
-
 
 const avatar_profiles = {
 	"normal" : [
@@ -153,12 +175,23 @@ const avatar_profiles = {
 	"res://assets/avatar/avatarProfiles/nice/right_arm_1_slim_001.tscn",
 	"res://assets/avatar/avatarProfiles/nice/right_arm_2_slim_001.tscn",
 	]
-	
 }
 
 func instance_creature(key: String,location : Vector3,modifiers = {}):
 	emit_signal("spawnCreature",key,location,modifiers)
-	pass
+
+func instance_projectile(key : String, pos : Vector3, dir : Vector3, owned_by : String) -> void:
+	emit_signal("spawn_projectile", key,pos,dir,owned_by)
 
 func set_post(key,val):
 	emit_signal("set_post_param",key,val)
+
+var room_doors = [] #index is room id, data is door_indx
+var room_internal_doors = [] #index is room id, data is door_indx
+var doors_val = [] #index is door_indx (door number in group "doorway"), data is [Location, output_location, output room_id, room_id]
+
+var room_ladders = [] #indes is room id, data is ladder_indx
+var ladders_val = [] #index is ladder_indx, data, is [position,height,rot]
+
+func play_sound(pos : Vector3, file_path : String, room_id := -1) -> void:
+	emit_signal("signal_play_sound", pos, file_path,room_id)

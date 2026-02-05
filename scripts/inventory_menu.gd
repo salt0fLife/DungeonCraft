@@ -36,37 +36,46 @@ func _ready():
 	Inventory.connect("update_hotbar", update_hotbar_graphics)
 	Inventory.connect("update_status_effect_graphics",_on_update_status_effect_graphics)
 	Global.connect("update_skin", load_skin)
+	Global.connect("update_health_graphics",_update_health_graphics)
+	Global.connect("update_attributes",_update_attributes)
+	Global.connect("update_mana_graphics",_update_mana_graphics)
 	for i in range(0,$hotbar/slots/itemIcons.get_children().size()):
 		var n = $hotbar/slots/itemIcons.get_child(i)
 		n.connect("mouse_entered", preview_hotbar_indx.bind(i))
 		n.connect("mouse_exited", preview_hide)
-		n.connect("button_down", _on_hotbar_pressed.bind(i))
+		#n.connect("button_down", _on_hotbar_pressed.bind(i))
+		n.connect("gui_input", _on_hotbar_input.bind(i))
 		n.material = mat.duplicate(true)
 	for k in accessory_buttons.keys():
 		var b = accessory_buttons[k]
 		b.connect("mouse_entered", preview_equipment_key.bind(k))
 		b.connect("mouse_exited", preview_hide)
-		b.connect("button_down", _on_equipment_pressed.bind(k))
+		#b.connect("button_down", _on_equipment_pressed.bind(k))
+		b.connect("gui_input", _on_equipment_input.bind(k))
 		b.material = mat.duplicate(true)
 	$held_item.material = mat.duplicate(true)
 	$held_item.material.set("shader_parameter/transparent_background",true)
+	$itemPreview.connect("preview_item_data", _create_preview_window)
 	pass
 
 func preview_equipment_key(k: String):
-	var key = Inventory.accessories[k][0]
+	var item = Inventory.accessories[k]
+	var key = item[0]
 	if key == "":
 		return
 	$itemPreview.visible = true
 	$itemPreview.update_graphics_from_key(key)
+	$itemPreview.add_graphics_from_custom_data(item[3])
 	pass
 
 func preview_hotbar_indx(i: int):
-	var key = Inventory.hotbar[i][0]
+	var item = Inventory.hotbar[i]
+	var key = item[0]
 	if key == "":
 		return
 	$itemPreview.visible = true
 	$itemPreview.update_graphics_from_key(key)
-	pass
+	$itemPreview.add_graphics_from_custom_data(item[3])
 
 func preview_hide():
 	$itemPreview.visible = false
@@ -111,7 +120,8 @@ func update_hotbar_graphics():
 	pass
 
 func _on_hotbar_pressed(index):
-	print(index)
+	$itemMenu.visible = false
+	#print(index)
 	var temp = held_item
 	held_item = Inventory.hotbar[index]
 	Inventory.hotbar[index] = temp
@@ -119,8 +129,22 @@ func _on_hotbar_pressed(index):
 	update_hotbar_graphics()
 	preview_hotbar_indx(index)
 
+func _on_hotbar_input(_event, index):
+	if Input.is_action_just_pressed("lm"):
+		_on_hotbar_pressed(index)
+	elif Input.is_action_just_pressed("rm"):
+		#print("right click hotbar " + str(Inventory.hotbar[index]))
+		dropdown_hotbar_index(index)
+	#if !(event is InputEventMouseButton):
+		#return #only care about mouse button events
+	#if event.button_index == MOUSE_BUTTON_RIGHT:
+		#_on_hotbar_pressed(index)
+	#elif event.button_index == MOUSE_BUTTON_LEFT:
+		#print("hotbar mouse_left " + str(index))
+
 func _on_equipment_pressed(key):
-	print(key)
+	$itemMenu.visible = false
+	#print(key)
 	if held_item[0] != "":
 		if !Inventory.can_item_go_in_accessory(held_item[0], key):
 			return # makes sure you cant put equipment in wrong slots
@@ -130,6 +154,29 @@ func _on_equipment_pressed(key):
 	update_held_item_graphics()
 	load_accessories()
 	preview_equipment_key(key)
+	Inventory.emit_signal("update_accessories")
+
+func _on_equipment_input(_event,key):
+	if Input.is_action_just_pressed("lm"):
+		_on_equipment_pressed(key)
+	elif Input.is_action_just_pressed("rm"):
+		dropdown_equipment_key(key)
+
+func dropdown_hotbar_index(index):
+	#print(index)
+	$itemMenu.position = get_viewport().get_mouse_position()
+	#$itemMenu.visible = true
+	$itemMenu.item_location = $itemMenu.locations.HOTBAR
+	$itemMenu.item_index = index
+	$itemMenu.display()
+
+func dropdown_equipment_key(key):
+	#print(key)
+	$itemMenu.position = get_viewport().get_mouse_position()
+	#$itemMenu.visible = true
+	$itemMenu.item_location = $itemMenu.locations.EQUIPMENT
+	$itemMenu.item_key = key
+	$itemMenu.display()
 
 func show_hotbar():
 	unused_hide_timer = time_till_hide
@@ -147,6 +194,7 @@ func _on_hotbar_slot_changed():
 	moving_indicator = true
 	#$hotbar/slots/below.position.x = x
 	#$hotbar/slots/above.position.x = x
+	Inventory.emit_signal("update_accessories")
 	pass
 
 func _process(delta):
@@ -158,7 +206,13 @@ func _process(delta):
 		avatar.head_angle = Vector2(pos.y*PI*0.5,pos.x*PI*0.5)
 		pass
 	if $itemPreview.visible:
-		$itemPreview.position = get_viewport().get_mouse_position() + Vector2(0.0,-216.0)
+		var mouse_pos = get_viewport().get_mouse_position()
+		#var mouse_pos = $itemPreview.position #so it stays stationary
+		$itemPreview.position = mouse_pos# get_viewport().get_mouse_position()# + Vector2(0.0,-216.0)
+		if mouse_pos.y > get_viewport_rect().size.y*0.5:
+			$itemPreview.set_anchor_up(false)
+		else:
+			$itemPreview.set_anchor_up(true)
 	if moving_indicator:
 		if moving_time > 0.0:
 			moving_time -= delta
@@ -187,6 +241,7 @@ func hide_accessories():
 	$accessories.hide()
 
 func open():
+	$hotbar.visible = true
 	hide_want = false
 	show_hotbar()
 	show_accessories()
@@ -194,6 +249,8 @@ func open():
 	pass
 
 func close():
+	$itemMenu.visible = false
+	$hotbar.visible = true
 	hide_want = true
 	hide_accessories()
 	$itemPreview.hide()
@@ -239,7 +296,7 @@ func close():
 }
 
 var accessories_paths = {}
-@onready var avatar = $accessories/preview_window/SubViewport/SubViewport/playerAvatar/genericAvatar
+@onready var avatar = $accessories/gearCenter/TabContainer/preview/SubViewport/SubViewport/playerAvatar/genericAvatar
 func load_accessories(a = Inventory.accessories):
 	for k in a.keys():
 		var enchant_col = Color.BLACK
@@ -293,9 +350,6 @@ func load_skin():
 	var skin_img = Global.data_to_image(Global.skin)
 	avatar.load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5])
 
-
-
-
 func _on_update_status_effect_graphics():
 	var se = Inventory.active_status_effects
 	#handles burning
@@ -313,4 +367,93 @@ func _on_update_status_effect_graphics():
 	#blessed
 	avatar.set_blessed(se.has(Lookup.statusEffectType.blessed))
 
+var max_health = 10.0
+func _update_health_graphics(val : float, max : float) -> void:
+	val = float(int(val*10.0))*0.1 #rounds to nearest 0.1
+	$hotbar.visible = true
+	$hotbar/health_display.text = str(val) + " / " + str(max) + " HP"
+	$hotbar/health_bar.value = val
+	$hotbar/health_bar.max_value = max
+
+@onready var stats_display = $accessories/gearCenter/TabContainer/stats/RichTextLabel
+@onready var stats_label_handler = $accessories/gearCenter/TabContainer/stats/ScrollContainer/VBoxContainer
+@onready var l_theme = preload("res://assets/themes/genericTheme.tres")
+func _update_attributes(attributes) -> void:
+	
+	for i in stats_label_handler.get_children(false):
+		i.queue_free()
+	
+	for key in attributes.keys():
+		var val = attributes[key]
+		var text = ""
+		var col = Color.DODGER_BLUE
+		var default = Lookup.base_player_attributes[key]
+		var bold = false
+		match typeof(val):
+			TYPE_FLOAT:
+				if val < default:
+					col = Color.DARK_RED
+				if val == default:
+					col = Color.DIM_GRAY
+					text = key + " : " + str(val)
+				else:
+					text = key + " : " + str(default) + " -> " + str(val)
+			TYPE_BOOL:
+				if val == default:
+					text = key + " : " + str(val)
+					col = Color.DIM_GRAY
+				else:
+					if val:
+						text = key + " : " + str(val)
+						col = Color.SEA_GREEN
+					else:
+						text = key + " : " + str(val)
+						col = Color.INDIAN_RED
+			TYPE_STRING:
+				text = key
+				col = Color(default)
+				bold = true
+		var l = Label.new()
+		if Lookup.max_attributes.has(key):
+			var max_val = Lookup.max_attributes[key] - default
+			val = val - default
+			if val == max_val:
+				text += " MAX"
+				col = Color("8a68ad")
+				l.material = load("res://assets/materials/max_stat_mat.tres")
+				#s.set
+			elif val >= max_val*0.75:
+				text += " Legendary"
+				col = Color.GOLDENROD
+				l.material = load("res://assets/materials/legendary_stat_mat.tres")
+			elif val >= max_val*0.5:
+				text += " expert"
+				#col = Color("da000a")
+				col = lerp(col,Color("da000a"),0.75)
+				l.material = load("res://assets/materials/legendary_stat_mat.tres")
+			elif val >= max_val*0.25:
+				text += " rookie"
+				#col = Color("da000a")
+				col = lerp(col, Color.DIM_GRAY,0.5)
+				l.material = load("res://assets/materials/legendary_stat_mat.tres")
+		l.text = text
+		l.set("theme",l_theme)
+		l.set("theme_override_colors/font_color",col)
+		if bold:
+			l.set("theme_override_styles/normal",load("res://assets/gui/divider_styleBox.tres"))
+			l.set("theme_override_font_sizes/font_size",50.0)
+		if !bold:
+			stats_label_handler.add_child(l)
+
+@onready var mana_mat = $overlay/mana.material
+func _update_mana_graphics(val):
+	$overlay.visible = true
+	mana_mat.set("shader_parameter/full_percent",val/10.0)
+	pass
+
+func _create_preview_window(item_data : Array) -> void:
+	
+	
+	
+	pass
 

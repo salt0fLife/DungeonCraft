@@ -1,8 +1,18 @@
 extends Node3D
 @export var life_time = 30.0
+@export var unlimited_life_time = false
+
+func _ready():
+	#var s = 1.0 / get_parent().scale.x
+	#scale = Vector3(s,s,s)
+	var s2 = randf_range(0.5,2.0)
+	$MeshInstance3D.scale = Vector3(s2,s2,s2)
+	$MeshInstance3D.rotation.y = randf_range(0.0,PI*2.0)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if unlimited_life_time:
+		return
 	life_time -= delta
 	if life_time < 0.0:
 		queue_free()

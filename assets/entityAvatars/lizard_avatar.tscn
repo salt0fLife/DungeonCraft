@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://cuy4sdom8y4bt"]
+
+[ext_resource type="Script" path="res://scripts/lizard_avatar.gd" id="1_7wjbw"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_y0vv8"]
+size = Vector3(0.56, 0.71, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_k245v"]
+size = Vector3(0.39, 0.515, 0.96)
+
+[sub_resource type="BoxMesh" id="BoxMesh_si8vb"]
+size = Vector3(0.48, 0.535, 0.415)
+
+[node name="lizard_avatar" type="Node3D"]
+script = ExtResource("1_7wjbw")
+
+[node name="root" type="Node3D" parent="."]
+
+[node name="body" type="Node3D" parent="root"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.636632, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="root/body"]
+mesh = SubResource("BoxMesh_y0vv8")
+skeleton = NodePath("../../..")
+
+[node name="waist" type="Node3D" parent="root/body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.505527)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="root/body/waist"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.366475)
+mesh = SubResource("BoxMesh_k245v")
+
+[node name="hips" type="Node3D" parent="root/body/waist"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.80381)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="root/body/waist/hips"]
+mesh = SubResource("BoxMesh_si8vb")

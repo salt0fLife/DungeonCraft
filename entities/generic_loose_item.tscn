@@ -13,5 +13,7 @@ script = ExtResource("1_4sspg")
 shape = SubResource("SphereShape3D_2l2ns")
 
 [node name="RayCast3D" type="RayCast3D" parent="."]
+target_position = Vector3(0, -50, 0)
 
 [node name="graphics" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.1, 0)

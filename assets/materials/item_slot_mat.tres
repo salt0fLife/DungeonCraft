@@ -6,6 +6,8 @@
 [resource]
 shader = ExtResource("1_hia6t")
 shader_parameter/wavy = false
+shader_parameter/shaky = false
 shader_parameter/enchanted_col = Color(0.811765, 0, 0.14902, 1)
 shader_parameter/transparent_background = false
+shader_parameter/fade = null
 shader_parameter/enchanted_tex = ExtResource("2_68ygu")

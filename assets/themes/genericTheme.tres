@@ -1,6 +1,6 @@
-[gd_resource type="Theme" load_steps=8 format=3 uid="uid://bxsqmdqtm4i4k"]
+[gd_resource type="Theme" load_steps=11 format=3 uid="uid://bxsqmdqtm4i4k"]
 
-[ext_resource type="FontFile" uid="uid://d04jqh1m2w8v1" path="res://assets/fonts/PIXELOIDSANSBOLD-PKNYD.TTF" id="1_epc4j"]
+[ext_resource type="FontFile" uid="uid://bp5a71yk0qgbk" path="res://assets/fonts/JACQUARD24-REGULAR.TTF" id="1_se5ks"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8x6qf"]
 bg_color = Color(0.376471, 0.0901961, 0.239216, 0.403922)
@@ -27,6 +27,9 @@ expand_margin_right = 2.0
 expand_margin_bottom = 2.0
 shadow_size = 8
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bm504"]
+bg_color = Color(1, 1, 1, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m2rii"]
 bg_color = Color(0.180392, 0.180392, 0.2, 1)
 border_width_left = 4
@@ -34,6 +37,9 @@ border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0.580392, 0.580392, 0.580392, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qdi4k"]
+bg_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yukli"]
 bg_color = Color(0.211765, 0.207843, 0.219608, 1)
@@ -43,17 +49,23 @@ border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0.564706, 0.564706, 0.564706, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vwdr1"]
+bg_color = Color(1, 1, 1, 1)
+
 [resource]
-default_font = ExtResource("1_epc4j")
+default_font = ExtResource("1_se5ks")
+default_font_size = 35
 Button/colors/font_color = Color(0.878431, 0.956863, 1, 1)
 Button/colors/font_focus_color = Color(0.592157, 0.937255, 1, 1)
 Button/colors/font_hover_color = Color(0.564706, 0.858824, 1, 1)
 Button/colors/font_hover_pressed_color = Color(0.666667, 0.709804, 0.94902, 1)
 Button/constants/h_separation = 4
-Button/fonts/font = ExtResource("1_epc4j")
 Button/styles/focus = SubResource("StyleBoxFlat_8x6qf")
 Button/styles/hover = SubResource("StyleBoxFlat_o2bao")
 Button/styles/normal = SubResource("StyleBoxFlat_hvya4")
 Button/styles/pressed = SubResource("StyleBoxFlat_a4p60")
+HScrollBar/styles/grabber = SubResource("StyleBoxFlat_bm504")
 Panel/styles/panel = SubResource("StyleBoxFlat_m2rii")
+ScrollContainer/styles/panel = SubResource("StyleBoxFlat_qdi4k")
 TabContainer/styles/panel = SubResource("StyleBoxFlat_yukli")
+VScrollBar/styles/grabber = SubResource("StyleBoxFlat_vwdr1")

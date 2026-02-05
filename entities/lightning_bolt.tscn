@@ -1,0 +1,90 @@
+[gd_scene load_steps=10 format=3 uid="uid://c0din1ysrwrs5"]
+
+[ext_resource type="Shader" path="res://assets/shaders/lightning_bolt.gdshader" id="1_teut1"]
+[ext_resource type="Script" path="res://scripts/lightning_bolt.gd" id="1_wqn5u"]
+[ext_resource type="AudioStream" uid="uid://baexnl0w6mpu5" path="res://assets/sounds/explosion/lightning_discharge.ogg" id="3_5p1gi"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_d0fwd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sl7s0"]
+render_priority = 0
+shader = ExtResource("1_teut1")
+shader_parameter/albedo = Color(0.2, 0.3, 0.8, 1)
+shader_parameter/octave_count = 10
+shader_parameter/amp_start = 0.5
+shader_parameter/amp_coeff = 0.635
+shader_parameter/freq_coeff = 1.69
+shader_parameter/filter = 1.0
+shader_parameter/top_fade = 1.0
+shader_parameter/wobble_speed = 1.0
+shader_parameter/desync_speed = 1.0
+shader_parameter/desync_amount = 100.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_1bbnk"]
+material = SubResource("ShaderMaterial_sl7s0")
+size = Vector2(50, 500)
+center_offset = Vector3(0, 250, 0)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_53llk"]
+radius = 4.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jqept"]
+render_priority = 0
+shader = ExtResource("1_teut1")
+shader_parameter/albedo = Color(0.2, 0.3, 0.8, 1)
+shader_parameter/octave_count = 10
+shader_parameter/amp_start = 0.5
+shader_parameter/amp_coeff = 0.635
+shader_parameter/freq_coeff = 1.69
+shader_parameter/filter = 1.0
+shader_parameter/top_fade = 1.0
+shader_parameter/wobble_speed = 1.0
+shader_parameter/desync_speed = 1.0
+shader_parameter/desync_amount = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_5cu7p"]
+material = SubResource("ShaderMaterial_jqept")
+center_offset = Vector3(0, 0.5, 0)
+
+[node name="lightning" type="Node3D"]
+script = ExtResource("1_wqn5u")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("BoxMesh_d0fwd")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+mesh = SubResource("QuadMesh_1bbnk")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.90288, 0)
+layers = 3
+light_color = Color(0.705882, 0.909804, 0.964706, 1)
+light_energy = 0.0
+omni_range = 134.435
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_5p1gi")
+
+[node name="attackArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 72
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="attackArea"]
+shape = SubResource("SphereShape3D_53llk")
+
+[node name="electric" type="CPUParticles3D" parent="."]
+emitting = false
+amount = 32
+lifetime = 0.1
+randomness = 1.0
+local_coords = true
+mesh = SubResource("QuadMesh_5cu7p")
+particle_flag_align_y = true
+direction = Vector3(0, 1, 0)
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 0.1
+initial_velocity_max = 0.2
+scale_amount_min = 2.0
+scale_amount_max = 6.0

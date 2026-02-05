@@ -33,7 +33,9 @@ extends Node
 
 @onready var Projectiles = {
 	"arrow" : preload("res://entities/projectiles/arrow.tscn"),
-	"spark_bolt" : preload("res://entities/projectiles/spark_bolt.tscn")
+	"spark_bolt" : preload("res://entities/projectiles/spark_bolt.tscn"),
+	"lightning" : preload("res://entities/lightning_bolt.tscn"),
+	"lightning_seed" : preload("res://entities/projectiles/lightning_seed.tscn"),
 }
 
 const worlds = {
@@ -43,7 +45,11 @@ const worlds = {
 	"debug" : ["res://debug/debug_world.tscn", 0.0],
 	"gm_construct" : ["res://world/gm_construct.tscn", 0.4],
 	"skywas_test" : ["res://world/skywars_prot_rainy.tscn", 0.0],
-	"dungeon_world" : ["res://world/dungeon_world.tscn", 0.0]
+	"dungeon_world" : ["res://world/dungeon_world.tscn", 0.0],
+	"wayland" : ["res://world/wayland_main.tscn",0.0],
+	"elder_tree_temple" : ["res://world/elder_tree_temple.tscn", 0.0],
+	"test_modular" : ["res://world/test_modular_world.tscn",1.0],
+	"the_moor" : ["res://world/the_moor.tscn"]
 }
 
 enum itemType {
@@ -65,6 +71,15 @@ enum itemType {
 	racial_changes,
 	subclass_changes,
 	weapons_sword, #[damage, range, damage_stab, block_defense]
+	weapons_longsword,
+	weapons_mace,
+	weapons_fishing_rod,
+	weapons_bow,
+	weapons_spear,
+	weapons_glaive,
+	weapons_scythe,
+	weapons_wand,
+	weapons_spellbook,
 	weapons_projectile #[projectile_key, animation_key]
 }
 
@@ -87,6 +102,7 @@ const accessories_types = [
 	itemType.accessories_pants,
 	itemType.accessories_gloves,
 	itemType.accessories_shoes,
+	itemType.accessories_chestplate,
 ]
 
 #damage = [[damageType.generic, amount],[damageType.stab, amount]]
@@ -121,6 +137,48 @@ const damageType_color_lookup = [
 ]
 
 var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_key(if applicable)]
+	##debug
+	"crown_of_god" : ["immortal king", "res://debug/blockRenderTestDebug.tscn", itemType.accessories_crown, [[], 
+	{"can_fly":true,
+	"flying_can_hover" : true, 
+	"flying_speed":+99999.0,
+	"jump_velocity":max_attributes["jump_velocity"]*0.25, 
+	"speed" : max_attributes["speed"]*0.5,
+	"speed_multiplier" : max_attributes["speed"]*0.75,
+	"air_acceleration": 99999.0,
+	"flying_control" : 99999.0,
+	"max_health" : 99999.0,
+	"max_mana" : 99999.0,
+	"mana_regen_speed" : 99999.0,
+	"max_stamina" : 99999.0,
+	"stamina_regen_speed": 99999.0,
+	"flying_can_glide" : true,
+	"strength" : 99999.0,
+	#"size" : 99999.0, default is expert, just dont mess with this very much because kinda wacky :/
+	"localized defenses" : "dark red", #
+	"defense_head" : 99999.0,
+	"defense_torso" : 99999.0,
+	"defense_arms" : 99999.0,
+	"defense_handL" : 99999.0,
+	"defense_handR" : 99999.0,
+	"defense_legs" : 99999.0,
+	"defense_footR" : 99999.0,
+	"defense_footL" : 99999.0,
+	"true_defense" : 99999.0, #only changed through race and subclass, effects all damage
+	"generic_defense" : 99999.0,
+	"stab_defense" : 99999.0,
+	"slash_defense" : 99999.0,
+	"blunt_defense" : 99999.0,
+	"fire_defense" : 99999.0,
+	"ice_defense" : 99999.0,
+	"toxic_defense" : 99999.0,
+	"explosion_defense" : 99999.0,
+	"magic_defense" : 99999.0,
+	"lightning_defense" : 99999.0,
+	"holy_defense" : 99999.0,
+	"blight_defense" : 99999.0
+	}], ""],
+	
 	##crafting
 	"simple_rock" : ["rock", "res://assets/itemGraphics/rock_graphics.tscn", itemType.crafting_throwable, [10.0], ""],
 	
@@ -230,7 +288,7 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 	"res://assets/itemGraphics/armor/textured_iron/textured_iron_helmet.tscn", 
 	itemType.accessories_hat, [[
 		["res://assets/itemGraphics/armor/textured_iron/textured_iron_helmet.tscn", 5]], 
-		{"defense_head" : +0.3, "speed": -0.1}], 
+		{"defense_head" : +0.3, "speed": -0.1, "true_defense" : 100.0}], 
 		"res://assets/textures/items/iron helmet tn.png"], # no texture yet
 	#chestplate
 	"iron_chestplate" : ["iron chestplate", 
@@ -256,6 +314,15 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 	"iron_sword" : ["iron sword", "res://assets/itemGraphics/iron_sword.tscn", itemType.weapons_sword, [[[damageType.slash, 5.0]],3.0,[[damageType.stab, 2.5]]], "res://assets/textures/items/ironSword.png"],
 	"short_bow" : ["short bow", "res://assets/itemGraphics/oak_bow.tscn", itemType.weapons_projectile, ["arrow", "punch"], ""],
 	"magic_bow" : ["spark wand", "res://assets/itemGraphics/spark_wand.tscn", itemType.weapons_projectile, ["spark_bolt", "punch"], "res://assets/textures/items/sparkWand.png"],
+	"longsword_debug" : ["longsword", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_longsword, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"mace_debug" : ["mace", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_mace, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"fishing_rod_debug" : ["fishing rod", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_fishing_rod, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"bow_debug" : ["bow", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_bow, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"spear_debug" : ["spear", "res://assets/itemGraphics/weapons/spear_standin.tscn", itemType.weapons_spear, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"glaive_debug" : ["glaive", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_glaive, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"scythe_debug" : ["scythe", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_scythe, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"wand_debug" : ["wand", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_wand, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
+	"spellbook_debug" : ["spellbook", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_spellbook, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
 	
 	
 	#jewelry
@@ -264,6 +331,11 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 	"ring_of_dragons" : ["ring of dragons", "res://assets/itemGraphics/iron_sword.tscn", itemType.accessories_ring, [[], {"max_health": +5.0, "speed_multiplier" : 0.5}], ""], # no texture yet]
 	"grace_pendant" : ["grace pendant", "res://assets/itemGraphics/jewelry/necklaces/grace_pendant.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/grace_pendant.tscn", 0]], {"mana_regen": +2.0, "max_mana" : + 20.0, "blight_defense" : 3.0}], ""],
 	"ruby_amulet" : ["ruby amulet", "res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", 0]], {"health_regen": +2.0, "max_health" : + 20.0, "true_defense" : 0.05}], ""],
+}
+
+const items_lore = {
+	"devil_wings" : "sick ass pair of wings",
+	"crown_of_god" : "no one was ever meant to have this"
 }
 
 const set_bonus = { #[[item1,item2,item3],{attribute modifiers}, [[model_path,bone_id]]]
@@ -297,10 +369,167 @@ enum interact_return_code {
 	dont_do_anything, #returns null
 	is_item, #returns item_key that should be picked up
 	print, #returns a string that should be printed
+	is_doorway, #returns [tp_pos, new_rot] that should be traveled to (rot should be added not set)
+	is_ladder, #returns [xz_pos, height_min_max,facing_rot]
 }
 
 const fire_colors = [Color.ORANGE_RED, Color.AQUA, Color.DARK_RED,Color.SPRING_GREEN,Color.WEB_PURPLE]
 
 const creatures = {
 	"young_spider" : "res://entities/youngSpider.tscn",
+	"lightning" : "res://entities/lightning_bolt.tscn",
+	"debug" : "res://entities/mechanical/debug_creature.tscn",
+	"debug_v2" : "res://entities/mechanical/debug_creature_v_2.tscn",
 }
+
+const base_player_attributes = {
+	##vision
+	"dark_vision" : 0.0,
+	##movement
+	#ground
+	"movement ground" : "dark gray",#
+	"speed" : 3.0,
+	"speed_multiplier" : 1.0,
+	"jump_velocity" : 6.0,
+	"air_acceleration": 1.0,
+	#air
+	"movement air" : "gray",#
+	"can_fly" : false,
+	"flying_speed" : 5.0,
+	"flying_control" : 1.0,
+	"flying_can_glide" : false,
+	"flying_can_hover" : false,
+	##bars and such
+	"resiliance" : "light blue", #
+	"max_health" : 10.0,
+	"max_mana" : 10.0,
+	"mana_regen_speed" : 1.0,
+	"max_stamina" : 10.0,
+	"stamina_regen_speed": 1.0,
+	##physical enhancements
+	"combat strength" : "purple", #
+	"strength" : 1.0,
+	"size" : 1.0,
+	##defenses
+	#localized_generic_defense
+	"localized defenses" : "dark red", #
+	"defense_head" : 1.0,
+	"defense_torso" : 1.0,
+	"defense_arms" : 1.0,
+	"defense_handL" : 1.0,
+	"defense_handR" : 1.0,
+	"defense_legs" : 1.0,
+	"defense_footR" : 1.0,
+	"defense_footL" : 1.0,
+	#real_defense
+	"real defenses" : "red", #
+	"true_defense" : 1.0, #only changed through race and subclass, effects all damage
+	"generic_defense" : 1.0,
+	"stab_defense" : 1.0,
+	"slash_defense" : 1.0,
+	"blunt_defense" : 1.0,
+	"fire_defense" : 1.0,
+	"ice_defense" : 1.0,
+	"toxic_defense" : 1.0,
+	"explosion_defense" : 1.0,
+	"magic_defense" : 1.0,
+	"lightning_defense" : 1.0,
+	"holy_defense" : 1.0,
+	"blight_defense" : 1.0
+	#
+}
+
+const max_attributes = {
+	##movement
+	#ground
+	"speed" : 10.0,
+	"speed_multiplier" : 3.0,
+	"jump_velocity" : 50.0,
+	"air_acceleration": 50.0,
+	"flying_speed" : 50.0,
+	"flying_control" : 50.0,
+	"max_health" : 500.0,
+	"max_mana" : 500.0,
+	"mana_regen_speed" : 100.0,
+	"max_stamina" : 500.0,
+	"stamina_regen_speed": 100.0,
+	"strength" : 100.0,
+	#"size" : 2.0, default is expert, just dont messa round with this too much because kinda wacky :/
+	"defense_head" : 1000.0,
+	"defense_torso" : 1000.0,
+	"defense_arms" : 1000.0,
+	"defense_handL" : 1000.0,
+	"defense_handR" : 1000.0,
+	"defense_legs" : 1000.0,
+	"defense_footR" : 1000.0,
+	"defense_footL" : 1000.0,
+	"true_defense" : 1000.0, #only changed through race and subclass, effects all damage
+	"generic_defense" : 1000.0,
+	"stab_defense" : 1000.0,
+	"slash_defense" : 1000.0,
+	"blunt_defense" : 1000.0,
+	"fire_defense" : 1000.0,
+	"ice_defense" : 1000.0,
+	"toxic_defense" : 1000.0,
+	"explosion_defense" : 1000.0,
+	"magic_defense" : 1000.0,
+	"lightning_defense" : 1000.0,
+	"holy_defense" : 1000.0,
+	"blight_defense" : 1000.0
+}
+
+enum enchantments {
+	resilience, #improves all defensive attributes by small amounts
+	advanced_resiliance, #better resiliance resiliance
+	desolation, #applies blight and increases damage attributes decreases defensive effects
+	mastery, #improves everything by a little bit
+	advanced_mastery, #better mastery
+	perfect_mastery, #better better mastery
+	weightless, #removes movement debuffs and knockback resistance if applicable #weightlessness?
+	density, #increases movment debuffs and knockback resistance if applicable
+	swiftness, #increases attack speed and all ground movement speed
+}
+
+const enchantment_names = [
+	"𐰓𐰏𐰇", #"resilience", #improves all defensive attributes by small amounts
+	#"𐰋𐰓𐰜 𐰓𐰏𐰇", #better resiliance
+	"𐰑𐰨𐰃𐰍 𐰓𐰏𐰇", #best resiliance
+	"𐰪𐰃𐰍", #"desolation", bad/evil, #applies blight and increases damage attributes decreases defensive effects
+	"𐰋𐰓𐰜", #big powerful great "mastery", #improves everything by a little bit
+	"𐰑𐰨𐰃𐰍 𐰋𐰓𐰜", #better mastery
+	"𐰋𐰭𐰏𐰇", #eternal, #"perfect_mastery", #better better mastery
+	"𐰚𐰃𐰲𐰏", #small little young, #"weightless", #removes movement debuffs and knockback resistance if applicable #weightlessness?
+	"𐰖𐰆𐰍𐰣", # #"𐰍𐰺",# dense thick tough, density", #increases movment debuffs and knockback resistance if applicable
+	"𐱆𐰕𐰃𐰐", #"swiftness",
+	"𐰃𐰑𐰸", #holy or blessing, adds holy damage or blight defense
+	"𐰑𐰨𐰃𐰍 𐰃𐰑𐰸", #better holy
+]
+
+const enchantment_colors = [
+	Color.ROYAL_BLUE, #improves all defensive attributes by small amounts
+	Color.ROYAL_BLUE, #better resilience
+	Color.INDIGO, #applies blight and increases damage attributes decreases defensive effects
+	Color.CRIMSON, #improves everything by a little bit
+	Color.CRIMSON, #better mastery
+	Color.CRIMSON, #better better mastery
+	Color.AQUAMARINE, #removes movement debuffs and knockback resistance if applicable #weightlessness?
+	Color.MIDNIGHT_BLUE, #increases movment debuffs and knockback resistance if applicable
+	Color.PALE_TURQUOISE,
+	Color.GOLD,
+	Color.GOLDENROD,
+]
+
+const good_enchantments =[
+	enchantments.advanced_resiliance,
+	enchantments.advanced_mastery,
+	enchantments.weightless
+]
+
+const godly_enchantments =[
+	enchantments.perfect_mastery,
+	enchantments.swiftness
+]
+
+const evil_enchantments = [
+	enchantments.desolation
+]

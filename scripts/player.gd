@@ -21,20 +21,27 @@ var idle_anim_key = "idle"
 
 ## accessories and weapons
 var attributes = {
+	##vision
+	"dark_vision" : 0.0,
+	##movement
+	#ground
 	"speed" : 3.0,
 	"speed_multiplier" : 1.0,
+	"jump_velocity" : 6.0,
+	"air_acceleration": 1.0,
+	#air
+	"can_fly" : false,
 	"flying_speed" : 5.0,
 	"flying_control" : 1.0,
 	"flying_can_glide" : false,
 	"flying_can_hover" : false,
+	##bars and such
 	"max_health" : 10.0,
 	"max_mana" : 10.0,
 	"max_stamina" : 10.0,
 	"mana_regen_speed" : 1.0,
 	"stamina_regen_speed": 1.0,
-	"jump_velocity" : 6.0,
-	"can_fly" : false,
-	"air_acceleration": 1.0,
+	##physical enhancements
 	"strength" : 1.0,
 	"size" : 1.0,
 	##defenses
@@ -64,24 +71,36 @@ var attributes = {
 	#
 }
 const base_attributes = {
+	##vision
+	"dark_vision" : 0.0,
+	##movement
+	#ground
+	"movement ground" : "break",#
 	"speed" : 3.0,
 	"speed_multiplier" : 1.0,
-	"flying_speed" : 5.0,
-	"flying_control" : 1.0,
+	"jump_velocity" : 6.0,
+	"air_acceleration": 1.0,
+	#air
+	"movement air" : "break",#
+	"can_fly" : false,
 	"flying_can_glide" : false,
 	"flying_can_hover" : false,
+	"flying_speed" : 5.0,
+	"flying_control" : 1.0,
+	##bars and such
+	"resiliance" : "break", #
 	"max_health" : 10.0,
 	"max_mana" : 10.0,
-	"max_stamina" : 10.0,
 	"mana_regen_speed" : 1.0,
+	"max_stamina" : 10.0,
 	"stamina_regen_speed": 1.0,
-	"jump_velocity" : 6.0,
-	"can_fly" : false,
-	"air_acceleration": 1.0,
+	##physical enhancements
+	"combat strength" : "break", #
 	"strength" : 1.0,
 	"size" : 1.0,
 	##defenses
 	#localized_generic_defense
+	"localized defenses" : "break", #
 	"defense_head" : 1.0,
 	"defense_torso" : 1.0,
 	"defense_arms" : 1.0,
@@ -91,6 +110,7 @@ const base_attributes = {
 	"defense_footR" : 1.0,
 	"defense_footL" : 1.0,
 	#real_defense
+	"real defenses" : "break", #
 	"true_defense" : 1.0, #only changed through race and subclass, effects all damage
 	"generic_defense" : 1.0,
 	"stab_defense" : 1.0,
@@ -118,6 +138,7 @@ func update_accessories():
 	update_attribute_graphics()
 	update_attribute_graphics.rpc(attributes["size"])
 
+var last_mh_c_l:float = 1.0 #max health changed level idk man
 func update_stats_from_accessories():
 	set_stats_to_default()
 	var applied_bonuses = []
@@ -149,7 +170,13 @@ func update_stats_from_accessories():
 									attributes[sbk] = sb_data[1][sbk]
 								else:
 									attributes[sbk] += sb_data[1][sbk]
+	for k in attributes.keys(): #applies a cap on some attributes because yes
+		if Lookup.max_attributes.has(k):
+			if attributes[k] > Lookup.max_attributes[k]:
+				attributes[k] = Lookup.max_attributes[k]
+	health = attributes["max_health"]*last_mh_c_l #no infinite health for you :3
 	update_health_graphics()
+	Global.emit_signal("update_attributes", attributes)
 	pass
 
 
@@ -229,6 +256,14 @@ func update_anims_from_item_type(type):
 			walk_anim_key = "walk_weapon"
 			idle_anim_key = "idle_weapon"
 			play_arm_anim("draw_weapon")
+		Lookup.itemType.weapons_spear:
+			walk_anim_key = "walk_staff"
+			idle_anim_key = "idle_staff"
+			play_arm_anim("draw_staff")
+		Lookup.itemType.weapons_glaive:
+			walk_anim_key = "walk_weapon"
+			idle_anim_key = "idle_staff"
+			play_arm_anim("draw_weapon")
 		_:
 			walk_anim_key = "walk"
 			idle_anim_key = "idle"
@@ -250,6 +285,9 @@ func update_held_item_graphics(model_path, enchanted = false, enchanted_col = Co
 	if mf.has_method("enable_item_mode"):
 		mf.enable_item_mode()
 		mt.enable_item_mode()
+	if mf is MeshInstance3D:
+		mf.set_layer_mask_value(1,true)
+		mf.set_layer_mask_value(2,true)
 	if enchanted and mf is MeshInstance3D:
 		var mat = mf.get_active_material(0).duplicate()
 		mat.set("shader_parameter/enchanted_col", enchanted_col)
@@ -313,6 +351,7 @@ func update_attribute_graphics(s = attributes["size"]):
 	pass
 
 func set_stats_to_default():
+	last_mh_c_l = health / attributes["max_health"]
 	attributes = base_attributes.duplicate(true)
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -343,6 +382,8 @@ func _ready():
 	if !is_multiplayer_authority():
 		request_cosmetics.rpc()
 		return
+	get_viewport().connect("size_changed",_on_screen_resized)
+	_on_screen_resized() #make sure verything works fine
 	avatar.visible = false
 	tp_item_handler.hide()
 	settup_team_hurtboxes(true)
@@ -375,7 +416,7 @@ func settup_team_hurtboxes(is_team):
 	pass
 
 func _on_world_load():
-	tp(Vector3.ZERO,Vector3.ZERO)
+	tp(Vector3.ZERO,0.0)
 
 var jump_buffer = 0.0
 func _input(event):
@@ -415,6 +456,9 @@ func _input(event):
 			play_arm_anim("")
 	if Input.is_action_just_pressed("interact"):
 		attempt_to_interact()
+		#interacting = true
+	elif Input.is_action_just_released("interact"):
+		stop_interacting()
 	if Input.is_action_just_pressed("lm"):
 		_on_left_mouse()
 	if Input.is_action_just_pressed("rm"):
@@ -497,7 +541,21 @@ func _input(event):
 		die(display_name, "perish", "",Vector3(0.0,1.0,0.0))
 	if Input.is_action_just_pressed("respawn"):
 		respawn()
+	if Input.is_action_just_pressed("debugMisc"):
+		create_after_image(velocity)
+		create_after_image.rpc(velocity)
 
+@rpc("any_peer","unreliable")
+func create_after_image(vel = Vector3.ZERO, pos = position, lightness = 0.0):
+	var af_im = load("res://assets/avatar/player_after_image.tscn").instantiate()
+	var pose = avatar.get_pose()
+	af_im.starting_fade = lightness
+	get_parent().add_child(af_im)
+	af_im.position = pos
+	af_im.rotation = rotation
+	af_im.rotation.y = graphics.rotation.y + PI + body.rotation.y
+	af_im.apply_pose(pose)
+	af_im.initial_vel = vel*0.1
 
 func set_flying(val):
 	if flying == val:
@@ -522,10 +580,14 @@ func get_non_clipped_look_reference() -> Vector3:
 		return look_reference.global_position
 
 func jump():
+	is_climbing_ladder = false
 	jump_buffer = 0.0
 	jumped_last_frame = true
 	play_footstep()
-	velocity.y = attributes["jump_velocity"]
+	if sprinting:
+		velocity.y = attributes["jump_velocity"]
+	else:
+		velocity.y = clamp(attributes["jump_velocity"],0.0,base_attributes["jump_velocity"]*2.0)
 	avatar.walk_tilt = 0.0
 	avatar.animation_speed = 4.0
 
@@ -536,10 +598,12 @@ var airborn = false
 var last_y_velocity = 0.0
 var jumped_last_frame = false
 var vel_last_frame = Vector3.ZERO
+var after_image_pos = Vector3.ZERO
+var after_image_this_frame = false
+var after_image_buffer = 0
 func _physics_process(delta):
 	if !is_multiplayer_authority():
 		return
-	
 	if head_bonk.is_colliding():
 		crouching = true
 	else:
@@ -549,12 +613,14 @@ func _physics_process(delta):
 	
 	hands.position = lerp(hands.position, bobHandler.position, delta*64.0)
 	hands.rotation = Global.vec3_rot_lerp(hands.rotation, bobHandler.rotation, delta*32.0)
-	
+	if is_climbing_ladder:
+		climbing_ladder(delta) #nice
+		return
 	
 	if position.y < -200.0:
 		position = Vector3.ZERO
 	# Add the gravity.
-	if not is_on_floor():
+	if not is_on_floor() and not _snapped_to_stairs_last_frame:
 		jumped_last_frame = false
 		avatar.animation_speed = lerp(avatar.animation_speed, 0.25*attributes["speed_multiplier"], delta*40.0)
 		last_y_velocity = velocity.y
@@ -568,6 +634,14 @@ func _physics_process(delta):
 			jump_buffer -= delta
 			if jump_buffer < 0.0:
 				jump_buffer = 0.0
+		#head bonk damage
+		if is_on_wall() or is_on_ceiling():
+			var mult = (vel_last_frame.length()-velocity.length())/9.8
+			var d = int(pow(mult,2.0))
+			if d > 0:
+				damage([[3,d]],"physics_damage","", "",-vel_last_frame*0.1,false)
+				heavy_impact()
+				heavy_impact.rpc()
 	else:
 		set_flying(false)
 		if jump_buffer > 0.0:
@@ -580,11 +654,12 @@ func _physics_process(delta):
 			avatar.crouching += abs(last_y_velocity/9.8)*0.25
 			var mult = (-last_y_velocity/9.8)*0.9
 			var d = int(pow(mult,3.0))
+			d = d / (attributes["jump_velocity"] * 0.16666666) #idk why but doing division with a constant feels illigal
 			if d > 0:
 				damage([[3,d]],"fall_damage","", "",Vector3(0.0,last_y_velocity,0.0),false)
-				if d > 3:
-					heavy_impact()
-					heavy_impact.rpc()
+				#if d > 3:
+				heavy_impact()
+				heavy_impact.rpc()
 			#avatar.walk_tilt += abs(last_y_velocity/9.8)*0.25
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
@@ -690,6 +765,22 @@ func _physics_process(delta):
 	avatar.walk_tilt = lerp(avatar.walk_tilt, 0.15, delta*8.0)
 	bobbing(delta, true_speed, input_dir)
 	avoid_close_entities(delta)
+	#after images
+	if after_image_this_frame:
+			var lightness = 1.0 / ((after_image_buffer + 1)*2.0)
+			create_after_image(velocity,after_image_pos,lightness)
+			create_after_image.rpc(velocity,after_image_pos,lightness)
+			after_image_buffer -= 1
+			after_image_pos = position
+			if after_image_buffer < 0:
+				after_image_this_frame = false
+				after_image_buffer = 0
+	if velocity.length() > speed_cap*0.25:
+		if velocity.length() > vel_last_frame.length()*1.25:# or velocity.dot(vel_last_frame) < 0.75:
+			after_image_this_frame = true
+			after_image_buffer = 10
+			after_image_pos = position
+	
 	vel_last_frame = velocity
 	if not snap_up_to_stairs_check(delta):
 		move_and_slide()
@@ -702,9 +793,58 @@ func _physics_process(delta):
 	var speed_fov_effect = Settings.user_settings["speed_fov_effect"]
 	camera.fov = lerp(desired_fov,desired_fov+speed_fov_effect,speed_appeal)
 	Global.set_post("shader_parameter/action_lines",speed_appeal)
-	$genericAudio/movement_wind.volume_db = remap(speed_appeal,0.0,1.0,-80.0,0.0)
+	$genericAudio/movement_wind.volume_db = remap(speed_appeal,0.0,1.0,-80.0,-15.0)
 	update_shadow()
 	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting)
+	$UI/second_pass/SubViewport/second_pass.global_transform = camera.global_transform
+	$UI/second_pass/SubViewport/second_pass.fov = camera.fov
+
+func climbing_ladder(delta):
+	set_flying(false)
+	velocity = Vector3.ZERO
+	position.x = ladder_pos.x
+	position.z = ladder_pos.y
+	
+	graphics.rotation.y = clamp(graphics.rotation.y,ladder_facing-PI*0.25,ladder_facing+PI*0.25)
+	avatar.animation_speed = 1.0
+	avatar.animation_state = "idle"
+	if Input.is_action_just_pressed("jump"):
+		is_climbing_ladder = false
+		jump()
+		return
+	elif Input.is_action_just_pressed("crouch"):
+		is_climbing_ladder = false
+		velocity.y = -2.0
+		#escape
+		return
+	if Input.is_action_pressed("up"):
+		position.y += delta*2.0
+	elif Input.is_action_pressed("down"):
+		position.y -= delta*2.0
+	if position.y < ladder_height.x:
+		#below ladder
+		is_climbing_ladder = false
+		pass
+	elif position.y > ladder_height.y:
+		#above ladder
+		is_climbing_ladder = false
+		#jump() feel bad
+		velocity.y = 2.0 #feel good
+		pass
+	var vel_length = velocity.length()
+	if vel_length > speed_cap:
+		velocity = speed_cap * velocity.normalized() #keeps you from going into orbit :3
+	speed_appeal = lerp(speed_appeal,velocity.length()/speed_cap,delta*8.0)#Vector2(velocity.x,velocity.z).length()/speed_cap
+	var desired_fov = Settings.user_settings["desired_fov"]
+	var speed_fov_effect = Settings.user_settings["speed_fov_effect"]
+	camera.fov = lerp(desired_fov,desired_fov+speed_fov_effect,speed_appeal)
+	Global.set_post("shader_parameter/action_lines",speed_appeal)
+	$genericAudio/movement_wind.volume_db = remap(speed_appeal,0.0,1.0,-80.0,-15.0)
+	update_shadow()
+	sync_information.rpc(position, graphics.rotation.y, body.rotation.y,avatar.animation_state, avatar.walk_speed, avatar.animation_speed, avatar.crouching, avatar.head_angle, avatar.falling, avatar.walk_angle, avatar.walk_tilt,avatar.resist_dir,dust_particles.emitting)
+	$UI/second_pass/SubViewport/second_pass.global_transform = camera.global_transform
+	$UI/second_pass/SubViewport/second_pass.fov = camera.fov
+	pass
 
 @onready var shadow = $playerAvatar/projected_shadow/shadow
 @onready var shadow_mat = shadow.get_active_material(0)
@@ -830,6 +970,17 @@ func update_velocity_flying(delta):
 		damage([[Lookup.damageType.blunt, d]],"fall_damage","", "",Vector3(0.0,last_y_velocity,0.0))
 	avatar.animation_state = "fly"
 	if attributes["flying_can_hover"]:
+		if attributes["flying_can_glide"]: #bootleg ability to glide while can hover
+			if Input.is_action_pressed("jump") and Input.is_action_pressed("crouch"):
+				velocity.y -= gravity * delta
+				update_velocity_gliding(delta*1.0) #glide
+				stamina -= delta*0.05
+				body.rotation.y = lerp(body.rotation.y, 0.0, delta*4.0)
+				avatar.head_angle.y = -body.rotation.y
+				cameraHandler.rotation.z = -body.rotation.y*speed_appeal*0.4*Settings.user_settings["flying_tilt_power"]
+				if Input.is_action_pressed("up"):
+					velocity += get_look_dir() * attributes["flying_speed"] * delta
+				return
 		var input_vertical = Input.get_vector("crouch", "jump", "up", "down")
 		var input_flat = Input.get_vector("left", "right", "up", "down")
 		var f_s = attributes["flying_speed"]
@@ -1103,6 +1254,7 @@ func sync_information(pos: Vector3, rot: float, rotB: float, anim_state: String,
 	avatar.animation_speed = AnimS
 	avatar.crouching = C
 	avatar.head_angle = HA
+	cameraHandler.rotation.x = HA.y #only needed for hitbox graphics
 	avatar.falling = F
 	avatar.walk_angle = A
 	avatar.walk_tilt = T
@@ -1111,8 +1263,11 @@ func sync_information(pos: Vector3, rot: float, rotB: float, anim_state: String,
 	update_shadow()
 	pass
 
+var cosmetics_data = [] #loads for everything regardless of local or remote
+
 @rpc("any_peer", "reliable")
 func sync_cosmetics(skin, t: Array, dn: String):
+	cosmetics_data = [skin,t]
 	avatar.set_display_name(dn)
 	display_name = dn
 	var skin_img = Global.data_to_image(skin)
@@ -1150,6 +1305,17 @@ func load_skin_hands(slim, img):
 	arm_1_R.get_child(0,true).set_surface_override_material(0,tran_mat)
 	arm_2_R.set_surface_override_material(0,mat)
 	arm_2_R.get_child(0,true).set_surface_override_material(0,tran_mat)
+	
+	arm_1_R.set_layer_mask_value(1,false)
+	arm_1_R.set_layer_mask_value(2,true)
+	arm_2_R.set_layer_mask_value(1,false)
+	arm_2_R.set_layer_mask_value(2,true)
+	
+	arm_1_R.get_child(0).set_layer_mask_value(1,false)
+	arm_1_R.get_child(0).set_layer_mask_value(2,true)
+	arm_2_R.get_child(0).set_layer_mask_value(1,false)
+	arm_2_R.get_child(0).set_layer_mask_value(2,true)
+	
 	handR.get_child(0).add_child(arm_1_R)
 	elbowR.get_child(0).add_child(arm_2_R)
 	arm_1_R.position = Vector3.ZERO
@@ -1161,6 +1327,9 @@ func load_skin_hands(slim, img):
 	#for i in h_m_slim:
 		#hands_meshes[i].visible = slim
 
+func _on_screen_resized():
+	$UI/second_pass/SubViewport.size = DisplayServer.window_get_size()
+	print($UI/second_pass/SubViewport.size)
 
 @rpc("any_peer","reliable")
 func request_cosmetics() -> void:
@@ -1192,7 +1361,7 @@ func despawn():
 	queue_free()
 
 @rpc("any_peer","reliable")
-func tp(pos : Vector3, rot = graphics.rotation.y):
+func tp(pos : Vector3, rot: float = graphics.rotation.y):
 	global_position = pos
 	graphics.rotation.y = rot
 
@@ -1200,8 +1369,11 @@ var last_attacker = ""
 var last_attack_forget = 20.0
 var last_attack_forget_timer = 0.0
 
+@onready var blood_decal = preload("res://assets/effects/blood_decal.tscn")
 @onready var hitmarker = preload("res://assets/effects/hitmarker.tscn")
 func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, count_attacker = false):
+	if !is_multiplayer_authority():
+		return
 	#print(attacker + " hit " + display_name + " with " + str(data) + " damage in the " + id)
 	if count_attacker:# and attacker != "":
 		last_attack_forget_timer = last_attack_forget
@@ -1214,12 +1386,12 @@ func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, coun
 		var d = i
 		var total = 0.0
 		var a = attributes
-		var h = hitmarker.instantiate()
-		h.val = d[1]
-		h.type = d[0]
-		h.position = position
-		h.position.y += 0.65
-		get_parent().add_child(h)
+		#var h = hitmarker.instantiate()
+		#h.val = d[1]
+		#h.type = d[0]
+		#h.position = position
+		#h.position.y += 0.65
+		#get_parent().add_child(h)
 		match d[0]:# d = [damage_type, amount]
 			Lookup.damageType.generic: #applies defense stuff
 				total += d[1] / (a["generic_defense"]*a["true_defense"])
@@ -1255,8 +1427,24 @@ func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, coun
 	if limb_key_to_defense.has(id):
 		amount = amount / attributes[limb_key_to_defense[id]] #applies local defense to whole damage value based on key
 	health -= amount
-	if !is_multiplayer_authority():
-		return
+	
+	var h = hitmarker.instantiate()
+	h.val = amount
+	h.type = primary_damage_type
+	h.position = position
+	h.position.y += 0.65
+	get_parent().add_child(h)
+	
+	if is_on_floor() or is_on_wall():
+		var col = get_last_slide_collision()
+		if col != null: #yeah idk man had it happen once so why not
+			var norm = col.get_normal(0)
+			var poi = col.get_position(0)
+			add_blood(norm,poi)
+			add_blood.rpc(norm,poi)
+	
+	add_hitmarker.rpc(amount,primary_damage_type) #now everyone knows :D
+	
 	velocity += knockback
 	if health <= 0:
 		var key = id
@@ -1271,9 +1459,31 @@ func damage(data, id, attacker, weapon_name = "", knockback = Vector3.ZERO, coun
 		pass
 	update_health_graphics()
 
+@rpc("any_peer")
+func add_hitmarker(val,type):
+	var h = hitmarker.instantiate()
+	h.val = val
+	h.type = type
+	h.position = position
+	h.position.y += 0.65
+	get_parent().add_child(h)
+
+@rpc("any_peer")
+func add_blood(norm,poi):
+	var b = blood_decal.instantiate()
+	b.unlimited_life_time = true
+	$blood_handler.add_child(b)
+	b.global_position = poi + norm*0.01
+	var rot_y = atan2(norm.x,norm.z)
+	var rot_x = atan2(sqrt(pow(norm.x,2.0)+pow(norm.z,2.0)),norm.y)
+	b.rotation.y = rot_y
+	b.rotation.x = rot_x
+	if $blood_handler.get_child_count(false) > 256:
+		$blood_handler.get_child(0).queue_free()
+
 func set_damaged(val):
 	var sined_val = (sin(val.x*PI)+1.0)*0.5*val.y
-	print("set_damaged " + str(sined_val))
+	#print("set_damaged " + str(sined_val))
 	Global.set_post("shader_parameter/damaged", (sined_val))
 	set_damaged_third_person(sined_val)
 	set_damaged_third_person.rpc(sined_val)
@@ -1300,13 +1510,22 @@ const fall_damage_messages = [
 	" fell down the stairs",
 	" tripped"
 ]
+const physics_damage_messages = [ #should be funny lmao
+	" was thrown violently against a wall",
+	" had all of their bones shattered",
+	" got their head slammed into the wall", #these first three have to be able to have -by player added to them
+	" hit a wall quite forcefully",
+	" broke every single one of their bones",
+	" violently cracked their skull"
+]
 
 const perish_messages = [
 	" bid farewell cruel world",
 	" died instantly",
 	" perished",
 	" alt+f4",
-	" shuffled off this mortal coil"
+	" shuffled off this mortal coil",
+	
 ]
 
 const damage_types_verbs = [
@@ -1318,7 +1537,10 @@ const damage_types_verbs = [
 	["froze"],
 	["poisoned"],
 	["exploded", "dismembered", "disfigured"],
-	["cursed"]
+	["cursed"],
+	["electrocuted", "shocked", "disintegrate"],
+	["blessed","sanctified","purified"],
+	["defiled","currupted","tainted","corroded"]
 ]
 
 const key_nicknames = {
@@ -1343,61 +1565,75 @@ const key_nicknames = {
 	#toxic,
 	#explosion,
 	#magic,
+	
+	#lightning,
+	#holy,
+	#blight
 
 signal died
 @onready var corpse = preload("res://entities/ragdolls/player_corpse.tscn")
+@rpc("any_peer","reliable") #for the funny cool stuff like petrification
 func die(attacker = "", key = "", weapon_name = "", add_vel = Vector3.ZERO, damage_id = 0):
+	if !is_multiplayer_authority():
+		ghost = true #for the creatures
+		return
 	clear_status_effects = true
 	print(attacker)
 	print(last_attacker)
 	Global.emit_signal("player_death")
 	health = attributes["max_health"]
-	match key: #died to natrual causes
-		"fall_damage" : 
-			if attacker == "":
-				if last_attacker == "": #died natrually
-					Global.print_chat((display_name + fall_damage_messages.pick_random()), "red")
-				else:#died to natrual causes while fighting attacker
-					Global.print_chat((display_name + fall_damage_messages.pick_random()) + " while running from " + last_attacker, "red")
-			else:
-				Global.print_chat((display_name + fall_damage_messages.pick_random()) + " while running from " + last_attacker, "red")
-		"perish": 
-			if attacker == "":
-				if last_attacker == "": #died natrually
-					Global.print_chat((display_name + perish_messages.pick_random()), "red")
-				else:#died to natrual causes while fighting attacker
-					Global.print_chat((display_name + perish_messages.pick_random()) + " while fighting " + last_attacker, "red")
-			else:
-				Global.print_chat((display_name + perish_messages.pick_random()) + " while fighting " + last_attacker, "red")
-			pass
-		_:
-			if !key_nicknames.has(key):
-				if last_attacker != "":
-					Global.print_chat(display_name + " died to " + key + " " + weapon_name + " while fighting " + last_attacker, "red")
-				else:
-					Global.print_chat(display_name + " died to " + key + " " + weapon_name, "red")
-				pass
-			elif attacker == "":
-				if last_attacker == "":
-					#natrual
-					Global.print_chat(display_name + " got their " + key_nicknames[key].pick_random() + damage_types_verbs[damage_id].pick_random(), "red")
-				else:
-					Global.print_chat(display_name + " got their " + key_nicknames[key].pick_random() + damage_types_verbs[damage_id].pick_random() + " while fighting " + last_attacker, "red")
-					#natrual while fighting
-					pass
-			else:
-				Global.print_chat(display_name + " was " + damage_types_verbs[damage_id].pick_random() + " in the " + key_nicknames[key].pick_random() + " by " + attacker, "red")
-				#fighting
-				pass
+	if attacker == "":
+		attacker = last_attacker
+	Global.print_chat(get_death_message(attacker,key,weapon_name,damage_id), "red")
+	#match key: #died to natrual causes
+		#"fall_damage" : 
+			#if attacker == "":
+				#if last_attacker == "": #died natrually
+					#Global.print_chat((display_name + fall_damage_messages.pick_random()), "red")
+				#else:#died to natrual causes while fighting attacker
+					#Global.print_chat((display_name + fall_damage_messages.pick_random()) + " while running from " + last_attacker, "red")
+			#else:
+				#Global.print_chat((display_name + fall_damage_messages.pick_random()) + " while running from " + last_attacker, "red")
+		#"perish": 
+			#if attacker == "":
+				#if last_attacker == "": #died natrually
+					#Global.print_chat((display_name + perish_messages.pick_random()), "red")
+				#else:#died to natrual causes while fighting attacker
+					#Global.print_chat((display_name + perish_messages.pick_random()) + " while fighting " + last_attacker, "red")
+			#else:
+				#Global.print_chat((display_name + perish_messages.pick_random()) + " while fighting " + last_attacker, "red")
+			#pass
+		#_:
+			#if !key_nicknames.has(key):
+				#if last_attacker != "":
+					#Global.print_chat(display_name + " died to " + key + " " + weapon_name + " while fighting " + last_attacker, "red")
+				#else:
+					#Global.print_chat(display_name + " died to " + key + " " + weapon_name, "red")
+				#pass
+			#elif attacker == "":
+				#if last_attacker == "":
+					##natrual
+					#Global.print_chat(display_name + " got their " + key_nicknames[key].pick_random() + damage_types_verbs[damage_id].pick_random(), "red")
+				#else:
+					#Global.print_chat(display_name + " got their " + key_nicknames[key].pick_random() + damage_types_verbs[damage_id].pick_random() + " while fighting " + last_attacker, "red")
+					##natrual while fighting
+					#pass
+			#else:
+				#Global.print_chat(display_name + " was " + damage_types_verbs[damage_id].pick_random() + " in the " + key_nicknames[key].pick_random() + " by " + attacker, "red")
+				##fighting
+				#pass
 		#"head" : 
 	if !is_multiplayer_authority():
 		await  get_tree().process_frame
-		emit_signal("died")
+		#emit_signal("died") #phantom signal will do this after the other calls are made
 		return
 	update_health_graphics()
-	create_ragdoll.rpc(add_vel, position, graphics.rotation.y, velocity,Inventory.accessories)
-	await create_ragdoll(add_vel, position, graphics.rotation.y, velocity,Inventory.accessories)
-	#await get_tree().process_frame
+	#create_ragdoll.rpc(add_vel, position, graphics.rotation.y, velocity,Inventory.accessories)
+	#await create_ragdoll(add_vel, position, graphics.rotation.y, velocity,Inventory.accessories)
+	#add_vel,pos,rot,vel,acc,key = "", damage_id = 0
+	create_appropriate_corpse(add_vel,position,graphics.rotation.y,velocity,Inventory.accessories,key,damage_id)
+	create_appropriate_corpse.rpc(add_vel,position,graphics.rotation.y,velocity,Inventory.accessories,key,damage_id)
+	await get_tree().process_frame
 	update_status_effect_graphics({})
 	update_status_effect_graphics.rpc({})
 	set_ghost(true)
@@ -1409,18 +1645,68 @@ func die(attacker = "", key = "", weapon_name = "", add_vel = Vector3.ZERO, dama
 	Inventory.drop_all(position)
 	#tp(Vector3.ZERO,0.0)
 
+func get_death_message(attacker = "", key = "", weapon_name = "", damage_id = 0) -> String:
+	var message = ""
+	match key:
+		"fall_damage":
+			message = display_name + fall_damage_messages.pick_random()
+			if attacker != "":
+				message = display_name + " was pushed off cliff by " + attacker
+		"physics_damage":
+			message = display_name + physics_damage_messages.pick_random()
+			if attacker != "":
+				message = display_name + physics_damage_messages[randi_range(0,2)] + " by " + attacker
+		"perish":
+			message = display_name + perish_messages.pick_random()
+			if attacker != "":
+				message += " while fighting " + attacker
+		"petrification":
+			message = display_name + " was turned to stone"
+			if attacker != "":
+				message += " by " + attacker
+		"status_effect":
+			match damage_id:
+				Lookup.damageType.fire:
+					message = display_name + " went up in flames"
+				Lookup.damageType.blight:
+					message = display_name + " wasted away"
+				Lookup.damageType.toxic:
+					message = display_name + " choked on poison"
+				Lookup.damageType.holy:
+					message = display_name + " was purged"
+				Lookup.damageType.magic:
+					message = display_name + " fell to a hex"
+			if attacker != "":
+				message += " while fighting " + attacker
+		_:
+			if attacker == "":
+				message = display_name + " got " + damage_types_verbs[damage_id].pick_random()
+			else:
+				message = display_name + " was " + damage_types_verbs[damage_id].pick_random() + " by " + attacker
+	return message
+
+@rpc("any_peer","reliable")
+func create_appropriate_corpse(add_vel,pos,rot,vel,acc,key = "", damage_id = 0) -> void:
+	match key:
+		"petrification":
+			create_petrification_statue(pos,rot)
+		_:
+			create_ragdoll(add_vel,pos,rot,vel,acc)
+
 @rpc("unreliable","call_remote")
 func phantom_signal(signal_key : String): #sick ass function name
 	emit_signal(signal_key)
 
 @rpc("any_peer", "reliable")
 func set_ghost(val):
+	ghost = val
 	print("set_ghost")
 	$ghostParticles.emitting = val
 	voip.set_ghostly(val)
 	avatar.set_ghost(val)
-	set_collision_layer_value(3, !val)
-	set_collision_mask_value(1, !val)
+	#set_collision_layer_value(3, !val)
+	#set_collision_mask_value(1, !val)
+	#we want collision now no more flying through stuff because of room system
 	if val:
 		avatar.set_eye_param("blend_mode", 1)
 		avatar.set_mouth_param("blend_mode", 1)
@@ -1434,18 +1720,19 @@ func set_ghost(val):
 		handR.get_child(0).get_child(0).get_active_material(0).set("blend_mode", 0)
 		handR.get_child(0).get_child(0).get_child(0,true).get_active_material(0).set("blend_mode", 0)
 	set_invulnerable(val)
-	ghost = val
 	print("set_ghost2")
 	if !is_multiplayer_authority():
 		$playerAvatar/genericAvatar/root/chestBase/neck/nameTag.visible = !val
 		return
 	if val:
-		print("set_ghost_perspective")
-		set_perspective(3)
-		forced_perspective = true
-	else:
-		set_perspective(desired_perspective)
-		forced_perspective = false
+		#print("set_ghost_perspective")
+		velocity -= get_look_dir() * 4.0 #push you back a bit so it feels like you left body
+		#set_perspective(3)
+		#forced_perspective = true
+		#no longer forced because it feels bad
+	#else:
+		#set_perspective(desired_perspective)
+		#forced_perspective = false
 	update_health_graphics()
 
 func set_invulnerable(val):
@@ -1465,19 +1752,51 @@ func respawn(pos = position):
 	update_health_graphics()
 
 @rpc("any_peer","reliable")
+func reset_all(): #like it was all a bad dream
+	print("reset all")
+	respawn(Vector3.ZERO)
+	leave_no_trace()
+
+func leave_no_trace() -> void: #cleans up all blood and bodies
+	print("left no trace")
+	for c in $ragdollHandler.get_children(false):
+		c.queue_free()
+	for b in $blood_handler.get_children(false):
+		b.queue_free()
+
+@rpc("any_peer","reliable")
 func create_ragdoll(add_vel,pos,rot,vel,acc):
+	if $ragdollHandler.get_child_count(false) > 8:
+		$ragdollHandler.get_child(0).queue_free()
+	#makes sure there is never a truly unholy amount of ragdolls
 	var c = corpse.instantiate()
 	await get_tree().physics_frame
 	c.rotation.y = rot
 	c.position = pos
 	c.accessories = acc
-	get_parent().add_child(c)
+	c.connect("blood_decal",add_blood) #allows player to handle blood seperately
+	$ragdollHandler.add_child(c)
 	var mat = avatar.base_skin_mat.duplicate()#meshes[1].get_active_material(0).duplicate()
 	#mat.set("blend_mode", 0)
 	c.load_skin(mat,avatar.is_slim)
 	c.activate("", vel+add_vel, Vector3(0.0,5.0,0.0))
 	return true
 
+func create_petrification_statue(pos:Vector3,rot:float)-> void:
+	if $ragdollHandler.get_child_count(false) > 8:
+		$ragdollHandler.get_child(0).queue_free()
+	#makes sure there is never a truly unholy amount of ragdolls
+	var c = load("res://entities/ragdolls/petrified_player_corpse.tscn").instantiate()
+	c.rotation.y = rot
+	c.position = pos
+	#->stone does not bleed
+	#c.connect("blood_decal",add_blood) #allows player to handle blood seperately
+	$ragdollHandler.add_child(c)
+	var mat = avatar.base_skin_mat.duplicate()
+	#mat.set("blend_mode", 0)
+	#c.set_mat(mat)
+	c.load_skin(cosmetics_data)
+	c.set_pose(avatar.get_pose()) #:3
 
 @onready var hurtboxes = [
 	$playerAvatar/genericAvatar/root/chestBase/hip_L/knee_L/hurtbox,
@@ -1502,10 +1821,17 @@ func _on_left_mouse():
 		type = held_item_data[2]
 	
 	match type:
-		Lookup.itemType.weapons_sword:
-			use_sword()
-		Lookup.itemType.weapons_projectile:
-			use_projectile_weapon()
+		Lookup.itemType.weapons_sword: use_sword()
+		Lookup.itemType.weapons_projectile: use_projectile_weapon()
+		Lookup.itemType.weapons_longsword: use_longsword()
+		Lookup.itemType.weapons_mace: use_mace()
+		Lookup.itemType.weapons_fishing_rod: use_fishing_rod()
+		Lookup.itemType.weapons_bow: use_bow()
+		Lookup.itemType.weapons_spear: use_spear()
+		Lookup.itemType.weapons_glaive: use_glaive()
+		Lookup.itemType.weapons_scythe: use_scythe()
+		Lookup.itemType.weapons_wand: use_wand()
+		Lookup.itemType.weapons_spellbook: use_spellbook()
 		_:
 			punch()
 	pass
@@ -1519,19 +1845,63 @@ func use_sword():
 	if Input.is_action_pressed("rm"):
 		play_arm_anim("stab_1")
 		#deal_look_damage(held_item_data[3][2],held_item_data[3][1])
-		deal_sword_sweep(held_item_data[3][2], held_item_data[3][0],1.0)
+		deal_sword_sweep(held_item_data[3][2], held_item_data[0],1.0)
 	elif current_animation == "slash_1":
 		#deal_look_damage(held_item_data[3][0],held_item_data[3][1])
-		deal_sword_sweep(held_item_data[3][0], held_item_data[3][0],1.0)
+		deal_sword_sweep(held_item_data[3][0], held_item_data[0],1.0)
 		play_arm_anim("slash_2")
 	elif current_animation == "slash_2":
 		play_arm_anim("stab_1")
 		#deal_look_damage(held_item_data[3][2],held_item_data[3][1])
-		deal_sword_sweep(held_item_data[3][2], held_item_data[3][0],1.0)
+		deal_sword_sweep(held_item_data[3][2], held_item_data[0],1.0)
 	else:
 		play_arm_anim("slash_1")
 		#deal_look_damage(held_item_data[3][0],held_item_data[3][1])
-		deal_sword_sweep(held_item_data[3][0], held_item_data[3][0],1.0)
+		deal_sword_sweep(held_item_data[3][0], held_item_data[0],1.0)
+
+func use_longsword():
+	print("used longsword")
+
+func use_mace():
+	print("used mace")
+
+func use_fishing_rod():
+	print("used fishing rod")
+
+func use_bow():
+	print("used bow")
+
+func use_spear():
+	print("used spear")
+
+func use_glaive():
+	print("used glaive")
+
+func use_scythe():
+	print("used scythe")
+
+func use_wand():
+	print("used wand")
+	mana -= 1.0
+	update_mana_graphics()
+	Global.instance_projectile("lightning_seed", get_non_clipped_look_reference(), get_look_dir(), display_name)
+
+func use_spellbook():
+	print("used spellbook")
+	summon_lightning()
+
+@onready var distance_look = $playerAvatar/cameraHandler/bobbingHandler/distance_select
+func summon_lightning():
+	#print("summoned lightning")
+	#var l = load("res://entities/lightning_bolt.tscn").instantiate()
+	#Global.instance_creature("lightning",global_position)
+	if distance_look.is_colliding():
+		var poi = distance_look.get_collision_point()
+		Global.instance_projectile("lightning", poi, Vector3.UP, display_name)
+	else:
+		#dont summon lightning if cannot find target :3
+		pass
+	pass
 
 func use_projectile_weapon():
 	if mana - 2.0 < 0.0:
@@ -1607,11 +1977,36 @@ func attempt_to_interact(primary_interact = true):
 			printerr("something was deleted before could interact check your code fucker :/")
 			return
 		if hit.is_in_group("interact"):
+			time_to_interact = hit.interact_time
 			var ret = hit.interact()
-			print(ret)
-			process_interact_data(ret, primary_interact, hit)
+			interacting_timer = time_to_interact
+			interact_data = [ret, primary_interact, hit]
+			
+			interact_initial_pos = position
+			interact_initial_rot = Vector2(graphics.rotation.y,cameraHandler.rotation.x)
+			initial_distance_to_interact = (hit.global_position - position).length()
+			
+			interacting = true
+			print("started_interacting: " + str(ret))
+			#print(ret)
+			#process_interact_data(ret, primary_interact, hit)
 			return
 	print("invalid interact")
+
+var time_to_interact = 0.75
+var interacting = false
+var interacting_timer = 0.0
+var interact_data = null #[ret,primary_interact,hit]
+var interact_initial_rot = Vector2.ZERO
+var interact_initial_pos = Vector3.ZERO
+var initial_distance_to_interact = 0.0
+
+var is_climbing_ladder = false
+var ladder_pos = Vector2.ZERO
+var ladder_height = Vector2.ZERO
+var ladder_facing = 0.0
+
+var room_id = 0
 
 func process_interact_data(data, normal, hit):
 	match data[0]:
@@ -1620,9 +2015,34 @@ func process_interact_data(data, normal, hit):
 				hit.destroy()
 			else:
 				print("cant pick up inventory full")
+		Lookup.interact_return_code.is_doorway:
+			var old_room_id = room_id
+			position = data[1][0]
+			graphics.rotation.y += data[1][1]
+			room_id = data[1][2]
+			Global.emit_signal("enter_room",data[1][2])
+			Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg",room_id)
+			Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg",old_room_id)
+			pass
+		Lookup.interact_return_code.is_ladder:
+			is_climbing_ladder = true
+			var li = data[1] #[xz_pos, height_min_max,facing_rot]
+			ladder_pos = li[0]
+			ladder_height = li[1]
+			ladder_facing = li[2]
+			position.y = clamp(position.y,ladder_height.x,ladder_height.y)
+			position.x = ladder_pos.x
+			position.z = ladder_pos.y
 
-
-
+func enter_door(door_index : int) -> void:
+	var dd= Global.doors_val[door_index] #[Location, output_location, output room_id, room_id]
+	var old_room = room_id
+	position = dd[1]
+	graphics.rotation.y += 0.0 #rotation add is not store for navigation so just keep same rot
+	room_id = dd[2]
+	Global.emit_signal("enter_room",room_id)
+	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg",old_room)
+	Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg",room_id)
 
 ##audio handling
 func settup_audio():
@@ -1763,52 +2183,55 @@ func _process(delta):
 				$UI/tooltip.visible = true
 				$UI/tooltip.text = hit.tool_tip
 				$UI/tooltip.modulate = hit.tool_tip_color
-	if !clear_status_effects:
-		update_status_effect_ui()
-		for k in status_effects.keys():
-			match k:
-				Lookup.statusEffectType.burning:
-					status_effects[k] -= delta
-					damage([[Lookup.damageType.fire,delta]], "status_effect", "", "burning")
-					if status_effects[k] < 0.0 or (velocity.length() > speed_cap*0.5):
-						status_effects.erase(k)
-						update_status_effect_graphics(status_effects)
-						update_status_effect_graphics.rpc(status_effects)
-				Lookup.statusEffectType.blighted:
-					status_effects[k] -= delta
-					damage([[Lookup.damageType.blight,delta*2.5]], "status_effect", "", "blighted")
-					if status_effects[k] < 0.0:
-						status_effects.erase(k)
-						update_status_effect_graphics(status_effects)
-						update_status_effect_graphics.rpc(status_effects)
-				Lookup.statusEffectType.poisoned:
-					status_effects[k] -= delta
-					damage([[Lookup.damageType.toxic,delta*1.75]], "status_effect", "", "poisoned")
-					if status_effects[k] < 0.0:
-						status_effects.erase(k)
-						update_status_effect_graphics(status_effects)
-						update_status_effect_graphics.rpc(status_effects)
-				Lookup.statusEffectType.cursed:
-					status_effects[k] -= delta
-					damage([[Lookup.damageType.magic,delta*1.0]], "status_effect", "", "cursed")
-					if status_effects[k] < 0.0:
-						status_effects.erase(k)
-						update_status_effect_graphics(status_effects)
-						update_status_effect_graphics.rpc(status_effects)
-				Lookup.statusEffectType.blessed:
-					status_effects[k] -= delta
-					#healing function here
-					damage([[Lookup.damageType.magic,-delta*1.0]], "status_effect", "", "blessed")
-					if status_effects[k] < 0.0:
-						status_effects.erase(k)
-						update_status_effect_graphics(status_effects)
-						update_status_effect_graphics.rpc(status_effects)
-	else:
-		print("clearing status effects")
-		for k in status_effects.keys():
-			print(k)
-			status_effects.erase(k)
-		clear_status_effects = false
+	status_effect_timer -= delta
+	if status_effect_timer < 0.0:
+		status_effect_timer = 0.25
+		if !clear_status_effects:
+			update_status_effect_ui()
+			for k in status_effects.keys():
+				match k:
+					Lookup.statusEffectType.burning:
+						status_effects[k] -= 0.25
+						damage([[Lookup.damageType.fire,0.25]], "status_effect", "", "burning")
+						if status_effects[k] < 0.0 or (velocity.length() > speed_cap*0.5):
+							status_effects.erase(k)
+							update_status_effect_graphics(status_effects)
+							update_status_effect_graphics.rpc(status_effects)
+					Lookup.statusEffectType.blighted:
+						status_effects[k] -= 0.25
+						damage([[Lookup.damageType.blight,0.25*2.5]], "status_effect", "", "blighted")
+						if status_effects[k] < 0.0:
+							status_effects.erase(k)
+							update_status_effect_graphics(status_effects)
+							update_status_effect_graphics.rpc(status_effects)
+					Lookup.statusEffectType.poisoned:
+						status_effects[k] -= 0.25
+						damage([[Lookup.damageType.toxic,0.25*1.75]], "status_effect", "", "poisoned")
+						if status_effects[k] < 0.0:
+							status_effects.erase(k)
+							update_status_effect_graphics(status_effects)
+							update_status_effect_graphics.rpc(status_effects)
+					Lookup.statusEffectType.cursed:
+						status_effects[k] -= 0.25
+						damage([[Lookup.damageType.magic,0.25*1.0]], "status_effect", "", "cursed")
+						if status_effects[k] < 0.0:
+							status_effects.erase(k)
+							update_status_effect_graphics(status_effects)
+							update_status_effect_graphics.rpc(status_effects)
+					Lookup.statusEffectType.blessed:
+						status_effects[k] -= 0.25
+						#healing function here
+						damage([[Lookup.damageType.magic,-0.25*1.0]], "status_effect", "", "blessed")
+						if status_effects[k] < 0.0:
+							status_effects.erase(k)
+							update_status_effect_graphics(status_effects)
+							update_status_effect_graphics.rpc(status_effects)
+		else:
+			print("clearing status effects")
+			for k in status_effects.keys():
+				print(k)
+				status_effects.erase(k)
+			clear_status_effects = false
 	if mana < attributes["max_mana"]:
 		mana += delta * attributes["mana_regen_speed"]
 		if mana > attributes["max_mana"]:
@@ -1825,10 +2248,45 @@ func _process(delta):
 		if stamina >= attributes["max_stamina"]:
 			stamina = attributes["max_stamina"]
 		update_stamina_graphics()
-var clear_status_effects = true
+	
+	#interacting
+	if interacting:
+		interacting_timer -= delta
+		update_interacting_graphics()
+		if interacting_timer < 0.0:
+			interacting_timer = 0.0
+			process_interact_data(interact_data[0],interact_data[1],interact_data[2])
+			stop_interacting()
+		elif (interact_initial_pos - position).length() > 0.5:
+			if initial_distance_to_interact > (interact_data[2].global_position - position).length():
+				print("waved movement interact cancel because distance was closer to target")
+				interact_initial_pos = position
+			else: stop_interacting()
+			print("moved to far")
+		elif (interact_initial_rot.x > graphics.rotation.y+PI*0.25) or (interact_initial_rot.x < graphics.rotation.y-PI*0.25):
+			stop_interacting()
+			print("rotated to far horizontal")
+		elif (interact_initial_rot.y > cameraHandler.rotation.x+PI*0.25) or (interact_initial_rot.y < cameraHandler.rotation.x-PI*0.25):
+			stop_interacting()
+			print("rotated to far vertical")
+		#i feel like those parameters are lenient enough
+var clear_status_effects : bool = true
+var status_effect_timer  : float = 0.25
+
+func stop_interacting():
+	interacting = false
+	$UI/crosshairControl/crosshair.hide()
+	print("stopped interacting")
+
+func update_interacting_graphics():
+	$UI/crosshairControl/crosshair.visible = true
+	$UI/crosshairControl/crosshair.frame = int(remap(interacting_timer,0.0,time_to_interact,0.0,4.0))
+	
+	pass
 
 func update_mana_graphics():
 	$UI/mana.text = str(round(mana)) + " / " + str(attributes["max_mana"])
+	Global.emit_signal("update_mana_graphics",mana)
 	pass
 
 func update_stamina_graphics():
@@ -1858,8 +2316,22 @@ func deal_look_damage(dam := [[Lookup.damageType.generic, 1]], dist := 2.0) -> v
 		if hit.is_in_group("hurtbox"):
 			hit.take_damage.rpc(dam,poi,display_name,weapon_name, dir*attributes["strength"]*2.0, true)
 
+@onready var hitbox_handler = $playerAvatar/cameraHandler/hitboxes
 @onready var near_hitbox = $playerAvatar/cameraHandler/hitboxes/near_hitbox
 func deal_sword_sweep(dam, weapon_name, knockback_mult = 1.0):
+	var h = hitbox.new()
+	h.active_time = 0.5
+	h.damage = dam
+	h.weapon_name = weapon_name
+	h.knockback = get_look_dir() * knockback_mult
+	h.remember = true
+	h.size = Vector3(2.0,2.0,2.0)
+	h.position.z -= 1.5
+	#h.friendly_node = get_path_to(self)
+	h.no_hit_list += [self]
+	hitbox_handler.add_child(h)
+	add_hh_child.rpc(h.size, Vector3(0.0,0.0,-1.5), h.active_time, weapon_name)
+	return ##pre hitbox code
 	var col_count = near_hitbox.get_collision_count()
 	var dir = get_look_dir()
 	print(str(col_count))
@@ -1876,8 +2348,19 @@ func deal_sword_sweep(dam, weapon_name, knockback_mult = 1.0):
 			break #cannot hit through walls
 	pass
 
+@rpc("any_peer")
+func add_hh_child(size : Vector3, offset : Vector3, life_time : float, weapon_name := "", active := false) -> void:
+	var h = hitbox.new() #for other people to see
+	h.size = size
+	h.active = active
+	h.active_time = life_time
+	h.weapon_name = weapon_name
+	h.position = offset
+	hitbox_handler.add_child(h)
+
 ##ui and stuffs
 func update_health_graphics():
+	Global.emit_signal("update_health_graphics",health,attributes["max_health"])
 	var percent = remap(health,0.0,attributes["max_health"],0.0,1.0)
 	Global.set_post("shader_parameter/heart_pounding",1.0-percent)
 	var rounded_health = round(health * 4.0)*0.25 #rounds to nearest .25
@@ -1941,4 +2424,6 @@ const limb_key_to_defense = {
 @rpc("reliable")
 func request_ghost() -> bool:
 	return ghost
+
+
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://dntnunlwfyesu"]
+[gd_scene load_steps=52 format=3 uid="uid://dntnunlwfyesu"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_5fl5y"]
 [ext_resource type="Script" path="res://debug/debug_world.gd" id="1_87rlt"]
@@ -26,6 +26,8 @@
 [ext_resource type="Script" path="res://debug/avatar_state_tester.gd" id="25_un0qr"]
 [ext_resource type="Shader" path="res://assets/shaders/circleShadow.gdshader" id="26_bv1sq"]
 [ext_resource type="PackedScene" uid="uid://dokv4awf7hm7b" path="res://debug/debug_effectbox.tscn" id="26_uei57"]
+[ext_resource type="PackedScene" uid="uid://dsva3w0odq2a2" path="res://assets/environmentPieces/traversal/generic_doorway.tscn" id="27_8tomo"]
+[ext_resource type="PackedScene" uid="uid://cnh2mcjrokd7t" path="res://assets/environmentPieces/traversal/climb_area.tscn" id="28_236k0"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ks42u"]
 
@@ -155,11 +157,9 @@ glow_blend_mode = 1
 fog_enabled = true
 fog_light_color = Color(0.576471, 0.705882, 0.705882, 1)
 fog_sun_scatter = 0.11
-fog_density = 0.015
+fog_density = 0.003
 fog_aerial_perspective = 0.307
 fog_sky_affect = 0.868
-fog_height = 1.5
-fog_height_density = 0.25
 volumetric_fog_density = 0.0353
 volumetric_fog_albedo = Color(0.65098, 0.901961, 0.894118, 1)
 volumetric_fog_anisotropy = 0.04
@@ -209,7 +209,6 @@ orientation = 1
 
 [node name="debugWorld" type="Node3D"]
 script = ExtResource("1_87rlt")
-spider_count = 0
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
@@ -327,7 +326,7 @@ transform = Transform3D(0.757332, 0, 1.14764, 0, 1.375, 0, -1.14764, 0, 0.757332
 
 [node name="portal_1" parent="." instance=ExtResource("12_kfbny")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -2)
-world_path = "dungeon_world"
+world_path = "test_modular"
 
 [node name="playerCorpse" parent="." instance=ExtResource("13_lys41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -5)
@@ -405,6 +404,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.64017, 0, -8.12931)
 
 [node name="avatar_state_tester" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 0, 0)
+visible = false
 script = ExtResource("25_un0qr")
 
 [node name="playerAvatar" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
@@ -461,5 +461,31 @@ effect_to_apply = 4
 time = 1.0
 
 [node name="shadow" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.910317, 1.64374, 0.736822)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.910317, 0.0132772, -3.80074)
 mesh = SubResource("QuadMesh_8sebf")
+
+[node name="doors" type="Node" parent="."]
+
+[node name="doorway" parent="doors" instance=ExtResource("27_8tomo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.4099, 0, 11)
+sibling_door_path = NodePath("../doorway2")
+
+[node name="doorway2" parent="doors" instance=ExtResource("27_8tomo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.4099, 0, 11)
+sibling_door_path = NodePath("../doorway")
+
+[node name="doorway3" parent="doors" instance=ExtResource("27_8tomo")]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -17.4099, 0, 11)
+sibling_door_path = NodePath("../doorway4")
+visual_type = 1
+
+[node name="doorway4" parent="doors" instance=ExtResource("27_8tomo")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -20.4099, 0, 8)
+sibling_door_path = NodePath("../doorway3")
+
+[node name="climb_area" parent="." instance=ExtResource("28_236k0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, 10)
+
+[node name="climb_area2" parent="." instance=ExtResource("28_236k0")]
+transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, -29, 0, 10)
+desired_height = 5.0

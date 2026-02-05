@@ -1,7 +1,7 @@
 @tool
 extends Node3D
 
-@export var animation_key = "walk"
+@export var animation_state = "walk"
 @export var animated = true
 @onready var bone_paths = [
 	$graphics/root, #0
@@ -34,17 +34,24 @@ extends Node3D
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 @export var tail_rot = Vector2.ZERO
-@export var mult = 1.0
+@export var walk_speed = 1.0
 @export var tail_delay = 0.5
 @export var crouching = 0.0
+@export var turn = 0.0
+@export var head_angle = Vector2.ZERO
+@export var falling = 0.0
+#@export var walk_speed_ratio = 1.0
 var time = 0.0
 func _physics_process(delta):
 	if time > 64.0*PI:
 		time -= 64.0*PI
+	#position.z -= delta * walk_speed_ratio
+	#if position.z < -20.0:
+		#position.z = 0.0
 	if animated:
-		match animation_key:
-			"walk": walk(delta, mult, tail_rot, tail_delay, crouching)
-			"idle": idle(delta, mult, tail_rot, tail_delay, crouching)
+		match animation_state:
+			"walk": walk(delta, walk_speed, tail_rot, tail_delay, crouching)
+			"idle": idle(delta, walk_speed, tail_rot, tail_delay, crouching)
 	#move_and_slide()
 
 func walk(delta, mult = 1.0, tail_rot = Vector2.ZERO, tail_delay = 0.5, crouching = 0.0, tail_strength = 1.0):
@@ -55,18 +62,30 @@ func walk(delta, mult = 1.0, tail_rot = Vector2.ZERO, tail_delay = 0.5, crouchin
 	var tail_speed = 1.0#mult
 	tail_delay -= mult*0.1
 	tail_strength = (2.5 - mult*1.5)*0.25
-	
+	var active_turn = -(turn/PI) - head_angle.y * 0.25
 	#body
 	bone_paths[5].rotation.y = sin(time*12.0-PI*0.75)*0.1
 	bone_paths[5].rotation.x = sin(time*24.0-PI*0.75)*0.2
 	bone_paths[1].rotation.y = -sin(time*12.0-PI*0.75)*0.1
 	bone_paths[1].rotation.x = -sin(time*24.0-PI*0.75)*0.1
+	bone_paths[1].rotation.y += active_turn * 0.8
+	bone_paths[5].rotation.y -= active_turn * 0.8
+	bone_paths[1].rotation.x += head_angle.x*0.1
+	bone_paths[5].rotation.x -= head_angle.x*0.1
+	
+	active_turn -= head_angle.y*0.75
 	
 	#head
 	bone_paths[2].rotation.y = sin(time*12.0-PI*0.75)*0.05
 	bone_paths[4].rotation.y = sin(time*12.0-PI*0.75)*0.05
 	bone_paths[2].rotation.x = sin(time*24.0-PI*0.75)*0.05 - 1.0
 	bone_paths[4].rotation.x = sin(time*24.0-PI*0.75)*0.05 + 1.0
+	bone_paths[2].rotation.y += active_turn * 0.5
+	bone_paths[4].rotation.y += active_turn * 0.5
+	bone_paths[2].rotation.x += head_angle.x * 0.7
+	bone_paths[4].rotation.x += head_angle.x * 0.3
+	
+	active_turn += head_angle.y
 	
 	#tail
 #	bone_paths[6].rotation.x = sin(time*24.0*tail_speed-PI*0.75-tail_delay*0.1)*0.1*tail_strength
@@ -83,6 +102,17 @@ func walk(delta, mult = 1.0, tail_rot = Vector2.ZERO, tail_delay = 0.5, crouchin
 	bone_paths[9].rotation.y = sin(time*12.0*tail_speed-PI)*0.3*tail_strength
 	bone_paths[10].rotation.y = sin(time*12.0*tail_speed-PI*1.25)*0.3*tail_strength*1.25
 	bone_paths[11].rotation.y = sin(time*12.0*tail_speed-PI*1.5)*0.3*tail_strength*1.5
+	
+	bone_paths[6].rotation.y -= active_turn*0.4
+	bone_paths[7].rotation.y -= active_turn*0.35
+	bone_paths[8].rotation.y -= active_turn*0.3
+	bone_paths[9].rotation.y -= active_turn*0.25
+	bone_paths[10].rotation.y -= active_turn*0.25
+	bone_paths[11].rotation.y -= active_turn*0.25
+	
+	
+	
+	
 	
 	#idle legs
 	bone_paths[12].rotation.x = -0.628319 - (sin(time*tail_speed) * 0.1 + tail_rot.y) + bob*0.5 - crouching*0.5*1.25

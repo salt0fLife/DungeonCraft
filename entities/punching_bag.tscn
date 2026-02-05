@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://dtdp0xkmjwtre"]
+[gd_scene load_steps=9 format=3 uid="uid://dtdp0xkmjwtre"]
 
 [ext_resource type="Script" path="res://scripts/punching_bag.gd" id="1_lx4nv"]
 [ext_resource type="PackedScene" uid="uid://ctjywblutag5l" path="res://assets/entityComponents/hurtbox.tscn" id="2_d3bc4"]
+[ext_resource type="FontFile" uid="uid://cqn75tgqy02u5" path="res://assets/fonts/PIXELOIDSANS-MLXMM.TTF" id="3_cvoco"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_fwmtd"]
 size = Vector3(0.75, 1.75, 0.75)
@@ -46,3 +47,9 @@ mesh = SubResource("BoxMesh_38t4w")
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
 transform = Transform3D(1.91069e-15, 4.37114e-08, 1, 1, -4.37114e-08, 0, 4.37114e-08, 1, -4.37114e-08, 0, -0.0179958, 0)
 mesh = SubResource("BoxMesh_38t4w")
+
+[node name="damage indicator" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.29986, 0)
+billboard = 1
+no_depth_test = true
+font = ExtResource("3_cvoco")

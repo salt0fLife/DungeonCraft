@@ -1,8 +1,11 @@
 extends Node3D
 var life_time = 30.0
+var immortal = true
 var activated = false
 var blood_cooldown = 0.0
 var blood_charges = 4
+var total_blood_charges = 8
+var bleeding = true
 
 @onready var meshes = [
 	$head/head, #0
@@ -52,7 +55,7 @@ const slim_i = [
 
 
 func _process(delta):
-	if activated:
+	if activated and !immortal:
 		life_time -= delta
 		if life_time < 0.0:
 			queue_free()
@@ -62,34 +65,57 @@ func _process(delta):
 			var hit = $torso/RayCast3D.get_collider()
 			var poi = $torso/RayCast3D.get_collision_point()
 			var norm = $torso/RayCast3D.get_collision_normal()
-			var b = preload("res://assets/effects/blood_decal.tscn").instantiate()
-			hit.add_child(b)
-			#b.global_scale = Vector3(1.0,1.0,1.0) threw error for some reason???
-			b.global_position = poi + norm*0.01
-			var rot_y = atan2(norm.x,norm.z)
-			var rot_x = atan2(sqrt(pow(norm.x,2.0)+pow(norm.z,2.0)),norm.y)
-			b.rotation.y = rot_y
-			b.rotation.x = rot_x
-			blood_charges -= 1
+			add_blood_decal(poi,norm)
+			#var b = preload("res://assets/effects/blood_decal.tscn").instantiate()
+			#b.life_time = 20.0
+			#hit.add_child(b)
+			##b.global_scale = Vector3(1.0,1.0,1.0) threw error for some reason???
+			#b.global_position = poi + norm*0.01
+			#var rot_y = atan2(norm.x,norm.z)
+			#var rot_x = atan2(sqrt(pow(norm.x,2.0)+pow(norm.z,2.0)),norm.y)
+			#b.rotation.y = rot_y
+			#b.rotation.x = rot_x
+			#blood_charges -= 1
 		if $torso/RayCast3D2.is_colliding():
 			var hit = $torso/RayCast3D2.get_collider()
 			var poi = $torso/RayCast3D2.get_collision_point()
 			var norm = $torso/RayCast3D2.get_collision_normal()
-			var b = preload("res://assets/effects/blood_decal.tscn").instantiate()
-			hit.add_child(b)
-			b.global_position = poi + norm*0.01
-			var rot_y = atan2(norm.x,norm.z)
-			var rot_x = atan2(sqrt(pow(norm.x,2.0)+pow(norm.z,2.0)),norm.y)
-			b.rotation.y = rot_y
-			b.rotation.x = rot_x
-			blood_charges -= 1
-	if blood_cooldown < 0.0:
-		blood_cooldown = 5.0
-		blood_charges += 1
-	else:
-		blood_cooldown -= delta
+			add_blood_decal(poi,norm)
+			#var b = preload("res://assets/effects/blood_decal.tscn").instantiate()
+			#hit.add_child(b)
+			#b.global_position = poi + norm*0.01
+			#var rot_y = atan2(norm.x,norm.z)
+			#var rot_x = atan2(sqrt(pow(norm.x,2.0)+pow(norm.z,2.0)),norm.y)
+			#b.rotation.y = rot_y
+			#b.rotation.x = rot_x
+			#blood_charges -= 1
+	if bleeding:
+		if blood_cooldown < 0.0: #makes blood finite
+			blood_cooldown = 20.0 #same time as blood charges
+			if total_blood_charges > 0: #so you cant bleed infinitely
+				total_blood_charges -= 1 #so you cant bleed infinitely
+				blood_charges += 1
+			else:
+				bleeding = false
+		else:
+			blood_cooldown -= delta
 	
 	pass
+
+signal blood_decal
+func add_blood_decal(poi,norm) -> void:
+	blood_charges -= 1
+	emit_signal("blood_decal", norm, poi)
+	#var b = preload("res://assets/effects/blood_decal.tscn").instantiate()
+	#b.life_time = 20.0
+	#hit.add_child(b)
+	##b.global_scale = Vector3(1.0,1.0,1.0) threw error for some reason???
+	#b.global_position = poi + norm*0.01
+	#var rot_y = atan2(norm.x,norm.z)
+	#var rot_x = atan2(sqrt(pow(norm.x,2.0)+pow(norm.z,2.0)),norm.y)
+	#b.rotation.y = rot_y
+	#b.rotation.x = rot_x
+	#blood_charges -= 1
 
 func activate(key = "", force = Vector3.ZERO, extraForce = Vector3.ZERO):
 	activated = true
@@ -131,6 +157,7 @@ func activate(key = "", force = Vector3.ZERO, extraForce = Vector3.ZERO):
 	pass
 
 func load_skin(skin_mat,slim):
+	skin_mat.set("shader_parameter/ghostly",0.0) #dont know why i didnt just do this before
 	var tran = skin_mat.duplicate()
 	for m in meshes:
 		m.visible = !slim
