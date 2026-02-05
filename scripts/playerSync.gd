@@ -22,6 +22,7 @@ func spawn_player(data):
 	p.set_multiplayer_authority(data)
 	players[data] = p
 	p.connect("died",_on_player_died)
+	Global.emit_signal("player_died") #all it really does is update Global.living_players
 	return p
 
 func remove_player(data):

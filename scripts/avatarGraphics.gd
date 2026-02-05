@@ -1254,7 +1254,6 @@ func set_ghost(val: bool) -> void:
 		$root/chestBase/neck/eyeBrows_L.get_active_material(0).set("blend_mode", 1)
 	pass
 
-
 func set_burning(val : bool,col := Color.ORANGE_RED) -> void:
 	base_skin_mat.set("shader_parameter/burning", val)
 	base_skin_mat.set("shader_parameter/fire_col", col)

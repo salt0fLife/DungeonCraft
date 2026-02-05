@@ -1254,6 +1254,7 @@ func sync_information(pos: Vector3, rot: float, rotB: float, anim_state: String,
 	avatar.animation_speed = AnimS
 	avatar.crouching = C
 	avatar.head_angle = HA
+	cameraHandler.rotation.x = HA.y #only needed for hitbox graphics
 	avatar.falling = F
 	avatar.walk_angle = A
 	avatar.walk_tilt = T
@@ -2015,12 +2016,13 @@ func process_interact_data(data, normal, hit):
 			else:
 				print("cant pick up inventory full")
 		Lookup.interact_return_code.is_doorway:
-			Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg")
+			var old_room_id = room_id
 			position = data[1][0]
 			graphics.rotation.y += data[1][1]
-			Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg")
 			room_id = data[1][2]
 			Global.emit_signal("enter_room",data[1][2])
+			Global.play_sound(position,"res://assets/sounds/environment_interaction/doorOpen.ogg",room_id)
+			Global.play_sound(position,"res://assets/sounds/environment_interaction/doorClose.ogg",old_room_id)
 			pass
 		Lookup.interact_return_code.is_ladder:
 			is_climbing_ladder = true

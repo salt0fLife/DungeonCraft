@@ -9,4 +9,5 @@ shader_parameter/wavy = true
 shader_parameter/shaky = false
 shader_parameter/enchanted_col = Color(0.882353, 0.407843, 1, 1)
 shader_parameter/transparent_background = true
+shader_parameter/fade = null
 shader_parameter/enchanted_tex = ExtResource("2_vo1cu")

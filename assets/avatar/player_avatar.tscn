@@ -1,4 +1,4 @@
-[gd_scene load_steps=70 format=3 uid="uid://dyheecbeltw3w"]
+[gd_scene load_steps=65 format=3 uid="uid://dyheecbeltw3w"]
 
 [ext_resource type="Script" path="res://scripts/avatarGraphics.gd" id="1_xe47e"]
 [ext_resource type="PackedScene" uid="uid://vu6npk7m024o" path="res://assets/avatar/avatarProfiles/normal/left_leg_1_norm.tscn" id="3_0xbrj"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://c6d3q7uqdbg60" path="res://assets/avatar/avatarProfiles/normal/left_arm_1_norm.tscn" id="13_3alx6"]
 [ext_resource type="PackedScene" uid="uid://5fdkt46r3d3u" path="res://assets/avatar/avatarProfiles/normal/right_arm_2_norm.tscn" id="14_qj8id"]
 [ext_resource type="PackedScene" uid="uid://6auorb7ldl7v" path="res://assets/avatar/avatarProfiles/normal/right_arm_1_norm.tscn" id="15_8tpry"]
+[ext_resource type="Material" uid="uid://cu7u32rvb4tl1" path="res://assets/materials/fire_mat.tres" id="16_daxmk"]
 [ext_resource type="PackedScene" uid="uid://rptrx6feun7i" path="res://assets/avatar/avatarProfiles/normal/torso_norm.tscn" id="16_fnyfx"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ww77j"]
@@ -57,7 +58,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_e1mb0")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r6lbu"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4wuiw"]
 resource_name = "eyeBrows"
 transparency = 2
 alpha_scissor_threshold = 0.5
@@ -158,7 +159,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_tycrd")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_1fm0c"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ccl86"]
 resource_name = "eyes"
 render_priority = 0
 shader = ExtResource("4_0gktj")
@@ -289,7 +290,7 @@ shadow_mesh = SubResource("ArrayMesh_nxc6e")
 [sub_resource type="PlaneMesh" id="PlaneMesh_tuqqr"]
 size = Vector2(0.27, 0.1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_dlv4y"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j2hd7"]
 render_priority = 0
 shader = ExtResource("5_cdrxt")
 shader_parameter/uv1_scale = Vector3(1, 1, 1)
@@ -309,6 +310,11 @@ shader_parameter/open = 0.0
 shader_parameter/outline_thickness = 0.025
 shader_parameter/transparency = 0.0
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_uwoon"]
+material = ExtResource("16_daxmk")
+size = Vector2(1.32, 2.565)
+orientation = 2
+
 [sub_resource type="Shader" id="Shader_82q5v"]
 code = "
 shader_type spatial;
@@ -316,6 +322,7 @@ render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlic
 uniform sampler2D fire_noise : repeat_enable;
 uniform vec3 fire_col : source_color;
 uniform sampler2D gradient_tex;
+uniform float size = 1.0;
 
 void vertex() {
 	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(vec4(normalize(cross(vec3(0.0, 1.0, 0.0), INV_VIEW_MATRIX[2].xyz)), 0.0), vec4(0.0, 1.0, 0.0, 0.0), vec4(normalize(cross(INV_VIEW_MATRIX[0].xyz, vec3(0.0, 1.0, 0.0))), 0.0), MODEL_MATRIX[3]);
@@ -329,14 +336,14 @@ void vertex() {
 
 void fragment() {
 	vec2 base_uv = UV;
-	vec4 fire = texture(fire_noise,base_uv+vec2(0.0,TIME*2.0));
-	fire *= texture(fire_noise,base_uv+vec2(0.25,TIME*3.2));
+	vec4 fire = texture(fire_noise,base_uv*vec2(size,size)+vec2(0.0,TIME*2.0*size));
+	fire *= texture(fire_noise,base_uv*vec2(size,size)+vec2(0.25,TIME*3.2*size));
 	vec4 gradient = texture(gradient_tex,base_uv+vec2(0.0,0.01));
 	ALPHA = fire.a * gradient.r;
 	ALBEDO = mix(fire_col,fire_col*vec3(0.7,0.7,0.1),fire.r*ALPHA);
 	//ALBEDO *= gradient.r;
 	EMISSION = ALBEDO*4.0;
-	if (fire.r*gradient.r < 0.05) {
+	if (fire.r*gradient.r < 0.05*size) {
 		ALPHA = 0.0;
 	}
 }
@@ -358,77 +365,15 @@ colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
 gradient = SubResource("Gradient_mcdeo")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
-fill_to = Vector2(1, 0.2)
+fill_to = Vector2(1, 0.5)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_kguxy"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mcl0v"]
 render_priority = 0
 shader = SubResource("Shader_82q5v")
 shader_parameter/fire_col = Color(0.796078, 0.247059, 0, 1)
+shader_parameter/size = 1.0
 shader_parameter/fire_noise = SubResource("NoiseTexture2D_0xgdf")
 shader_parameter/gradient_tex = SubResource("GradientTexture2D_gpt44")
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_uwoon"]
-material = SubResource("ShaderMaterial_kguxy")
-size = Vector2(1, 2)
-orientation = 2
-
-[sub_resource type="Shader" id="Shader_7ykqe"]
-code = "
-shader_type spatial;
-render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
-uniform sampler2D fire_noise : repeat_enable;
-uniform vec3 fire_col : source_color;
-uniform sampler2D gradient_tex;
-
-void vertex() {
-	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(vec4(normalize(cross(vec3(0.0, 1.0, 0.0), INV_VIEW_MATRIX[2].xyz)), 0.0), vec4(0.0, 1.0, 0.0, 0.0), vec4(normalize(cross(INV_VIEW_MATRIX[0].xyz, vec3(0.0, 1.0, 0.0))), 0.0), MODEL_MATRIX[3]);
-	MODELVIEW_NORMAL_MATRIX = mat3(MODELVIEW_MATRIX);
-}
-
-
-
-
-
-
-void fragment() {
-	vec2 base_uv = UV;
-	vec4 fire = texture(fire_noise,base_uv+vec2(0.0,TIME*2.0));
-	fire *= texture(fire_noise,base_uv+vec2(0.25,TIME*3.2));
-	vec4 gradient = texture(gradient_tex,base_uv+vec2(0.0,0.01));
-	ALPHA = fire.a * gradient.r;
-	ALBEDO = mix(fire_col,fire_col*vec3(0.7,0.7,0.1),fire.r*ALPHA);
-	//ALBEDO *= gradient.r;
-	EMISSION = ALBEDO*4.0;
-	if (fire.r*gradient.r < 0.05) {
-		ALPHA = 0.0;
-	}
-}
-"
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_jl3go"]
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_cme5f"]
-width = 128
-height = 128
-seamless = true
-noise = SubResource("FastNoiseLite_jl3go")
-
-[sub_resource type="Gradient" id="Gradient_yt7lo"]
-offsets = PackedFloat32Array(0.22973, 1)
-colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_x2pq6"]
-gradient = SubResource("Gradient_yt7lo")
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-fill_to = Vector2(1, 0.2)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_265di"]
-render_priority = 0
-shader = SubResource("Shader_7ykqe")
-shader_parameter/fire_col = Color(0.796078, 0.247059, 0, 1)
-shader_parameter/fire_noise = SubResource("NoiseTexture2D_cme5f")
-shader_parameter/gradient_tex = SubResource("GradientTexture2D_x2pq6")
 
 [sub_resource type="Gradient" id="Gradient_mjhpo"]
 colors = PackedColorArray(1, 1, 1, 1, 0.71748, 0.923041, 0.739958, 0)
@@ -801,7 +746,7 @@ eye_scale = 1.035
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.869417, 0)
 
 [node name="chestBase" type="Node3D" parent="genericAvatar/root"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, 0.00236001, -0.0258223, -0.000122169)
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999296, -0.00499267, -0.0185811, -0.000122169)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase"]
 transform = Transform3D(1, 2.22045e-16, 0, -4.44089e-16, 1, 0, 0, -7.45058e-09, 1, 0, 0, 0)
@@ -810,7 +755,7 @@ transform = Transform3D(1, 2.22045e-16, 0, -4.44089e-16, 1, 0, 0, -7.45058e-09, 
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="hip_L" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.995002, -0.0129384, 0.0989912, 0, 0.991558, 0.129601, -0.0998332, -0.128953, 0.98661, 0.075, -0.282, -0.001)
+transform = Transform3D(0.995002, -0.0107851, 0.0992489, 0, 0.994139, 0.108032, -0.0998332, -0.107491, 0.989178, 0.075, -0.282, -0.001)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/hip_L"]
 transform = Transform3D(1, 4.65661e-10, 7.45058e-09, -4.65661e-10, 1, 1.11759e-08, 1.49012e-08, 1.11759e-08, 1, 0, 0, 0)
@@ -819,7 +764,7 @@ transform = Transform3D(1, 4.65661e-10, 7.45058e-09, -4.65661e-10, 1, 1.11759e-0
 transform = Transform3D(1, 2.32831e-09, 0, 2.32831e-10, 0.999371, 0.0354538, -7.45058e-09, -0.0354534, 0.999371, -0.00167371, -0.0117996, -0.000610452)
 
 [node name="knee_L" type="Node3D" parent="genericAvatar/root/chestBase/hip_L"]
-transform = Transform3D(1, 0, 0, 0, 0.991236, -0.132079, 0, 0.132079, 0.991236, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.993871, -0.110517, 0, 0.110517, 0.993871, 0, -0.274171, 0)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/hip_L/knee_L"]
 transform = Transform3D(1, 0, 0, -4.65661e-10, 1, 0, -7.45058e-09, 0, 1, 0, 0, 0)
@@ -828,7 +773,7 @@ transform = Transform3D(1, 0, 0, -4.65661e-10, 1, 0, -7.45058e-09, 0, 1, 0, 0, 0
 transform = Transform3D(0.999239, 0.0389944, 0, -0.0389944, 0.999239, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="hip_R" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.995003, 0.0129385, -0.0989914, 0, 0.991559, 0.129601, 0.0998333, -0.128953, 0.986612, -0.075, -0.282, -0.001)
+transform = Transform3D(0.995003, 0.0107851, -0.0992491, 0, 0.99414, 0.108032, 0.0998333, -0.107492, 0.98918, -0.075, -0.282, -0.001)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/hip_R"]
 transform = Transform3D(1, -9.31323e-10, 0, 9.31323e-10, 1, -7.45058e-09, 0, 7.45058e-09, 1, 0, 0, 0)
@@ -837,7 +782,7 @@ transform = Transform3D(1, -9.31323e-10, 0, 9.31323e-10, 1, -7.45058e-09, 0, 7.4
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="knee_R" type="Node3D" parent="genericAvatar/root/chestBase/hip_R"]
-transform = Transform3D(1, 0, 0, 0, 0.991234, -0.132079, 0, 0.132079, 0.991234, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.993869, -0.110516, 0, 0.110516, 0.993869, 0, -0.274171, 0)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/hip_R/knee_R"]
 transform = Transform3D(1, 0, 0, -4.65661e-10, 1, 0, -7.45058e-09, 0, 1, 0, 0, 0)
@@ -859,20 +804,20 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0619893, 0.196939, 0.163494
 visible = false
 mesh = SubResource("ArrayMesh_tre6c")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("StandardMaterial3D_r6lbu")
+surface_material_override/0 = SubResource("StandardMaterial3D_4wuiw")
 
 [node name="eyeBrows_R" type="MeshInstance3D" parent="genericAvatar/root/chestBase/neck"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0619893, 0.196939, 0.1646)
 visible = false
 mesh = SubResource("ArrayMesh_t454n")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("StandardMaterial3D_r6lbu")
+surface_material_override/0 = SubResource("StandardMaterial3D_4wuiw")
 
 [node name="eyes" type="MeshInstance3D" parent="genericAvatar/root/chestBase/neck"]
 transform = Transform3D(1, -2.11758e-22, -7.10543e-15, 0, 1, 0, 0, 0, 1, 0, -0.01, 0)
 mesh = SubResource("ArrayMesh_utghw")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("ShaderMaterial_1fm0c")
+surface_material_override/0 = SubResource("ShaderMaterial_ccl86")
 
 [node name="headOutsideP" type="MeshInstance3D" parent="genericAvatar/root/chestBase/neck"]
 transform = Transform3D(1, 0, 0, 2.11758e-22, 1, 0, 0, 0, 1, 0, 0.153, 0.02)
@@ -895,7 +840,7 @@ skeleton = NodePath("")
 [node name="mouth" type="MeshInstance3D" parent="genericAvatar/root/chestBase/neck"]
 transform = Transform3D(1, 0, 3.38813e-21, 0, -4.37114e-08, -1, 5.68434e-14, 1, -4.37114e-08, 0.000952967, 0.060794, 0.163323)
 mesh = SubResource("PlaneMesh_tuqqr")
-surface_material_override/0 = SubResource("ShaderMaterial_dlv4y")
+surface_material_override/0 = SubResource("ShaderMaterial_j2hd7")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="genericAvatar/root/chestBase/neck"]
 visible = false
@@ -913,7 +858,7 @@ font = ExtResource("11_s8wen")
 outline_size = 6
 
 [node name="shoulder_L" type="Node3D" parent="genericAvatar/root/chestBase"]
-transform = Transform3D(0.998625, -0.0522393, 0.00440228, 0.0519493, 0.997354, 0.0507839, -0.00704358, -0.0504852, 0.998699, 0.14978, 0.241, -0.0014265)
+transform = Transform3D(0.99959, -0.0286338, -0.000270523, 0.0286274, 0.999051, 0.0326969, -0.000665972, -0.0326911, 0.999464, 0.14978, 0.241, -0.0014265)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/shoulder_L"]
 transform = Transform3D(1, -3.56522e-09, 4.65661e-10, 7.42148e-10, 1, 4.65661e-09, 0, 0, 1, 0, 0, 0)
@@ -922,7 +867,7 @@ transform = Transform3D(1, -3.56522e-09, 4.65661e-10, 7.42148e-10, 1, 4.65661e-0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="elbowL" type="Node3D" parent="genericAvatar/root/chestBase/shoulder_L"]
-transform = Transform3D(1, 0, 0, 0, 0.999285, 0.0378138, 0, -0.0378138, 0.999285, 0.079, -0.24, -0.003)
+transform = Transform3D(1, 0, 0, 0, 0.995028, 0.0996002, 0, -0.0996002, 0.995028, 0.079, -0.24, -0.003)
 
 [node name="gh" type="Node3D" parent="genericAvatar/root/chestBase/shoulder_L/elbowL"]
 transform = Transform3D(1, -1.41881e-09, -5.82077e-11, 1.80444e-09, 1, -7.45058e-09, 5.82077e-11, 0, 1, 0, 0, 0)
@@ -955,7 +900,7 @@ transform = Transform3D(1, 0, 0, 0, 0.173651, -0.984807, 0, 0.984807, 0.173651, 
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1, 0)
 visible = false
 mesh = SubResource("PlaneMesh_uwoon")
-surface_material_override/0 = SubResource("ShaderMaterial_265di")
+surface_material_override/0 = SubResource("ShaderMaterial_mcl0v")
 
 [node name="fire_light" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.891093, 0)

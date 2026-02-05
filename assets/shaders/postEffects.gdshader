@@ -35,6 +35,9 @@ uniform float cinematic: hint_range(0.0,1.0) = 0.0;
 uniform vec3 cinematic_col: source_color;
 uniform float damaged: hint_range(0.0,1.0) = 0.0;
 uniform float color_pop: hint_range(0.0, 1.0, 0.1) = 0.0;
+uniform bool impact_frame = false;
+uniform vec3 impact_color : source_color;
+uniform vec3 impact_color_2 : source_color;
 
 float inv_lerp(float from, float to, float value){
   return (value - from) / (to - from);
@@ -156,7 +159,18 @@ void fragment() {
 	if (dif_1 < color_pop && dif_2 < (color_pop) && dif_3 < (color_pop)) {
 		COLOR.rgb = mix(COLOR.rgb, vec3(1.0,1.0,1.0)*brightness, 0.3);
 	}
-	
+	if (impact_frame) {
+		float res_2 = (1.0 - (mask * line_density));
+		res_2 = smoothstep(res_2, res_2 + line_faloff, lines.r);
+		if ((COLOR.r+res_2) > 0.75 || (COLOR.g+res_2) > 0.75 || (COLOR.b+res_2) > 0.75) {
+			COLOR.rgb = impact_color;
+		}
+		else {
+		COLOR.rgb = impact_color_2;
+		COLOR.rgb -= texture(screen_gradient,UV).rgb*0.5;
+		}
+		mix(COLOR.rgb, vec3(line_color.rgb), min(line_color.a, result));
+	}
 	
 	//COLOR.a = min(line_color.a, result);
 	

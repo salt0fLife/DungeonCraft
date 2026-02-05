@@ -8,6 +8,7 @@ signal set_post_param
 signal spawn_projectile
 signal camera_impact
 signal player_death
+signal player_count_changed
 signal chat
 signal update_skin
 signal create_item
@@ -19,6 +20,11 @@ signal enter_room #called with an id when moving using doors for hiding unused r
 var room_id = 0
 signal signal_play_sound #needs (pos,filepath)
 var inside = 0.0
+
+
+var visited_places = []
+
+var living_players = []
 
 func _ready():
 	connect("enter_room",_on_enter_room)

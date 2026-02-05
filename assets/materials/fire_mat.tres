@@ -1,0 +1,61 @@
+[gd_resource type="ShaderMaterial" load_steps=6 format=3 uid="uid://cu7u32rvb4tl1"]
+
+[sub_resource type="Shader" id="Shader_82q5v"]
+code = "
+shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
+uniform sampler2D fire_noise : repeat_enable;
+uniform vec3 fire_col : source_color;
+uniform sampler2D gradient_tex;
+uniform float size = 1.0;
+
+void vertex() {
+	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(vec4(normalize(cross(vec3(0.0, 1.0, 0.0), INV_VIEW_MATRIX[2].xyz)), 0.0), vec4(0.0, 1.0, 0.0, 0.0), vec4(normalize(cross(INV_VIEW_MATRIX[0].xyz, vec3(0.0, 1.0, 0.0))), 0.0), MODEL_MATRIX[3]);
+	MODELVIEW_NORMAL_MATRIX = mat3(MODELVIEW_MATRIX);
+}
+
+
+
+
+
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 fire = texture(fire_noise,base_uv*vec2(size,size)+vec2(0.0,TIME*2.0*size));
+	fire *= texture(fire_noise,base_uv*vec2(size,size)+vec2(0.25,TIME*3.2*size));
+	vec4 gradient = texture(gradient_tex,base_uv+vec2(0.0,0.01));
+	ALPHA = fire.a * gradient.r;
+	ALBEDO = mix(fire_col,fire_col*vec3(0.7,0.7,0.1),fire.r*ALPHA);
+	//ALBEDO *= gradient.r;
+	EMISSION = ALBEDO*4.0;
+	if (fire.r*gradient.r < 0.05*size) {
+		ALPHA = 0.0;
+	}
+}
+"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_2dxmx"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0xgdf"]
+width = 128
+height = 128
+seamless = true
+noise = SubResource("FastNoiseLite_2dxmx")
+
+[sub_resource type="Gradient" id="Gradient_mcdeo"]
+offsets = PackedFloat32Array(0.22973, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_gpt44"]
+gradient = SubResource("Gradient_mcdeo")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[resource]
+render_priority = 0
+shader = SubResource("Shader_82q5v")
+shader_parameter/fire_col = Color(0.796078, 0.247059, 0, 1)
+shader_parameter/size = 1.0
+shader_parameter/fire_noise = SubResource("NoiseTexture2D_0xgdf")
+shader_parameter/gradient_tex = SubResource("GradientTexture2D_gpt44")

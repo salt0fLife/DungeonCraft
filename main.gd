@@ -6,6 +6,7 @@ var localPeer = ENetMultiplayerPeer.new()
 var playerName = str(Steam.getPersonaName())
 @onready var playerSync = $playerSync
 @onready var key_selector = $Control/skinKey
+@onready var music_handler = $musicHandler
 var hosting = false
 
 var skin_key = "default"
@@ -14,6 +15,7 @@ var skins = ["default"]
 const naming = [["cruel", "laughable", "evil", "friendly", "small", "diabolical"], ["Jonathan", "Julius", "Jessica", "Jeremy", "Jerimiah", "Justin", "Josiah", "James", "Dave"]]
 
 func _ready():
+	#music_handler.play_song("res://assets/sounds/music/mainTheme.wav")
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	Global.connect("spawn_projectile", _on_spawn_projectile)
 	Global.connect("spawnCreature", _on_spawn_creature)
@@ -98,7 +100,7 @@ func host_local():
 	multiplayer.server_relay = true
 	playerSync.boot(true)
 	hide_menu()
-	_on_change_world("test_modular")
+	_on_change_world("the_moor")
 
 func join_local(address = ""):
 	Global.is_host = false
@@ -186,7 +188,7 @@ func host():
 	multiplayer.server_relay = true
 	playerSync.boot(true)
 	hide_menu()
-	_on_change_world("debug")
+	_on_change_world("the_moor")
 
 func refresh():
 	for i in $Control/lobbyButtons.get_children(false):
@@ -405,9 +407,6 @@ func _input(event):
 			Global.disable_avatar = true
 			settings_menu.show()
 
-
-
-
 func _on_resume_button_down():
 	is_paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -449,6 +448,7 @@ func _on_spawn_creature(key, location, attribute_modifiers = null, require_host 
 
 @onready var worldSync = $worldSync
 func _on_change_world(key, require_host = false):
+	music_handler.stop_the_music() #let the world choose its music
 	for e in creatureSync.get_children(false):
 		e.queue_free()
 	for i in worldSync.get_children(false):
@@ -458,7 +458,6 @@ func _on_change_world(key, require_host = false):
 	for p in get_tree().get_nodes_in_group("player"):
 		p.tp(Vector3.ZERO)
 		p.tp.rpc(Vector3.ZERO)
-	
 	pass
 
 @onready var projectileSync = $projectileSync
@@ -522,8 +521,6 @@ func sync_item(index, pos, key, total_items):
 		for i in range(0,dif):
 			itemHandler.get_child(total_items+dif).queue_free()
 
-
-
 @rpc("reliable", "any_peer")
 func destroy_item(index):
 	if itemHandler.get_child_count() <= index:
@@ -558,11 +555,12 @@ func _on_player_death():
 		#rpc_id(0,"_on_player_death") #yeah yeah yeah I know this is really bad but whatever dont change anything
 		rpc_id(0,"check_for_living_players") #so i sleep well at night
 
+
 @rpc("reliable")
 func check_for_living_players() -> void:
 	print("player died")
 	var living_players= get_living_players()
-	print(living_players)
+	Global.living_players = living_players
 	if living_players.size() < 1:
 		print("all players dead ;-;")
 		game_over()
@@ -575,7 +573,7 @@ func game_over(): #only called on host rpc other graphical changes for everyone 
 		node.reset_all()#.rpc() #other was not working and im lazy :3
 		node.reset_all.rpc()
 		#node.rpc_id(auth,"reset_all") #tells that player node to reset like it was just spawned in
-	_on_change_world("test_modular")
+	_on_change_world("the_moor")
 
 var thunder_sounds = [
 	"res://assets/sounds/explosion/lightning_thunder.ogg",

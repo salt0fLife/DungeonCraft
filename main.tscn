@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://cm7d5y2llo0ky"]
+[gd_scene load_steps=40 format=3 uid="uid://cm7d5y2llo0ky"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_s7ggu"]
 [ext_resource type="Script" path="res://scripts/steam.gd" id="2_35c3e"]
@@ -12,6 +12,7 @@
 [ext_resource type="Theme" uid="uid://bxsqmdqtm4i4k" path="res://assets/themes/genericTheme.tres" id="9_486y8"]
 [ext_resource type="PackedScene" uid="uid://b7s8ume16tah0" path="res://assets/gui/inventory_menu.tscn" id="11_ws5gg"]
 [ext_resource type="Script" path="res://scripts/settingsMenu.gd" id="12_m1jv6"]
+[ext_resource type="Script" path="res://scripts/musicHandler.gd" id="13_bj5bb"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_pium0"]
 frequency = 0.2226
@@ -109,7 +110,7 @@ shader_parameter/blood_col = Color(0.298039, 0, 0.027451, 1)
 shader_parameter/fire_color = Color(0.968627, 0.356863, 0, 1)
 shader_parameter/burning = false
 shader_parameter/action_lines = 0.0
-shader_parameter/line_color = Color(0.898039, 0.913725, 0.878431, 0.235294)
+shader_parameter/line_color = Color(0.737255, 0.741176, 0.701961, 0.235294)
 shader_parameter/line_count = 1.5
 shader_parameter/line_density = 0.43
 shader_parameter/line_faloff = 0.25
@@ -123,6 +124,9 @@ shader_parameter/cinematic = 0.15
 shader_parameter/cinematic_col = Color(0.764706, 0.615686, 0.956863, 1)
 shader_parameter/damaged = 0.0
 shader_parameter/color_pop = 0.0
+shader_parameter/impact_frame = false
+shader_parameter/impact_color = Color(1, 1, 1, 1)
+shader_parameter/impact_color_2 = Color(0, 0, 0, 1)
 shader_parameter/noise_1 = SubResource("NoiseTexture2D_h3kr7")
 shader_parameter/red_ramp = SubResource("GradientTexture1D_xyupm")
 shader_parameter/green_ramp = SubResource("GradientTexture1D_ptsje")
@@ -153,6 +157,11 @@ visible = false
 offset_right = 1920.0
 offset_bottom = 1017.0
 texture = ExtResource("6_ybl52")
+
+[node name="playerSync" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath(".")
+script = ExtResource("3_4tkpv")
+playerScene = ExtResource("4_rgl0b")
 
 [node name="postEffects" type="TextureRect" parent="."]
 material = SubResource("ShaderMaterial_gbjt2")
@@ -304,11 +313,6 @@ offset_right = 681.0
 offset_bottom = 247.0
 text = "launch skin editor"
 
-[node name="playerSync" type="MultiplayerSpawner" parent="."]
-spawn_path = NodePath(".")
-script = ExtResource("3_4tkpv")
-playerScene = ExtResource("4_rgl0b")
-
 [node name="playerHandler" type="Node3D" parent="."]
 
 [node name="pauseMenu" type="Control" parent="."]
@@ -373,7 +377,7 @@ _spawnable_scenes = PackedStringArray("res://entities/projectiles/arrow.tscn", "
 spawn_path = NodePath(".")
 
 [node name="worldSync" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://world/peaceful_island.tscn", "res://world/world_1.tscn", "res://world/world_2.tscn", "res://debug/debug_world.tscn", "res://world/gm_construct.tscn", "res://world/skywars_prot_rainy.tscn", "res://world/dungeon_world.tscn", "res://world/wayland_main.tscn", "res://world/elder_tree_temple.tscn", "res://world/test_modular_world.tscn")
+_spawnable_scenes = PackedStringArray("res://world/peaceful_island.tscn", "res://world/world_1.tscn", "res://world/world_2.tscn", "res://debug/debug_world.tscn", "res://world/gm_construct.tscn", "res://world/skywars_prot_rainy.tscn", "res://world/dungeon_world.tscn", "res://world/wayland_main.tscn", "res://world/elder_tree_temple.tscn", "res://world/test_modular_world.tscn", "res://world/the_moor.tscn")
 spawn_path = NodePath(".")
 
 [node name="itemHandler" type="Node3D" parent="."]
@@ -532,6 +536,11 @@ popup/item_3/id = 3
 [node name="thunderHandler" type="Node" parent="."]
 
 [node name="spacialAudioHandler" type="Node3D" parent="."]
+
+[node name="musicHandler" type="AudioStreamPlayer" parent="."]
+script = ExtResource("13_bj5bb")
+
+[node name="base" type="AudioStreamPlayer" parent="musicHandler"]
 
 [connection signal="button_down" from="Control/hostLocal" to="." method="_on_host_local_button_down"]
 [connection signal="button_down" from="Control/joinLocal" to="." method="_on_join_local_button_down"]

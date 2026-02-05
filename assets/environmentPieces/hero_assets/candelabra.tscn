@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://d0pjteb4slpw7"]
+
+[ext_resource type="Script" path="res://scripts/candelabra.gd" id="1_8qho7"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_514o2"]
+size = Vector3(0.1, 1, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vawfv"]
+size = Vector3(0.25, 0.1, 0.25)
+
+[sub_resource type="BoxMesh" id="BoxMesh_iytr1"]
+size = Vector3(1, 0.05, 0.1)
+
+[node name="candelabra" type="Node3D"]
+script = ExtResource("1_8qho7")
+
+[node name="base" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="base"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_514o2")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="base"]
+mesh = SubResource("BoxMesh_vawfv")
+
+[node name="heads" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="cross" type="Node3D" parent="."]
+transform = Transform3D(0.1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="cross"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.975, 0)
+mesh = SubResource("BoxMesh_iytr1")
+skeleton = NodePath("../../heads")

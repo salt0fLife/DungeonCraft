@@ -77,10 +77,18 @@ func _physics_process(delta):
 			avatar.falling = 1.0
 	else:
 		avatar.falling = 0.0
-	if !climbing:
-		avatar.animation_state = "walk"
+	#if !climbing: #always walking now :D
+		#avatar.animation_state = "walk"
+	#else:
+		#avatar.animation_state = "idle"
+	
+	if climbing:
+		graphics.rotation.y = ladder_rot
+		graphics.rotation.x = lerp(graphics.rotation.x,PI*0.5,8.0*delta)
 	else:
-		avatar.animation_state = "idle"
+		graphics.rotation.x = lerp(graphics.rotation.x,0.0,8.0*delta)
+	
+	
 	sync.rpc(position,graphics.rotation.y,$Label3D.text,$Label3D2.text,$Label3D3.text)
 
 @rpc("any_peer","unreliable")
@@ -299,7 +307,7 @@ func velocity_towards_target(delta) -> void:
 				next_desired_pos = ladder_location
 				teller("moving towards ladder ")
 	#checks if it should find a ladder
-	elif (abs(pointer.y) > 0.1 or abs(dif.y) > 7.5) and (!nav_agent.is_target_reachable() or tired_of_this_shit) and abs(dif.y) > 1.0: # we can walk up that: #less math and a bit cleaner #(abs(pointer.y) > Vector2(pointer.x,pointer.z).length()): #checks if wish_vel wants to go vertical more than horizontal
+	elif (abs(pointer.y) > 0.1 or abs(dif.y) > 7.5) and (!nav_agent.is_target_reachable() or tired_of_this_shit):# and abs(dif.y) > 1.0: # we can walk up that: #less math and a bit cleaner #(abs(pointer.y) > Vector2(pointer.x,pointer.z).length()): #checks if wish_vel wants to go vertical more than horizontal
 		teller("wants to go up")
 		#checks if can climb last_computed ladder
 		if (Vector2(position.x,position.z) - ladder_pos).length() < 0.75 and (position.y < ladder_height.y and position.y > ladder_height.x):
