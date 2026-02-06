@@ -138,7 +138,7 @@ func update_accessories():
 	update_accessories_graphics()
 	update_accessories_graphics.rpc(Inventory.accessories)
 	update_attribute_graphics()
-	update_attribute_graphics.rpc(attributes["size"])
+	update_attribute_graphics.rpc(attributes["size"],attributes["chaotic_affinity"],attributes["divine_affinity"],attributes["arcane_affinity"])
 
 var last_mh_c_l:float = 1.0 #max health changed level idk man
 func update_stats_from_accessories():
@@ -237,8 +237,14 @@ func update_stats_from_accessories():
 	update_ghost_communication(attributes["ghost_communication"]) #also sets the Global
 	update_health_graphics()
 	Global.emit_signal("update_attributes", attributes)
-	pass
+	
+	
 
+@rpc("any_peer") #yeah yeah go crazy
+func set_eye_glow(col : Color) -> void:
+	avatar.set_eye_param("shader_parameter/glow_col_2",col)
+	avatar.set_eye_param("shader_parameter/glow_col_3",col)
+	pass
 
 #func update_stats_from_accessories():
 	#set_stats_to_default()
@@ -403,15 +409,43 @@ func update_accessories_graphics(a = Inventory.accessories):
 					s.set_surface_override_material(0,m)
 				elif s.has_method("set_enchanted_col"):
 					s.set_enchanted_col(enchant_col)
-			#var s = load(Lookup.items[val][3][0]).instantiate()
-			#AG_handler.add_child(s)
-			#accessories_paths[k] = s
+			
 			pass
 
 @rpc("any_peer", "reliable")
-func update_attribute_graphics(s = attributes["size"]):
+func update_attribute_graphics(s = attributes["size"],chaotic = attributes["chaotic_affinity"],divine = attributes["divine_affinity"],arcane = attributes["arcane_affinity"]):
 	scale = Vector3(s,s,s)
-	pass
+	var eye_glow = Color.BLACK
+	var c_a = chaotic/Lookup.max_attributes["chaotic_affinity"]
+	var d_a = divine/Lookup.max_attributes["divine_affinity"]
+	var a_a = arcane/Lookup.max_attributes["arcane_affinity"]
+	var eye_taper = 0.08
+	var smile = 0.0
+	if c_a > d_a:
+		if c_a > a_a:
+			#c_a is highest chaotic
+			eye_glow = lerp(eye_glow,Color.WEB_PURPLE,c_a)
+			eye_taper = -0.08
+			smile = -0.01
+		else:
+			#a_a is highest arcane
+			eye_glow = lerp(eye_glow,Color.SPRING_GREEN,a_a)
+			eye_taper = 0.0
+			smile = 0.0
+	else:
+		if d_a > a_a:
+			#d_a is highest divine
+			eye_glow = lerp(eye_glow,Color.GOLD,d_a)
+			smile = 0.02
+		else:
+			#a_a is highest arcane
+			eye_glow = lerp(eye_glow,Color.SPRING_GREEN,a_a)
+			eye_taper = 0.0
+			smile = 0.0
+	set_eye_glow(eye_glow)
+	avatar.eye_taper = eye_taper
+	avatar.smile_addition = smile
+
 
 func set_stats_to_default():
 	last_mh_c_l = health / attributes["max_health"]
@@ -1415,7 +1449,7 @@ func request_cosmetics() -> void:
 	if is_multiplayer_authority():
 		sync_cosmetics.rpc(Global.skin, [Global.ears, Global.tail, Global.snout, Global.slim, Global.eyeColor, Global.mouthData], Global.display_name)
 		update_accessories_graphics.rpc(Inventory.accessories)
-		update_attribute_graphics.rpc(attributes["size"])
+		update_attribute_graphics.rpc(attributes["size"],attributes["chaotic_affinity"],attributes["divine_affinity"],attributes["arcane_affinity"])
 		sync_hand_anim.rpc(current_animation)
 		set_ghost.rpc(ghost)
 		update_status_effect_graphics.rpc(status_effects)

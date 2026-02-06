@@ -156,6 +156,10 @@ func _on_equipment_pressed(key):
 	preview_equipment_key(key)
 	Inventory.emit_signal("update_accessories")
 
+func update_eyes():
+	
+	pass
+
 func _on_equipment_input(_event,key):
 	if Input.is_action_just_pressed("lm"):
 		_on_equipment_pressed(key)
@@ -444,6 +448,43 @@ func _update_attributes(attributes) -> void:
 			l.set("theme_override_font_sizes/font_size",50.0)
 		if !bold:
 			stats_label_handler.add_child(l)
+	
+	
+	#graphics because yes
+	var eye_glow = Color.BLACK
+	var eye_taper = 0.08
+	var smile = 0.0
+	var c_a = attributes["chaotic_affinity"]/Lookup.max_attributes["chaotic_affinity"]
+	var d_a = attributes["divine_affinity"]/Lookup.max_attributes["divine_affinity"]
+	var a_a = attributes["arcane_affinity"]/Lookup.max_attributes["arcane_affinity"]
+	if c_a > d_a:
+		if c_a > a_a:
+			#c_a is highest chaotic
+			eye_glow = lerp(eye_glow,Color.WEB_PURPLE,c_a)
+			eye_taper = -0.08
+			smile = -0.01
+		else:
+			#a_a is highest arcane
+			eye_glow = lerp(eye_glow,Color.SPRING_GREEN,a_a)
+			eye_taper = 0.0
+			smile = 0.0
+	else:
+		if d_a > a_a:
+			#d_a is highest divine
+			eye_glow = lerp(eye_glow,Color.GOLD,d_a)
+			smile = 0.02
+		else:
+			#a_a is highest arcane
+			eye_glow = lerp(eye_glow,Color.SPRING_GREEN,a_a)
+			eye_taper = 0.0
+			smile = 0.0
+	set_eye_glow(eye_glow)
+	avatar.eye_taper = eye_taper
+	avatar.smile_addition = smile
+
+func set_eye_glow(col) -> void:
+	avatar.set_eye_param("shader_parameter/glow_col_2",col)
+	avatar.set_eye_param("shader_parameter/glow_col_3",col)
 
 @onready var mana_mat = $overlay/mana.material
 func _update_mana_graphics(val):

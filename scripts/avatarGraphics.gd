@@ -169,6 +169,7 @@ func set_material_for_all(mat):
 @export var blink = 0.0
 @export var time_between_blinks = 10.0
 @export var blink_speed = 20.0
+@export var smile_addition:float = 0.0
 
 var eye_rot = Vector2.ZERO
 
@@ -1204,7 +1205,7 @@ func spectrum_to_mouth(spectrum, delta = 1.0):
 	#pos.x = -o*0.01
 	
 	set_mouth_param("shader_parameter/open", open)
-	set_mouth_param("shader_parameter/smile", smile)
+	set_mouth_param("shader_parameter/smile", smile+smile_addition)
 	set_mouth_param("shader_parameter/mouth_size", Vector2(wide, 0.02))#Vector2(wide, 0.04))
 	set_mouth_param("shader_parameter/mouthPos", pos)
 	set_mouth_param("shader_parameter/teeth", teeth)
