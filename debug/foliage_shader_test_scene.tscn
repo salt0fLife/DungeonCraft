@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://ctlab8sib87jy"]
+
+[ext_resource type="Material" uid="uid://bdrf5dy40y0vr" path="res://assets/materials/particle_grass_process_mat.tres" id="1_v2jsn"]
+[ext_resource type="ArrayMesh" uid="uid://buca7go165sor" path="res://assets/meshes/grass_1.tres" id="5_d2vw6"]
+
+[node name="foliage_shader_test_scene" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-4.37114e-08, -0.5, 0.866025, 0, 0.866025, 0.5, -1, 2.18557e-08, -3.78552e-08, 0, 0, 0)
+shadow_enabled = true
+
+[node name="grass_system" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.22907)
+amount = 64
+lifetime = 0.1
+explosiveness = 1.0
+interpolate = false
+fract_delta = false
+process_material = ExtResource("1_v2jsn")
+draw_pass_1 = ExtResource("5_d2vw6")

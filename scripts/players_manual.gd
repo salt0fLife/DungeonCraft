@@ -78,7 +78,7 @@ func get_page_safe(indx:int) -> String:
 	else:
 		return contents[indx]
 
-const contents = [
+var contents = [
 	"well hello there!!!\n this is the first page!",
 	"hello world, this is the second page!",
 	"and the third to be a little unique",

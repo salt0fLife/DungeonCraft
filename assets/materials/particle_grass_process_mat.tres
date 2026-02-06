@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://bdrf5dy40y0vr"]
+
+[ext_resource type="Shader" path="res://assets/shaders/grass_particles_process_shader.gdshader" id="1_1f0um"]
+
+[resource]
+shader = ExtResource("1_1f0um")
+shader_parameter/num_particles = 8.0
+shader_parameter/side_length = 64
+shader_parameter/spacing = 1.0
+shader_parameter/y_height = 0.0
+shader_parameter/random_pos_strength = 1.08
+shader_parameter/random_rot_strength = 0.1
+shader_parameter/random_size_strength = 0.41

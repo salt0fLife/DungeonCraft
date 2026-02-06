@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://ypqlw3u87lmv"]
+[gd_scene load_steps=25 format=3 uid="uid://ypqlw3u87lmv"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_mfk44"]
 [ext_resource type="Script" path="res://scripts/the_moor.gd" id="1_vyo31"]
@@ -6,6 +6,9 @@
 [ext_resource type="Shader" path="res://assets/shaders/item_slot.gdshader" id="3_vmhbv"]
 [ext_resource type="AudioStream" uid="uid://bbh7g8qnq2m4h" path="res://assets/sounds/misc/discovery7.ogg" id="5_a00df"]
 [ext_resource type="PackedScene" uid="uid://cfuq164y84rpp" path="res://assets/environmentPieces/traversal/all_players_world_changer.tscn" id="6_dta4i"]
+[ext_resource type="Material" uid="uid://bdrf5dy40y0vr" path="res://assets/materials/particle_grass_process_mat.tres" id="7_anlln"]
+[ext_resource type="Script" path="res://scripts/copy_camera_pos.gd" id="7_shbfg"]
+[ext_resource type="ArrayMesh" uid="uid://buca7go165sor" path="res://assets/meshes/grass_1.tres" id="8_4dq2h"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_0ags3"]
 
@@ -157,6 +160,25 @@ noise = SubResource("FastNoiseLite_wo72l")
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.019084, 1), -0.523954, -0.523954, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_qxudb"]
+
+[sub_resource type="Sky" id="Sky_o4vs8"]
+sky_material = SubResource("PhysicalSkyMaterial_qxudb")
+
+[sub_resource type="Environment" id="Environment_nstc6"]
+background_mode = 2
+sky = SubResource("Sky_o4vs8")
+ssao_detail = 5.0
+sdfgi_cascades = 2
+sdfgi_max_distance = 51.2
+sdfgi_y_scale = 0
+glow_enabled = true
+volumetric_fog_enabled = true
+volumetric_fog_albedo = Color(0.643137, 0.807843, 0.705882, 1)
+volumetric_fog_temporal_reprojection_enabled = false
+adjustment_enabled = true
+adjustment_saturation = 1.27
+
 [node name="world_1" type="Node3D"]
 script = ExtResource("1_vyo31")
 
@@ -191,10 +213,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 354.5
-offset_top = 260.5
-offset_right = 797.5
-offset_bottom = 387.511
+offset_left = -221.5
+offset_top = -63.5
+offset_right = 221.5
+offset_bottom = 63.511
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("3_g1qmm")
@@ -246,3 +268,22 @@ volume_db = -4.554
 [node name="all_players_world_changer" parent="." instance=ExtResource("6_dta4i")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -8)
 world_key = "debug"
+
+[node name="particle_grass_system" type="Node3D" parent="."]
+script = ExtResource("7_shbfg")
+
+[node name="grass_system" type="GPUParticles3D" parent="particle_grass_system"]
+amount = 4096
+lifetime = 0.1
+explosiveness = 1.0
+interpolate = false
+fract_delta = false
+process_material = ExtResource("7_anlln")
+draw_pass_1 = ExtResource("8_4dq2h")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_nstc6")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.917161, 0.311129, -0.249028, -0.0650037, 0.733313, 0.676776, 0.393181, -0.604525, 0.692791, 0, 4.96528, 0)
+shadow_enabled = true

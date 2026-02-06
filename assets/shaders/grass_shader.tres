@@ -21,6 +21,7 @@ uniform vec3 uv1_offset;
 uniform vec3 uv2_scale;
 uniform vec3 uv2_offset;
 uniform float speed = 1.0;
+uniform vec3 backlight_col : source_color;
 
 
 void vertex() {
@@ -40,7 +41,8 @@ void vertex() {
 
 
 void fragment() {
-	NORMAL = vec3(0.0,1.0,0.0) + VIEW;
+	//NORMAL = mix(NORMAL,CAMERA_DIRECTION_WORLD,0.5);
+	//NORMAL = vec3(0.0,1.0,0.0); back lighting go brrrrrrrr >:3c
 	vec2 base_uv = UV;
 	vec4 albedo_tex = texture(texture_albedo,base_uv);
 	ALBEDO = albedo.rgb * albedo_tex.rgb;
@@ -51,6 +53,7 @@ void fragment() {
 	ROUGHNESS = roughness_tex * roughness;
 	SPECULAR = specular;
 	ALPHA *= albedo.a * albedo_tex.a;
+	BACKLIGHT = backlight_col;
 }
 "
 
@@ -69,4 +72,5 @@ shader_parameter/uv1_offset = Vector3(0, 0, 0)
 shader_parameter/uv2_scale = Vector3(1, 1, 1)
 shader_parameter/uv2_offset = Vector3(0, 0, 0)
 shader_parameter/speed = 1.0
+shader_parameter/backlight_col = Color(0.768627, 0.866667, 0.745098, 1)
 shader_parameter/texture_albedo = ExtResource("1_pra0d")

@@ -327,6 +327,7 @@ func update_anims_from_item_type(type):
 		Lookup.itemType.book:
 			play_arm_anim("read")
 		_:
+			reset_first_person_hand()
 			walk_anim_key = "walk"
 			idle_anim_key = "idle"
 			pass
