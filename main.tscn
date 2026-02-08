@@ -377,7 +377,7 @@ _spawnable_scenes = PackedStringArray("res://entities/projectiles/arrow.tscn", "
 spawn_path = NodePath(".")
 
 [node name="worldSync" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://world/peaceful_island.tscn", "res://world/world_1.tscn", "res://world/world_2.tscn", "res://debug/debug_world.tscn", "res://world/gm_construct.tscn", "res://world/skywars_prot_rainy.tscn", "res://world/dungeon_world.tscn", "res://world/wayland_main.tscn", "res://world/elder_tree_temple.tscn", "res://world/test_modular_world.tscn", "res://world/the_moor.tscn")
+_spawnable_scenes = PackedStringArray("res://world/peaceful_island.tscn", "res://world/world_1.tscn", "res://world/world_2.tscn", "res://debug/debug_world.tscn", "res://world/gm_construct.tscn", "res://world/skywars_prot_rainy.tscn", "res://world/dungeon_world.tscn", "res://world/wayland_main.tscn", "res://world/elder_tree_temple.tscn", "res://world/test_modular_world.tscn", "res://world/the_moor.tscn", "res://world/maze_world.tscn")
 spawn_path = NodePath(".")
 
 [node name="itemHandler" type="Node3D" parent="."]

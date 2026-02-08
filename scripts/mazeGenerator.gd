@@ -1,4 +1,5 @@
-extends Node2D
+@tool
+extends Node3D
 @export var height : int = 4
 @export var width : int = 4
 @export var starting_pos = Vector2i.ZERO
@@ -7,17 +8,19 @@ extends Node2D
 @export var max_straight:int = 10
 @export var straight_backtrack:int = 3
 @export var straight_backtrack_random : int = 3
-var cell_spacing = 32.0
+var cell_spacing = 10.0
 
 func _ready():
 	generate_maze()
 	#inject_randomness()
 	#generate_graphics_rectangles() #for base_layer
-	generate_graphics_textures()
-	generate_graphics_intersections()
-	highlight_path()
-	highlight_injected_random()
+	#generate_graphics_textures()
+	#generate_graphics_intersections()
+	#highlight_path()
 	#calculate_unique_intersections()
+	generate_graphics_3d()
+	#highlight_path_3d()
+	highlight_injected_random_3d()
 	print(randi_range_from_seed(seed,0,10))
 	pass
 
@@ -64,9 +67,22 @@ func highlight_path() -> void:
 	draw_maze_tile(ending_pos.x,ending_pos.y,Color.BLUE)
 	pass
 
+func highlight_path_3d() -> void:
+	for pos in path_to_exit:
+		var a = load("res://debug/generation/maze/testPathwayIndicator.tscn").instantiate()
+		a.position = Vector3(pos.x*cell_spacing,0.0,pos.y*cell_spacing)
+		add_child(a)
+	pass
+
 func highlight_injected_random() -> void:
 	for pos in randomized_cells:
 		draw_maze_tile(pos.x,pos.y,Color(1.0,1.0,0.0,0.25))
+
+func highlight_injected_random_3d() -> void:
+	for pos in randomized_cells:
+		var s = load("res://debug/generation/maze/test_randomized_indicator.tscn").instantiate()
+		s.position = Vector3(pos.x*cell_spacing,0.0,pos.y*cell_spacing)
+		add_child(s)
 
 func generate_maze() -> void:
 	starting_pos.x = clampi(starting_pos.x,0,width)
@@ -88,7 +104,7 @@ func generate_maze() -> void:
 	#var path_to_exit = [] #set this as the path when the cell_pos == ending_pos
 	var last_set_val = UP #starting val does not really matter
 	var finished: bool = false
-	var max_iterrations: int = 16384
+	var max_iterrations: int = 4096
 	var found_path = false
 	cells[starting_pos.x][starting_pos.y] = OPEN
 	while !finished: #loops until you stop it
@@ -201,6 +217,7 @@ func inject_randomness() -> void:
 				pass
 			i += 1
 
+
 func get_valid_options(coords : Vector2i) -> Array:
 	var options = [ #up down left right
 		Vector3i(coords.x,coords.y+1,UP),
@@ -270,6 +287,65 @@ func generate_graphics_textures_old():
 				r.texture = load("res://debug/textures/NewPiskel-2.png1.png")
 			r.position = Vector2(float(x)*cell_spacing, float(y)*cell_spacing)
 			add_child(r)
+
+const tiles_scenes = [
+	"res://debug/generation/maze/open.tscn", #0 empty
+	"res://debug/generation/maze/dead_end2.tscn", #1 dead end
+	"res://debug/generation/maze/open.tscn", #2 four way
+	"res://debug/generation/maze/three_way2.tscn", #3 three way
+	"res://debug/generation/maze/corner2.tscn", #4 corner
+	"res://debug/generation/maze/hallway2.tscn", #5 hallway
+	"res://debug/generation/maze/open.tscn", #6 neutral
+]
+
+const rough_tiles_scenes = [
+	"res://debug/generation/maze/open3.tscn", #0 empty
+	"res://debug/generation/maze/dead_end3.tscn", #1 dead end
+	"res://debug/generation/maze/open3.tscn", #2 four way
+	"res://debug/generation/maze/three_way3.tscn", #3 three way
+	"res://debug/generation/maze/corner3.tscn", #4 corner
+	"res://debug/generation/maze/hallway3.tscn", #5 hallway
+	"res://debug/generation/maze/open3.tscn", #6 neutral
+]
+
+func generate_graphics_3d() -> void:
+	var si = 0
+	for x in range(0,width):
+		for y in range(0,height):
+			si += 1
+			var val = cells[x][y]
+			var tex_indx = 0
+			var tex_rot = 0
+			
+			var c_key = get_connected_borders(x,y)
+			
+			for i in range(0,4):
+				if connected_lookup.has(c_key):
+					tex_indx = connected_lookup[c_key]
+					break
+				else:
+					c_key = rotate_key_90(c_key)
+					tex_rot += 1
+			#if cant find it tex_indx = 0 (empty)
+			var path = tiles_scenes[tex_indx]
+			
+			if randf_from_seed(float(x+y+si)) > 0.25:
+				path = rough_tiles_scenes[tex_indx]
+			
+			var s = load(path).instantiate()
+			s.position = Vector3(float(x)*cell_spacing, 0.0,float(y)*cell_spacing)
+			match tex_rot:
+				1: 
+					s.rotation.y -= PI*0.5
+					#s.position.x -= cell_spacing
+				2: 
+					s.rotation.y -= PI
+					#s.position.z += cell_spacing
+					#s.position.x -= cell_spacing
+				3:
+					s.rotation.y -= PI*1.5
+					#s.position.z += cell_spacing
+			add_child(s)
 
 const tiles_tex = [
 	"res://assets/textures/maze/mazeTiles04.png", #0 empty

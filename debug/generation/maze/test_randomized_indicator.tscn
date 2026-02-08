@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8bw3iftrcsh3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xwssn"]
+shading_mode = 0
+disable_fog = true
+albedo_color = Color(0.945098, 0.686275, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ixyv4"]
+material = SubResource("StandardMaterial3D_xwssn")
+
+[node name="testRandomizedIndicator" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 51, 0)
+mesh = SubResource("SphereMesh_ixyv4")

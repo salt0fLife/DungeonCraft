@@ -100,7 +100,7 @@ func host_local():
 	multiplayer.server_relay = true
 	playerSync.boot(true)
 	hide_menu()
-	_on_change_world("the_moor")
+	_on_change_world("maze_world")
 
 func join_local(address = ""):
 	Global.is_host = false
@@ -575,7 +575,7 @@ func game_over(): #only called on host rpc other graphical changes for everyone 
 		#node.rpc_id(auth,"reset_all") #tells that player node to reset like it was just spawned in
 	for i in itemHandler.get_children(false):
 		i.call_deferred("queue_free") #destroys all items
-	_on_change_world("the_moor")
+	_on_change_world("maze_world")
 
 var thunder_sounds = [
 	"res://assets/sounds/explosion/lightning_thunder.ogg",

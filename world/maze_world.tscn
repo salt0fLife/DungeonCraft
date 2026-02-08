@@ -1,0 +1,175 @@
+[gd_scene load_steps=17 format=3 uid="uid://u6n0xqknaoj1"]
+
+[ext_resource type="Script" path="res://scripts/maze_world.gd" id="1_ifdhu"]
+[ext_resource type="Script" path="res://scripts/mazeGenerator.gd" id="2_3xfjh"]
+[ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="3_2jce0"]
+[ext_resource type="AudioStream" uid="uid://bo1dbrdg1edqo" path="res://assets/sounds/entities/crote/CroteDistantHowl.wav" id="4_5p4ik"]
+[ext_resource type="AudioStream" uid="uid://bxb6yhrfr4qk7" path="res://assets/sounds/entities/crote/CroteNearby.wav" id="5_hgaxc"]
+[ext_resource type="PackedScene" uid="uid://c4u7j7ayr1kum" path="res://assets/environmentPieces/ambience/rain.tscn" id="6_scy27"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_3bqov"]
+
+[sub_resource type="Shader" id="Shader_mq27s"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.2.1.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color,filter_linear_mipmap,repeat_enable;
+uniform sampler2D texture_rain : source_color,filter_linear_mipmap,repeat_enable;
+uniform float point_size : hint_range(0,128);
+uniform float roughness : hint_range(0,1);
+uniform sampler2D texture_metallic : hint_default_white,filter_linear_mipmap,repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r,filter_linear_mipmap,repeat_enable;
+uniform float specular;
+uniform float metallic;
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+uniform vec3 puddle_color : source_color;
+
+void vertex() {
+	UV=UV*uv1_scale.xy+uv1_offset.xy;
+}
+
+
+
+
+float ripple(vec2 uv, vec2 b_uv) {
+	float ripple = (.1 / length(uv)*(sin(TIME*16.0+b_uv.x*100.0)+1.0)); //* sin(TIME*10.0 + sin(b_uv.x*TIME) + sin(b_uv.y*TIME)) + 1.0
+	//float rays = max(0,1.0 - abs(uv.x * uv.y) * 1000.0) * ripple;
+	//ripple += rays;
+	if (sin((b_uv.x)*5.0 - sin(TIME)*3.0 + 1.0) < 0.99) {
+		ripple = 0.0;
+	}
+	return ripple;
+}
+
+vec2 RandomVec2(vec2 seed) {
+	seed = fract(seed * vec2(123.45, 784.29));
+	seed += dot(seed, seed + 875.34);
+	float x = fract(seed.x * 164.32);
+	float y = fract(seed.y * 287.21);
+	return vec2(x,y) - 0.5; //was 0.0-1.0 now 0.0-0.5
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
+	float roughness_tex = dot(texture(texture_rain,base_uv*vec2(0.02,0.02)),roughness_texture_channel);
+	vec4 albedo_tex = texture(texture_albedo,base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	ALBEDO = mix(ALBEDO, puddle_color, (1.0 - roughness_tex)*0.5);
+	float metallic_tex = dot(texture(texture_metallic,base_uv),metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	ROUGHNESS = roughness_tex * roughness;
+	SPECULAR = specular;
+	//vec2 grid_uv = fract(base_uv*10.0) - 0.5;
+	//vec2 grid_id = floor(base_uv*10.0);
+	//vec2 rv = RandomVec2(grid_id);
+	//float size = (rv.x + 0.5);
+	//ALBEDO.r += ripple(grid_uv + rv, rv) * size;
+	//ALBEDO = mix(ALBEDO, puddle_color, ripple(grid_uv + rv, rv) * size*0.25);
+}
+"
+
+[sub_resource type="Gradient" id="Gradient_ksdqg"]
+colors = PackedColorArray(0.381703, 0.381703, 0.381703, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ekow4"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_flird"]
+seamless = true
+color_ramp = SubResource("Gradient_ksdqg")
+noise = SubResource("FastNoiseLite_ekow4")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_g00mk"]
+render_priority = 0
+shader = SubResource("Shader_mq27s")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = null
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(500, 500, 500)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+shader_parameter/puddle_color = Color(0.27451, 0.47451, 0.639216, 1)
+shader_parameter/texture_albedo = ExtResource("3_2jce0")
+shader_parameter/texture_rain = SubResource("NoiseTexture2D_flird")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_0wgrm"]
+material = SubResource("ShaderMaterial_g00mk")
+size = Vector2(500, 500)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tik6y"]
+
+[sub_resource type="Sky" id="Sky_ifmfg"]
+sky_material = SubResource("ProceduralSkyMaterial_tik6y")
+
+[sub_resource type="Environment" id="Environment_pfntb"]
+background_mode = 2
+sky = SubResource("Sky_ifmfg")
+ssr_enabled = true
+ssr_max_steps = 32
+ssao_enabled = true
+ssil_enabled = true
+sdfgi_use_occlusion = true
+sdfgi_min_cell_size = 1.0
+sdfgi_cascade0_distance = 64.0
+sdfgi_max_distance = 1024.0
+sdfgi_normal_bias = 1.0
+sdfgi_probe_bias = 1.0
+glow_enabled = true
+fog_enabled = true
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.02
+volumetric_fog_albedo = Color(0.823529, 0.929412, 0.878431, 1)
+volumetric_fog_emission = Color(0.160784, 0.286275, 0.298039, 1)
+volumetric_fog_emission_energy = 0.0
+volumetric_fog_detail_spread = 1.0
+volumetric_fog_ambient_inject = 0.5
+volumetric_fog_temporal_reprojection_enabled = false
+adjustment_enabled = true
+adjustment_brightness = 0.58
+adjustment_contrast = 1.17
+adjustment_saturation = 1.25
+
+[node name="maze_world" type="Node3D"]
+script = ExtResource("1_ifdhu")
+
+[node name="mazeGenerator" type="Node3D" parent="."]
+script = ExtResource("2_3xfjh")
+height = 20
+width = 20
+ending_pos = Vector2i(19, 19)
+seed = 2
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("WorldBoundaryShape3D_3bqov")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("PlaneMesh_0wgrm")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_pfntb")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.980088, -0.191798, 0.0513922, 0.0195558, 0.350797, 0.936247, -0.197599, -0.9166, 0.347562, 0, 0, 0)
+shadow_enabled = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 67.2196, 12.7197, 52.2147)
+stream = ExtResource("4_5p4ik")
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.2279, 5.72959, 23.4382)
+stream = ExtResource("5_hgaxc")
+
+[node name="rain" parent="." instance=ExtResource("6_scy27")]

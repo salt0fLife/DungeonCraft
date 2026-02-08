@@ -1,0 +1,93 @@
+[gd_scene load_steps=18 format=3 uid="uid://b40ra65epyo55"]
+
+[ext_resource type="PackedScene" uid="uid://ch2pnr1qtax77" path="res://debug/generation/maze/hallway.tscn" id="1_rxma1"]
+[ext_resource type="PackedScene" uid="uid://djukhenv6e08h" path="res://debug/generation/maze/three_way.tscn" id="2_2yo2n"]
+[ext_resource type="PackedScene" uid="uid://ii2mhjmcv4un" path="res://debug/generation/maze/dead_end.tscn" id="3_78226"]
+[ext_resource type="PackedScene" uid="uid://b8cxtm7hdj8oe" path="res://debug/generation/maze/corner.tscn" id="4_502t2"]
+[ext_resource type="PackedScene" uid="uid://bmkalrh1qpd5c" path="res://debug/generation/maze/four_way.tscn" id="5_3b0mf"]
+[ext_resource type="PackedScene" uid="uid://deevhiwefq77l" path="res://debug/generation/maze/unique_1.tscn" id="6_5t6f4"]
+[ext_resource type="PackedScene" uid="uid://b4uh5iepg4ldx" path="res://debug/generation/maze/base_cell.tscn" id="7_unmjq"]
+[ext_resource type="PackedScene" uid="uid://crdgv1n3ajd3n" path="res://debug/generation/maze/hallway2.tscn" id="8_df02o"]
+[ext_resource type="PackedScene" uid="uid://cmeuyqalta51o" path="res://debug/generation/maze/three_way2.tscn" id="9_nanv7"]
+[ext_resource type="PackedScene" uid="uid://d3qq00mj342y1" path="res://debug/generation/maze/dead_end2.tscn" id="10_6dlxk"]
+[ext_resource type="PackedScene" uid="uid://3te0bxmreo8n" path="res://debug/generation/maze/corner2.tscn" id="11_jv26e"]
+[ext_resource type="PackedScene" uid="uid://cv8tr1vty8qci" path="res://debug/generation/maze/open.tscn" id="12_pq2cs"]
+[ext_resource type="PackedScene" uid="uid://qnp0cvxkdeo6" path="res://debug/generation/maze/unique_test2.tscn" id="13_e4iab"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uj6da"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_eb3bq"]
+_surfaces = [{
+"aabb": AABB(0, 0, -2, 2, 10, 2.00001),
+"format": 34896613377,
+"index_count": 36,
+"index_data": PackedByteArray(0, 0, 3, 0, 2, 0, 0, 0, 1, 0, 3, 0, 4, 0, 7, 0, 5, 0, 4, 0, 6, 0, 7, 0, 3, 0, 6, 0, 2, 0, 3, 0, 7, 0, 6, 0, 0, 0, 5, 0, 1, 0, 0, 0, 4, 0, 5, 0, 1, 0, 7, 0, 3, 0, 1, 0, 5, 0, 7, 0, 2, 0, 4, 0, 0, 0, 2, 0, 6, 0, 4, 0),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 254, 255, 0, 0, 255, 255, 0, 0, 254, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 254, 255, 0, 0, 255, 255, 255, 255, 254, 255, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0)
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_0qeil"]
+resource_name = "mazeCellsTest_Plane"
+_surfaces = [{
+"aabb": AABB(0, 0, -2, 2, 10, 2.00001),
+"attribute_data": PackedByteArray(0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0),
+"format": 34896613399,
+"index_count": 36,
+"index_data": PackedByteArray(1, 0, 10, 0, 7, 0, 1, 0, 4, 0, 10, 0, 13, 0, 22, 0, 16, 0, 13, 0, 19, 0, 22, 0, 9, 0, 18, 0, 6, 0, 9, 0, 21, 0, 18, 0, 0, 0, 15, 0, 3, 0, 0, 0, 12, 0, 15, 0, 5, 0, 23, 0, 11, 0, 5, 0, 17, 0, 23, 0, 8, 0, 14, 0, 2, 0, 8, 0, 20, 0, 14, 0),
+"material": SubResource("StandardMaterial3D_uj6da"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 254, 255, 254, 127, 0, 0, 0, 0, 254, 255, 255, 63, 0, 0, 0, 0, 254, 255, 255, 191, 255, 255, 0, 0, 254, 255, 254, 127, 255, 255, 0, 0, 254, 255, 255, 63, 255, 255, 0, 0, 254, 255, 255, 191, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 255, 63, 0, 0, 0, 0, 0, 0, 255, 191, 255, 255, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 255, 63, 255, 255, 0, 0, 0, 0, 255, 191, 0, 0, 255, 255, 254, 255, 254, 127, 0, 0, 255, 255, 254, 255, 255, 191, 0, 0, 255, 255, 254, 255, 255, 191, 255, 255, 255, 255, 254, 255, 254, 127, 255, 255, 255, 255, 254, 255, 255, 191, 255, 255, 255, 255, 254, 255, 255, 191, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 191, 0, 0, 255, 255, 0, 0, 255, 191, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 255, 191, 255, 255, 255, 255, 0, 0, 255, 191, 255, 127, 255, 255, 0, 0, 255, 127, 255, 127, 255, 255, 255, 127, 255, 255, 0, 0, 255, 127, 255, 127, 0, 0, 255, 255, 255, 127, 0, 0, 255, 127, 255, 127, 255, 255, 255, 255, 255, 127, 0, 0, 255, 127, 255, 127, 0, 0, 255, 127, 255, 255, 255, 255, 255, 127, 255, 127, 255, 255, 255, 127, 255, 255, 255, 255, 255, 127, 255, 127, 0, 0, 255, 255, 255, 127, 255, 255, 255, 127, 255, 127, 255, 255, 255, 255, 255, 127, 255, 255, 255, 127, 255, 127, 0, 0)
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_eb3bq")
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_keeky"]
+data = PackedVector3Array(0, 0, 0, 2, 0, -2, 0, 0, -2, 0, 0, 0, 2, 0, 0, 2, 0, -2, 0, 10, 0, 2, 10, -2, 2, 10, 0, 0, 10, 0, 0, 10, -2, 2, 10, -2, 2, 0, -2, 0, 10, -2, 0, 0, -2, 2, 0, -2, 2, 10, -2, 0, 10, -2, 0, 0, 0, 2, 10, 0, 2, 0, 0, 0, 0, 0, 0, 10, 0, 2, 10, 0, 2, 0, 0, 2, 10, -2, 2, 0, -2, 2, 0, 0, 2, 10, 0, 2, 10, -2, 0, 0, -2, 0, 10, 0, 0, 0, 0, 0, 0, -2, 0, 10, -2, 0, 10, 0)
+
+[node name="mazeCells" type="Node3D"]
+
+[node name="mazeCellsTest" type="Node3D" parent="."]
+visible = false
+
+[node name="baseCell" type="MeshInstance3D" parent="mazeCellsTest"]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+mesh = SubResource("ArrayMesh_0qeil")
+skeleton = NodePath("")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="mazeCellsTest/baseCell"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="mazeCellsTest/baseCell/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_keeky")
+
+[node name="hallway" parent="mazeCellsTest" instance=ExtResource("1_rxma1")]
+
+[node name="threeWay" parent="mazeCellsTest" instance=ExtResource("2_2yo2n")]
+
+[node name="deadEnd" parent="mazeCellsTest" instance=ExtResource("3_78226")]
+
+[node name="corner" parent="mazeCellsTest" instance=ExtResource("4_502t2")]
+
+[node name="fourWay" parent="mazeCellsTest" instance=ExtResource("5_3b0mf")]
+
+[node name="unique1" parent="mazeCellsTest" instance=ExtResource("6_5t6f4")]
+
+[node name="mazeCellsTest2" type="Node3D" parent="."]
+
+[node name="baseCell" parent="mazeCellsTest2" instance=ExtResource("7_unmjq")]
+
+[node name="hallway" parent="mazeCellsTest2" instance=ExtResource("8_df02o")]
+
+[node name="three_way" parent="mazeCellsTest2" instance=ExtResource("9_nanv7")]
+
+[node name="dead_end" parent="mazeCellsTest2" instance=ExtResource("10_6dlxk")]
+
+[node name="corner" parent="mazeCellsTest2" instance=ExtResource("11_jv26e")]
+
+[node name="open" parent="mazeCellsTest2" instance=ExtResource("12_pq2cs")]
+
+[node name="uniqueTest" parent="mazeCellsTest2" instance=ExtResource("13_e4iab")]

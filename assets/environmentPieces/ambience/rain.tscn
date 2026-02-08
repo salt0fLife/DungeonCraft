@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://c4u7j7ayr1kum"]
+[gd_scene load_steps=12 format=3 uid="uid://c4u7j7ayr1kum"]
 
 [ext_resource type="Script" path="res://scripts/environment_effects.gd" id="1_x6rxq"]
 [ext_resource type="AudioStream" uid="uid://b2wcl671hpr16" path="res://assets/sounds/ambience/Rain Heavy Loud.mp3" id="2_v7avd"]
@@ -17,14 +17,17 @@ sub_emitter_mode = 3
 sub_emitter_amount_at_collision = 6
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ss6go"]
+shading_mode = 2
 diffuse_mode = 1
 specular_mode = 2
-albedo_color = Color(0.380392, 0.596078, 0.752941, 1)
+albedo_color = Color(0.65098, 0.741176, 0.784314, 1)
+rim_enabled = true
+rim = 0.21
 disable_receive_shadows = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_lb5do"]
 material = SubResource("StandardMaterial3D_ss6go")
-size = Vector3(0.05, 0.5, 0.05)
+size = Vector3(0.01, 0.5, 0.01)
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_re8k3"]
 emission_shape_offset = Vector3(0, 25, 0)
@@ -41,12 +44,8 @@ direction = Vector3(0, 1, 0)
 initial_velocity_min = 2.0
 initial_velocity_max = 3.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n71wx"]
-albedo_color = Color(0.376471, 0.490196, 0.686275, 1)
-refraction_enabled = true
-
 [sub_resource type="BoxMesh" id="BoxMesh_c28bg"]
-material = SubResource("StandardMaterial3D_n71wx")
+material = SubResource("StandardMaterial3D_ss6go")
 size = Vector3(0.02, 0.02, 0.02)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xdtx5"]
@@ -63,6 +62,7 @@ lightning_chance = 0.1
 
 [node name="rainNear" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+cast_shadow = 0
 amount = 2048
 sub_emitter = NodePath("../rainSplash")
 lifetime = 5.0
@@ -73,6 +73,7 @@ draw_pass_1 = SubResource("BoxMesh_lb5do")
 
 [node name="rainFar" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+cast_shadow = 0
 amount = 4096
 lifetime = 5.0
 collision_base_size = 1.0
@@ -81,6 +82,7 @@ process_material = SubResource("ParticleProcessMaterial_re8k3")
 draw_pass_1 = SubResource("BoxMesh_lb5do")
 
 [node name="rainSplash" type="GPUParticles3D" parent="."]
+cast_shadow = 0
 emitting = false
 amount = 2048
 lifetime = 0.5

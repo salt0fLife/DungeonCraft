@@ -49,7 +49,8 @@ const worlds = {
 	"wayland" : ["res://world/wayland_main.tscn",0.0],
 	"elder_tree_temple" : ["res://world/elder_tree_temple.tscn", 0.0],
 	"test_modular" : ["res://world/test_modular_world.tscn",1.0],
-	"the_moor" : ["res://world/the_moor.tscn"]
+	"the_moor" : ["res://world/the_moor.tscn",0.0],
+	"maze_world" : ["res://world/maze_world.tscn",1.0]
 }
 
 enum itemType {
