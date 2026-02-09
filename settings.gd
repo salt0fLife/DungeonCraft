@@ -3,7 +3,7 @@ signal updated
 signal update_combat_boxes
 
 var user_settings = {
-	"auto_flying_perspective" : true,
+	"auto_flying_perspective" : false,
 	"desired_flying_perspective" : 1,
 	"look_sensitivity" : 2.5,
 	"desired_fov" : 90.0,

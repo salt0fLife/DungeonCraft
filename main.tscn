@@ -418,6 +418,7 @@ metadata/_edit_use_anchors_ = true
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("9_486y8")
+theme_override_font_sizes/normal_font_size = 24
 bbcode_enabled = true
 text = "Early access 012"
 scroll_following = true

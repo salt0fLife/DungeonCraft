@@ -66,7 +66,7 @@ shader_parameter/uv1_scale = Vector3(1, 1, 1)
 shader_parameter/uv1_offset = Vector3(0, 0, 0)
 shader_parameter/uv2_scale = Vector3(1, 1, 1)
 shader_parameter/uv2_offset = Vector3(0, 0, 0)
-shader_parameter/enchanted_col = Color(0, 0, 0, 1)
+shader_parameter/enchanted_col = Color(0.976471, 0.352941, 1, 1)
 shader_parameter/texture_albedo = ExtResource("1_41j6y")
 shader_parameter/enchanted_tex = ExtResource("1_uhxhb")
 

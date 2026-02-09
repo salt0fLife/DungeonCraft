@@ -2,21 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dq5ejxv0w5cjg"
-path.s3tc="res://.godot/imported/goldMinnow.png-48055aceb0dbbc441d8339ef3794abb3.s3tc.ctex"
+uid="uid://cvrw8s7ny3d8b"
+path="res://.godot/imported/deathSythe.png-d6316519f13c1d842bfa66dac9ddc000.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/icons/goldMinnow.png"
-dest_files=["res://.godot/imported/goldMinnow.png-48055aceb0dbbc441d8339ef3794abb3.s3tc.ctex"]
+source_file="res://assets/textures/items/deathSythe.png"
+dest_files=["res://.godot/imported/deathSythe.png-d6316519f13c1d842bfa66dac9ddc000.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1

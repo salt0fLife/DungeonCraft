@@ -1,4 +1,3 @@
-@tool
 extends Node3D
 @export var height : int = 4
 @export var width : int = 4
@@ -10,19 +9,33 @@ extends Node3D
 @export var straight_backtrack_random : int = 3
 var cell_spacing = 10.0
 
-func _ready():
-	generate_maze()
+#func _ready():
+	#resize_cells()
 	#inject_randomness()
-	#generate_graphics_rectangles() #for base_layer
-	#generate_graphics_textures()
-	#generate_graphics_intersections()
-	#highlight_path()
-	#calculate_unique_intersections()
-	generate_graphics_3d()
+	#cuttout_area(Vector2i(19,19),Vector2i(30,30))
+	#generate_maze()
+	##inject_randomness()
+	##generate_graphics_rectangles() #for base_layer
+	##generate_graphics_textures()
+	##generate_graphics_intersections()
+	##highlight_path()
+	##calculate_unique_intersections()
+	#generate_graphics_3d()
 	#highlight_path_3d()
+	#highlight_injected_random_3d()
+	#print(randi_range_from_seed(seed,0,10))
+	#pass
+
+func create_from_seed(s:int) -> void:
+	seed = s
+	resize_cells()
+	inject_randomness()
+	cuttout_area(Vector2i(19,19),Vector2i(30,30))
+	generate_maze()
+	generate_graphics_3d()
+	highlight_path_3d()
 	highlight_injected_random_3d()
 	print(randi_range_from_seed(seed,0,10))
-	pass
 
 func calculate_unique_intersections():
 	var keys = [] #tbf 256 down to 70 is pretty good
@@ -71,6 +84,8 @@ func highlight_path_3d() -> void:
 	for pos in path_to_exit:
 		var a = load("res://debug/generation/maze/testPathwayIndicator.tscn").instantiate()
 		a.position = Vector3(pos.x*cell_spacing,0.0,pos.y*cell_spacing)
+		a.position.x -= width*0.5 * cell_spacing
+		a.position.z -= height*0.5 * cell_spacing
 		add_child(a)
 	pass
 
@@ -82,9 +97,11 @@ func highlight_injected_random_3d() -> void:
 	for pos in randomized_cells:
 		var s = load("res://debug/generation/maze/test_randomized_indicator.tscn").instantiate()
 		s.position = Vector3(pos.x*cell_spacing,0.0,pos.y*cell_spacing)
+		s.position.x -= width*0.5 * cell_spacing
+		s.position.z -= height*0.5 * cell_spacing
 		add_child(s)
 
-func generate_maze() -> void:
+func resize_cells() -> void:
 	starting_pos.x = clampi(starting_pos.x,0,width)
 	starting_pos.y = clampi(starting_pos.y,0,height)
 	#scales cells array to correct size
@@ -97,7 +114,9 @@ func generate_maze() -> void:
 			pass
 		new_cells += [ar]
 	cells = new_cells
-	
+
+func generate_maze() -> void:
+	#requires resize cells first
 	var cell_coords : Vector2i = starting_pos
 	var current_straight = 0
 	var path = [] #keep track of your path and when you cannot continue backtrack
@@ -202,6 +221,13 @@ func generate_maze() -> void:
 			print("max maze iterations reached")
 			finished = true
 
+func cuttout_area(start_pos:Vector2i,end_pos:Vector2i) -> void:
+	var size = end_pos - start_pos
+	for x in range(0,size.x):
+		for y in range(0,size.y):
+			var pos = Vector2i(x,y)+start_pos
+			cells[pos.x][pos.y] = OPEN
+
 var randomized_cells = []
 func inject_randomness() -> void:
 	var i = 0
@@ -216,7 +242,6 @@ func inject_randomness() -> void:
 				randomized_cells += [Vector2i(x,y)]
 				pass
 			i += 1
-
 
 func get_valid_options(coords : Vector2i) -> Array:
 	var options = [ #up down left right
@@ -317,6 +342,9 @@ func generate_graphics_3d() -> void:
 			var tex_indx = 0
 			var tex_rot = 0
 			
+			if val == OPEN:
+				continue #so it does not instantiate for open
+			
 			var c_key = get_connected_borders(x,y)
 			
 			for i in range(0,4):
@@ -331,9 +359,10 @@ func generate_graphics_3d() -> void:
 			
 			if randf_from_seed(float(x+y+si)) > 0.25:
 				path = rough_tiles_scenes[tex_indx]
-			
 			var s = load(path).instantiate()
 			s.position = Vector3(float(x)*cell_spacing, 0.0,float(y)*cell_spacing)
+			s.position.x -= width*0.5 * cell_spacing
+			s.position.z -= height*0.5 * cell_spacing
 			match tex_rot:
 				1: 
 					s.rotation.y -= PI*0.5
@@ -419,15 +448,28 @@ func get_connected_borders(x:int,y:int): #up right down left
 		RIGHT:connections[3] = true
 		DOWN:connections[0] = true
 		LEFT:connections[1] = true
+		OPEN:
+			connections[0] = true
+			connections[1] = true
+			connections[2] = true
+			connections[3] = true
 	
 	if is_in_bounds(up): #connects to all the surrounding cells that exit from it
-		if cells[up.x][up.y] == UP: connections[0] = true
+		match cells[up.x][up.y]:
+			UP: connections[0] = true
+			#OPEN: connections[0] = true
 	if is_in_bounds(right):
-		if cells[right.x][right.y] == RIGHT: connections[1] = true
+		match cells[right.x][right.y]:
+			RIGHT: connections[1] = true
+			#OPEN: connections[1] = true
 	if is_in_bounds(down):
-		if cells[down.x][down.y] == DOWN: connections[2] = true
+		match cells[down.x][down.y]:
+			DOWN: connections[2] = true
+			#OPEN: connections[2] = true
 	if is_in_bounds(left):
-		if cells[left.x][left.y] == LEFT: connections[3] = true
+		match cells[left.x][left.y]:
+			LEFT: connections[3] = true
+			#OPEN: connections[3] = true
 	return connections #up right down left
 
 func rotate_connected_borders(c_key : Array) -> Array: #up right down left

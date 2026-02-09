@@ -104,7 +104,7 @@ shader_parameter/texture_rain = SubResource("NoiseTexture2D_flird")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_0wgrm"]
 material = SubResource("ShaderMaterial_g00mk")
-size = Vector2(500, 500)
+size = Vector2(1000, 1000)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tik6y"]
 
@@ -144,10 +144,14 @@ script = ExtResource("1_ifdhu")
 
 [node name="mazeGenerator" type="Node3D" parent="."]
 script = ExtResource("2_3xfjh")
-height = 20
-width = 20
-ending_pos = Vector2i(19, 19)
-seed = 2
+height = 50
+width = 50
+starting_pos = Vector2i(24, 30)
+ending_pos = Vector2i(24, 0)
+seed = 1
+max_straight = 20
+straight_backtrack = 5
+straight_backtrack_random = 10
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 

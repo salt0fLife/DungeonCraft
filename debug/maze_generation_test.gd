@@ -7,9 +7,13 @@ extends Node2D
 @export var max_straight:int = 10
 @export var straight_backtrack:int = 3
 @export var straight_backtrack_random : int = 3
+@export var injected_randomness_chance : float = 0.01
 var cell_spacing = 32.0
 
 func _ready():
+	resize_cells_array()
+	inject_randomness()
+	cuttout_area(Vector2i(22,22),Vector2i(27,27))
 	generate_maze()
 	#inject_randomness()
 	#generate_graphics_rectangles() #for base_layer
@@ -68,7 +72,7 @@ func highlight_injected_random() -> void:
 	for pos in randomized_cells:
 		draw_maze_tile(pos.x,pos.y,Color(1.0,1.0,0.0,0.25))
 
-func generate_maze() -> void:
+func resize_cells_array() -> void:
 	starting_pos.x = clampi(starting_pos.x,0,width)
 	starting_pos.y = clampi(starting_pos.y,0,height)
 	#scales cells array to correct size
@@ -81,14 +85,16 @@ func generate_maze() -> void:
 			pass
 		new_cells += [ar]
 	cells = new_cells
-	
+
+func generate_maze() -> void:
+	#need to resize cells first
 	var cell_coords : Vector2i = starting_pos
 	var current_straight = 0
 	var path = [] #keep track of your path and when you cannot continue backtrack
 	#var path_to_exit = [] #set this as the path when the cell_pos == ending_pos
 	var last_set_val = UP #starting val does not really matter
 	var finished: bool = false
-	var max_iterrations: int = 16384
+	var max_iterrations: int = 16384*4
 	var found_path = false
 	cells[starting_pos.x][starting_pos.y] = OPEN
 	while !finished: #loops until you stop it
@@ -145,6 +151,12 @@ func generate_maze() -> void:
 			if next_cell == null:
 				print("no more neutral cells")
 				finished = true
+			elif path.size() < 2: #we cant back track anymore
+				cell_coords = next_cell
+				cells[cell_coords.x][cell_coords.y] = 1
+				randomized_cells += [cell_coords]
+				#we just select and set a random neutral cell now till none are left
+				pass
 			else:
 				#hit end moving elsewhere
 				#we dont want to set to the cells value because its
@@ -186,6 +198,13 @@ func generate_maze() -> void:
 			print("max maze iterations reached")
 			finished = true
 
+func cuttout_area(start_pos:Vector2i,end_pos:Vector2i) -> void:
+	var size = end_pos - start_pos
+	for x in range(0,size.x):
+		for y in range(0,size.y):
+			var pos = Vector2i(x,y)+start_pos
+			cells[pos.x][pos.y] = OPEN
+
 var randomized_cells = []
 func inject_randomness() -> void:
 	var i = 0
@@ -195,7 +214,7 @@ func inject_randomness() -> void:
 				continue
 			var val = cells[x][y]
 			var seed = float(val + seed + x + y + i)
-			if randf_from_seed(seed+27.0) < 0.005:
+			if randf_from_seed(seed+27.0) < injected_randomness_chance:
 				cells[x][y] = randi_range_from_seed(seed,0,3) #
 				randomized_cells += [Vector2i(x,y)]
 				pass
@@ -271,13 +290,23 @@ func generate_graphics_textures_old():
 			r.position = Vector2(float(x)*cell_spacing, float(y)*cell_spacing)
 			add_child(r)
 
-const tiles_tex = [
+const tiles_tex_old = [
 	"res://assets/textures/maze/mazeTiles04.png", #0 empty
 	"res://assets/textures/maze/mazeTiles05.png", #1 dead end
 	"res://assets/textures/maze/mazeTiles06.png", #2 four way
 	"res://assets/textures/maze/mazeTiles07.png", #3 three way
 	"res://assets/textures/maze/mazeTiles08.png", #4 corner
 	"res://assets/textures/maze/mazeTiles09.png", #5 hallway
+	"res://assets/textures/maze/mazeTiles10.png", #6 neutral
+]
+
+const tiles_tex = [
+	"res://assets/textures/maze/maze05.png", #0 empty
+	"res://assets/textures/maze/maze06.png", #1 dead end
+	"res://assets/textures/maze/maze08.png", #2 four way
+	"res://assets/textures/maze/maze09.png", #3 three way
+	"res://assets/textures/maze/maze10.png", #4 corner
+	"res://assets/textures/maze/maze11.png", #5 hallway
 	"res://assets/textures/maze/mazeTiles10.png", #6 neutral
 ]
 
@@ -343,15 +372,28 @@ func get_connected_borders(x:int,y:int): #up right down left
 		RIGHT:connections[3] = true
 		DOWN:connections[0] = true
 		LEFT:connections[1] = true
+		OPEN:
+			connections[0] = true
+			connections[1] = true
+			connections[2] = true
+			connections[3] = true
 	
 	if is_in_bounds(up): #connects to all the surrounding cells that exit from it
-		if cells[up.x][up.y] == UP: connections[0] = true
+		match cells[up.x][up.y]:
+			UP: connections[0] = true
+			#OPEN: connections[0] = true
 	if is_in_bounds(right):
-		if cells[right.x][right.y] == RIGHT: connections[1] = true
+		match cells[right.x][right.y]:
+			RIGHT: connections[1] = true
+			#OPEN: connections[1] = true
 	if is_in_bounds(down):
-		if cells[down.x][down.y] == DOWN: connections[2] = true
+		match cells[down.x][down.y]:
+			DOWN: connections[2] = true
+			#OPEN: connections[2] = true
 	if is_in_bounds(left):
-		if cells[left.x][left.y] == LEFT: connections[3] = true
+		match cells[left.x][left.y]:
+			LEFT: connections[3] = true
+			#OPEN: connections[3] = true
 	return connections #up right down left
 
 func rotate_connected_borders(c_key : Array) -> Array: #up right down left

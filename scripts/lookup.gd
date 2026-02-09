@@ -328,7 +328,8 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 	"scythe_debug" : ["scythe", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_scythe, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
 	"wand_debug" : ["wand", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_wand, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
 	"spellbook_debug" : ["spellbook", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_spellbook, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
-	
+	"blood_sythe" : ["crystal scythe", "res://assets/itemGraphics/weapons/scythes/crystal_scythe.tscn", itemType.weapons_scythe, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], "res://assets/textures/items/deathSythe.png"],
+	"old_sword" : ["old sword", "res://assets/itemGraphics/weapons/swords/old_sword.tscn", itemType.weapons_sword, [[[damageType.slash, 2.5]],3.0,[[damageType.stab, 3.0]]], "res://assets/textures/items/oldSword.png"],
 	
 	#jewelry
 	"mana_gen_necklace" : ["arcane necklace", "res://assets/itemGraphics/spark_wand.tscn", itemType.accessories_necklace, [[], {"mana_regen_speed" : +2.5, "max_health": -0.2}], ""], # no texture yet
@@ -336,14 +337,15 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 	"ring_of_dragons" : ["ring of dragons", "res://assets/itemGraphics/iron_sword.tscn", itemType.accessories_ring, [[], {"max_health": +5.0, "speed_multiplier" : 0.5}], ""], # no texture yet]
 	"grace_pendant" : ["grace pendant", "res://assets/itemGraphics/jewelry/necklaces/grace_pendant.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/grace_pendant.tscn", 0]], {"mana_regen": +2.0, "max_mana" : + 20.0, "blight_defense" : 3.0}], ""],
 	"ruby_amulet" : ["ruby amulet", "res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", 0]], {"health_regen": +2.0, "max_health" : + 20.0, "true_defense" : 0.05}], ""],
-	"arcane_amulet" : ["arcane amulet", "res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", 0]], {"arcane_affinity" : 10.0}], ""],
-	"chaotic_amulet" : ["chaotic amulet", "res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", 0]], {"chaotic_affinity" : 10.0}], ""],
-	"divine_amulet" : ["divine amulet", "res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", 0]], {"divine_affinity" : 10.0}], ""],
+	"arcane_amulet" : ["arcane amulet", "res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", 0]], {"arcane_affinity" : 50.0}], ""],
+	"chaotic_amulet" : ["chaotic amulet", "res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", 0]], {"chaotic_affinity" : 50.0}], ""],
+	"divine_amulet" : ["divine amulet", "res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", itemType.accessories_necklace, [[["res://assets/itemGraphics/jewelry/necklaces/ruby_amulet.tscn", 0]], {"divine_affinity" : 50.0}], ""],
 }
 
 const items_lore = {
 	"devil_wings" : "sick ass pair of wings",
-	"crown_of_god" : "no one was ever meant to have this"
+	"crown_of_god" : "no one was ever meant to have this",
+	"blood_sythe" : "yeah",
 }
 
 const set_bonus = { #[[item1,item2,item3],{attribute modifiers}, [[model_path,bone_id]]]

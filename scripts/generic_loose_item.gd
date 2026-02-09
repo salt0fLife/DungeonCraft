@@ -34,6 +34,8 @@ func _ready():
 	var model = load(mp).instantiate()
 	if item_key[3].keys().has("enchantments"):
 		var col = Color.BLUE_VIOLET
+		if !item_key[3]["enchantments"].is_empty():
+			col = Lookup.enchantment_colors[item_key[3]["enchantments"][0]]
 		if item_key[3].keys().has("enchantment_color"):
 			col = item_key[3]["enchantment_color"]
 		if model is MeshInstance3D:

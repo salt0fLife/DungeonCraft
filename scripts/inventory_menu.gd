@@ -20,6 +20,8 @@ func update_held_item_graphics():
 		if held_item[3].keys().has("enchantments"):
 			if held_item[3]["enchantments"].size() > 0:
 				var col = Color.BLUE_VIOLET
+				if !held_item[3]["enchantments"].is_empty():
+					col = Lookup.enchantment_colors[held_item[3]["enchantments"][0]]
 				if held_item[3].keys().has("enchantment_color"):
 					col = held_item[3]["enchantment_color"]
 				$held_item.material.set("shader_parameter/enchanted_col", col)
@@ -110,6 +112,7 @@ func update_hotbar_graphics():
 			if k[3].keys().has("enchantments"):
 				if k[3]["enchantments"].size() > 0:
 					var col = Color.BLUE_VIOLET
+					col = Lookup.enchantment_colors[k[3]["enchantments"][0]]
 					if k[3].keys().has("enchantment_color"):
 						col = k[3]["enchantment_color"]
 					node.material.set("shader_parameter/enchanted_col", col)

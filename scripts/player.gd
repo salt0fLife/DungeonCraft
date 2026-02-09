@@ -295,6 +295,8 @@ func update_held_item():
 			mp = held_item_custom_data["custom_model_path"]
 		if held_item_custom_data.keys().has("enchantments"):
 			var col = Color.BLUE_VIOLET
+			if !held_item_custom_data["enchantments"].is_empty():
+				col = Lookup.enchantment_colors[held_item_custom_data["enchantments"][0]]
 			if held_item_custom_data.keys().has("enchantment_color"):
 				col = held_item_custom_data["enchantment_color"]
 			update_held_item_graphics(mp,true,col)
@@ -325,6 +327,10 @@ func update_anims_from_item_type(type):
 		Lookup.itemType.weapons_spear:
 			walk_anim_key = "walk_staff"
 			idle_anim_key = "idle_staff"
+			play_arm_anim("draw_staff")
+		Lookup.itemType.weapons_scythe:
+			walk_anim_key = "walk_weapon"
+			idle_anim_key = "idle_weapon"
 			play_arm_anim("draw_staff")
 		Lookup.itemType.weapons_glaive:
 			walk_anim_key = "walk_weapon"
@@ -375,6 +381,8 @@ func update_accessories_graphics(a = Inventory.accessories):
 		var val = a[k]
 		if val[3].keys().has("enchantments"):
 			var col = Color.BLUE_VIOLET
+			if !val[3]["enchantments"].is_empty():
+				col = Lookup.enchantment_colors[val[3]["enchantments"][0]]
 			if val[3].keys().has("enchantment_color"):
 				col = val[3]["enchantment_color"]
 			enchant_col = col

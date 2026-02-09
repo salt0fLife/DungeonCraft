@@ -2,21 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dq5ejxv0w5cjg"
-path.s3tc="res://.godot/imported/goldMinnow.png-48055aceb0dbbc441d8339ef3794abb3.s3tc.ctex"
+uid="uid://dkllsewewqbl0"
+path="res://.godot/imported/pickaxe.png-cec867087d63c480edd0ddaa2a9789ae.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/icons/goldMinnow.png"
-dest_files=["res://.godot/imported/goldMinnow.png-48055aceb0dbbc441d8339ef3794abb3.s3tc.ctex"]
+source_file="res://assets/textures/items/pickaxe.png"
+dest_files=["res://.godot/imported/pickaxe.png-cec867087d63c480edd0ddaa2a9789ae.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1

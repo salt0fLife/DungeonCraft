@@ -19,7 +19,7 @@ func _process(delta):
 		$far.volume_db = lerp($far.volume_db, 0.0, delta*2.0)
 		update_rain_lightweight(delta)
 	else:
-		$near.volume_db = lerp($near.volume_db, 0.0, delta*2.0)
+		$near.volume_db = lerp($near.volume_db, -10.0, delta*2.0)
 		$far.volume_db = lerp($far.volume_db, -80.0, delta*2.0)
 
 func _on_finished():
@@ -45,7 +45,7 @@ func update_rain_lightweight(delta):
 				min_dis = remap(float(step), 0.0, dis, 0.0, 1.0)
 				break
 		#gets the nearest distance to exposed sky checking in steps of 1m
-		var v = remap(min_dis, 1.0, 0.0, -80.0, 0.0)
+		var v = remap(min_dis, 1.0, 0.0, -80.0, -10.0)
 		if v > vol:
 			#print(min_dis)
 			#print(dis)

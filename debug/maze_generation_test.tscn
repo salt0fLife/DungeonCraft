@@ -5,10 +5,14 @@
 
 [node name="mazeGenerationTest" type="Node2D"]
 script = ExtResource("1_s821a")
-height = 100
-width = 100
-starting_pos = Vector2i(25, 25)
-ending_pos = Vector2i(25, 49)
+height = 50
+width = 50
+starting_pos = Vector2i(24, 27)
+ending_pos = Vector2i(24, 0)
+max_straight = 20
+straight_backtrack = 5
+straight_backtrack_random = 10
+injected_randomness_chance = 0.001
 
 [node name="TextureRect" type="TextureRect" parent="."]
 offset_right = 40.0
