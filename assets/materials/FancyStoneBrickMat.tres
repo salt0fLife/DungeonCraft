@@ -1,0 +1,28 @@
+[gd_resource type="ShaderMaterial" load_steps=11 format=3 uid="uid://bpgp5o4wgcntq"]
+
+[ext_resource type="Shader" path="res://assets/shaders/fancyTexturing.gdshader" id="1_q1ewd"]
+[ext_resource type="Texture2D" uid="uid://uk31vjwmhmls" path="res://assets/textures/world/stoneBricks07.png" id="2_cblbb"]
+[ext_resource type="Texture2D" uid="uid://cxd7tgb0albls" path="res://assets/textures/world/stoneBricks09.png" id="3_ao165"]
+[ext_resource type="Texture2D" uid="uid://dfk12pqyia366" path="res://assets/textures/world/stoneBricks10.png" id="4_ga1pf"]
+[ext_resource type="Texture2D" uid="uid://b6paaqocjvrkb" path="res://assets/textures/world/stoneBricks11.png" id="5_lutgh"]
+[ext_resource type="Texture2D" uid="uid://3nmdll4vt1sc" path="res://assets/textures/world/stoneBricks12.png" id="6_lke2p"]
+[ext_resource type="Texture2D" uid="uid://cbafe3uv8svwg" path="res://assets/textures/world/stoneBricks13.png" id="7_rkhek"]
+[ext_resource type="Texture2D" uid="uid://brbdtcepwtgef" path="res://assets/textures/world/stoneBricks17.png" id="8_k2q7t"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_4wyip"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_pjhm1"]
+noise = SubResource("FastNoiseLite_4wyip")
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_q1ewd")
+shader_parameter/uv_mult = Vector2(2, 2)
+shader_parameter/blend_texture = SubResource("NoiseTexture2D_pjhm1")
+shader_parameter/tex_base = ExtResource("2_cblbb")
+shader_parameter/variation_1 = ExtResource("3_ao165")
+shader_parameter/variation_1_2 = ExtResource("4_ga1pf")
+shader_parameter/variation_1_3 = ExtResource("5_lutgh")
+shader_parameter/variation_2 = ExtResource("6_lke2p")
+shader_parameter/variation_2_2 = ExtResource("7_rkhek")
+shader_parameter/variation_2_3 = ExtResource("8_k2q7t")

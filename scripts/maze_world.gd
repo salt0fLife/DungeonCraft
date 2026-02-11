@@ -15,6 +15,7 @@ func _ready():
 		print("rpc after")
 		#print("recieved : " + str(world_seed))
 		pass
+	
 
 
 @rpc("any_peer","reliable")

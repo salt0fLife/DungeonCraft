@@ -17,6 +17,8 @@ func update_held_item_graphics():
 			$held_item.texture = load(held_item[3]["custom_texture_path"])
 		else:
 			$held_item.texture = Inventory.get_item_texture(held_item[0])
+		var s = 64.0/float($held_item.texture.get_height())
+		$held_item.scale = Vector2(s,s)
 		if held_item[3].keys().has("enchantments"):
 			if held_item[3]["enchantments"].size() > 0:
 				var col = Color.BLUE_VIOLET
@@ -109,6 +111,8 @@ func update_hotbar_graphics():
 				node.texture_normal = load(k[3]["custom_texture_path"])
 			else:
 				node.texture_normal = Inventory.get_item_texture(k[0])
+			var s = 64.0/float(node.texture_normal.get_height())
+			node.scale = Vector2(s,s)
 			if k[3].keys().has("enchantments"):
 				if k[3]["enchantments"].size() > 0:
 					var col = Color.BLUE_VIOLET

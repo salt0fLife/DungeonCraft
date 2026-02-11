@@ -118,9 +118,20 @@ func get_held_item_data() -> Array:
 func get_held_item() -> Array:
 	return hotbar[held_item]
 
+var change_item_timer:float = 0.0
 func change_held_item(index):
+	if change_item_timer != 0.0:
+		return #not allowed
+	change_item_timer += 0.05
 	held_item = index
 	emit_signal("update_held_item")
+	pass
+
+func _process(delta):
+	if change_item_timer != 0.0:
+		change_item_timer -= delta
+		if change_item_timer < 0.0:
+			change_item_timer = 0.0
 	pass
 
 func pickup_item(id, replace_held) -> bool:

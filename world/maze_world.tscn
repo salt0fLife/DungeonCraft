@@ -171,9 +171,11 @@ shadow_enabled = true
 [node name="AudioStreamPlayer" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 67.2196, 12.7197, 52.2147)
 stream = ExtResource("4_5p4ik")
+volume_db = 20.0
 
 [node name="AudioStreamPlayer2" type="AudioStreamPlayer3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.2279, 5.72959, 23.4382)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.8849, 5.72959, 23.4382)
 stream = ExtResource("5_hgaxc")
+attenuation_model = 2
 
 [node name="rain" parent="." instance=ExtResource("6_scy27")]

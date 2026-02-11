@@ -328,7 +328,7 @@ var items= { #[display_name, graphics_path, type_enum, data, 2dImage, set_bonus_
 	"scythe_debug" : ["scythe", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_scythe, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
 	"wand_debug" : ["wand", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_wand, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
 	"spellbook_debug" : ["spellbook", "res://assets/itemGraphics/weapons/longsword_standin.tscn", itemType.weapons_spellbook, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], ""],
-	"blood_sythe" : ["crystal scythe", "res://assets/itemGraphics/weapons/scythes/crystal_scythe.tscn", itemType.weapons_scythe, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], "res://assets/textures/items/deathSythe.png"],
+	"blood_sythe" : ["crystal scythe", "res://assets/itemGraphics/weapons/scythes/crystal_scythe_small.tscn", itemType.weapons_scythe, [[[damageType.slash, 7.5]],4.0,[[damageType.stab, 4.0]]], "res://assets/textures/items/3dBase/scythe16x.png"],
 	"old_sword" : ["old sword", "res://assets/itemGraphics/weapons/swords/old_sword.tscn", itemType.weapons_sword, [[[damageType.slash, 2.5]],3.0,[[damageType.stab, 3.0]]], "res://assets/textures/items/oldSword.png"],
 	
 	#jewelry

@@ -314,23 +314,53 @@ func generate_graphics_textures_old():
 			add_child(r)
 
 const tiles_scenes = [
-	"res://debug/generation/maze/open.tscn", #0 empty
-	"res://debug/generation/maze/dead_end2.tscn", #1 dead end
-	"res://debug/generation/maze/open.tscn", #2 four way
-	"res://debug/generation/maze/three_way2.tscn", #3 three way
-	"res://debug/generation/maze/corner2.tscn", #4 corner
-	"res://debug/generation/maze/hallway2.tscn", #5 hallway
-	"res://debug/generation/maze/open.tscn", #6 neutral
+	"res://assets/environmentPieces/mazeCells/base_four_way.tscn", #0 empty
+	"res://assets/environmentPieces/mazeCells/base_dead_end.tscn", #1 dead end
+	"res://assets/environmentPieces/mazeCells/base_four_way.tscn", #2 four way
+	"res://assets/environmentPieces/mazeCells/base_three_way.tscn", #3 three way
+	"res://assets/environmentPieces/mazeCells/base_corner.tscn", #4 corner
+	"res://assets/environmentPieces/mazeCells/base_hallway.tscn", #5 hallway
+	"res://assets/environmentPieces/mazeCells/base_cell.tscn", #6 neutral
 ]
 
-const rough_tiles_scenes = [
-	"res://debug/generation/maze/open3.tscn", #0 empty
-	"res://debug/generation/maze/dead_end3.tscn", #1 dead end
-	"res://debug/generation/maze/open3.tscn", #2 four way
-	"res://debug/generation/maze/three_way3.tscn", #3 three way
-	"res://debug/generation/maze/corner3.tscn", #4 corner
-	"res://debug/generation/maze/hallway3.tscn", #5 hallway
-	"res://debug/generation/maze/open3.tscn", #6 neutral
+const ridged_tiles_scenes = [
+	"res://assets/environmentPieces/mazeCells/base_four_way.tscn", #0 empty
+	"res://assets/environmentPieces/mazeCells/ridge_dead_end.tscn", #1 dead end
+	"res://assets/environmentPieces/mazeCells/base_four_way.tscn", #2 four way
+	"res://assets/environmentPieces/mazeCells/ridge_three_way.tscn", #3 three way
+	"res://assets/environmentPieces/mazeCells/ridge_corner.tscn", #4 corner
+	"res://assets/environmentPieces/mazeCells/ridge_hallway.tscn", #5 hallway
+	"res://assets/environmentPieces/mazeCells/base_cell.tscn", #6 neutral
+]
+
+const broken_tiles_1 = [
+	"res://assets/environmentPieces/mazeCells/base_four_way.tscn", #0 empty
+	"res://assets/environmentPieces/mazeCells/ridge_dead_end.tscn", #1 dead end
+	"res://assets/environmentPieces/mazeCells/base_four_way.tscn", #2 four way
+	"res://assets/environmentPieces/mazeCells/broken_three_way_1.tscn", #3 three way
+	"res://assets/environmentPieces/mazeCells/broken_corner_1.tscn", #4 corner
+	"res://assets/environmentPieces/mazeCells/ridge_hallway_broken_1.tscn", #5 hallway
+	"res://assets/environmentPieces/mazeCells/base_cell.tscn", #6 neutral
+]
+
+const broken_tiles_2 = [
+	"res://assets/environmentPieces/mazeCells/base_four_way.tscn", #0 empty
+	"res://assets/environmentPieces/mazeCells/ridge_dead_end.tscn", #1 dead end
+	"res://assets/environmentPieces/mazeCells/base_four_way.tscn", #2 four way
+	"res://assets/environmentPieces/mazeCells/broken_three_way_2.tscn", #3 three way
+	"res://assets/environmentPieces/mazeCells/broken_corner_2.tscn", #4 corner
+	"res://assets/environmentPieces/mazeCells/ridge_hallway_broken_2.tscn", #5 hallway
+	"res://assets/environmentPieces/mazeCells/base_cell.tscn", #6 neutral
+]
+
+const vines_corner = [
+	"res://assets/environmentPieces/mazeCells/decor/corner_vines_1.tscn",
+	"res://assets/environmentPieces/mazeCells/decor/corner_vines_2.tscn"
+]
+
+const vines_hallway = [
+	"res://assets/environmentPieces/mazeCells/decor/hallway_vines_1.tscn",
+	"res://assets/environmentPieces/mazeCells/decor/hallway_vines_2.tscn"
 ]
 
 func generate_graphics_3d() -> void:
@@ -357,8 +387,15 @@ func generate_graphics_3d() -> void:
 			#if cant find it tex_indx = 0 (empty)
 			var path = tiles_scenes[tex_indx]
 			
-			if randf_from_seed(float(x+y+si)) > 0.25:
-				path = rough_tiles_scenes[tex_indx]
+			var t_r = randf_from_seed(float(x+y+si))
+			if t_r < 0.5:
+				path = ridged_tiles_scenes[tex_indx]
+			if t_r < 0.05: #rare chance, landmark thing
+				if t_r > 0.025:
+					path = broken_tiles_1[tex_indx]
+				else:
+					path = broken_tiles_2[tex_indx]
+			
 			var s = load(path).instantiate()
 			s.position = Vector3(float(x)*cell_spacing, 0.0,float(y)*cell_spacing)
 			s.position.x -= width*0.5 * cell_spacing
@@ -374,7 +411,31 @@ func generate_graphics_3d() -> void:
 				3:
 					s.rotation.y -= PI*1.5
 					#s.position.z += cell_spacing
+			s.rotation.y += PI #because I made them backwards lmao
 			add_child(s)
+			
+			#now add decor
+			var v_r = randf_from_seed(float(x+y+si+5))
+			if v_r > 0.97:
+				var v = load(vines_corner[randi_range_from_seed(x+y+si,0,(vines_corner.size()))]).instantiate()
+				v.position = s.position
+				v.position.y = remap(v_r,0.97,1.0,30.0,90.0) #dont really want the player getting to it frequently
+				if v_r > 0.985:
+					v.rotation.y += PI*0.5
+				add_child(v)
+			
+			if tex_indx == 5: #is hallway
+				var h_v_r = randf_from_seed(float(x+y+si+7))
+				if h_v_r > 0.8:
+					var v = load(vines_hallway[randi_range_from_seed(x+y+si,0,(vines_hallway.size()))]).instantiate()
+					v.position = s.position
+					v.position.y = remap(v_r,0.8,1.0,30.0,90.0) #dont really want the player getting to it frequently
+					v.rotation.y = s.rotation.y
+					if v_r > 0.9:
+						v.rotation.y += PI
+					add_child(v)
+				pass
+			
 
 const tiles_tex = [
 	"res://assets/textures/maze/mazeTiles04.png", #0 empty

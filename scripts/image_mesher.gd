@@ -35,7 +35,7 @@ enum {
 }
 
 var st = SurfaceTool.new()
-var world_size = Vector3i(64,64,5)
+var world_size = Vector3i(16,16,5)
 var blocks = []
 
 
@@ -71,8 +71,8 @@ func resize_blocks():
 	for j in range(0, world_size.x):
 		blocks += [y.duplicate(true)]
 
-var image_path = "res://assets/textures/items/deathSythe.png"
-var pixel_size = (1.0/64.0)
+var image_path = "res://assets/textures/items/3dBase/boneSword.png"
+var pixel_size = (1.0/16.0)
 
 func settup_world():
 	var im = Image.load_from_file(image_path)
@@ -91,12 +91,12 @@ func settup_world():
 			var val = float(data[i])/255.0
 			if val > 0.5:
 				blocks[y][x][2] = opaque
-				if data[i-3] < 128:
-					blocks[y][x][1] = opaque
-					blocks[y][x][3] = opaque
-				if data[i-3] < 40:
-					blocks[y][x][0] = opaque
-					blocks[y][x][4] = opaque
+				#if data[i-3] < 128:
+					#blocks[y][x][1] = opaque
+					#blocks[y][x][3] = opaque
+				#if data[i-3] < 40:
+					#blocks[y][x][0] = opaque
+					#blocks[y][x][4] = opaque
 			#if data[i] == 255: #no floating point errors :D
 				#blocks[y][x][0] = opaque
 				#blocks[y][x][1] = opaque

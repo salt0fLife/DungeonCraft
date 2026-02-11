@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://cm00qxfi7i251"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_gt0ht"]
+size = Vector3(7.745, 1, 1)
+
+[node name="cornerVines1" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.670566, 0.224368, -0.707107, -0.317305, 0.948324, 0, 0.670566, 0.224368, 0.707107, -1.8647, -0.385141, -1.95253)
+mesh = SubResource("BoxMesh_gt0ht")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.606109, -0.364187, -0.707107, 0.515038, 0.857167, 0, 0.606109, -0.364187, 0.707107, 2.1595, 0.281166, 2.1067)
+mesh = SubResource("BoxMesh_gt0ht")

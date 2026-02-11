@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjjuropequss0"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_dbgvg"]
+size = Vector3(8.54, 1, 1)
+
+[node name="hallwayVines1" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.29257, -2.03948)
+mesh = SubResource("BoxMesh_dbgvg")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.976266, 0, -0.216576, 0, 1, 0, 0.216576, 0, 0.976266, 0, -0.077492, 2.07636)
+mesh = SubResource("BoxMesh_dbgvg")
