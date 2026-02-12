@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://cm7d5y2llo0ky"]
+[gd_scene load_steps=41 format=3 uid="uid://cm7d5y2llo0ky"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_s7ggu"]
 [ext_resource type="Script" path="res://scripts/steam.gd" id="2_35c3e"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://scripts/postEffects.gd" id="6_knuf1"]
 [ext_resource type="Texture2D" uid="uid://bj3uo4xlqklj1" path="res://assets/textures/misc/Screenshot 2025-11-24 220401.png" id="6_ybl52"]
 [ext_resource type="Script" path="res://scripts/chat_display.gd" id="8_8non7"]
+[ext_resource type="FontFile" uid="uid://bp5a71yk0qgbk" path="res://assets/fonts/JACQUARD24-REGULAR.TTF" id="9_87a8l"]
 [ext_resource type="Theme" uid="uid://bxsqmdqtm4i4k" path="res://assets/themes/genericTheme.tres" id="9_486y8"]
 [ext_resource type="PackedScene" uid="uid://b7s8ume16tah0" path="res://assets/gui/inventory_menu.tscn" id="11_ws5gg"]
 [ext_resource type="Script" path="res://scripts/settingsMenu.gd" id="12_m1jv6"]
@@ -190,46 +191,96 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="mainMenu" type="Control" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="backdrop" type="ColorRect" parent="Control/mainMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0509804, 0.0509804, 0.0509804, 1)
+
+[node name="title" type="Label" parent="Control/mainMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.019
+anchor_right = 0.981
+anchor_bottom = 0.327
+offset_left = 196.112
+offset_right = -196.112
+offset_bottom = -74.896
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("9_87a8l")
+theme_override_font_sizes/font_size = 211
+text = "MAZE GAME"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/mainMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.031
+anchor_top = 0.395
+anchor_right = 0.177
+anchor_bottom = 0.605
+offset_left = 0.287998
+offset_top = 0.0399933
+offset_right = 0.095993
+offset_bottom = -0.0400085
+grow_vertical = 2
+
+[node name="refreshList" type="Button" parent="Control/mainMenu/VBoxContainer"]
+layout_mode = 2
+text = "REFRESH LOBBY LIST"
+
+[node name="skinKey" type="OptionButton" parent="Control/mainMenu/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "SELECT SKIN"
+
+[node name="quit" type="Button" parent="Control/mainMenu/VBoxContainer"]
+layout_mode = 2
+text = "quit game"
+
+[node name="openHostMenu" type="Button" parent="Control/mainMenu/VBoxContainer"]
+layout_mode = 2
+text = "HOST"
+
 [node name="hostLocal" type="Button" parent="Control"]
 layout_mode = 0
-offset_left = 66.0
-offset_top = 47.0
-offset_right = 228.0
-offset_bottom = 104.0
+offset_left = 26.0
+offset_top = 572.0
+offset_right = 188.0
+offset_bottom = 629.0
 text = "hostLocal"
 
 [node name="joinLocal" type="Button" parent="Control"]
 layout_mode = 0
-offset_left = 277.0
-offset_top = 47.0
-offset_right = 439.0
-offset_bottom = 104.0
+offset_left = 196.0
+offset_top = 565.0
+offset_right = 358.0
+offset_bottom = 622.0
 text = "joinLocal"
 
 [node name="lobbyButtons" type="VBoxContainer" parent="Control"]
-layout_mode = 0
-offset_left = 59.0
-offset_top = 277.0
-offset_right = 622.0
-offset_bottom = 551.0
-
-[node name="refreshList" type="Button" parent="Control"]
-layout_mode = 0
-offset_left = 82.0
-offset_top = 196.0
-offset_right = 198.0
-offset_bottom = 244.0
-text = "refresh list"
-
-[node name="host" type="Button" parent="Control"]
-layout_mode = 0
-offset_left = 207.0
-offset_top = 214.0
-offset_right = 529.0
-offset_bottom = 246.0
-text = "host steam"
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.46
+anchor_top = 0.318
+anchor_right = 0.949
+anchor_bottom = 0.741
+offset_left = 0.0800171
+offset_top = -0.0640106
+offset_right = -0.248047
+offset_bottom = -0.16803
 
 [node name="nameInput" type="TextEdit" parent="Control"]
+visible = false
 layout_mode = 0
 offset_left = 319.0
 offset_top = 124.0
@@ -238,14 +289,20 @@ offset_bottom = 168.0
 placeholder_text = "display name"
 
 [node name="skinPreview" type="TextureRect" parent="Control"]
-layout_mode = 0
-offset_left = 592.0
-offset_top = 63.0
-offset_right = 632.0
-offset_bottom = 103.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.184
+anchor_top = 0.486
+anchor_right = 0.24
+anchor_bottom = 0.585
+offset_left = 0.0319824
+offset_top = 0.071991
+offset_right = -0.480011
+offset_bottom = -0.0800171
 texture = ExtResource("3_30b8r")
 
 [node name="filepathInput" type="TextEdit" parent="Control"]
+visible = false
 layout_mode = 0
 offset_left = 701.0
 offset_top = 13.0
@@ -254,6 +311,7 @@ offset_bottom = 56.0
 placeholder_text = "filepath"
 
 [node name="skinImport" type="Button" parent="Control"]
+visible = false
 layout_mode = 0
 offset_left = 591.0
 offset_top = 24.0
@@ -262,6 +320,7 @@ offset_bottom = 55.0
 text = "import skin"
 
 [node name="importDialogue" type="Label" parent="Control"]
+visible = false
 layout_mode = 0
 offset_left = 705.0
 offset_top = 61.0
@@ -269,6 +328,7 @@ offset_right = 745.0
 offset_bottom = 84.0
 
 [node name="randomize Name" type="Button" parent="Control"]
+visible = false
 layout_mode = 0
 offset_left = 222.0
 offset_top = 136.0
@@ -276,14 +336,8 @@ offset_right = 317.0
 offset_bottom = 167.0
 text = "Randomize"
 
-[node name="skinKey" type="OptionButton" parent="Control"]
-layout_mode = 0
-offset_left = 558.0
-offset_top = 172.0
-offset_right = 675.0
-offset_bottom = 203.0
-
 [node name="skinKeylabel" type="Label" parent="Control"]
+visible = false
 layout_mode = 0
 offset_left = 562.0
 offset_top = 145.0
@@ -292,6 +346,7 @@ offset_bottom = 168.0
 text = "Select Skin"
 
 [node name="save" type="Button" parent="Control"]
+visible = false
 layout_mode = 0
 offset_left = 347.0
 offset_top = 170.0
@@ -299,19 +354,48 @@ offset_right = 449.0
 offset_bottom = 207.0
 text = "save name"
 
-[node name="quit" type="Button" parent="Control"]
-layout_mode = 0
-offset_right = 63.0
-offset_bottom = 34.0
-text = "quit game"
-
 [node name="skinEditor" type="Button" parent="Control"]
+visible = false
 layout_mode = 0
 offset_left = 534.0
 offset_top = 211.0
 offset_right = 681.0
 offset_bottom = 247.0
 text = "launch skin editor"
+
+[node name="hostMenu" type="Control" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Control/hostMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0823529, 0.0823529, 0.0823529, 1)
+
+[node name="host" type="Button" parent="Control/hostMenu"]
+layout_mode = 2
+offset_left = 36.0
+offset_top = 219.0
+offset_right = 204.0
+offset_bottom = 250.0
+text = "HOST"
+
+[node name="backToMainMenu" type="Button" parent="Control/hostMenu"]
+layout_mode = 0
+offset_left = 42.0
+offset_top = 154.0
+offset_right = 92.0
+offset_bottom = 185.0
+text = "BACK"
 
 [node name="playerHandler" type="Node3D" parent="."]
 
@@ -377,12 +461,13 @@ _spawnable_scenes = PackedStringArray("res://entities/projectiles/arrow.tscn", "
 spawn_path = NodePath(".")
 
 [node name="worldSync" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://world/peaceful_island.tscn", "res://world/world_1.tscn", "res://world/world_2.tscn", "res://debug/debug_world.tscn", "res://world/gm_construct.tscn", "res://world/skywars_prot_rainy.tscn", "res://world/dungeon_world.tscn", "res://world/wayland_main.tscn", "res://world/elder_tree_temple.tscn", "res://world/test_modular_world.tscn", "res://world/the_moor.tscn", "res://world/maze_world.tscn")
+_spawnable_scenes = PackedStringArray("res://world/peaceful_island.tscn", "res://world/world_1.tscn", "res://world/world_2.tscn", "res://debug/debug_world.tscn", "res://world/skywars_prot_rainy.tscn", "res://world/dungeon_world.tscn", "res://world/wayland_main.tscn", "res://world/test_modular_world.tscn", "res://world/the_moor.tscn", "res://world/maze_world.tscn")
 spawn_path = NodePath(".")
 
 [node name="itemHandler" type="Node3D" parent="."]
 
 [node name="chat_display" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -543,17 +628,19 @@ script = ExtResource("13_bj5bb")
 
 [node name="base" type="AudioStreamPlayer" parent="musicHandler"]
 
+[connection signal="button_down" from="Control/mainMenu/VBoxContainer/refreshList" to="." method="_on_refresh_list_button_down"]
+[connection signal="item_selected" from="Control/mainMenu/VBoxContainer/skinKey" to="." method="_on_skin_key_item_selected"]
+[connection signal="button_down" from="Control/mainMenu/VBoxContainer/quit" to="." method="_on_quit_button_down"]
+[connection signal="button_down" from="Control/mainMenu/VBoxContainer/openHostMenu" to="." method="_on_open_host_menu_button_down"]
 [connection signal="button_down" from="Control/hostLocal" to="." method="_on_host_local_button_down"]
 [connection signal="button_down" from="Control/joinLocal" to="." method="_on_join_local_button_down"]
-[connection signal="button_down" from="Control/refreshList" to="." method="_on_refresh_list_button_down"]
-[connection signal="button_down" from="Control/host" to="." method="_on_host_button_down"]
 [connection signal="text_changed" from="Control/nameInput" to="." method="_on_name_input_text_changed"]
 [connection signal="button_down" from="Control/skinImport" to="." method="_on_skin_import_button_down"]
 [connection signal="button_down" from="Control/randomize Name" to="." method="_on_randomize_name_button_down"]
-[connection signal="item_selected" from="Control/skinKey" to="." method="_on_skin_key_item_selected"]
 [connection signal="button_down" from="Control/save" to="." method="_on_save_button_down"]
-[connection signal="button_down" from="Control/quit" to="." method="_on_quit_button_down"]
 [connection signal="button_down" from="Control/skinEditor" to="." method="_on_skin_editor_button_down"]
+[connection signal="button_down" from="Control/hostMenu/host" to="." method="_on_host_button_down"]
+[connection signal="button_down" from="Control/hostMenu/backToMainMenu" to="." method="_on_back_to_main_menu_button_down"]
 [connection signal="button_down" from="pauseMenu/VBoxContainer/Resume" to="." method="_on_resume_button_down"]
 [connection signal="button_down" from="pauseMenu/VBoxContainer/leave" to="." method="_on_leave_button_down"]
 [connection signal="value_changed" from="settingsMenu/VBoxContainer/FOV" to="settingsMenu" method="_on_fov_value_changed"]

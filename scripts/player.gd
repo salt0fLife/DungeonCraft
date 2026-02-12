@@ -42,6 +42,8 @@ var attributes = {
 	"max_stamina" : 10.0,
 	"mana_regen_speed" : 1.0,
 	"stamina_regen_speed": 1.0,
+	"health_regen_speed": 0.0,
+	"vampirism" : 0.0, #multiplier for how much damage is converted to healing
 	##damage enhancements
 	"strength" : 1.0, #increases physical attacks
 	"chaotic_affinity" : 1.0, #increases blight explosion and lightning attacks
@@ -96,6 +98,8 @@ const base_attributes = {
 	"max_stamina" : 10.0,
 	"mana_regen_speed" : 1.0,
 	"stamina_regen_speed": 1.0,
+	"health_regen_speed": 0.0,
+	"vampirism" : 0.0, #multiplier for how much damage is converted to healing
 	##damage enhancements
 	"strength" : 1.0, #increases physical attacks
 	"chaotic_affinity" : 1.0, #increases blight explosion and lightning attacks
@@ -1392,7 +1396,7 @@ func sync_cosmetics(skin, t: Array, dn: String):
 	avatar.set_display_name(dn)
 	display_name = dn
 	var skin_img = Global.data_to_image(skin)
-	avatar.load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5])
+	avatar.load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5],t[6],t[7])
 	load_skin_hands(t[3],skin_img)
 
 @onready var hands_meshes = [
@@ -2241,10 +2245,10 @@ const footstep_sounds = [
 func play_footstep():
 	if !is_on_floor():
 		return
-	var p = footstep_sounds.pick_random()
-	$footsteps.stream = load(p)
-	$footsteps.pitch_scale = randf_range(0.9,1.1)
-	$footsteps.play()
+	#var p = footstep_sounds.pick_random()
+	#$footsteps.stream = load(p)
+	#$footsteps.pitch_scale = randf_range(0.9,1.1)
+	$footsteps.play() #this now handles all of randomization itself
 	pass
 
 ##arm animations

@@ -414,6 +414,8 @@ const base_player_attributes = {
 	"max_stamina" : 10.0,
 	"mana_regen_speed" : 1.0,
 	"stamina_regen_speed": 1.0,
+	"health_regen_speed": 0.0,
+	"vampirism" : 0.0, #multiplier for how much damage is converted to healing
 	##damage enhancements
 	"strength" : 1.0, #increases physical attacks
 	"chaotic_affinity" : 1.0, #increases blight explosion and lightning attacks
@@ -485,8 +487,22 @@ const max_attributes = {
 	"magic_defense" : 100.0,
 	"lightning_defense" : 100.0,
 	"holy_defense" : 100.0,
-	"blight_defense" : 100.0
+	"blight_defense" : 100.0,
+	"health_regen_speed": 10.0,
+	"vampirism" : 1.0
 }
+
+const always_show_attributes = [ #shown even when not changed
+	"speed",
+	"jump_velocity",
+	"max_health",
+	"max_mana",
+	"max_stamina",
+	"mana_regen_speed",
+	"stamina_regen_speed",
+	"strength"
+]
+
 
 enum enchantments {
 	resilience, #improves all defensive attributes by small amounts

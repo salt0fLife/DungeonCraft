@@ -51,9 +51,14 @@ uniform vec3 uv1_offset;
 uniform vec3 uv2_scale;
 uniform vec3 uv2_offset;
 uniform vec3 puddle_color : source_color;
-
+varying vec2 cloud_uv;
+#include \"res://environment.gdshaderinc\"
+varying float dist;
 void vertex() {
-	UV=UV*uv1_scale.xy+uv1_offset.xy;
+	//UV=UV*uv1_scale.xy+uv1_offset.xy;
+	cloud_uv = get_cloud_uv(NODE_POSITION_WORLD,VERTEX);
+	vec3 dif = (CAMERA_POSITION_WORLD-(VERTEX+NODE_POSITION_WORLD));
+	dist = sqrt((dif.x*dif.x) + (dif.y*dif.y) + (dif.z*dif.z)); 
 }
 
 
@@ -78,7 +83,7 @@ vec2 RandomVec2(vec2 seed) {
 }
 
 void fragment() {
-	vec2 base_uv = UV;
+	vec2 base_uv = UV*uv1_scale.xy+uv1_offset.xy;
 	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
 	float roughness_tex = dot(texture(texture_rain,base_uv*vec2(0.02,0.02)),roughness_texture_channel);
 	vec4 albedo_tex = texture(texture_albedo,base_uv);
@@ -88,6 +93,9 @@ void fragment() {
 	METALLIC = metallic_tex * metallic;
 	ROUGHNESS = roughness_tex * roughness;
 	SPECULAR = specular;
+	
+	//ALBEDO = albedo_fog_apply(ALBEDO,dist);
+	
 	//vec2 grid_uv = fract(base_uv*10.0) - 0.5;
 	//vec2 grid_id = floor(base_uv*10.0);
 	//vec2 rv = RandomVec2(grid_id);
@@ -95,7 +103,11 @@ void fragment() {
 	//ALBEDO.r += ripple(grid_uv + rv, rv) * size;
 	//ALBEDO = mix(ALBEDO, puddle_color, ripple(grid_uv + rv, rv) * size*0.25);
 }
-"
+
+void light(){
+	DIFFUSE_LIGHT = csc_light(DIFFUSE_LIGHT,NORMAL,LIGHT,ATTENUATION,LIGHT_COLOR,cloud_uv);
+	//DIFFUSE_LIGHT += clamp(dot(NORMAL, LIGHT), 0.0, 1.0) * ATTENUATION * LIGHT_COLOR / PI;
+}"
 
 [sub_resource type="Gradient" id="Gradient_ksdqg"]
 colors = PackedColorArray(0.381703, 0.381703, 0.381703, 1, 1, 1, 1, 1)
@@ -154,7 +166,6 @@ glow_enabled = true
 glow_normalized = true
 glow_bloom = 0.01
 glow_blend_mode = 1
-fog_enabled = true
 fog_light_color = Color(0.576471, 0.705882, 0.705882, 1)
 fog_sun_scatter = 0.11
 fog_density = 0.003
@@ -270,7 +281,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38, 0, 0)
 [node name="treePine5" parent="SubViewport" instance=ExtResource("9_hirog")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 51, 0, 0)
 
-[node name="StaticBody3D2" type="StaticBody3D" parent="."]
+[node name="StaticBody3D2" type="StaticBody3D" parent="." groups=["brush_s"]]
 transform = Transform3D(0.625583, 0, -0.780158, 0, 1, 0, 0.780158, 0, 0.625583, -3.63709, 0, 1.85641)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2"]
@@ -279,7 +290,7 @@ shape = SubResource("BoxShape3D_qtu70")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D2"]
 mesh = SubResource("BoxMesh_twib7")
 
-[node name="StaticBody3D5" type="StaticBody3D" parent="."]
+[node name="StaticBody3D5" type="StaticBody3D" parent="." groups=["dirt_s"]]
 transform = Transform3D(0.625583, 0, -0.780158, 0, 1, 0, 0.780158, 0, 0.625583, -4.42847, -0.155596, 2.34845)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D5"]
@@ -313,6 +324,51 @@ transform = Transform3D(0.625583, 0, -0.780158, 0, 1, 0, 0.780158, 0, 0.625583, 
 shape = SubResource("BoxShape3D_qtu70")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D4"]
+mesh = SubResource("BoxMesh_twib7")
+
+[node name="StaticBody3D7" type="StaticBody3D" parent="." groups=["snow_s"]]
+transform = Transform3D(1.46074, 0, -1.82167, 0, 2.335, 0, 1.82167, 0, 1.46074, -8.17847, -0.982192, 2.44083)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D7"]
+shape = SubResource("BoxShape3D_qtu70")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D7"]
+mesh = SubResource("BoxMesh_twib7")
+
+[node name="StaticBody3D8" type="StaticBody3D" parent="." groups=["dirt_s"]]
+transform = Transform3D(2.335, 0, 0, 0, 2.335, 0, 0, 0, 2.335, -7.33077, -0.9733, 6.06743)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D8"]
+shape = SubResource("BoxShape3D_qtu70")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D8"]
+mesh = SubResource("BoxMesh_twib7")
+
+[node name="StaticBody3D9" type="StaticBody3D" parent="." groups=["grass_s"]]
+transform = Transform3D(2.335, 0, 0, 0, 2.335, 0, 0, 0, 2.335, -7.33077, -0.9733, 9.35065)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D9"]
+shape = SubResource("BoxShape3D_qtu70")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D9"]
+mesh = SubResource("BoxMesh_twib7")
+
+[node name="StaticBody3D10" type="StaticBody3D" parent="." groups=["concrete_s"]]
+transform = Transform3D(2.335, 0, 0, 0, 2.335, 0, 0, 0, 2.335, -7.33077, -0.9733, 12.6442)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D10"]
+shape = SubResource("BoxShape3D_qtu70")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D10"]
+mesh = SubResource("BoxMesh_twib7")
+
+[node name="StaticBody3D11" type="StaticBody3D" parent="." groups=["water_s"]]
+transform = Transform3D(2.335, 0, 0, 0, 2.335, 0, 0, 0, 2.335, -7.33077, -0.9733, 15.6451)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D11"]
+shape = SubResource("BoxShape3D_qtu70")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D11"]
 mesh = SubResource("BoxMesh_twib7")
 
 [node name="treePineSmall" parent="." instance=ExtResource("11_t1tsb")]

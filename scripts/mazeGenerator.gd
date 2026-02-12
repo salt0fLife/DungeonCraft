@@ -7,6 +7,8 @@ extends Node3D
 @export var max_straight:int = 10
 @export var straight_backtrack:int = 3
 @export var straight_backtrack_random : int = 3
+@export var middle_area_start: Vector2i = Vector2i.ZERO
+@export var middle_area_end: Vector2i = Vector2i.ZERO
 var cell_spacing = 10.0
 
 #func _ready():
@@ -30,7 +32,7 @@ func create_from_seed(s:int) -> void:
 	seed = s
 	resize_cells()
 	inject_randomness()
-	cuttout_area(Vector2i(19,19),Vector2i(30,30))
+	cuttout_area(middle_area_start,middle_area_end)
 	generate_maze()
 	generate_graphics_3d()
 	highlight_path_3d()

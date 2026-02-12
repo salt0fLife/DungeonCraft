@@ -1090,7 +1090,7 @@ func set_cosmetic_visibility(ears, tail, snout):
 	pass
 
 const skin_mat_path = "res://assets/avatar/playerSkinShaderMat.tres"#"res://assets/avatar/playerSkin.tres"#
-func load_skin(img, ears, tail, snout, is_slim_loc, eColors, mData):
+func load_skin(img, ears, tail, snout, is_slim_loc, eColors, mData, pointy_teeth, fangs):
 	#img = ImageTexture.create_from_image(Image.load_from_file("res://assets/glb/playerAvatar002_dapper128Secondary.png"))
 	#var meshes = avatar.meshes
 	is_slim = is_slim_loc

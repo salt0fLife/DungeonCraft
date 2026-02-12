@@ -29,13 +29,12 @@ uniform vec3 uv1_offset;
 uniform vec3 uv2_scale;
 uniform vec3 uv2_offset;
 uniform vec3 puddle_color : source_color;
-
+varying vec2 cloud_uv;
+#include \"res://environment.gdshaderinc\"
 void vertex() {
-	UV=UV*uv1_scale.xy+uv1_offset.xy;
+	//UV=UV*uv1_scale.xy+uv1_offset.xy;
+	cloud_uv = get_cloud_uv(NODE_POSITION_WORLD,VERTEX);
 }
-
-
-
 
 float ripple(vec2 uv, vec2 b_uv) {
 	float ripple = (.1 / length(uv)*(sin(TIME*16.0+b_uv.x*100.0)+1.0)); //* sin(TIME*10.0 + sin(b_uv.x*TIME) + sin(b_uv.y*TIME)) + 1.0
@@ -56,7 +55,7 @@ vec2 RandomVec2(vec2 seed) {
 }
 
 void fragment() {
-	vec2 base_uv = UV;
+	vec2 base_uv = UV*uv1_scale.xy+uv1_offset.xy;;
 	vec4 roughness_texture_channel = vec4(1.0,0.0,0.0,0.0);
 	float roughness_tex = dot(texture(texture_rain,base_uv*vec2(0.02,0.02)),roughness_texture_channel);
 	vec4 albedo_tex = texture(texture_albedo,base_uv);
@@ -73,7 +72,11 @@ void fragment() {
 	//ALBEDO.r += ripple(grid_uv + rv, rv) * size;
 	//ALBEDO = mix(ALBEDO, puddle_color, ripple(grid_uv + rv, rv) * size*0.25);
 }
-"
+
+void light(){
+	DIFFUSE_LIGHT = csc_light(DIFFUSE_LIGHT,NORMAL,LIGHT,ATTENUATION,LIGHT_COLOR,cloud_uv);
+	//DIFFUSE_LIGHT += clamp(dot(NORMAL, LIGHT), 0.0, 1.0) * ATTENUATION * LIGHT_COLOR / PI;
+}"
 
 [sub_resource type="Gradient" id="Gradient_ksdqg"]
 colors = PackedColorArray(0.381703, 0.381703, 0.381703, 1, 1, 1, 1, 1)
@@ -125,8 +128,8 @@ sdfgi_max_distance = 1024.0
 sdfgi_normal_bias = 1.0
 sdfgi_probe_bias = 1.0
 glow_enabled = true
-fog_enabled = true
-volumetric_fog_enabled = true
+fog_light_color = Color(0.541176, 0.603922, 0.658824, 1)
+fog_density = 0.005
 volumetric_fog_density = 0.02
 volumetric_fog_albedo = Color(0.823529, 0.929412, 0.878431, 1)
 volumetric_fog_emission = Color(0.160784, 0.286275, 0.298039, 1)
@@ -134,7 +137,6 @@ volumetric_fog_emission_energy = 0.0
 volumetric_fog_detail_spread = 1.0
 volumetric_fog_ambient_inject = 0.5
 volumetric_fog_temporal_reprojection_enabled = false
-adjustment_enabled = true
 adjustment_brightness = 0.58
 adjustment_contrast = 1.17
 adjustment_saturation = 1.25
@@ -152,6 +154,8 @@ seed = 1
 max_straight = 20
 straight_backtrack = 5
 straight_backtrack_random = 10
+middle_area_start = Vector2i(19, 19)
+middle_area_end = Vector2i(30, 30)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 

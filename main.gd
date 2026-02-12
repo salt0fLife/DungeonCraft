@@ -5,7 +5,7 @@ var peer = SteamMultiplayerPeer.new()
 var localPeer = ENetMultiplayerPeer.new()
 var playerName = str(Steam.getPersonaName())
 @onready var playerSync = $playerSync
-@onready var key_selector = $Control/skinKey
+@onready var key_selector = $Control/mainMenu/VBoxContainer/skinKey
 @onready var music_handler = $musicHandler
 var hosting = false
 
@@ -100,7 +100,7 @@ func host_local():
 	multiplayer.server_relay = true
 	playerSync.boot(true)
 	hide_menu()
-	_on_change_world("maze_world")
+	_on_change_world("debug")
 
 func join_local(address = ""):
 	Global.is_host = false
@@ -567,15 +567,16 @@ func check_for_living_players() -> void:
 
 func game_over(): #only called on host rpc other graphical changes for everyone else
 	print("game over")
-	Global.room_id = 0
-	for auth in playerSync.players.keys():
-		var node = playerSync.players[auth]
-		node.reset_all()#.rpc() #other was not working and im lazy :3
-		node.reset_all.rpc()
-		#node.rpc_id(auth,"reset_all") #tells that player node to reset like it was just spawned in
-	for i in itemHandler.get_children(false):
-		i.call_deferred("queue_free") #destroys all items
-	_on_change_world("maze_world")
+	return #dont do anything
+	#Global.room_id = 0
+	#for auth in playerSync.players.keys():
+		#var node = playerSync.players[auth]
+		#node.reset_all()#.rpc() #other was not working and im lazy :3
+		#node.reset_all.rpc()
+		##node.rpc_id(auth,"reset_all") #tells that player node to reset like it was just spawned in
+	#for i in itemHandler.get_children(false):
+		#i.call_deferred("queue_free") #destroys all items
+	#_on_change_world("maze_world")
 
 var thunder_sounds = [
 	"res://assets/sounds/explosion/lightning_thunder.ogg",
@@ -617,3 +618,9 @@ func create_spacial_audio_player(pos : Vector3, file_path : String, room_id := -
 
 func kill_node(node):
 	node.queue_free()
+
+func _on_open_host_menu_button_down():
+	$Control/hostMenu.visible = true
+
+func _on_back_to_main_menu_button_down():
+	$Control/hostMenu.hide()

@@ -33,7 +33,6 @@ func _on_enter_room(id):
 	room_id = id
 
 var skin = [64,64,false,0,[]]
-
 var snout = 0
 var ears = 0
 var tail = 0
@@ -43,6 +42,7 @@ var eyeLashes = 1.0
 var mouthData = [0.0,0.0,0.0,0.0,0.0,Color.BLACK, Color.BROWN, Color.RED, Color.WHITE]
 var fangs = 0.0
 var pointy_teeth = 0.0
+
 
 var time = 0.0
 
@@ -91,7 +91,7 @@ func vec3_rot_lerp(rot1: Vector3, rot2: Vector3, val: float):
 	return Vector3(x,y,z)
 
 func send_chat(text, dead = false):
-	var col = eyeColor[2]
+	var col = Color.CORNSILK#eyeColor[2]
 	var txt = "[color=blue][player][/color][color=#" + str(int(col.r*9.0))+ str(int(col.g*9.0))+ str(int(col.b*9.0)) + "]" + display_name + ": [/color][color=gray]" + text + "[/color]"
 	_on_chat(txt)
 	_on_chat.rpc(txt)

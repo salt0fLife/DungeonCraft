@@ -5,7 +5,7 @@
 
 [resource]
 shader = ExtResource("1_n5ik1")
-shader_parameter/wavy = true
+shader_parameter/wavy = false
 shader_parameter/shaky = false
 shader_parameter/enchanted_col = Color(0.560784, 0, 0.537255, 1)
 shader_parameter/transparent_background = false

@@ -1,4 +1,5 @@
 shader_type spatial;
+render_mode diffuse_toon,specular_disabled;
 uniform vec2 uv_mult = vec2(1.0,1.0);
 uniform sampler2D blend_texture : repeat_enable, filter_nearest;
 uniform sampler2D tex_base : repeat_enable, filter_nearest;

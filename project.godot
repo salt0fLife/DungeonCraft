@@ -243,3 +243,26 @@ debugMisc={
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method.mobile="gl_compatibility"
 textures/decals/filter=0
+
+[shader_globals]
+
+clouds_shadow_color={
+"type": "color",
+"value": Color(0.564706, 0.658824, 0.776471, 1)
+}
+clouds_shadow_texture={
+"type": "sampler2D",
+"value": "res://assets/textures/world/cloudShadow.png"
+}
+fog_color={
+"type": "color",
+"value": Color(0.321569, 0.639216, 0.372549, 1)
+}
+fog_start={
+"type": "float",
+"value": 20.0
+}
+fog_strength={
+"type": "float",
+"value": 5.0
+}

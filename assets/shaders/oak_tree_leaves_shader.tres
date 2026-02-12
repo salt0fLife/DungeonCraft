@@ -42,5 +42,6 @@ void fragment() {
 	ROUGHNESS = roughness_tex * roughness;
 	SPECULAR = specular;
 	ALPHA *= albedo.a * albedo_tex.a;
+	BACKLIGHT = ALBEDO;
 }
 "
