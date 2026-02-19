@@ -53,10 +53,10 @@ void fragment() {
 	BACKLIGHT = vec3(0.9,1.0,0.97);
 }
 
-void light(){
-	DIFFUSE_LIGHT = csc_light(DIFFUSE_LIGHT,NORMAL,LIGHT,ATTENUATION,LIGHT_COLOR,cloud_uv);
-	//DIFFUSE_LIGHT += clamp(dot(NORMAL, LIGHT), 0.0, 1.0) * ATTENUATION * LIGHT_COLOR / PI;
-}
+//void light(){
+	//DIFFUSE_LIGHT = csc_light(DIFFUSE_LIGHT,NORMAL,LIGHT,ATTENUATION,LIGHT_COLOR,cloud_uv);
+	////DIFFUSE_LIGHT += clamp(dot(NORMAL, LIGHT), 0.0, 1.0) * ATTENUATION * LIGHT_COLOR / PI;
+//}
 "
 
 [resource]

@@ -99,10 +99,10 @@ void fragment() {
 	EMISSION = mix(EMISSION,vec3(0.5,0.0,0.0),damaged*0.25);
 }
 
-void light(){
-	//DIFFUSE_LIGHT += LIGHT_COLOR*ATTENUATION*ALBEDO; //Everything except red turns to 0
-	DIFFUSE_LIGHT = csc_light(DIFFUSE_LIGHT,NORMAL,LIGHT,ATTENUATION,LIGHT_COLOR,cloud_uv);
-}"
+//void light(){
+	////DIFFUSE_LIGHT += LIGHT_COLOR*ATTENUATION*ALBEDO; //Everything except red turns to 0
+	//DIFFUSE_LIGHT = csc_light(DIFFUSE_LIGHT,NORMAL,LIGHT,ATTENUATION,LIGHT_COLOR,cloud_uv);
+//}"
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_a57bj"]
 noise_type = 5

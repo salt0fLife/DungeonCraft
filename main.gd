@@ -15,7 +15,7 @@ var skins = ["default"]
 const naming = [["cruel", "laughable", "evil", "friendly", "small", "diabolical"], ["Jonathan", "Julius", "Jessica", "Jeremy", "Jerimiah", "Justin", "Josiah", "James", "Dave"]]
 
 func _ready():
-	#music_handler.play_song("res://assets/sounds/music/mainTheme.wav")
+	music_handler.play_song("res://assets/sounds/music/beAHouse.wav")
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	Global.connect("spawn_projectile", _on_spawn_projectile)
 	Global.connect("spawnCreature", _on_spawn_creature)

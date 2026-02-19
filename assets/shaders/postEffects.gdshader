@@ -38,6 +38,11 @@ uniform float color_pop: hint_range(0.0, 1.0, 0.1) = 0.0;
 uniform bool impact_frame = false;
 uniform vec3 impact_color : source_color;
 uniform vec3 impact_color_2 : source_color;
+uniform float sharpness_distance = 0.002;
+uniform bool sharpen = true;
+uniform float sharpness_strength = 0.5;
+uniform bool blur_whites = false;
+uniform float blur_distance = 0.002;
 
 float inv_lerp(float from, float to, float value){
   return (value - from) / (to - from);
@@ -80,6 +85,14 @@ vec2 wavy_uv(vec2 uv) {
 	return uv;
 }
 
+vec4 get_blurred_col(sampler2D tex, vec2 uv, float dis) {
+	vec4 up = texture(tex, uv+vec2(0.0,dis));
+	vec4 down = texture(tex, uv+vec2(0.0,-dis));
+	vec4 left = texture(tex, uv+vec2(-dis,0.0));
+	vec4 right = texture(tex, uv+vec2(dis,0.0));
+	return ((up+down+left+right)*0.25);
+}
+
 void vertex() {
 	// Called for every vertex the material is visible on.
 }
@@ -87,6 +100,20 @@ void vertex() {
 void fragment() {
 	vec2 uv = wavy_uv(SCREEN_UV);
 	COLOR = texture(ScreenTexture, spiral_uv(uv, vec2(0.5), spiral));
+	
+	float brightness = (COLOR.r+COLOR.b)*0.33333;
+	
+	if (sharpen){
+		vec4 blurred = get_blurred_col(ScreenTexture, spiral_uv(uv, vec2(0.5), spiral),sharpness_distance);
+		COLOR += (COLOR-blurred)*sharpness_strength;
+		}
+	
+	if (blur_whites) {
+		vec4 blurred = get_blurred_col(ScreenTexture, spiral_uv(uv, vec2(0.5), spiral),blur_distance);
+		COLOR -= (COLOR-blurred)*brightness*brightness;
+	}
+	
+	
 	vec3 col_flash = mix(flash_color - 0.2, flash_color, texture(noise_1, spiral_uv(uv, vec2(0.5), 0.5) + vec2(TIME*0.25)).r);
 	COLOR = vec4(mix(COLOR.rgb, flash_color, flash), 1.0);
 	COLOR.rgb = mix(COLOR.rgb, col_flash, flash);
@@ -130,7 +157,6 @@ void fragment() {
 	result = smoothstep(result, result + line_faloff, lines.r);
 	
 	COLOR.rgb = mix(COLOR.rgb, vec3(line_color.rgb), min(line_color.a, result));
-	float brightness = (COLOR.r+COLOR.b)*0.33333;
 	float vingette_simple = (sin(UV.y*PI+PI)+1.0)*0.5 + (sin(UV.x*PI+PI)+1.0)*0.5;
 	
 	
@@ -171,6 +197,9 @@ void fragment() {
 		}
 		mix(COLOR.rgb, vec3(line_color.rgb), min(line_color.a, result));
 	}
+	
+	
+	
 	
 	//COLOR.a = min(line_color.a, result);
 	

@@ -2242,12 +2242,15 @@ const footstep_sounds = [
 	"res://assets/sounds/footsteps/stone/footstepStone1.wav"
 ]
 
+var last_foot_stepped_left = false
 func play_footstep():
+	last_foot_stepped_left = !last_foot_stepped_left
 	if !is_on_floor():
 		return
 	#var p = footstep_sounds.pick_random()
 	#$footsteps.stream = load(p)
 	#$footsteps.pitch_scale = randf_range(0.9,1.1)
+	
 	$footsteps.play() #this now handles all of randomization itself
 	pass
 

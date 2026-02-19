@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://beqcvgvnki5sh"]
+
+[ext_resource type="Script" path="res://scripts/small_water_splash_effect.gd" id="1_3e535"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_k4vva"]
+orientation = 1
+
+[node name="water_splash_effect" type="Node3D"]
+script = ExtResource("1_3e535")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0122206, 0)
+mesh = SubResource("QuadMesh_k4vva")

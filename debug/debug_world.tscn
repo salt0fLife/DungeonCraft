@@ -1,7 +1,9 @@
-[gd_scene load_steps=52 format=3 uid="uid://dntnunlwfyesu"]
+[gd_scene load_steps=54 format=3 uid="uid://dntnunlwfyesu"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_5fl5y"]
 [ext_resource type="Script" path="res://debug/debug_world.gd" id="1_87rlt"]
+[ext_resource type="AudioStream" uid="uid://jnigego317t7" path="res://assets/sounds/music/ambiencePractice.wav" id="2_ego5s"]
+[ext_resource type="PackedScene" uid="uid://cn56ylv4ycn75" path="res://assets/environmentPieces/ambience/generic_ambience.tscn" id="2_ocimu"]
 [ext_resource type="PackedScene" uid="uid://dly3g0b5sqii7" path="res://assets/environmentPieces/level_details/grass_1.tscn" id="3_5vhho"]
 [ext_resource type="PackedScene" uid="uid://cc8lpiwjggev5" path="res://assets/glb/items/sparkWand.glb" id="3_jyith"]
 [ext_resource type="PackedScene" uid="uid://dq5aik6jyb0o6" path="res://assets/environmentPieces/level_details/grass_2.tscn" id="4_4it4o"]
@@ -104,10 +106,10 @@ void fragment() {
 	//ALBEDO = mix(ALBEDO, puddle_color, ripple(grid_uv + rv, rv) * size*0.25);
 }
 
-void light(){
-	DIFFUSE_LIGHT = csc_light(DIFFUSE_LIGHT,NORMAL,LIGHT,ATTENUATION,LIGHT_COLOR,cloud_uv);
-	//DIFFUSE_LIGHT += clamp(dot(NORMAL, LIGHT), 0.0, 1.0) * ATTENUATION * LIGHT_COLOR / PI;
-}"
+//void light(){
+	//DIFFUSE_LIGHT = csc_light(DIFFUSE_LIGHT,NORMAL,LIGHT,ATTENUATION,LIGHT_COLOR,cloud_uv);
+	////DIFFUSE_LIGHT += clamp(dot(NORMAL, LIGHT), 0.0, 1.0) * ATTENUATION * LIGHT_COLOR / PI;
+//}"
 
 [sub_resource type="Gradient" id="Gradient_ksdqg"]
 colors = PackedColorArray(0.381703, 0.381703, 0.381703, 1, 1, 1, 1, 1)
@@ -220,6 +222,13 @@ orientation = 1
 
 [node name="debugWorld" type="Node3D"]
 script = ExtResource("1_87rlt")
+
+[node name="generic_ambience" parent="." instance=ExtResource("2_ocimu")]
+
+[node name="ambience" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_ego5s")
+volume_db = -22.328
+autoplay = true
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
@@ -383,6 +392,10 @@ transform = Transform3D(0.757332, 0, 1.14764, 0, 1.375, 0, -1.14764, 0, 0.757332
 [node name="portal_1" parent="." instance=ExtResource("12_kfbny")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -2)
 world_path = "test_modular"
+
+[node name="portal_2" parent="." instance=ExtResource("12_kfbny")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -12)
+world_path = "maze_world"
 
 [node name="playerCorpse" parent="." instance=ExtResource("13_lys41")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -5)

@@ -157,7 +157,7 @@ straight_backtrack_random = 10
 middle_area_start = Vector2i(19, 19)
 middle_area_end = Vector2i(30, 30)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="StaticBody3D" type="StaticBody3D" parent="." groups=["water_s"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("WorldBoundaryShape3D_3bqov")

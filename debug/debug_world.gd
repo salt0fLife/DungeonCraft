@@ -8,3 +8,7 @@ extends Node3D
 	#for i in range(0,spider_count):
 		#Global.instance_creature("young_spider", Vector3(-15.0-i*1.0,1.0,0.0))
 	#pass # Replace with function body.
+
+func _ready():
+	
+	pass

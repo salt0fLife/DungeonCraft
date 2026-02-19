@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dim3yh24xb765"]
+[gd_scene load_steps=13 format=3 uid="uid://dim3yh24xb765"]
 
 [ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="1_mdkvd"]
 [ext_resource type="PackedScene" uid="uid://cnh2mcjrokd7t" path="res://assets/environmentPieces/traversal/climb_area.tscn" id="2_5ixju"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://7pogl134aryp" path="res://assets/environmentPieces/traversal/stairs_generator.tscn" id="4_6toaq"]
 [ext_resource type="Script" path="res://scripts/roomsHandler.gd" id="5_t3r10"]
 [ext_resource type="Script" path="res://scripts/generic_entity_spawnpoint.gd" id="6_6ld0l"]
+[ext_resource type="Material" uid="uid://oihxva6xesp7" path="res://assets/materials/smart_concrete.tres" id="6_qv1ad"]
 [ext_resource type="Script" path="res://scripts/scene_doorway_loader.gd" id="7_4vpww"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hewi2"]
@@ -190,6 +191,7 @@ doorway_loader = NodePath("../scene_doorway_loader")
 [node name="room" type="Node3D" parent="roomsHandler"]
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="roomsHandler/room"]
+material_override = ExtResource("6_qv1ad")
 use_collision = true
 
 [node name="CSGBox3D" type="CSGBox3D" parent="roomsHandler/room/CSGCombiner3D"]
@@ -261,6 +263,7 @@ spot_angle = 33.1019
 [node name="room1" type="Node3D" parent="roomsHandler"]
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="roomsHandler/room1"]
+material_override = ExtResource("6_qv1ad")
 use_collision = true
 
 [node name="CSGBox3D" type="CSGBox3D" parent="roomsHandler/room1/CSGCombiner3D"]
@@ -306,6 +309,7 @@ spot_angle = 33.1019
 [node name="room2" type="Node3D" parent="roomsHandler"]
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="roomsHandler/room2"]
+material_override = ExtResource("6_qv1ad")
 use_collision = true
 
 [node name="CSGBox3D" type="CSGBox3D" parent="roomsHandler/room2/CSGCombiner3D"]
@@ -322,6 +326,7 @@ spot_range = 10.5392
 [node name="room3" type="Node3D" parent="roomsHandler"]
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="roomsHandler/room3"]
+material_override = ExtResource("6_qv1ad")
 use_collision = true
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="roomsHandler/room3/CSGCombiner3D"]
@@ -366,6 +371,7 @@ spot_angle = 17.7323
 [node name="room4" type="Node3D" parent="roomsHandler"]
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="roomsHandler/room4"]
+material_override = ExtResource("6_qv1ad")
 use_collision = true
 
 [node name="CSGBox3D" type="CSGBox3D" parent="roomsHandler/room4/CSGCombiner3D"]
