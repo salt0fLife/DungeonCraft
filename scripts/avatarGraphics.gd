@@ -1231,7 +1231,7 @@ func set_ghost(val: bool) -> void:
 		#base_skin_mat.set("proximity_fade_enabled", false)
 		#tran_skin_mat.set("blend_mode", 0)
 		#tran_skin_mat.set("proximity_fade_enabled", false)
-		base_skin_mat.set("shader_parameter/ghostly", 0.0)
+		##base_skin_mat.set("shader_parameter/ghostly", 0.0) ##NOTE CHECK THIS LATER
 		#bone_paths[0].get_child(0).get_child(0).get_active_material(0).set("blend_mode", 0)
 		#meshes[0].get_active_material(0).set("blend_mode", 0)
 		#meshes[1].get_active_material(0).set("blend_mode", 0)

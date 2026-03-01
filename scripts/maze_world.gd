@@ -4,11 +4,12 @@ var generated = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if is_multiplayer_authority():
+	if is_multiplayer_authority() or Engine.is_editor_hint():
 		world_seed = randi()
-		generated = true
-		print("world seed : " + str(world_seed))
-		$mazeGenerator.create_from_seed(world_seed)
+		generate_world_from_seed(world_seed)
+		#generated = true
+		#print("world seed : " + str(world_seed))
+		#$mazeGenerator.create_from_seed(world_seed)
 	else:
 		print("rpc before")
 		print(rpc_id(1,"request_seed"))
@@ -32,3 +33,5 @@ func generate_world_from_seed(seed:int):
 	world_seed = seed
 	generated = true
 	$mazeGenerator.create_from_seed(world_seed)
+	
+	$VoxelGI.bake()

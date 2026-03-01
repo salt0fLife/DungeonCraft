@@ -130,9 +130,9 @@ shader_parameter/impact_color = Color(1, 1, 1, 1)
 shader_parameter/impact_color_2 = Color(0, 0, 0, 1)
 shader_parameter/sharpness_distance = 0.001
 shader_parameter/sharpen = false
-shader_parameter/sharpness_strength = 1.0
-shader_parameter/blur_whites = true
-shader_parameter/blur_distance = 0.002
+shader_parameter/sharpness_strength = 0.5
+shader_parameter/blur_whites = false
+shader_parameter/blur_distance = 0.001
 shader_parameter/noise_1 = SubResource("NoiseTexture2D_h3kr7")
 shader_parameter/red_ramp = SubResource("GradientTexture1D_xyupm")
 shader_parameter/green_ramp = SubResource("GradientTexture1D_ptsje")
@@ -163,6 +163,21 @@ visible = false
 offset_right = 1920.0
 offset_bottom = 1017.0
 texture = ExtResource("6_ybl52")
+
+[node name="ColorRect" type="ColorRect" parent="postEffectTest"]
+layout_mode = 0
+offset_left = 476.0
+offset_top = 365.0
+offset_right = 516.0
+offset_bottom = 405.0
+
+[node name="ColorRect2" type="ColorRect" parent="postEffectTest"]
+layout_mode = 0
+offset_left = 487.0
+offset_top = 379.0
+offset_right = 505.0
+offset_bottom = 394.0
+color = Color(0, 0, 0, 1)
 
 [node name="playerSync" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath(".")

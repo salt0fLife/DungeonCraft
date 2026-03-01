@@ -17,12 +17,12 @@ sub_emitter_mode = 3
 sub_emitter_amount_at_collision = 6
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ss6go"]
-shading_mode = 2
 diffuse_mode = 1
 specular_mode = 2
 albedo_color = Color(0.65098, 0.741176, 0.784314, 1)
-rim_enabled = true
 rim = 0.21
+backlight_enabled = true
+backlight = Color(1, 1, 1, 1)
 disable_receive_shadows = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_lb5do"]

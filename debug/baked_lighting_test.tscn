@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3 uid="uid://co7rsl85ngldy"]
+
+[ext_resource type="VoxelGIData" uid="uid://cu4o173na0dw1" path="res://debug/lighting/baked_lighting_test.VoxelGI_data.res" id="1_nnwtg"]
+
+[sub_resource type="Environment" id="Environment_5jpbs"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_d711t"]
+lightmap_size_hint = Vector2i(14, 21)
+add_uv2 = true
+
+[node name="bakedLightingTest" type="Node3D"]
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+flip_faces = true
+size = Vector3(3, 3, 3)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 1)
+flip_faces = true
+size = Vector3(3, 3, 3)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.52166, -0.123389)
+flip_faces = true
+size = Vector3(3, 3, 3)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_5jpbs")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+light_energy = 0.0
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.57026, 1.55458, 0.00976336)
+light_bake_mode = 1
+shadow_enabled = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.859959, 0, -0.510363, 0, 1, 0, 0.510363, 0, 0.859959, 0.778243, 0, 0)
+mesh = SubResource("BoxMesh_d711t")
+
+[node name="VoxelGI" type="VoxelGI" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.466644, 1.61829, 0.421204)
+subdiv = 0
+size = Vector3(6.18414, 4.34497, 4.34705)
+data = ExtResource("1_nnwtg")

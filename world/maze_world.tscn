@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" path="res://scripts/maze_world.gd" id="1_ifdhu"]
 [ext_resource type="Script" path="res://scripts/mazeGenerator.gd" id="2_3xfjh"]
+[ext_resource type="VoxelGIData" uid="uid://bnx2dmwtgueb5" path="res://world/lightingInformation/maze_world/maze_world.VoxelGI_data.res" id="3_1frde"]
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="3_2jce0"]
 [ext_resource type="AudioStream" uid="uid://bo1dbrdg1edqo" path="res://assets/sounds/entities/crote/CroteDistantHowl.wav" id="4_5p4ik"]
 [ext_resource type="AudioStream" uid="uid://bxb6yhrfr4qk7" path="res://assets/sounds/entities/crote/CroteNearby.wav" id="5_hgaxc"]
-[ext_resource type="PackedScene" uid="uid://c4u7j7ayr1kum" path="res://assets/environmentPieces/ambience/rain.tscn" id="6_scy27"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_3bqov"]
 
@@ -73,10 +73,10 @@ void fragment() {
 	//ALBEDO = mix(ALBEDO, puddle_color, ripple(grid_uv + rv, rv) * size*0.25);
 }
 
-void light(){
-	DIFFUSE_LIGHT = csc_light(DIFFUSE_LIGHT,NORMAL,LIGHT,ATTENUATION,LIGHT_COLOR,cloud_uv);
-	//DIFFUSE_LIGHT += clamp(dot(NORMAL, LIGHT), 0.0, 1.0) * ATTENUATION * LIGHT_COLOR / PI;
-}"
+//void light(){
+	//DIFFUSE_LIGHT = csc_light(DIFFUSE_LIGHT,NORMAL,LIGHT,ATTENUATION,LIGHT_COLOR,cloud_uv);
+	////DIFFUSE_LIGHT += clamp(dot(NORMAL, LIGHT), 0.0, 1.0) * ATTENUATION * LIGHT_COLOR / PI;
+//}"
 
 [sub_resource type="Gradient" id="Gradient_ksdqg"]
 colors = PackedColorArray(0.381703, 0.381703, 0.381703, 1, 1, 1, 1, 1)
@@ -117,11 +117,7 @@ sky_material = SubResource("ProceduralSkyMaterial_tik6y")
 [sub_resource type="Environment" id="Environment_pfntb"]
 background_mode = 2
 sky = SubResource("Sky_ifmfg")
-ssr_enabled = true
 ssr_max_steps = 32
-ssao_enabled = true
-ssil_enabled = true
-sdfgi_use_occlusion = true
 sdfgi_min_cell_size = 1.0
 sdfgi_cascade0_distance = 64.0
 sdfgi_max_distance = 1024.0
@@ -131,11 +127,9 @@ glow_enabled = true
 fog_light_color = Color(0.541176, 0.603922, 0.658824, 1)
 fog_density = 0.005
 volumetric_fog_density = 0.02
-volumetric_fog_albedo = Color(0.823529, 0.929412, 0.878431, 1)
-volumetric_fog_emission = Color(0.160784, 0.286275, 0.298039, 1)
+volumetric_fog_albedo = Color(0.756863, 0.811765, 0.741176, 1)
 volumetric_fog_emission_energy = 0.0
-volumetric_fog_detail_spread = 1.0
-volumetric_fog_ambient_inject = 0.5
+volumetric_fog_length = 128.0
 volumetric_fog_temporal_reprojection_enabled = false
 adjustment_brightness = 0.58
 adjustment_contrast = 1.17
@@ -150,14 +144,19 @@ height = 50
 width = 50
 starting_pos = Vector2i(24, 30)
 ending_pos = Vector2i(24, 0)
-seed = 1
+seed = 4049909675
 max_straight = 20
 straight_backtrack = 5
 straight_backtrack_random = 10
 middle_area_start = Vector2i(19, 19)
 middle_area_end = Vector2i(30, 30)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="." groups=["water_s"]]
+[node name="VoxelGI" type="VoxelGI" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.83967, 49.5914, -4.99957)
+size = Vector3(502.388, 104, 500.924)
+data = ExtResource("3_1frde")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." groups=["wood_s"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("WorldBoundaryShape3D_3bqov")
@@ -169,7 +168,8 @@ mesh = SubResource("PlaneMesh_0wgrm")
 environment = SubResource("Environment_pfntb")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.980088, -0.191798, 0.0513922, 0.0195558, 0.350797, 0.936247, -0.197599, -0.9166, 0.347562, 0, 0, 0)
+transform = Transform3D(0.959717, -0.258819, 0.109346, -0.113203, -4.94827e-09, 0.993572, -0.257155, -0.965926, -0.0292992, 0, 0, 0)
+light_bake_mode = 1
 shadow_enabled = true
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer3D" parent="."]
@@ -181,5 +181,3 @@ volume_db = 20.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.8849, 5.72959, 23.4382)
 stream = ExtResource("5_hgaxc")
 attenuation_model = 2
-
-[node name="rain" parent="." instance=ExtResource("6_scy27")]

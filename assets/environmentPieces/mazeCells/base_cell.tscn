@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://nt18ul6q16ei"]
+[gd_scene load_steps=6 format=3 uid="uid://nt18ul6q16ei"]
 
 [ext_resource type="Material" uid="uid://bpgp5o4wgcntq" path="res://assets/materials/FancyStoneBrickMat.tres" id="1_8kdpk"]
+[ext_resource type="Material" uid="uid://oihxva6xesp7" path="res://assets/materials/smart_concrete.tres" id="2_2kbi6"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_aqswp"]
 _surfaces = [{
@@ -38,9 +39,9 @@ shadow_mesh = SubResource("ArrayMesh_aqswp")
 data = PackedVector3Array(4.9999, 0, -5, -5, 0, 5, 4.9999, 0, 4.9999, 4.9999, 0, -5, -5, 0, -5, -5, 0, 5, 4.9999, 100, -5, -5, 100, 5, -5, 100, -5, 4.9999, 100, -5, 4.9999, 100, 4.9999, -5, 100, 5, -5, 0, 5, 4.9999, 100, 4.9999, 4.9999, 0, 4.9999, -5, 0, 5, -5, 100, 5, 4.9999, 100, 4.9999, 4.9999, 0, -5, -5, 100, -5, -5, 0, -5, 4.9999, 0, -5, 4.9999, 100, -5, -5, 100, -5, -5, 0, -5, -5, 100, 5, -5, 0, 5, -5, 0, -5, -5, 100, -5, -5, 100, 5, 4.9999, 0, 4.9999, 4.9999, 100, -5, 4.9999, 0, -5, 4.9999, 0, 4.9999, 4.9999, 100, 4.9999, 4.9999, 100, -5)
 
 [node name="baseCell" type="MeshInstance3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
 mesh = SubResource("ArrayMesh_8g1xc")
 skeleton = NodePath("")
+surface_material_override/0 = ExtResource("2_2kbi6")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 

@@ -1,18 +1,21 @@
 shader_type spatial;
 uniform sampler2D base_concrete : repeat_enable, filter_nearest;
 uniform sampler2D water_stained_concrete : repeat_enable,filter_nearest;
+uniform sampler2D water_stained_concrete_2 : repeat_enable,filter_nearest;
 uniform sampler2D weathered_concrete : repeat_enable,filter_nearest;
 uniform sampler2D cracked_concrete : repeat_enable, filter_nearest;
 uniform sampler2D bleached_concrete : repeat_enable,filter_nearest;
 uniform sampler2D noise : repeat_enable,filter_linear;
 varying vec2 WORLD_UV;
+uniform bool edge_weathering = true;
 
 void vertex() {
 	
+	vec3 vert = VERTEX + NODE_POSITION_WORLD;
 	//settup triplanar
-	vec2 north_uv = VERTEX.xy;
-	vec2 west_uv = VERTEX.zy+vec2(5.0,5.0);
-	vec2 down_uv = VERTEX.xz+vec2(10.0,10.0);
+	vec2 north_uv = vert.xy;
+	vec2 west_uv = vert.zy+vec2(5.0,5.0);
+	vec2 down_uv = vert.xz+vec2(10.0,10.0);
 	
 	vec3 norm = (NORMAL);
 	WORLD_UV = north_uv;
@@ -21,7 +24,7 @@ void vertex() {
 	
 	
 	
-	WORLD_UV *= 0.00390625*32.0;
+	WORLD_UV *= 0.00390625*16.0;
 	// Called for every vertex the material is visible on.
 }
 
@@ -29,25 +32,29 @@ float edges(vec2 uv) {
 	float difx = (0.5-uv.x);
 	float dify = (0.5-uv.y);
 	float dif = ((difx*difx)+(dify*dify));
-	return (dif*dif*dif)*20.0;
+	return clamp((dif*dif)*10.0,0.0,2.0);
 }
 
 void fragment() {
 	vec2 uv = UV;
 	ALBEDO = texture(base_concrete,WORLD_UV).rgb;
+	//ALBEDO = mix(ALBEDO,texture(water_stained_concrete,uv).rgb,(1.0-uv.y)*0.3);
 	float n = texture(noise,WORLD_UV*0.1).r;
 	n = n * n * n * n;
 	n += n;
 	
 	ALBEDO = mix(ALBEDO,texture(cracked_concrete,WORLD_UV).rgb,n);
+	//ALBEDO = mix(ALBEDO,texture(water_stained_concrete_2,WORLD_UV).rgb,n*uv.y);
 	
 	float n_2 = texture(noise,WORLD_UV*0.05).r;
 	n_2 = n_2 * n_2 * n_2 * n_2;
 	n_2 += n_2;
 	ALBEDO = mix(ALBEDO,texture(bleached_concrete,WORLD_UV).rgb,n_2);
 	
-	float edge = edges(uv);
-	ALBEDO = mix(ALBEDO,texture(weathered_concrete,uv*vec2(2.0,2.0)).rgb,edge);
+	if (edge_weathering) {
+		float edge = edges(uv);
+		ALBEDO = mix(ALBEDO,texture(weathered_concrete,WORLD_UV).rgb,edge*0.5);
+		}
 }
 
 //void light() {

@@ -101,7 +101,7 @@ void fragment() {
 	vec2 uv = wavy_uv(SCREEN_UV);
 	COLOR = texture(ScreenTexture, spiral_uv(uv, vec2(0.5), spiral));
 	
-	float brightness = (COLOR.r+COLOR.b)*0.33333;
+	float brightness = (COLOR.r+COLOR.b+COLOR.g)*0.33333;
 	
 	if (sharpen){
 		vec4 blurred = get_blurred_col(ScreenTexture, spiral_uv(uv, vec2(0.5), spiral),sharpness_distance);
@@ -110,6 +110,10 @@ void fragment() {
 	
 	if (blur_whites) {
 		vec4 blurred = get_blurred_col(ScreenTexture, spiral_uv(uv, vec2(0.5), spiral),blur_distance);
+		if ((blurred.r + blurred.g + blurred.b)*0.33333 > brightness){
+			COLOR -= (COLOR-blurred)*0.5;
+		}
+		blurred = get_blurred_col(ScreenTexture, spiral_uv(uv, vec2(0.5), spiral),blur_distance*2.0);
 		COLOR -= (COLOR-blurred)*brightness*brightness;
 	}
 	

@@ -414,6 +414,7 @@ func generate_graphics_3d() -> void:
 					s.rotation.y -= PI*1.5
 					#s.position.z += cell_spacing
 			s.rotation.y += PI #because I made them backwards lmao
+			s.owner = self
 			add_child(s)
 			
 			#now add decor
@@ -424,6 +425,7 @@ func generate_graphics_3d() -> void:
 				v.position.y = remap(v_r,0.97,1.0,30.0,90.0) #dont really want the player getting to it frequently
 				if v_r > 0.985:
 					v.rotation.y += PI*0.5
+				v.owner = self
 				add_child(v)
 			
 			if tex_indx == 5: #is hallway
@@ -435,6 +437,7 @@ func generate_graphics_3d() -> void:
 					v.rotation.y = s.rotation.y
 					if v_r > 0.9:
 						v.rotation.y += PI
+					v.owner = self
 					add_child(v)
 				pass
 			

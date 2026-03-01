@@ -1,4 +1,4 @@
-[gd_resource type="ShaderMaterial" load_steps=9 format=3 uid="uid://oihxva6xesp7"]
+[gd_resource type="ShaderMaterial" load_steps=10 format=3 uid="uid://oihxva6xesp7"]
 
 [ext_resource type="Shader" path="res://assets/shaders/smart_concrete.gdshader" id="1_iqxpx"]
 [ext_resource type="Texture2D" uid="uid://bcku1g841pepd" path="res://assets/textures/world/concrete/clean_concrete.png" id="2_ss5m0"]
@@ -6,8 +6,10 @@
 [ext_resource type="Texture2D" uid="uid://m2f3q11mvq5c" path="res://assets/textures/world/concrete/weathered_concrete.png" id="3_bysp3"]
 [ext_resource type="Texture2D" uid="uid://b7eeribf7g6me" path="res://assets/textures/world/concrete/cracked_concrete.png" id="3_fbr8w"]
 [ext_resource type="Texture2D" uid="uid://bvrndpgaml7af" path="res://assets/textures/world/concrete/bleached_dirty_concrete.png" id="3_i2tso"]
+[ext_resource type="Texture2D" uid="uid://bv6pe3hqkyjn" path="res://assets/textures/world/concrete/water_stained_2_concrete.png" id="6_c3ulv"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_3fj24"]
+fractal_type = 2
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0d6a7"]
 noise = SubResource("FastNoiseLite_3fj24")
@@ -15,8 +17,10 @@ noise = SubResource("FastNoiseLite_3fj24")
 [resource]
 render_priority = 0
 shader = ExtResource("1_iqxpx")
+shader_parameter/edge_weathering = false
 shader_parameter/base_concrete = ExtResource("2_ss5m0")
 shader_parameter/water_stained_concrete = ExtResource("3_8eots")
+shader_parameter/water_stained_concrete_2 = ExtResource("6_c3ulv")
 shader_parameter/weathered_concrete = ExtResource("3_bysp3")
 shader_parameter/cracked_concrete = ExtResource("3_fbr8w")
 shader_parameter/bleached_concrete = ExtResource("3_i2tso")

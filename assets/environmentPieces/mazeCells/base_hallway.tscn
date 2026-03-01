@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://ce6b4knsbarsp"]
+[gd_scene load_steps=6 format=3 uid="uid://ce6b4knsbarsp"]
 
 [ext_resource type="Material" uid="uid://bpgp5o4wgcntq" path="res://assets/materials/FancyStoneBrickMat.tres" id="1_uup3b"]
+[ext_resource type="Material" uid="uid://oihxva6xesp7" path="res://assets/materials/smart_concrete.tres" id="2_p6pyu"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_mlv5x"]
 _surfaces = [{
@@ -40,6 +41,7 @@ data = PackedVector3Array(3.9999, 0, 4.9999, 4.9999, 100, 4.9999, 4.9999, 0, 4.9
 [node name="baseHallway" type="MeshInstance3D"]
 mesh = SubResource("ArrayMesh_6a5er")
 skeleton = NodePath("")
+surface_material_override/0 = ExtResource("2_p6pyu")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 

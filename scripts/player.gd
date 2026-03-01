@@ -1459,7 +1459,7 @@ func _on_screen_resized():
 @rpc("any_peer","reliable")
 func request_cosmetics() -> void:
 	if is_multiplayer_authority():
-		sync_cosmetics.rpc(Global.skin, [Global.ears, Global.tail, Global.snout, Global.slim, Global.eyeColor, Global.mouthData], Global.display_name)
+		sync_cosmetics.rpc(Global.skin, [Global.ears, Global.tail, Global.snout, Global.slim, Global.eyeColor, Global.mouthData], Global.display_name, Global.pointy_teeth, Global.fangs)
 		update_accessories_graphics.rpc(Inventory.accessories)
 		update_attribute_graphics.rpc(attributes["size"],attributes["chaotic_affinity"],attributes["divine_affinity"],attributes["arcane_affinity"])
 		sync_hand_anim.rpc(current_animation)
