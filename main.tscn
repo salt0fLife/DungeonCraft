@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://cm7d5y2llo0ky"]
+[gd_scene load_steps=43 format=3 uid="uid://cm7d5y2llo0ky"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_s7ggu"]
 [ext_resource type="Script" path="res://scripts/steam.gd" id="2_35c3e"]
@@ -14,6 +14,8 @@
 [ext_resource type="PackedScene" uid="uid://b7s8ume16tah0" path="res://assets/gui/inventory_menu.tscn" id="11_ws5gg"]
 [ext_resource type="Script" path="res://scripts/settingsMenu.gd" id="12_m1jv6"]
 [ext_resource type="Script" path="res://scripts/musicHandler.gd" id="13_bj5bb"]
+[ext_resource type="AudioStream" uid="uid://cwjs6y1ervlbj" path="res://assets/sounds/gui/button_hover_2.ogg" id="15_rgtr5"]
+[ext_resource type="AudioStream" uid="uid://b1cm5almhbe3o" path="res://assets/sounds/gui/button_click_1.ogg" id="16_hl5la"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_pium0"]
 frequency = 0.2226
@@ -647,6 +649,14 @@ popup/item_3/id = 3
 script = ExtResource("13_bj5bb")
 
 [node name="base" type="AudioStreamPlayer" parent="musicHandler"]
+
+[node name="guiSoundsHandler" type="Node" parent="."]
+
+[node name="button_hovered" type="AudioStreamPlayer" parent="guiSoundsHandler"]
+stream = ExtResource("15_rgtr5")
+
+[node name="button_pressed" type="AudioStreamPlayer" parent="guiSoundsHandler"]
+stream = ExtResource("16_hl5la")
 
 [connection signal="button_down" from="Control/mainMenu/VBoxContainer/refreshList" to="." method="_on_refresh_list_button_down"]
 [connection signal="item_selected" from="Control/mainMenu/VBoxContainer/skinKey" to="." method="_on_skin_key_item_selected"]

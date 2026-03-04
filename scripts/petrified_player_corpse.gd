@@ -14,5 +14,5 @@ func load_skin(cosmetics_data):
 	var skin = cosmetics_data[0]
 	var t = cosmetics_data[1]
 	var skin_img = Global.data_to_image(skin)
-	avatar.load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5],t[6],t[7])
+	avatar.load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5])
 	avatar.set_body_param("shader_parameter/petrified",true)

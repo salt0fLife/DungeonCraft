@@ -35,7 +35,7 @@ func create_graphics():
 			#m.scale += Vector3(0.3,0.3,0.3)
 			m.set_surface_override_material(0,dis_mat)
 			m.visible = Settings.show_combat_boxes
-			m.set_layer_mask_value(1,false)
+			m.set_layer_mask_value(1,false) 
 			m.set_layer_mask_value(2,true)
 			var l = Label3D.new()
 			l.text = id

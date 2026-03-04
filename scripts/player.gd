@@ -142,7 +142,7 @@ func update_accessories():
 	update_accessories_graphics()
 	update_accessories_graphics.rpc(Inventory.accessories)
 	update_attribute_graphics()
-	update_attribute_graphics.rpc(attributes["size"],attributes["chaotic_affinity"],attributes["divine_affinity"],attributes["arcane_affinity"])
+	update_attribute_graphics.rpc(attributes["size"],attributes["chaotic_affinity"],attributes["divine_affinity"],attributes["arcane_affinity"],attributes["vampirism"])
 
 var last_mh_c_l:float = 1.0 #max health changed level idk man
 func update_stats_from_accessories():
@@ -425,7 +425,7 @@ func update_accessories_graphics(a = Inventory.accessories):
 			pass
 
 @rpc("any_peer", "reliable")
-func update_attribute_graphics(s = attributes["size"],chaotic = attributes["chaotic_affinity"],divine = attributes["divine_affinity"],arcane = attributes["arcane_affinity"]):
+func update_attribute_graphics(s = attributes["size"],chaotic = attributes["chaotic_affinity"],divine = attributes["divine_affinity"],arcane = attributes["arcane_affinity"], vampirism = attributes["vampirism"]):
 	scale = Vector3(s,s,s)
 	var eye_glow = Color.BLACK
 	var c_a = chaotic/Lookup.max_attributes["chaotic_affinity"]
@@ -433,12 +433,17 @@ func update_attribute_graphics(s = attributes["size"],chaotic = attributes["chao
 	var a_a = arcane/Lookup.max_attributes["arcane_affinity"]
 	var eye_taper = 0.08
 	var smile = 0.0
+	var hand_fire_col = Color(0.0,0.0,0.0,0.0)
+	
 	if c_a > d_a:
 		if c_a > a_a:
 			#c_a is highest chaotic
 			eye_glow = lerp(eye_glow,Color.WEB_PURPLE,c_a)
 			eye_taper = -0.08
 			smile = -0.01
+			hand_fire_col = Color.WEB_PURPLE
+			hand_fire_col.a = clamp(c_a-0.4,0.0,0.6)*1.66666 #only starts showing up about halfway
+			print(hand_fire_col.a)
 		else:
 			#a_a is highest arcane
 			eye_glow = lerp(eye_glow,Color.SPRING_GREEN,a_a)
@@ -454,9 +459,21 @@ func update_attribute_graphics(s = attributes["size"],chaotic = attributes["chao
 			eye_glow = lerp(eye_glow,Color.SPRING_GREEN,a_a)
 			eye_taper = 0.0
 			smile = 0.0
+	
+	
+	var v =  (vampirism/Lookup.max_attributes["vampirism"] )
+	eye_glow = lerp(eye_glow,Color.RED,v)
+	
 	set_eye_glow(eye_glow)
 	avatar.eye_taper = eye_taper
 	avatar.smile_addition = smile
+	
+	avatar.set_mouth_param("shader_parameter/fangs", v* 0.15)
+	avatar.set_mouth_param("shader_parameter/pointy_teeth", v* 0.02)
+	
+	
+	avatar.set_hand_fire(hand_fire_col.a > 0.0,hand_fire_col)
+	
 
 
 func set_stats_to_default():
@@ -700,7 +717,7 @@ func jump():
 	avatar.walk_tilt = 0.0
 	avatar.animation_speed = 4.0
 
-@onready var dust_particles = $dust_particles
+@onready var dust_particles = $effect_handler/dust_particles
 @onready var impact_particles = $impact_particles
 @onready var head_bonk = $head_bonk
 var airborn = false
@@ -1396,7 +1413,7 @@ func sync_cosmetics(skin, t: Array, dn: String):
 	avatar.set_display_name(dn)
 	display_name = dn
 	var skin_img = Global.data_to_image(skin)
-	avatar.load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5],t[6],t[7])
+	avatar.load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5])
 	load_skin_hands(t[3],skin_img)
 
 @onready var hands_meshes = [
@@ -1459,9 +1476,9 @@ func _on_screen_resized():
 @rpc("any_peer","reliable")
 func request_cosmetics() -> void:
 	if is_multiplayer_authority():
-		sync_cosmetics.rpc(Global.skin, [Global.ears, Global.tail, Global.snout, Global.slim, Global.eyeColor, Global.mouthData], Global.display_name, Global.pointy_teeth, Global.fangs)
+		sync_cosmetics.rpc(Global.skin, [Global.ears, Global.tail, Global.snout, Global.slim, Global.eyeColor, Global.mouthData], Global.display_name)
 		update_accessories_graphics.rpc(Inventory.accessories)
-		update_attribute_graphics.rpc(attributes["size"],attributes["chaotic_affinity"],attributes["divine_affinity"],attributes["arcane_affinity"])
+		update_attribute_graphics.rpc(attributes["size"],attributes["chaotic_affinity"],attributes["divine_affinity"],attributes["arcane_affinity"],attributes["vampirism"])
 		sync_hand_anim.rpc(current_animation)
 		set_ghost.rpc(ghost)
 		update_status_effect_graphics.rpc(status_effects)
@@ -1626,6 +1643,14 @@ func add_status_effect(id,time):
 		status_effects[id] = time
 	update_status_effect_graphics(status_effects)
 	update_status_effect_graphics.rpc(status_effects)
+
+func clear_status_effect(id) -> bool:
+	if status_effects.has(id):
+		status_effects.erase(id)
+		update_status_effect_graphics(status_effects)
+		update_status_effect_graphics.rpc(status_effects)
+		return true
+	return false
 
 const fall_damage_messages = [
 	" fell to their death",
@@ -1826,7 +1851,8 @@ func phantom_signal(signal_key : String): #sick ass function name
 func set_ghost(val):
 	ghost = val
 	print("set_ghost")
-	$ghostParticles.emitting = val
+	print(val)
+	effect_handler.set_ghost(val)
 	voip.set_ghostly(val)
 	avatar.set_ghost(val)
 	#set_collision_layer_value(3, !val)
@@ -1909,7 +1935,6 @@ func update_ghost_communication(val : bool): #specifically for the ghost_communi
 					p.set_mute(true)
 					p.set_graphics_visible(false)
 
-
 func set_invulnerable(val):
 	if val:
 		for h in hurtboxes:
@@ -1919,12 +1944,17 @@ func set_invulnerable(val):
 		settup_team_hurtboxes(is_multiplayer_authority())
 	pass
 
+@onready var effect_handler = $effect_handler
+
 func respawn(pos = position):
 	position = pos
 	health = attributes["max_health"]
 	set_ghost(false)
 	set_ghost.rpc(false)
+	#avatar.respawn_effect()
 	update_health_graphics()
+	effect_handler.respawn_effect()
+	effect_handler.respawn_effect.rpc()
 
 @rpc("any_peer","reliable")
 func reset_all(): #like it was all a bad dream
@@ -2385,7 +2415,7 @@ func _process(delta):
 				$UI/tooltip.modulate = hit.tool_tip_color
 	status_effect_timer -= delta
 	if status_effect_timer < 0.0:
-		status_effect_timer = 0.25
+		status_effect_timer = 0.5
 		if !clear_status_effects:
 			update_status_effect_ui()
 			for k in status_effects.keys():
@@ -2577,7 +2607,13 @@ func update_health_graphics():
 		$UI/health.text = "deceased"
 		col = Color("RED")
 	$UI/health.set("theme_override_colors/font_color",col)
-	pass
+	
+	set_bloody(1.0-dif)
+	set_bloody.rpc(1.0-dif)
+
+@rpc("any_peer")
+func set_bloody(val : float) -> void:
+	avatar.set_bloody(val)
 
 ##status effects
 @rpc("any_peer","reliable")

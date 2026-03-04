@@ -1,4 +1,4 @@
-[gd_resource type="ShaderMaterial" load_steps=12 format=3 uid="uid://cs5uq77gi4wbq"]
+[gd_resource type="ShaderMaterial" load_steps=14 format=3 uid="uid://cs5uq77gi4wbq"]
 
 [ext_resource type="Texture2D" uid="uid://b6cpqftytnnam" path="res://assets/playerSkins/dapper128Secondary.png" id="1_3f7et"]
 
@@ -6,7 +6,7 @@
 code = "// NOTE: Shader automatically converted from Godot Engine 4.2.1.stable's StandardMaterial3D.
 
 shader_type spatial;
-render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_toon,specular_disabled,depth_prepass_alpha;
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_toon,specular_schlick_ggx,depth_prepass_alpha;
 uniform vec4 albedo : source_color;
 uniform sampler2D texture_albedo : source_color,filter_nearest,repeat_enable;
 uniform float point_size : hint_range(0,128);
@@ -38,6 +38,11 @@ uniform bool petrified = false;
 uniform sampler2D stone_texture : filter_nearest;
 varying vec2 cloud_uv;
 #include \"res://environment.gdshaderinc\"
+
+uniform vec3 blood_col : source_color;
+uniform float bloody : hint_range(0.0, 1.0, 0.01);
+uniform sampler2D blood_mask;
+uniform float bloody_offset = 0.0;
 
 void vertex() {
 	UV=UV*uv1_scale.xy+uv1_offset.xy;
@@ -97,6 +102,13 @@ void fragment() {
 	}
 	ALBEDO = mix(ALBEDO,vec3(0.5,0.0,0.0),damaged*0.25);
 	EMISSION = mix(EMISSION,vec3(0.5,0.0,0.0),damaged*0.25);
+	
+	float b = texture(blood_mask,UV+vec2(bloody_offset,bloody_offset*7.0)).r;
+	
+	if (bloody*b*2.0*b > 0.5){
+		ALBEDO = blood_col;
+		ROUGHNESS = 0.25;
+	}
 }
 
 //void light(){
@@ -111,6 +123,13 @@ fractal_type = 0
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8vq3x"]
 noise = SubResource("FastNoiseLite_a57bj")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ggsa3"]
+noise_type = 5
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_kit8c"]
+noise = SubResource("FastNoiseLite_ggsa3")
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_ld084"]
 noise_type = 2
@@ -170,8 +189,12 @@ shader_parameter/cursed_col = Color(0.14902, 0.00392157, 0.0509804, 1)
 shader_parameter/blessed_col = Color(0.841253, 0.70698, 0.10669, 1)
 shader_parameter/damaged = 0.0
 shader_parameter/petrified = false
+shader_parameter/blood_col = Color(0.34902, 0.0509804, 0.0196078, 1)
+shader_parameter/bloody = 0.0
+shader_parameter/bloody_offset = 0.0
 shader_parameter/texture_albedo = ExtResource("1_3f7et")
 shader_parameter/fire_tex = SubResource("NoiseTexture2D_xik6f")
 shader_parameter/cursed_tex = SubResource("NoiseTexture2D_xiwry")
 shader_parameter/blessed_tex = SubResource("NoiseTexture2D_8vq3x")
 shader_parameter/stone_texture = SubResource("NoiseTexture2D_gv4lf")
+shader_parameter/blood_mask = SubResource("NoiseTexture2D_kit8c")

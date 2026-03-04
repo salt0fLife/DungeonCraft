@@ -8,6 +8,7 @@ uniform sampler2D fire_noise : repeat_enable;
 uniform vec3 fire_col : source_color;
 uniform sampler2D gradient_tex;
 uniform float size = 1.0;
+uniform float speed = 1.0;
 
 void vertex() {
 	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(vec4(normalize(cross(vec3(0.0, 1.0, 0.0), INV_VIEW_MATRIX[2].xyz)), 0.0), vec4(0.0, 1.0, 0.0, 0.0), vec4(normalize(cross(INV_VIEW_MATRIX[0].xyz, vec3(0.0, 1.0, 0.0))), 0.0), MODEL_MATRIX[3]);
@@ -21,8 +22,8 @@ void vertex() {
 
 void fragment() {
 	vec2 base_uv = UV;
-	vec4 fire = texture(fire_noise,base_uv*vec2(size,size)+vec2(0.0,TIME*2.0*size));
-	fire *= texture(fire_noise,base_uv*vec2(size,size)+vec2(0.25,TIME*3.2*size));
+	vec4 fire = texture(fire_noise,base_uv*vec2(size,size)+vec2(0.0,TIME*2.0*size*speed));
+	fire *= texture(fire_noise,base_uv*vec2(size,size)+vec2(0.25,TIME*3.2*size*speed));
 	vec4 gradient = texture(gradient_tex,base_uv+vec2(0.0,0.01));
 	ALPHA = fire.a * gradient.r;
 	ALBEDO = mix(fire_col,fire_col*vec3(0.7,0.7,0.1),fire.r*ALPHA);
@@ -55,7 +56,8 @@ fill_to = Vector2(1, 0.5)
 [resource]
 render_priority = 0
 shader = SubResource("Shader_82q5v")
-shader_parameter/fire_col = Color(0.796078, 0.247059, 0, 1)
+shader_parameter/fire_col = Color(0.964706, 0.305882, 0, 1)
 shader_parameter/size = 1.0
+shader_parameter/speed = 1.0
 shader_parameter/fire_noise = SubResource("NoiseTexture2D_0xgdf")
 shader_parameter/gradient_tex = SubResource("GradientTexture2D_gpt44")

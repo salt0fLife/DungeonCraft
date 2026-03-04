@@ -46,7 +46,7 @@ func _ready():
 func load_players_skin() -> void:
 	var skin_img = Global.data_to_image(Global.skin)
 	var t = [Global.ears, Global.tail, Global.snout, Global.slim, Global.eyeColor, Global.mouthData, Global.fangs, Global.pointy_teeth]
-	avatar.load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5],t[6],t[7])
+	avatar.load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5])
 
 @onready var avatar = $graphics/playerAvatar/genericAvatar
 @onready var graphics = $graphics

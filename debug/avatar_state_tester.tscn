@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3 uid="uid://bvjggig8k6x5v"]
+
+[ext_resource type="Script" path="res://debug/avatar_state_tester.gd" id="1_u7aa7"]
+[ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="2_is0ll"]
+
+[node name="avatar_state_tester" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 0, 0)
+script = ExtResource("1_u7aa7")
+
+[node name="playerAvatar" parent="." instance=ExtResource("2_is0ll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -4.15712)
+
+[node name="playerAvatar2" parent="." instance=ExtResource("2_is0ll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -5.15712)
+
+[node name="playerAvatar3" parent="." instance=ExtResource("2_is0ll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -6.15712)
+
+[node name="playerAvatar4" parent="." instance=ExtResource("2_is0ll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -7.15712)
+
+[node name="playerAvatar5" parent="." instance=ExtResource("2_is0ll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -8.15712)
+
+[node name="playerAvatar6" parent="." instance=ExtResource("2_is0ll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -10.1571)
+
+[node name="playerAvatar7" parent="." instance=ExtResource("2_is0ll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -9.15712)
+
+[node name="playerAvatar8" parent="." instance=ExtResource("2_is0ll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -11.1571)
+
+[node name="playerAvatar9" parent="." instance=ExtResource("2_is0ll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -12.1571)
+
+[node name="playerAvatar10" parent="." instance=ExtResource("2_is0ll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -13.1571)

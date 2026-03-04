@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cmdbwv1koq3np"]
+[gd_scene load_steps=15 format=3 uid="uid://cmdbwv1koq3np"]
 
 [ext_resource type="Script" path="res://scripts/death_timer.gd" id="1_g5r2b"]
 
@@ -121,8 +121,25 @@ shader_parameter/normal = SubResource("NoiseTexture2D_s4n5n")
 material = SubResource("ShaderMaterial_p5rkf")
 orientation = 1
 
+[sub_resource type="Gradient" id="Gradient_wad2y"]
+colors = PackedColorArray(1, 0, 0, 1, 1, 0.298039, 0, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_2aupy"]
+noise_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_nfly7"]
+color_ramp = SubResource("Gradient_wad2y")
+noise = SubResource("FastNoiseLite_2aupy")
+
 [node name="blood_decal" type="Node3D"]
 script = ExtResource("1_g5r2b")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("QuadMesh_370gf")
+
+[node name="Decal" type="Decal" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00389767, 0)
+size = Vector3(1, 1, 1)
+texture_orm = SubResource("NoiseTexture2D_nfly7")
+upper_fade = 104.912

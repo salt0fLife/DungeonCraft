@@ -1,4 +1,4 @@
-[gd_scene load_steps=90 format=3 uid="uid://bfmtven01nbak"]
+[gd_scene load_steps=97 format=3 uid="uid://bfmtven01nbak"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_rca1e"]
 [ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="2_841cm"]
@@ -19,6 +19,8 @@
 [ext_resource type="Script" path="res://scripts/footsteps_handler.gd" id="15_1gq2r"]
 [ext_resource type="AudioStream" uid="uid://d1r87672jbeap" path="res://assets/sounds/footsteps/metal/footstepMetal.wav" id="16_1yqqf"]
 [ext_resource type="Shader" path="res://assets/shaders/circleShadow.gdshader" id="16_he6of"]
+[ext_resource type="Script" path="res://scripts/player_effect_handler.gd" id="20_8yk8r"]
+[ext_resource type="Texture2D" uid="uid://ct7flrdh26g2f" path="res://assets/textures/effects/magic1.png" id="20_n466e"]
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ujmkt"]
 data = PackedVector3Array(-0.0617, -0.3077, -0.1433, 0.0873, -0.3019, 0.05, 0.0873, -0.3019, -0.1433, -0.0617, -0.3077, -0.1433, -0.0617, -0.3077, 0.05, 0.0873, -0.3019, 0.05, -0.0737, -0.0011, 0.05, -0.0617, -0.3077, -0.1433, -0.0737, -0.0011, -0.1433, -0.0737, -0.0011, 0.05, -0.0617, -0.3077, 0.05, -0.0617, -0.3077, -0.1433, 0.0873, -0.3019, 0.05, -0.0737, -0.0011, 0.05, 0.0753, 0.0047, 0.05, 0.0873, -0.3019, 0.05, -0.0617, -0.3077, 0.05, -0.0737, -0.0011, 0.05, 0.0873, -0.3019, -0.1433, 0.0753, 0.0047, 0.05, 0.0753, 0.0047, -0.1433, 0.0873, -0.3019, -0.1433, 0.0873, -0.3019, 0.05, 0.0753, 0.0047, 0.05, -0.0737, -0.0011, 0.05, 0.0753, 0.0047, -0.1433, 0.0753, 0.0047, 0.05, -0.0737, -0.0011, 0.05, -0.0737, -0.0011, -0.1433, 0.0753, 0.0047, -0.1433, -0.0617, -0.3077, -0.1433, 0.0753, 0.0047, -0.1433, -0.0737, -0.0011, -0.1433, -0.0617, -0.3077, -0.1433, 0.0873, -0.3019, -0.1433, 0.0753, 0.0047, -0.1433)
@@ -32,7 +34,7 @@ data = PackedVector3Array(0.0736, -0.305, -0.1433, -0.0755, -0.305, 0.05, 0.0737
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_6mvmu"]
 data = PackedVector3Array(0.0694, -0.2676, -0.1165, -0.0797, 0.0041, -0.1165, -0.0797, -0.2676, -0.1165, 0.0694, -0.2676, -0.1165, 0.0694, 0.0041, -0.1165, -0.0797, 0.0041, -0.1165, -0.0797, -0.2676, -0.1165, -0.0797, 0.0041, 0.0768, -0.0797, -0.2676, 0.0768, -0.0797, -0.2676, -0.1165, -0.0797, 0.0041, -0.1165, -0.0797, 0.0041, 0.0768, -0.0797, 0.0041, -0.1165, 0.0694, 0.0041, 0.0768, -0.0797, 0.0041, 0.0768, -0.0797, 0.0041, -0.1165, 0.0694, 0.0041, -0.1165, 0.0694, 0.0041, 0.0768, -0.0797, -0.2676, 0.0768, 0.0694, 0.0041, 0.0768, 0.0694, -0.2676, 0.0768, -0.0797, -0.2676, 0.0768, -0.0797, 0.0041, 0.0768, 0.0694, 0.0041, 0.0768, 0.0694, 0.0041, 0.0768, 0.0694, -0.2676, -0.1165, 0.0694, -0.2676, 0.0768, 0.0694, 0.0041, 0.0768, 0.0694, 0.0041, -0.1165, 0.0694, -0.2676, -0.1165, 0.0694, -0.2676, 0.0768, -0.0797, -0.2676, -0.1165, -0.0797, -0.2676, 0.0768, 0.0694, -0.2676, 0.0768, 0.0694, -0.2676, -0.1165, -0.0797, -0.2676, -0.1165)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_udnj3"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kfil4"]
 resource_name = "eyeBrows"
 transparency = 2
 alpha_scissor_threshold = 0.5
@@ -41,7 +43,7 @@ albedo_color = Color(0, 0, 0, 1)
 albedo_texture = ExtResource("4_uef4w")
 texture_filter = 2
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_fttdq"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rchds"]
 resource_name = "eyes"
 render_priority = 0
 shader = ExtResource("5_pm5ed")
@@ -69,7 +71,7 @@ shader_parameter/glow_col = Color(0, 0, 0, 1)
 shader_parameter/glow_col_2 = Color(0, 0, 0, 1)
 shader_parameter/glow_col_3 = Color(0, 0, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_sdh5p"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ipf0g"]
 render_priority = 0
 shader = ExtResource("6_oeoqp")
 shader_parameter/uv1_scale = Vector3(1, 1, 1)
@@ -98,18 +100,6 @@ data = PackedVector3Array(0.1431, -0.1431, 0.1431, -0.1431, -0.1431, -0.1431, -0
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_oox8g"]
 data = PackedVector3Array(-0.0487, -0.2964, -0.0934, 0.0996, -0.281, 0.0999, 0.0996, -0.281, -0.0934, -0.0487, -0.2964, -0.0934, -0.0487, -0.2964, 0.0999, 0.0996, -0.281, 0.0999, -0.0786, -0.0087, 0.0999, -0.0487, -0.2964, -0.0934, -0.0786, -0.0087, -0.0934, -0.0786, -0.0087, 0.0999, -0.0487, -0.2964, 0.0999, -0.0487, -0.2964, -0.0934, 0.0996, -0.281, 0.0999, -0.0786, -0.0087, 0.0999, 0.0697, 0.0067, 0.0999, 0.0996, -0.281, 0.0999, -0.0487, -0.2964, 0.0999, -0.0786, -0.0087, 0.0999, 0.0996, -0.281, -0.0934, 0.0697, 0.0067, 0.0999, 0.0697, 0.0067, -0.0934, 0.0996, -0.281, -0.0934, 0.0996, -0.281, 0.0999, 0.0697, 0.0067, 0.0999, -0.0487, -0.2964, -0.0934, 0.0697, 0.0067, -0.0934, -0.0786, -0.0087, -0.0934, -0.0487, -0.2964, -0.0934, 0.0996, -0.281, -0.0934, 0.0697, 0.0067, -0.0934, -0.0786, -0.0087, 0.0999, 0.0697, 0.0067, -0.0934, 0.0697, 0.0067, 0.0999, -0.0786, -0.0087, 0.0999, -0.0786, -0.0087, -0.0934, 0.0697, 0.0067, -0.0934)
-
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_s58j1"]
-data = PackedVector3Array(0.006, -0.2493, -0.0989, 0.1551, 0.0399, -0.0989, 0.006, 0.0399, -0.0989, 0.006, -0.2493, -0.0989, 0.1551, -0.2493, -0.0989, 0.1551, 0.0399, -0.0989, 0.1551, -0.2493, -0.0989, 0.1551, 0.0399, 0.0944, 0.1551, 0.0399, -0.0989, 0.1551, -0.2493, -0.0989, 0.1551, -0.2493, 0.0944, 0.1551, 0.0399, 0.0944, 0.1551, 0.0399, -0.0989, 0.006, 0.0399, 0.0944, 0.006, 0.0399, -0.0989, 0.1551, 0.0399, -0.0989, 0.1551, 0.0399, 0.0944, 0.006, 0.0399, 0.0944, 0.1551, -0.2493, 0.0944, 0.006, 0.0399, 0.0944, 0.1551, 0.0399, 0.0944, 0.1551, -0.2493, 0.0944, 0.006, -0.2493, 0.0944, 0.006, 0.0399, 0.0944, 0.006, 0.0399, 0.0944, 0.006, -0.2493, -0.0989, 0.006, 0.0399, -0.0989, 0.006, 0.0399, 0.0944, 0.006, -0.2493, 0.0944, 0.006, -0.2493, -0.0989, 0.006, -0.2493, 0.0944, 0.1551, -0.2493, -0.0989, 0.006, -0.2493, -0.0989, 0.006, -0.2493, 0.0944, 0.1551, -0.2493, 0.0944, 0.1551, -0.2493, -0.0989)
-
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_kk3xt"]
-data = PackedVector3Array(0.071, -0.2905, -0.1233, -0.0781, -0.2905, 0.07, 0.071, -0.2905, 0.07, 0.071, -0.2905, -0.1233, -0.0781, -0.2905, -0.1233, -0.0781, -0.2905, 0.07, 0.071, -0.0012, 0.07, 0.071, -0.2905, -0.1233, 0.071, -0.2905, 0.07, 0.071, -0.0012, 0.07, 0.071, -0.0012, -0.1233, 0.071, -0.2905, -0.1233, -0.0781, -0.2905, 0.07, 0.071, -0.0012, 0.07, 0.071, -0.2905, 0.07, -0.0781, -0.2905, 0.07, -0.0781, -0.0012, 0.07, 0.071, -0.0012, 0.07, -0.0781, -0.2905, -0.1233, -0.0781, -0.0012, 0.07, -0.0781, -0.2905, 0.07, -0.0781, -0.2905, -0.1233, -0.0781, -0.0012, -0.1233, -0.0781, -0.0012, 0.07, 0.071, -0.2905, -0.1233, -0.0781, -0.0012, -0.1233, -0.0781, -0.2905, -0.1233, 0.071, -0.2905, -0.1233, 0.071, -0.0012, -0.1233, -0.0781, -0.0012, -0.1233, 0.071, -0.0012, 0.07, -0.0781, -0.0012, -0.1233, 0.071, -0.0012, -0.1233, 0.071, -0.0012, 0.07, -0.0781, -0.0012, 0.07, -0.0781, -0.0012, -0.1233)
-
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_kvt2y"]
-data = PackedVector3Array(-0.006, -0.2493, -0.0989, -0.1551, 0.0399, -0.0989, -0.1551, -0.2493, -0.0989, -0.006, -0.2493, -0.0989, -0.006, 0.0399, -0.0989, -0.1551, 0.0399, -0.0989, -0.1551, -0.2493, -0.0989, -0.1551, 0.0399, 0.0944, -0.1551, -0.2493, 0.0944, -0.1551, -0.2493, -0.0989, -0.1551, 0.0399, -0.0989, -0.1551, 0.0399, 0.0944, -0.1551, 0.0399, -0.0989, -0.006, 0.0399, 0.0944, -0.1551, 0.0399, 0.0944, -0.1551, 0.0399, -0.0989, -0.006, 0.0399, -0.0989, -0.006, 0.0399, 0.0944, -0.1551, -0.2493, 0.0944, -0.006, 0.0399, 0.0944, -0.006, -0.2493, 0.0944, -0.1551, -0.2493, 0.0944, -0.1551, 0.0399, 0.0944, -0.006, 0.0399, 0.0944, -0.006, 0.0399, 0.0944, -0.006, -0.2493, -0.0989, -0.006, -0.2493, 0.0944, -0.006, 0.0399, 0.0944, -0.006, 0.0399, -0.0989, -0.006, -0.2493, -0.0989, -0.006, -0.2493, 0.0944, -0.1551, -0.2493, -0.0989, -0.1551, -0.2493, 0.0944, -0.006, -0.2493, 0.0944, -0.006, -0.2493, -0.0989, -0.1551, -0.2493, -0.0989)
-
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ihomt"]
-data = PackedVector3Array(-0.1491, -0.282, 0.0967, -0.1491, 0.2892, -0.0967, -0.1491, 0.2892, 0.0967, -0.1491, -0.282, 0.0967, -0.1491, -0.282, -0.0967, -0.1491, 0.2892, -0.0967, -0.1491, -0.282, -0.0967, 0.1491, 0.2892, -0.0967, -0.1491, 0.2892, -0.0967, -0.1491, -0.282, -0.0967, 0.1491, -0.282, -0.0967, 0.1491, 0.2892, -0.0967, 0.1491, -0.282, -0.0967, 0.1491, 0.2892, 0.0967, 0.1491, 0.2892, -0.0967, 0.1491, -0.282, -0.0967, 0.1491, -0.282, 0.0967, 0.1491, 0.2892, 0.0967, 0.1491, -0.282, 0.0967, -0.1491, 0.2892, 0.0967, 0.1491, 0.2892, 0.0967, 0.1491, -0.282, 0.0967, -0.1491, -0.282, 0.0967, -0.1491, 0.2892, 0.0967, -0.1491, -0.282, -0.0967, 0.1491, -0.282, 0.0967, 0.1491, -0.282, -0.0967, -0.1491, -0.282, -0.0967, -0.1491, -0.282, 0.0967, 0.1491, -0.282, 0.0967, 0.1491, 0.2892, -0.0967, -0.1491, 0.2892, 0.0967, -0.1491, 0.2892, -0.0967, 0.1491, 0.2892, -0.0967, 0.1491, 0.2892, 0.0967, -0.1491, 0.2892, 0.0967)
 
 [sub_resource type="Shader" id="Shader_82q5v"]
 code = "
@@ -162,7 +152,26 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.2)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_vbvvg"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uee3o"]
+render_priority = 0
+shader = SubResource("Shader_82q5v")
+shader_parameter/fire_col = Color(0.796078, 0.247059, 0, 1)
+shader_parameter/fire_noise = SubResource("NoiseTexture2D_0xgdf")
+shader_parameter/gradient_tex = SubResource("GradientTexture2D_gpt44")
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_s58j1"]
+data = PackedVector3Array(0.006, -0.2493, -0.0989, 0.1551, 0.0399, -0.0989, 0.006, 0.0399, -0.0989, 0.006, -0.2493, -0.0989, 0.1551, -0.2493, -0.0989, 0.1551, 0.0399, -0.0989, 0.1551, -0.2493, -0.0989, 0.1551, 0.0399, 0.0944, 0.1551, 0.0399, -0.0989, 0.1551, -0.2493, -0.0989, 0.1551, -0.2493, 0.0944, 0.1551, 0.0399, 0.0944, 0.1551, 0.0399, -0.0989, 0.006, 0.0399, 0.0944, 0.006, 0.0399, -0.0989, 0.1551, 0.0399, -0.0989, 0.1551, 0.0399, 0.0944, 0.006, 0.0399, 0.0944, 0.1551, -0.2493, 0.0944, 0.006, 0.0399, 0.0944, 0.1551, 0.0399, 0.0944, 0.1551, -0.2493, 0.0944, 0.006, -0.2493, 0.0944, 0.006, 0.0399, 0.0944, 0.006, 0.0399, 0.0944, 0.006, -0.2493, -0.0989, 0.006, 0.0399, -0.0989, 0.006, 0.0399, 0.0944, 0.006, -0.2493, 0.0944, 0.006, -0.2493, -0.0989, 0.006, -0.2493, 0.0944, 0.1551, -0.2493, -0.0989, 0.006, -0.2493, -0.0989, 0.006, -0.2493, 0.0944, 0.1551, -0.2493, 0.0944, 0.1551, -0.2493, -0.0989)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_kk3xt"]
+data = PackedVector3Array(0.071, -0.2905, -0.1233, -0.0781, -0.2905, 0.07, 0.071, -0.2905, 0.07, 0.071, -0.2905, -0.1233, -0.0781, -0.2905, -0.1233, -0.0781, -0.2905, 0.07, 0.071, -0.0012, 0.07, 0.071, -0.2905, -0.1233, 0.071, -0.2905, 0.07, 0.071, -0.0012, 0.07, 0.071, -0.0012, -0.1233, 0.071, -0.2905, -0.1233, -0.0781, -0.2905, 0.07, 0.071, -0.0012, 0.07, 0.071, -0.2905, 0.07, -0.0781, -0.2905, 0.07, -0.0781, -0.0012, 0.07, 0.071, -0.0012, 0.07, -0.0781, -0.2905, -0.1233, -0.0781, -0.0012, 0.07, -0.0781, -0.2905, 0.07, -0.0781, -0.2905, -0.1233, -0.0781, -0.0012, -0.1233, -0.0781, -0.0012, 0.07, 0.071, -0.2905, -0.1233, -0.0781, -0.0012, -0.1233, -0.0781, -0.2905, -0.1233, 0.071, -0.2905, -0.1233, 0.071, -0.0012, -0.1233, -0.0781, -0.0012, -0.1233, 0.071, -0.0012, 0.07, -0.0781, -0.0012, -0.1233, 0.071, -0.0012, -0.1233, 0.071, -0.0012, 0.07, -0.0781, -0.0012, 0.07, -0.0781, -0.0012, -0.1233)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_kvt2y"]
+data = PackedVector3Array(-0.006, -0.2493, -0.0989, -0.1551, 0.0399, -0.0989, -0.1551, -0.2493, -0.0989, -0.006, -0.2493, -0.0989, -0.006, 0.0399, -0.0989, -0.1551, 0.0399, -0.0989, -0.1551, -0.2493, -0.0989, -0.1551, 0.0399, 0.0944, -0.1551, -0.2493, 0.0944, -0.1551, -0.2493, -0.0989, -0.1551, 0.0399, -0.0989, -0.1551, 0.0399, 0.0944, -0.1551, 0.0399, -0.0989, -0.006, 0.0399, 0.0944, -0.1551, 0.0399, 0.0944, -0.1551, 0.0399, -0.0989, -0.006, 0.0399, -0.0989, -0.006, 0.0399, 0.0944, -0.1551, -0.2493, 0.0944, -0.006, 0.0399, 0.0944, -0.006, -0.2493, 0.0944, -0.1551, -0.2493, 0.0944, -0.1551, 0.0399, 0.0944, -0.006, 0.0399, 0.0944, -0.006, 0.0399, 0.0944, -0.006, -0.2493, -0.0989, -0.006, -0.2493, 0.0944, -0.006, 0.0399, 0.0944, -0.006, 0.0399, -0.0989, -0.006, -0.2493, -0.0989, -0.006, -0.2493, 0.0944, -0.1551, -0.2493, -0.0989, -0.1551, -0.2493, 0.0944, -0.006, -0.2493, 0.0944, -0.006, -0.2493, -0.0989, -0.1551, -0.2493, -0.0989)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ihomt"]
+data = PackedVector3Array(-0.1491, -0.282, 0.0967, -0.1491, 0.2892, -0.0967, -0.1491, 0.2892, 0.0967, -0.1491, -0.282, 0.0967, -0.1491, -0.282, -0.0967, -0.1491, 0.2892, -0.0967, -0.1491, -0.282, -0.0967, 0.1491, 0.2892, -0.0967, -0.1491, 0.2892, -0.0967, -0.1491, -0.282, -0.0967, 0.1491, -0.282, -0.0967, 0.1491, 0.2892, -0.0967, 0.1491, -0.282, -0.0967, 0.1491, 0.2892, 0.0967, 0.1491, 0.2892, -0.0967, 0.1491, -0.282, -0.0967, 0.1491, -0.282, 0.0967, 0.1491, 0.2892, 0.0967, 0.1491, -0.282, 0.0967, -0.1491, 0.2892, 0.0967, 0.1491, 0.2892, 0.0967, 0.1491, -0.282, 0.0967, -0.1491, -0.282, 0.0967, -0.1491, 0.2892, 0.0967, -0.1491, -0.282, -0.0967, 0.1491, -0.282, 0.0967, 0.1491, -0.282, -0.0967, -0.1491, -0.282, -0.0967, -0.1491, -0.282, 0.0967, 0.1491, -0.282, 0.0967, 0.1491, 0.2892, -0.0967, -0.1491, 0.2892, 0.0967, -0.1491, 0.2892, -0.0967, 0.1491, 0.2892, -0.0967, 0.1491, 0.2892, 0.0967, -0.1491, 0.2892, 0.0967)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3ej2t"]
 render_priority = 0
 shader = SubResource("Shader_82q5v")
 shader_parameter/fire_col = Color(0.796078, 0.247059, 0, 1)
@@ -725,6 +734,37 @@ viewport_path = NodePath("UI/second_pass/SubViewport")
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_qygbi"]
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_x6cox"]
+radius = 0.272
+height = 0.999
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0o03n"]
+transparency = 4
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.560784, 0.560784, 0.560784, 1)
+albedo_texture = ExtResource("20_n466e")
+emission_enabled = true
+emission = Color(0.45098, 0.352941, 0.470588, 1)
+backlight_enabled = true
+backlight = Color(1, 1, 1, 1)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_cij3j"]
+material = SubResource("StandardMaterial3D_0o03n")
+orientation = 2
+
+[sub_resource type="Curve" id="Curve_oifjq"]
+_data = [Vector2(0, 0.591749), 0.0, 0.0, 0, 0, Vector2(0.129032, 0.711823), 0.0, 0.0, 0, 0, Vector2(0.796774, 0.599754), 0.0, 0.0, 0, 0, Vector2(1, 0.527709), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Gradient" id="Gradient_4v6oe"]
+offsets = PackedFloat32Array(0, 0.0673759, 0.528369, 1)
+colors = PackedColorArray(0, 0, 0, 0, 1.2514e-06, 0.589648, 0.709916, 1, 0.615365, 0.597269, 0.589476, 1, 1, 1, 1, 0)
+
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_asdm7"]
 vertex_color_use_as_albedo = true
 albedo_color = Color(0.54902, 0.403922, 0.278431, 1)
@@ -762,10 +802,6 @@ size = Vector3(0.05, 0.05, 0.05)
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.275862, 1), 0.0, 0.0, 0, 0, Vector2(0.743295, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 4
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_x6cox"]
-radius = 0.272
-height = 0.999
-
 [node name="player" type="CharacterBody3D" groups=["class_1", "entity", "player"]]
 collision_layer = 6
 script = ExtResource("1_rca1e")
@@ -773,13 +809,13 @@ script = ExtResource("1_rca1e")
 [node name="playerAvatar" parent="." instance=ExtResource("2_841cm")]
 
 [node name="chestBase" parent="playerAvatar/genericAvatar/root" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999297, 0.000108895, -0.0170645, -0.00053499)
+transform = Transform3D(1, 0, 0, 0, 0.999297, -0.0374912, 0, 0.0374912, 0.999297, -0.00467982, -0.0240909, -0.00053499)
 
 [node name="hip_L" parent="playerAvatar/genericAvatar/root/chestBase" index="1"]
-transform = Transform3D(0.995003, -0.0103334, 0.0992969, 0, 0.994619, 0.103508, -0.0998333, -0.10299, 0.989657, 0.075, -0.282, -0.001)
+transform = Transform3D(0.995003, -0.0124241, 0.0990571, 0, 0.992216, 0.124449, -0.0998333, -0.123826, 0.987267, 0.075, -0.282, -0.001)
 
 [node name="knee_L" parent="playerAvatar/genericAvatar/root/chestBase/hip_L" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.99435, -0.105992, 0, 0.105992, 0.99435, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.991895, -0.126927, 0, 0.126927, 0.991895, 0, -0.274171, 0)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/hip_L/knee_L" index="1" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -799,10 +835,10 @@ transform = Transform3D(1, 0, 0, -4.65661e-10, 1, -1.49012e-08, -2.23517e-08, -7
 shape = SubResource("ConcavePolygonShape3D_bllhi")
 
 [node name="hip_R" parent="playerAvatar/genericAvatar/root/chestBase" index="2"]
-transform = Transform3D(0.995004, 0.0103335, -0.0992963, 0, 0.994621, 0.103507, 0.0998334, -0.10299, 0.989651, -0.075, -0.282, -0.001)
+transform = Transform3D(0.995004, 0.0124241, -0.0990565, 0, 0.992218, 0.124448, 0.0998334, -0.123827, 0.987261, -0.075, -0.282, -0.001)
 
 [node name="knee_R" parent="playerAvatar/genericAvatar/root/chestBase/hip_R" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.994357, -0.105993, 0, 0.105993, 0.994357, 0, -0.274171, 0)
+transform = Transform3D(1, 0, 0, 0, 0.991901, -0.126928, 0, 0.126928, 0.991901, 0, -0.274171, 0)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/hip_R/knee_R" index="1" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -825,21 +861,22 @@ shape = SubResource("ConcavePolygonShape3D_6mvmu")
 transform = Transform3D(1, 0, 0, 0, 0.999296, 0.0374911, 0, -0.0374912, 0.999295, 0, 0.289384, -0.00323021)
 
 [node name="eyeBrows_L" parent="playerAvatar/genericAvatar/root/chestBase/neck" index="1"]
-surface_material_override/0 = SubResource("StandardMaterial3D_udnj3")
+surface_material_override/0 = SubResource("StandardMaterial3D_kfil4")
 
 [node name="eyeBrows_R" parent="playerAvatar/genericAvatar/root/chestBase/neck" index="2"]
-surface_material_override/0 = SubResource("StandardMaterial3D_udnj3")
+surface_material_override/0 = SubResource("StandardMaterial3D_kfil4")
 
 [node name="eyes" parent="playerAvatar/genericAvatar/root/chestBase/neck" index="3"]
-surface_material_override/0 = SubResource("ShaderMaterial_fttdq")
+surface_material_override/0 = SubResource("ShaderMaterial_rchds")
 
 [node name="mouth" parent="playerAvatar/genericAvatar/root/chestBase/neck" index="7"]
-surface_material_override/0 = SubResource("ShaderMaterial_sdh5p")
+surface_material_override/0 = SubResource("ShaderMaterial_ipf0g")
 
 [node name="voicePlayer" type="AudioStreamPlayer3D" parent="playerAvatar/genericAvatar/root/chestBase/neck" index="10"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 stream = SubResource("AudioStreamGenerator_6h8bs")
 autoplay = true
+max_distance = 50.0
 emission_angle_enabled = true
 doppler_tracking = 2
 
@@ -858,10 +895,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.65661e-10, 0.142511, 0.0193
 shape = SubResource("ConcavePolygonShape3D_hok5u")
 
 [node name="shoulder_L" parent="playerAvatar/genericAvatar/root/chestBase" index="4"]
-transform = Transform3D(0.999957, -0.0048613, -0.00499659, 0.00500372, 0.99956, 0.0289066, 0.00485393, -0.0289313, 0.999547, 0.14978, 0.241, -0.0014265)
+transform = Transform3D(0.999756, -0.021114, -0.00175853, 0.0211728, 0.998685, 0.0464596, 0.000775276, -0.0464869, 0.998896, 0.14978, 0.241, -0.0014265)
 
 [node name="elbowL" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="1"]
-transform = Transform3D(1, 0, 0, 0, 0.999785, 0.0200363, 0, -0.0200363, 0.999785, 0.0786937, -0.240458, -0.002611)
+transform = Transform3D(1, 0, 0, 0, 0.995932, 0.0899594, 0, -0.0899594, 0.995932, 0.0786937, -0.240458, -0.002611)
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_L/elbowL" index="1" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../../..")
@@ -871,6 +908,9 @@ damage_mult = 0.9
 [node name="CollisionShape3D" type="CollisionShape3D" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_L/elbowL/hurtbox"]
 transform = Transform3D(0.994646, 0.103344, -4.65661e-10, -0.103344, 0.994646, 3.72529e-09, 9.31323e-10, 0, 1, 0, 0, 0)
 shape = SubResource("ConcavePolygonShape3D_oox8g")
+
+[node name="fireLH" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_L/elbowL" index="2"]
+surface_material_override/0 = SubResource("ShaderMaterial_uee3o")
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_L" index="2" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../..")
@@ -895,8 +935,8 @@ damage_mult = 0.9
 transform = Transform3D(1, 3.0559e-10, 0, -1.9063e-09, 1, 3.72529e-09, -2.32831e-10, -3.72529e-09, 1, 0.00799124, 0.000275373, 0.0298535)
 shape = SubResource("ConcavePolygonShape3D_kk3xt")
 
-[node name="tp_item_handler" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_R/elbowR" index="2"]
-transform = Transform3D(1, 0, 0, 0, 0.173651, -0.984807, 0, 0.984807, 0.173651, 0, -0.21, 0.075)
+[node name="fireRH" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_R/elbowR" index="3"]
+surface_material_override/0 = SubResource("ShaderMaterial_uee3o")
 
 [node name="hurtbox" parent="playerAvatar/genericAvatar/root/chestBase/shoulder_R" index="2" instance=ExtResource("4_gmgur")]
 health_handler = NodePath("../../../../../..")
@@ -915,7 +955,7 @@ transform = Transform3D(1, -2.22045e-16, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("ConcavePolygonShape3D_ihomt")
 
 [node name="fire" parent="playerAvatar" index="1"]
-surface_material_override/0 = SubResource("ShaderMaterial_vbvvg")
+surface_material_override/0 = SubResource("ShaderMaterial_3ej2t")
 
 [node name="accesories" type="Node3D" parent="playerAvatar"]
 
@@ -1246,49 +1286,6 @@ stream = SubResource("AudioStreamGenerator_qygbi")
 [node name="ragdollHandler" type="Node3D" parent="."]
 top_level = true
 
-[node name="dust_particles" type="CPUParticles3D" parent="."]
-emitting = false
-lifetime = 0.5
-one_shot = true
-explosiveness = 0.76
-mesh = SubResource("QuadMesh_pw52q")
-direction = Vector3(0, 1, 0)
-spread = 15.0
-gravity = Vector3(0, -0.5, 0)
-initial_velocity_min = 0.5
-initial_velocity_max = 1.0
-angle_min = -180.0
-angle_max = 180.0
-scale_amount_max = 2.0
-scale_amount_curve = SubResource("Curve_55bne")
-color_ramp = SubResource("Gradient_agbhh")
-
-[node name="impact_particles" type="CPUParticles3D" parent="."]
-emitting = false
-lifetime = 0.5
-one_shot = true
-explosiveness = 1.0
-mesh = SubResource("QuadMesh_pw52q")
-direction = Vector3(0, 1, 0)
-initial_velocity_min = 6.0
-initial_velocity_max = 10.0
-angle_min = -180.0
-angle_max = 180.0
-scale_amount_max = 2.0
-scale_amount_curve = SubResource("Curve_55bne")
-color_ramp = SubResource("Gradient_agbhh")
-
-[node name="ghostParticles" type="CPUParticles3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.996216, 0)
-emitting = false
-amount = 16
-lifetime = 5.0
-mesh = SubResource("BoxMesh_i4bci")
-emission_shape = 1
-emission_sphere_radius = 0.5
-gravity = Vector3(0, -0.1, 0)
-scale_amount_curve = SubResource("Curve_ichl7")
-
 [node name="projectile_handler" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://entities/projectiles/arrow.tscn", "res://entities/projectiles/spark_bolt.tscn")
 spawn_path = NodePath(".")
@@ -1310,5 +1307,78 @@ shape = SubResource("CapsuleShape3D_x6cox")
 target_position = Vector3(0, 0.4, 0)
 
 [node name="blood_handler" type="Node" parent="."]
+
+[node name="effect_handler" type="Node3D" parent="."]
+script = ExtResource("20_8yk8r")
+
+[node name="respawnEffect" type="CPUParticles3D" parent="effect_handler"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.779202, 0)
+cast_shadow = 0
+emitting = false
+amount = 16
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+randomness = 0.3
+lifetime_randomness = 0.65
+mesh = SubResource("PlaneMesh_cij3j")
+emission_shape = 3
+emission_box_extents = Vector3(0.1, 1, 0.1)
+direction = Vector3(0, 1, 0)
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 0.5
+angular_velocity_min = -26.18
+angular_velocity_max = 52.36
+tangential_accel_min = -3.63
+tangential_accel_max = 4.84
+angle_min = -720.0
+angle_max = 720.0
+scale_amount_min = 0.5
+scale_amount_curve = SubResource("Curve_oifjq")
+color_ramp = SubResource("Gradient_4v6oe")
+
+[node name="dust_particles" type="CPUParticles3D" parent="effect_handler"]
+emitting = false
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.76
+mesh = SubResource("QuadMesh_pw52q")
+direction = Vector3(0, 1, 0)
+spread = 15.0
+gravity = Vector3(0, -0.5, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 1.0
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_max = 2.0
+scale_amount_curve = SubResource("Curve_55bne")
+color_ramp = SubResource("Gradient_agbhh")
+
+[node name="impact_particles" type="CPUParticles3D" parent="effect_handler"]
+emitting = false
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+mesh = SubResource("QuadMesh_pw52q")
+direction = Vector3(0, 1, 0)
+initial_velocity_min = 6.0
+initial_velocity_max = 10.0
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_max = 2.0
+scale_amount_curve = SubResource("Curve_55bne")
+color_ramp = SubResource("Gradient_agbhh")
+
+[node name="ghostParticles" type="CPUParticles3D" parent="effect_handler"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.996216, 0)
+emitting = false
+amount = 16
+lifetime = 5.0
+mesh = SubResource("BoxMesh_i4bci")
+emission_shape = 1
+emission_sphere_radius = 0.5
+gravity = Vector3(0, -0.1, 0)
+scale_amount_curve = SubResource("Curve_ichl7")
 
 [editable path="playerAvatar"]

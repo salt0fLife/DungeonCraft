@@ -65,6 +65,7 @@ const pos_and_rot_only = [
 @onready var arm_test = load_file("player_poses/", "test.dat")
 #const default_pose = 
 var fire_mat = null
+var fire_mat_hands = null
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
@@ -73,6 +74,9 @@ func _ready():
 	$root/chestBase/neck/eyeBrows_R.set_surface_override_material(0, ebm)
 	fire_mat = $"../fire".get_active_material(0).duplicate()
 	$"../fire".set_surface_override_material(0,fire_mat)
+	fire_mat_hands = $"../fire".get_active_material(0).duplicate()
+	$root/chestBase/shoulder_R/elbowR/fireRH.set_surface_override_material(0,fire_mat_hands)
+	$root/chestBase/shoulder_L/elbowL/fireLH.set_surface_override_material(0,fire_mat_hands)
 	#save_pose_transforms()
 	#apply_pose(arm_test)
 	eye_mat = $root/chestBase/neck/eyes.get_active_material(0).duplicate()
@@ -1090,7 +1094,7 @@ func set_cosmetic_visibility(ears, tail, snout):
 	pass
 
 const skin_mat_path = "res://assets/avatar/playerSkinShaderMat.tres"#"res://assets/avatar/playerSkin.tres"#
-func load_skin(img, ears, tail, snout, is_slim_loc, eColors, mData, pointy_teeth, fangs):
+func load_skin(img, ears, tail, snout, is_slim_loc, eColors, mData):
 	#img = ImageTexture.create_from_image(Image.load_from_file("res://assets/glb/playerAvatar002_dapper128Secondary.png"))
 	#var meshes = avatar.meshes
 	is_slim = is_slim_loc
@@ -1145,12 +1149,21 @@ func load_skin(img, ears, tail, snout, is_slim_loc, eColors, mData, pointy_teeth
 	set_eye_param("shader_parameter/eyelashCol", eColors[4])
 	#[pointy_teeth, fangs, owo, standin1, standin2, colOutline, colInternal, colTongue, colTeeth]
 	#set_mouth_param("shader_parameter/smile", mInfo[0])
-	set_mouth_param("shader_parameter/fangs", mData[0])
-	set_mouth_param("shader_parameter/pointy_teeth", mData[1] * 0.1)
+	#set_mouth_param("shader_parameter/fangs", mData[0])
+	#set_mouth_param("shader_parameter/pointy_teeth", mData[1] * 0.1)
 	set_mouth_param("shader_parameter/owo", mData[2])
 	set_mouth_param("shader_parameter/col_outline", mData[5])
 	set_mouth_param("shader_parameter/col_internal", mData[6])
 	set_mouth_param("shader_parameter/col_tongue", mData[7])
+	
+	var bloody_offset = float((eColors[0].r + eColors[1].g) + eColors[2].b)
+	base_skin_mat.set("shader_parameter/bloody_offset",bloody_offset)
+
+func set_bloody(val: float) -> void:
+	if base_skin_mat == null:
+		printerr("cannot set_bloody, base_mat invalid")
+		return
+	base_skin_mat.set("shader_parameter/bloody",val)
 
 @onready var name_tag = $root/chestBase/neck/nameTag
 func set_display_name(text):
@@ -1231,7 +1244,7 @@ func set_ghost(val: bool) -> void:
 		#base_skin_mat.set("proximity_fade_enabled", false)
 		#tran_skin_mat.set("blend_mode", 0)
 		#tran_skin_mat.set("proximity_fade_enabled", false)
-		##base_skin_mat.set("shader_parameter/ghostly", 0.0) ##NOTE CHECK THIS LATER
+		base_skin_mat.set("shader_parameter/ghostly", 0.0) ##NOTE CHECK THIS LATER
 		#bone_paths[0].get_child(0).get_child(0).get_active_material(0).set("blend_mode", 0)
 		#meshes[0].get_active_material(0).set("blend_mode", 0)
 		#meshes[1].get_active_material(0).set("blend_mode", 0)
@@ -1256,28 +1269,53 @@ func set_ghost(val: bool) -> void:
 	pass
 
 func set_burning(val : bool,col := Color.ORANGE_RED) -> void:
+	if base_skin_mat == null:
+		printerr("cannot set burning, invalid base_skin_mat")
+		return
 	base_skin_mat.set("shader_parameter/burning", val)
 	base_skin_mat.set("shader_parameter/fire_col", col)
 	$"../fire".visible = val
-	$"../fire".get_active_material(0).set("shader_parameter/fire_col", col)
+	fire_mat.set("shader_parameter/fire_col", col)
+	#$"../fire".get_active_material(0).set("shader_parameter/fire_col", col)
 	$"../fire_light".visible = val
 	$"../fire_light".light_color = col
+	$"../smokeParticles".emitting = val
 
 func set_poisoned(val) -> void:
+	if base_skin_mat == null:
+		printerr("cannot set poisoned, invalid base_skin_mat")
+		return
 	base_skin_mat.set("shader_parameter/poisoned", val)
 	$"../poison particles".emitting = val
 	pass
 
 func set_cursed(val) -> void:
+	if base_skin_mat == null:
+		printerr("cannot set cursed, invalid base_skin_mat")
+		return
 	base_skin_mat.set("shader_parameter/cursed", val)
 	pass
 
 func set_blessed(val: bool) -> void:
+	if base_skin_mat == null:
+		printerr("cannot set blessed, invalid base_skin_mat")
+		return
 	base_skin_mat.set("shader_parameter/blessed", val)
 	$"../holyParticles".emitting = val
 	$"../aura".visible = val
 	pass
 
 func set_damaged(val : float) -> void:
+	if base_skin_mat == null:
+		printerr("cannot set damaged, invalid base_skin_mat")
+		return
 	base_skin_mat.set("shader_parameter/damaged", val)
+	pass
+
+func set_hand_fire(val : bool, col := Color.ORANGE_RED) -> void:
+	print(col.a)
+	print(col)
+	fire_mat_hands.set("shader_parameter/fire_col", col)
+	$root/chestBase/shoulder_L/elbowL/fireLH.visible = val
+	$root/chestBase/shoulder_R/elbowR/fireRH.visible = val
 	pass

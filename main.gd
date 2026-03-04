@@ -38,6 +38,7 @@ func _ready():
 	worldSync.connect("spawned",emit_world_loaded)
 	#Global.connect("player_death",_on_player_death)
 	playerSync.connect("player_died",_on_player_death)
+	settup_button_sounds()
 
 signal world_loaded
 func emit_world_loaded():
@@ -99,7 +100,7 @@ func host_local():
 	multiplayer.multiplayer_peer = localPeer
 	multiplayer.server_relay = true
 	playerSync.boot(true)
-	hide_menu()
+	start_game()
 	_on_change_world("debug")
 
 func join_local(address = ""):
@@ -113,7 +114,12 @@ func join_local(address = ""):
 	if error:
 		return error
 	multiplayer.multiplayer_peer = peer
+	start_game()
+
+func start_game(): #called when game is hosted or joined
+	music_handler.stop_the_music() #let the world choose its music
 	hide_menu()
+	pass
 
 func hide_menu():
 	$Control.visible = false
@@ -176,7 +182,7 @@ func join_lobby(id):
 	peer.connect_lobby(id)
 	multiplayer.multiplayer_peer = peer
 	lobbyID = id
-	hide_menu()
+	start_game()
 
 func host():
 	Global.is_host = true
@@ -187,7 +193,7 @@ func host():
 	multiplayer.multiplayer_peer = peer
 	multiplayer.server_relay = true
 	playerSync.boot(true)
-	hide_menu()
+	start_game()
 	_on_change_world("the_moor")
 
 func refresh():
@@ -448,7 +454,6 @@ func _on_spawn_creature(key, location, attribute_modifiers = null, require_host 
 
 @onready var worldSync = $worldSync
 func _on_change_world(key, require_host = false):
-	music_handler.stop_the_music() #let the world choose its music
 	for e in creatureSync.get_children(false):
 		e.queue_free()
 	for i in worldSync.get_children(false):
@@ -624,3 +629,26 @@ func _on_open_host_menu_button_down():
 
 func _on_back_to_main_menu_button_down():
 	$Control/hostMenu.hide()
+
+func settup_button_sounds(): #called in ready
+	var buttons = [ #just put any buttons you want sound applied to in here
+		$Control/hostLocal,
+		$Control/joinLocal,
+		$Control/mainMenu/VBoxContainer/refreshList,
+		$pauseMenu/VBoxContainer/Resume,
+		$pauseMenu/VBoxContainer/leave,
+		$Control/mainMenu/VBoxContainer/quit,
+		$Control/mainMenu/VBoxContainer/openHostMenu,
+		$Control/mainMenu/VBoxContainer/skinKey
+	]
+	for button in buttons:
+		button.connect("mouse_entered", _on_button_hovered)
+		button.connect("pressed", _on_button_pressed)
+
+func _on_button_hovered() -> void: #for sounds
+	$guiSoundsHandler/button_hovered.play()
+	pass
+
+func _on_button_pressed() -> void:
+	$guiSoundsHandler/button_pressed.play()
+	pass

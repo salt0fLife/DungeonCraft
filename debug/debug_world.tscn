@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=3 uid="uid://dntnunlwfyesu"]
+[gd_scene load_steps=52 format=3 uid="uid://dntnunlwfyesu"]
 
 [ext_resource type="Texture2D" uid="uid://dygadkt22kdik" path="res://debug/DebuggTexture.png" id="1_5fl5y"]
 [ext_resource type="Script" path="res://debug/debug_world.gd" id="1_87rlt"]
@@ -7,7 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://dly3g0b5sqii7" path="res://assets/environmentPieces/level_details/grass_1.tscn" id="3_5vhho"]
 [ext_resource type="PackedScene" uid="uid://cc8lpiwjggev5" path="res://assets/glb/items/sparkWand.glb" id="3_jyith"]
 [ext_resource type="PackedScene" uid="uid://dq5aik6jyb0o6" path="res://assets/environmentPieces/level_details/grass_2.tscn" id="4_4it4o"]
-[ext_resource type="PackedScene" uid="uid://dyheecbeltw3w" path="res://assets/avatar/player_avatar.tscn" id="4_5bd38"]
 [ext_resource type="PackedScene" uid="uid://dvkd2y2cnusj" path="res://assets/itemGraphics/spark_wand.tscn" id="4_yl0wx"]
 [ext_resource type="PackedScene" uid="uid://g6ektn38chvg" path="res://assets/environmentPieces/level_details/grass_3.tscn" id="5_bxdvy"]
 [ext_resource type="PackedScene" uid="uid://cqm1ptmfpda0v" path="res://assets/environmentPieces/trees/tree_pine_2.tscn" id="6_o0lwk"]
@@ -25,7 +24,6 @@
 [ext_resource type="AudioStream" uid="uid://us4531tbg0sh" path="res://assets/sounds/music/triplets.mp3" id="21_5nv8w"]
 [ext_resource type="PackedScene" uid="uid://cb6ovvv8dnrb1" path="res://world/levels/level_3_test.tscn" id="21_ooxf7"]
 [ext_resource type="PackedScene" uid="uid://dtdp0xkmjwtre" path="res://entities/punching_bag.tscn" id="25_2gtog"]
-[ext_resource type="Script" path="res://debug/avatar_state_tester.gd" id="25_un0qr"]
 [ext_resource type="Shader" path="res://assets/shaders/circleShadow.gdshader" id="26_bv1sq"]
 [ext_resource type="PackedScene" uid="uid://dokv4awf7hm7b" path="res://debug/debug_effectbox.tscn" id="26_uei57"]
 [ext_resource type="PackedScene" uid="uid://dsva3w0odq2a2" path="res://assets/environmentPieces/traversal/generic_doorway.tscn" id="27_8tomo"]
@@ -470,41 +468,6 @@ stream = ExtResource("21_5nv8w")
 
 [node name="punchingBag" parent="." instance=ExtResource("25_2gtog")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.64017, 0, -8.12931)
-
-[node name="avatar_state_tester" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 0, 0)
-visible = false
-script = ExtResource("25_un0qr")
-
-[node name="playerAvatar" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -4.15712)
-
-[node name="playerAvatar2" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -5.15712)
-
-[node name="playerAvatar3" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -6.15712)
-
-[node name="playerAvatar4" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -7.15712)
-
-[node name="playerAvatar5" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -8.15712)
-
-[node name="playerAvatar6" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -10.1571)
-
-[node name="playerAvatar7" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -9.15712)
-
-[node name="playerAvatar8" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -11.1571)
-
-[node name="playerAvatar9" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -12.1571)
-
-[node name="playerAvatar10" parent="avatar_state_tester" instance=ExtResource("4_5bd38")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3086, 0, -13.1571)
 
 [node name="debug effectbox" parent="." instance=ExtResource("26_uei57")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)

@@ -359,7 +359,7 @@ func load_accessories(a = Inventory.accessories):
 func load_skin():
 	var t = [Global.ears, Global.tail, Global.snout, Global.slim, Global.eyeColor, Global.mouthData, Global.fangs, Global.pointy_teeth]
 	var skin_img = Global.data_to_image(Global.skin)
-	avatar.load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5],t[6],t[7])
+	avatar.load_skin(skin_img, t[0],t[1],t[2],t[3],t[4],t[5])
 
 func _on_update_status_effect_graphics():
 	var se = Inventory.active_status_effects
