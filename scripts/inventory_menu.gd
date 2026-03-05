@@ -252,6 +252,8 @@ func hide_accessories():
 	$accessories.hide()
 
 func open():
+	if held_item != Inventory.empty_item:
+		$held_item.visible = true
 	$hotbar.visible = true
 	hide_want = false
 	show_hotbar()
@@ -260,6 +262,7 @@ func open():
 	pass
 
 func close():
+	$held_item.visible = false
 	$itemMenu.visible = false
 	$hotbar.visible = true
 	hide_want = true

@@ -2661,7 +2661,6 @@ const limb_key_to_defense = {
 func request_ghost() -> bool:
 	return ghost
 
-
 func set_mute(val : bool) -> void:
 	if !val:
 		$playerAvatar/genericAvatar/root/chestBase/neck/voicePlayer.set("volume_db",0.0)

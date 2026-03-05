@@ -158,6 +158,9 @@ func activate(key = "", force = Vector3.ZERO, extraForce = Vector3.ZERO):
 
 func load_skin(skin_mat,slim):
 	skin_mat.set("shader_parameter/ghostly",0.0) #dont know why i didnt just do this before
+	skin_mat.set("shader_parameter/damaged", 0.0) #no more glowing red corpses
+	skin_mat.set("shader_parameter/bloody", 0.5) #lightly bloody corpses :3
+	skin_mat.set("shader_parameter/bloody_offset", randf_range(-2.0,2.0)) #lightly bloody corpses :3
 	var tran = skin_mat.duplicate()
 	for m in meshes:
 		m.visible = !slim

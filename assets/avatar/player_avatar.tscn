@@ -60,7 +60,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_e1mb0")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qaram"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6bqrm"]
 resource_name = "eyeBrows"
 transparency = 2
 alpha_scissor_threshold = 0.5
@@ -161,7 +161,7 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_tycrd")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_xuwks"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o2aou"]
 resource_name = "eyes"
 render_priority = 0
 shader = ExtResource("4_0gktj")
@@ -292,7 +292,7 @@ shadow_mesh = SubResource("ArrayMesh_nxc6e")
 [sub_resource type="PlaneMesh" id="PlaneMesh_tuqqr"]
 size = Vector2(0.27, 0.1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_i712f"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8m6jy"]
 render_priority = 0
 shader = ExtResource("5_cdrxt")
 shader_parameter/uv1_scale = Vector3(1, 1, 1)
@@ -432,7 +432,7 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.5)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_fjgvd"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_upobq"]
 render_priority = 0
 shader = SubResource("Shader_5bmd7")
 shader_parameter/fire_col = Color(0.635294, 0.227451, 0, 1)
@@ -446,7 +446,7 @@ material = ExtResource("16_daxmk")
 size = Vector2(1.32, 2.565)
 orientation = 2
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ptxas"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_onh1e"]
 render_priority = 0
 shader = SubResource("Shader_5bmd7")
 shader_parameter/fire_col = Color(0.635294, 0.227451, 0, 1)
@@ -944,20 +944,20 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0619893, 0.196939, 0.163494
 visible = false
 mesh = SubResource("ArrayMesh_tre6c")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("StandardMaterial3D_qaram")
+surface_material_override/0 = SubResource("StandardMaterial3D_6bqrm")
 
 [node name="eyeBrows_R" type="MeshInstance3D" parent="genericAvatar/root/chestBase/neck"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0619893, 0.196939, 0.1646)
 visible = false
 mesh = SubResource("ArrayMesh_t454n")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("StandardMaterial3D_qaram")
+surface_material_override/0 = SubResource("StandardMaterial3D_6bqrm")
 
 [node name="eyes" type="MeshInstance3D" parent="genericAvatar/root/chestBase/neck"]
 transform = Transform3D(1, -2.11758e-22, -7.10543e-15, 0, 1, 0, 0, 0, 1, 0, -0.01, 0)
 mesh = SubResource("ArrayMesh_utghw")
 skeleton = NodePath("")
-surface_material_override/0 = SubResource("ShaderMaterial_xuwks")
+surface_material_override/0 = SubResource("ShaderMaterial_o2aou")
 
 [node name="headOutsideP" type="MeshInstance3D" parent="genericAvatar/root/chestBase/neck"]
 transform = Transform3D(1, 0, 0, 2.11758e-22, 1, 0, 0, 0, 1, 0, 0.153, 0.02)
@@ -980,7 +980,7 @@ skeleton = NodePath("")
 [node name="mouth" type="MeshInstance3D" parent="genericAvatar/root/chestBase/neck"]
 transform = Transform3D(1, 0, 3.38813e-21, 0, -4.37114e-08, -1, 5.68434e-14, 1, -4.37114e-08, 0.000952967, 0.060794, 0.163323)
 mesh = SubResource("PlaneMesh_tuqqr")
-surface_material_override/0 = SubResource("ShaderMaterial_i712f")
+surface_material_override/0 = SubResource("ShaderMaterial_8m6jy")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="genericAvatar/root/chestBase/neck"]
 visible = false
@@ -1019,7 +1019,7 @@ transform = Transform3D(0.994646, 0.103344, 0, -0.103344, 0.994646, 0, 0, 0, 1, 
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -0.145, 0)
 visible = false
 mesh = SubResource("PlaneMesh_88ef4")
-surface_material_override/0 = SubResource("ShaderMaterial_fjgvd")
+surface_material_override/0 = SubResource("ShaderMaterial_upobq")
 
 [node name="shoulder_R" type="Node3D" parent="genericAvatar/root/chestBase"]
 transform = Transform3D(0.998648, 0.0517957, -0.00435618, -0.0517567, 0.998623, 0.00861881, 0.00479659, -0.00838169, 0.999954, -0.15, 0.241, -0.00100074)
@@ -1046,13 +1046,13 @@ transform = Transform3D(1, 0, 0, 0, 0.173651, -0.984807, 0, 0.984807, 0.173651, 
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -0.145, 0)
 visible = false
 mesh = SubResource("PlaneMesh_88ef4")
-surface_material_override/0 = SubResource("ShaderMaterial_fjgvd")
+surface_material_override/0 = SubResource("ShaderMaterial_upobq")
 
 [node name="fire" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1, 0)
 visible = false
 mesh = SubResource("PlaneMesh_uwoon")
-surface_material_override/0 = SubResource("ShaderMaterial_ptxas")
+surface_material_override/0 = SubResource("ShaderMaterial_onh1e")
 
 [node name="fire_light" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.891093, 0)
